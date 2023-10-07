@@ -15,7 +15,16 @@ const usersRouter = require('./routes/users');
 const app = express();
 app.use(cors());
 
-//const db = mongoose.connect(process.env.MONGO_URL);
+// DB connection
+var db_url = "mongodb+srv://"+process.env.MONGO_USER+":"+process.env.MONGO_PASSWORD+"@"+process.env.MONGO_CLUSTER+".mongodb.net/?retryWrites=true&w=majority";
+console.log(db_url)
+mongoose.connect(db_url, {dbName: process.env.MONGO_DB_NAME , useNewUrlParser: true , useUnifiedTopology: true});
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error....'))
+
+db.once('open', () => {
+    console.log('Conexão ao MongoDB com sucesso!')
+})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
