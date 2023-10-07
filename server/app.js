@@ -4,6 +4,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const cors = require('cors');
 const mongoose = require('mongoose');
 
 dotenv.config();
@@ -12,8 +13,9 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 const app = express();
+app.use(cors());
 
-const db = mongoose.connect(process.env.MONGO_URL);
+//const db = mongoose.connect(process.env.MONGO_URL);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
