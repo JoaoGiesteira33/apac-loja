@@ -1,12 +1,11 @@
-import MobileComponent from './components/mobileComponent';
-import DesktopComponent from './components/desktopComponent';
-import useViewport from './hooks/useViewport';
+import Navbar from './components/navbar';
 
 function App() {
-  const { width } = useViewport();
-  const breakpoint = 620;
-
-  return width < breakpoint ? <MobileComponent /> : <DesktopComponent />;
+  return (
+    <div>
+      <Navbar/>
+    </div>
+  )
 }
 
 export default App
