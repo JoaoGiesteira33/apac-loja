@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import Button from '@mui/material/Button';
 
+import logoFile from './assets/logo_apac.png';
+
 function App() {
   const [count, setCount] = useState(0)
 
@@ -10,6 +12,7 @@ function App() {
 
   return (
     <>
+      <img src={logoFile} alt="logo" />
       <p className='text-base'>{count}</p>
       <Button 
       className='text-base'
