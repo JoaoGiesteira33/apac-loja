@@ -11,7 +11,7 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
     interpolation: {
         escapeValue: false,
     },
-    lng: "pt",
+    lng: 'pt',
     resources: {
         pt: portuguese_translation,
         en: english_translation,
