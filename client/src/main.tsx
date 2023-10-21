@@ -8,13 +8,16 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import './i18n';
 
+// Tirar no futuro.
 import { ViewportProvider } from './contexts/viewPortContext';
-
+import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ViewportProvider>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>	
     </ViewportProvider>
   </React.StrictMode>,
 )
