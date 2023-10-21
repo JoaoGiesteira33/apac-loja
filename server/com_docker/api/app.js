@@ -4,10 +4,10 @@ var path = require('path');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 
-// TODO - TROCAR OS NOMES DOS ROUTERS
-var indexRouter = require('./routes/acordao');
-var userRouter = require('./routes/user');
-var sugestaoRouter = require('./routes/sugestao');
+// // TODO - TROCAR OS NOMES DOS ROUTERS
+// var indexRouter = require('./routes/acordao');
+// var userRouter = require('./routes/user');
+// var sugestaoRouter = require('./routes/sugestao');
 
 
 var db_url = "mongodb+srv://"+process.env.MONGO_USER+":"+process.env.MONGO_PASSWORD+"@"+process.env.MONGO_CLUSTER+".mongodb.net/?retryWrites=true&w=majority";
