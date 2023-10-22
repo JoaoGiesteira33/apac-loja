@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import logoApac from '../assets/logo_apac.png';
+import logoApacSimplified from '../assets/logo_apac_simplified.png';
 
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -89,6 +90,14 @@ export default function Navbar() {
             role="presentation"
             onClick={toggleDrawer(false)}
             onKeyDown={toggleDrawer(false)}>
+            <div className="flex items-center justify-center">
+                <img
+                    className="max-h-16 place-self-center my-2"
+                    alt="logoSimples"
+                    src={logoApacSimplified}
+                />
+            </div>
+            <Divider />
             <List>
                 {collections.map((text) => (
                     <ListItem key={text} disablePadding>
