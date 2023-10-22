@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import logoApac from '../assets/logo_apac.png';
 
@@ -92,7 +93,9 @@ export default function Navbar() {
                 {collections.map((text) => (
                     <ListItem key={text} disablePadding>
                         <ListItemButton>
-                            <ListItemText primary={text} />
+                            <Link to={`/collections/${text}`}>
+                                <ListItemText primary={text} />
+                            </Link>
                         </ListItemButton>
                     </ListItem>
                 ))}
@@ -134,13 +137,13 @@ export default function Navbar() {
                                 onClose={toggleDrawer(false)}>
                                 {list()}
                             </Drawer>
-                            <a href="/">
+                            <Link to="/">
                                 <img
                                     className="max-h-16 my-4"
                                     alt="logo"
                                     src={logoApac}
                                 />
-                            </a>
+                            </Link>
                         </div>
                         <div className="flex items-center row-start-2 col-span-2 md:col-span-1 md:row-start-1 md:col-start-2">
                             <Search>
