@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react';
 
 type Artist = {
     id: string;
@@ -8,14 +8,14 @@ type Artist = {
     city: string;
     products_selling: string[];
     products_sold: string[];
-}
+};
 
-export default function Artist(){
-    const [ artist, setArtist ] = useState<Artist>();
+export default function Artist() {
+    const [artist, setArtist] = useState<Artist>();
 
     return (
         <div>
             <h1>Artist</h1>
         </div>
-    )
+    );
 }
