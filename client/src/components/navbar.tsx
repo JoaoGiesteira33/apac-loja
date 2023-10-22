@@ -1,3 +1,5 @@
+import React from 'react';
+
 import logoApac from '../assets/logo_apac.png';
 
 import { styled, alpha } from '@mui/material/styles';
@@ -6,11 +8,20 @@ import InputBase from '@mui/material/InputBase';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
+import Divider from '@mui/material/Divider';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import MenuIcon from '@mui/icons-material/Menu';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -21,10 +32,7 @@ const Search = styled('div')(({ theme }) => ({
     },
     marginLeft: 0,
     width: '100%',
-    [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(1),
-        width: 'auto',
-    },
+    display: 'flex',
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -44,17 +52,60 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-        width: '12ch',
-        '&:focus': {
-            width: '20ch',
-        },
-        },
     },
 }));
 
 export default function Navbar() {
+    const [drawer, setDrawer] = React.useState(false);
+
+    const toggleDrawer = (open: boolean) =>
+    (event: React.KeyboardEvent | React.MouseEvent) => {
+        if (
+        event.type === 'keydown' &&
+        ((event as React.KeyboardEvent).key === 'Tab' ||
+            (event as React.KeyboardEvent).key === 'Shift')
+        ) {
+        return;
+        }
+
+        setDrawer(open);
+    };
+
+    const list = () => (
+        <Box
+          sx={{ width: 250 }}
+          role="presentation"
+          onClick={toggleDrawer(false)}
+          onKeyDown={toggleDrawer(false)}
+        >
+          <List>
+            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+              <ListItem key={text} disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+          <List>
+            {['All mail', 'Trash', 'Spam'].map((text, index) => (
+              <ListItem key={text} disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      );
+
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
@@ -62,24 +113,30 @@ export default function Navbar() {
                 <div className='grid space-around grow justify-between grid-cols-2 md:grid-cols-[200px_3fr_1fr] md:gap-10'>
                     <div className='flex items-center'>
                         <IconButton
-                            size="large"
-                            edge="start"
-                            color="inherit"
-                            aria-label="menu"
-                            sx={{ mr: 2 }}
-                        >
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        onClick={toggleDrawer(true)}
+                        sx={{ mr: 2 }}>
                             <MenuIcon />
                         </IconButton>
+                        <Drawer anchor={'left'}
+                            open={drawer}
+                            onClose={toggleDrawer(false)}>
+                            {list()}
+                        </Drawer>
                         <a href='/'>
                             <img className="max-h-16 my-4" alt="logo" src={logoApac}/>
                         </a>
                     </div>
                     <div className='flex items-center row-start-2 col-span-2 md:col-span-1 md:row-start-1 md:col-start-2'>
-                        <Search className="grow">
+                        <Search>
                             <SearchIconWrapper>
                             <SearchIcon />
                             </SearchIconWrapper>
                             <StyledInputBase
+                            className='grow'
                             placeholder="Search…"
                             inputProps={{ 'aria-label': 'search' }}
                             />
