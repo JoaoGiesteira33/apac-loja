@@ -1,0 +1,51 @@
+var jwt = require('jsonwebtoken');
+
+
+function isAdmin(req, res, next) {
+    var myToken = req.query.token || req.body.token || req.cookies.token
+    if (myToken) {
+        jwt.verify(myToken, "rpcw2023", function (e, payload) { // esconder a chave ???????
+            if (e) {
+                res.status(401).render('error', { error: "Acess denied!" })
+            }
+            else if (payload.level == "admin") {
+                req.user = payload.username
+                req.level = payload.level
+                req.token = myToken
+                next()
+            }
+            else {
+                res.status(401).render('error', { error: "Acess denied!" })
+            }
+        })
+    }
+    else {
+        res.status(401).render('error', { error: "Token not found!" })
+    }
+}
+
+function hasAccess(req, res, next) {
+    var myToken = req.query.token || req.body.token || req.cookies.token
+    if (myToken) {
+        jwt.verify(myToken, "rpcw2023", function (e, payload) { // esconder a chave ???????
+            if (e) {
+                res.status(401).render('error', { error: "Acess denied!" })
+            }
+            else {
+                req.user = payload.username
+                req.level = payload.level
+                req.token = myToken
+                next()
+            }
+        })
+    }
+}
+
+function isMe(req, res, next){
+    if(req.params.id == req.user){
+        next()
+    }
+    else{
+        res.status(401).render('error', { error: "Acess denied!" })
+    }
+}

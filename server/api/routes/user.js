@@ -1,65 +1,104 @@
 var express = require('express');
 var router = express.Router();
+
 var controllerUser = require('../controllers/user');
-var controllerSugestao = require('../controllers/sugestao');
+var controllerAuth = require('../../auth/controllers/auth');
 
-// GET Utilizador - Favoritos
-router.get('/favoritos/:id', function(req, res, next) {
-  controllerUser.getFavoritos(req.params.id)
-    .then((favoritos) => {
-      console.dir(favoritos);
-      res.jsonp(favoritos);
-    })
-    .catch((erro) => {
-      res.jsonp(erro);
-    });
+// ---------------------------------------------
+
+
+// GET User Info
+router.get('/user/:id', controllerAuth.hasAccess, controllerAuth.isMe, function (req, res, next) {
+    controllerUser.getUserInfo(req.params.id)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((erro) => {
+            res.jsonp(erro);
+        });
+});
+
+// POST User Info
+router.post('/user', controllerAuth.hasAccess, function (req, res, next) {
+    controllerUser.createUser(req.body)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((erro) => {
+            res.jsonp(erro);
+        });
+});
+
+// UPDATE User Info
+router.put('/user/:id', function (req, res, next) {
+    controllerUser.updateUserInfo(req.params.id, req.body)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((erro) => {
+            res.jsonp(erro);
+        });
+});
+
+// DELETE User Info
+router.delete('/user/:id', function (req, res, next) {
+    controllerUser.deleteUser(req.params.id)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((erro) => {
+            res.jsonp(erro);
+        });
 });
 
 
+// ---------------------------------------------
 
-router.post('/favoritos/fav/:id', function(req, res, next) {
-  var fav = req.body.dados;
-  fav['idAcordao'] = req.params.id;
-  controllerUser.postFavorito(req.body.username, fav)
-    .then((favorito) => {
-      res.jsonp(favorito);
-    })
-    .catch((erro) => {
-      res.jsonp(erro);
-    })
+
+// GET Artist Info
+router.get('/artist/:id', function (req, res, next) {
+    controllerUser.getArtistInfo(req.params.id)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((erro) => {
+            res.jsonp(erro);
+        });
 });
 
-router.post('/favoritos/unfav/:id', function(req, res, next) {
-  var fav = req.body.dados;
-  fav['idAcordao'] = req.params.id;
-  controllerUser.deleteFavorito(req.body.username, fav)
-    .then((favorito) => {
-      res.jsonp(favorito);
-    })
-    .catch((erro) => {
-      res.jsonp(erro);
-    })
+// POST Artist Info
+router.post('/artist', function (req, res, next) {
+    controllerUser.createArtist(req.body)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((erro) => {
+            res.jsonp(erro);
+        });
+});
+
+// UPDATE Artist Info
+router.put('/artist/:id', function (req, res, next) {
+    controllerUser.updateArtistInfo(req.params.id, req.body)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((erro) => {
+            res.jsonp(erro);
+        });
+});
+
+// DELETE Artist Info
+router.delete('/artist/:id', function (req, res, next) {
+    controllerUser.deleteArtist(req.params.id)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((erro) => {
+            res.jsonp(erro);
+        });
 });
 
 
-// GET Utilizador - Notificações
-router.get('/notificacoes/:id', function(req, res, next) {
-    controllerSugestao.getNotificacoes(req.params.id)
-    .then((notificacoes) => {res.jsonp(notificacoes);})
-    .catch((erro) => {res.jsonp(erro);});
-});
+// ---------------------------------------------
 
-// GET Sugestões - Utilizador
-router.get('/sugestoes/:id', function(req, res, next) {
-  index = req.index == null ? 0: req.index;
-  controllerSugestao.getSugestoes(req.params.id)
-  .then((sugestoes) => {
-      res.jsonp(sugestoes);
-  })
-  .catch((erro) => {
-      res.jsonp(erro);
-  });
-});
-
-
-module.exports = router;
