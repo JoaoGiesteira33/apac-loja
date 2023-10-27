@@ -4,34 +4,24 @@ services:
   api:
     container_name: api
     build: ./api
-    restart: always
-#    depends_on:
-#      - auth
+#    restart: always
+    depends_on:
+      - auth
+    env_file:
+      - .env
+    ports:
+      - 11000:80
+    networks:
+      - apac-network
+
+  auth:
+    container_name: auth
+    build: ./auth
+#    restart: always
     env_file:
       - .env
     networks:
       - apac-network
-
-#  auth:
-#    container_name: auth
-#    build: ./auth
-#    restart: always
-#    ports:
-#      - 11001:80
-#    networks:
-#      - apac-network
-
-#  interface:
-#    container_name: interface
-#    build: ./interface
-#    restart: always
-#    ports:
-#      - 11000:80
-#    depends_on:
-#      - auth
-#      - api
-#    networks:
-#      - apac-network
 
 volumes:
   dbdata:

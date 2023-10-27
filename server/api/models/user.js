@@ -25,6 +25,14 @@ var Statistics = new mongoose.Schema({
     lastLogin: Date
 });
 
+// TODO - ALTERAR PARA USAR UM SQUEMA (?)
+//var artistFields = new mongoose.Schema({
+//    demographics: Demographics,
+//    statistics: Statistics,
+//    profile_picture: String,
+//    about: String,
+//    products: [String]
+//})
 
 /** 
  * User
@@ -57,6 +65,7 @@ var User = new mongoose.Schema({
         about: String,
         products: [String]
     }
+    // artist_fields: artistFields
 })
 
 module.exports = mongoose.model('userModel', User, "users")

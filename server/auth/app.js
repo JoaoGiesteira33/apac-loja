@@ -8,42 +8,41 @@ var passport = require('passport')
 var LocalStrategy = require('passport-local').Strategy
 
 var mongoose = require('mongoose')
-var mongoDB = process.env.MONGODB_URL
-mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true})
-var db = mongoose.connection
-db.on('error', function(){
-  console.log("Erro de conexão ao MongoDB...")
-})
-db.on('open', function(){
-  console.log("Conexão do Servidor de Autenticação ao MongoDB realizada com sucesso...")
-})
 
-var usersRouter = require('./routes/users');
+var db_url = "mongodb+srv://"+process.env.MONGO_USER+":"+process.env.MONGO_PASSWORD+"@"+process.env.MONGO_CLUSTER+".mongodb.net/?retryWrites=true&w=majority";
+console.log(db_url)
+mongoose.connect(db_url, {dbName: process.env.MONGO_DB_NAME , useNewUrlParser: true , useUnifiedTopology: true});
+var db = mongoose.connection;
+db.on('open', function(){console.log("Conexão do Servidor de Autenticação ao MongoDB realizada com sucesso...")});
+db.on('error', function(){console.log("Erro de conexão ao MongoDB...")});
+
+
+//var usersRouter = require('./routes/users');
 
 var app = express();
 
 app.use(session({
   genid: req => {
     return uuidv4()},
-  secret: 'acordaos-secret-key',
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true
 }))
 
 // Configuração do passport
-var User = require('./models/user')
-passport.use(new LocalStrategy(User.authenticate()))
-passport.serializeUser(User.serializeUser())
-passport.deserializeUser(User.deserializeUser())
+//var User = require('./models/user')
+//passport.use(new LocalStrategy(User.authenticate()))
+//passport.serializeUser(User.serializeUser())
+//passport.deserializeUser(User.deserializeUser())
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use(passport.initialize());
-app.use(passport.session());
+//app.use(passport.initialize());
+//app.use(passport.session());
 
-app.use('/users', usersRouter);
+//app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use('*', function(req, res, next) {

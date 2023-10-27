@@ -8,7 +8,7 @@ var mongoose = require('mongoose');
 // var indexRouter = require('./routes/acordao');
 // var userRouter = require('./routes/user');
 // var sugestaoRouter = require('./routes/sugestao');
-
+var productsRouter = require('./routes/product');
 
 var db_url = "mongodb+srv://"+process.env.MONGO_USER+":"+process.env.MONGO_PASSWORD+"@"+process.env.MONGO_CLUSTER+".mongodb.net/?retryWrites=true&w=majority";
 console.log(db_url)
@@ -32,7 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use('/acordaos', indexRouter);
 //app.use('/sugestoes', sugestaoRouter);
 //app.use('/user', userRouter);
-
+app.use("/product",productsRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
