@@ -1,6 +1,7 @@
 {
     "translation": {
-        "title": "Olá",
-        "description": "Mundo"
-    }
+        "navbar": {
+            "search": "Pesquisar a nossa loja"
+        }
+    }    
 }

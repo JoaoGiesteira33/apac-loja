@@ -1,6 +1,7 @@
 {
     "translation": {
-        "title": "Hello",
-        "description": "World"
+        "navbar": {
+            "search": "Search our store"
+        }
     }
 }

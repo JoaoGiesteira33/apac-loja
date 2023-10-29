@@ -23,6 +23,9 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import FormControl from '@mui/material/FormControl';
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -69,6 +72,8 @@ const collections = [
 ];
 
 export default function Navbar() {
+    const [t, i18n] = useTranslation();
+    const [lng, setLng] = React.useState('pt');
     const [drawer, setDrawer] = React.useState(false);
 
     const toggleDrawer =
@@ -83,6 +88,11 @@ export default function Navbar() {
 
             setDrawer(open);
         };
+
+    const handleChangeLng = (event: SelectChangeEvent) => {
+        setLng(event.target.value);
+        i18n.changeLanguage(event.target.value);
+    };
 
     const list = () => (
         <Box
@@ -161,7 +171,7 @@ export default function Navbar() {
                                 </SearchIconWrapper>
                                 <StyledInputBase
                                     className="grow"
-                                    placeholder="Search…"
+                                    placeholder={t('navbar.search')}
                                     inputProps={{ 'aria-label': 'search' }}
                                 />
                             </Search>
@@ -171,6 +181,18 @@ export default function Navbar() {
                             <ShoppingCartOutlinedIcon
                                 sx={{ fontSize: '2rem' }}
                             />
+                             <FormControl sx={{ fontSize: '2rem' }}>
+                                <Select
+                                    value={lng}
+                                    onChange={handleChangeLng}
+                                    displayEmpty
+                                    inputProps={{ 'aria-label': 'select'}}
+                                    aria-expanded="false"
+                                >
+                                <MenuItem value="pt" aria-expanded="true">PT</MenuItem>
+                                <MenuItem value="en">EN</MenuItem>
+                                </Select>
+                            </FormControl>
                         </div>
                     </div>
                 </Toolbar>
