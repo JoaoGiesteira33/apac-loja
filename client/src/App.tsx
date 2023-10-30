@@ -1,3 +1,4 @@
+import Footer from './components/footer';
 import MainPage from './components/mainPage';
 import Navbar from './components/navbar';
 
@@ -11,6 +12,7 @@ function App() {
                 <Route path="/" element={<MainPage />} />
                 <Route path="/collections/pintura" element={<></>} />
             </Routes>
+            <Footer />
         </div>
     );
 }
