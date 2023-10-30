@@ -6,7 +6,7 @@ function isAdmin(req, res, next) {
     if (myToken) {
         jwt.verify(myToken, "rpcw2023", function (e, payload) { // esconder a chave ???????
             if (e) {
-                res.status(401).render('error', { error: "Acess denied!" })
+                res.status(401).render('error', { error: "Access denied!" })
             }
             else if (payload.level == "admin") {
                 req.user = payload.username
@@ -15,7 +15,7 @@ function isAdmin(req, res, next) {
                 next()
             }
             else {
-                res.status(401).render('error', { error: "Acess denied!" })
+                res.status(401).render('error', { error: "Access denied!" })
             }
         })
     }
@@ -29,7 +29,7 @@ function hasAccess(req, res, next) {
     if (myToken) {
         jwt.verify(myToken, "rpcw2023", function (e, payload) { // esconder a chave ???????
             if (e) {
-                res.status(401).render('error', { error: "Acess denied!" })
+                res.status(401).render('error', { error: "Access denied!" })
             }
             else {
                 req.user = payload.username
@@ -46,6 +46,6 @@ function isMe(req, res, next){
         next()
     }
     else{
-        res.status(401).render('error', { error: "Acess denied!" })
+        res.status(401).render('error', { error: "Access denied!" })
     }
 }

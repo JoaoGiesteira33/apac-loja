@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var controllerProduct = require('../controllers/product');
-var controllerAuth = require('../controllers/acessLevel');
+var controllerAuth = require('../controllers/accessLevel');
 
 // ---------------------------------------------
 

@@ -4,7 +4,7 @@ var path = require('path');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 
-// // TODO - TROCAR OS NOMES DOS ROUTERS
+// ROUTES:
 var userRouter = require('./routes/user');
 var productRouter = require('./routes/product');
 

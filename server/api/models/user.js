@@ -66,7 +66,8 @@ var User = new mongoose.Schema({
         products: [String]
     },
     active_chat_id: [String],
-    
+    tags: [String]
+
     // artist_fields: artistFields
 })
 
