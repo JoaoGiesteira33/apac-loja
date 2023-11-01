@@ -10,7 +10,6 @@ export function MyForm() {
     event.preventDefault();
 
     socket.emit('chat message', value);
-    socket.emit('message', value);
     setValue('');
   }
 
