@@ -5,11 +5,11 @@ import { ConnectionManager } from './components/ConnectionManager';
 import { Events } from "./components/Events";
 import { MyForm } from "./components/MyForm";
 
+import Footer from './components/footer';
 import MainPage from './components/mainPage';
 import Navbar from './components/navbar';
 
 import { Route, Routes } from 'react-router-dom';
-import { on } from 'events';
 
 function App() {
     const [isConnected, setIsConnected] = useState(socket.connected);
@@ -50,6 +50,7 @@ function App() {
                 <Route path="/" element={<MainPage />} />
                 <Route path="/collections/pintura" element={<></>} />
             </Routes>
+            <Footer />
         </div>
     );
 }

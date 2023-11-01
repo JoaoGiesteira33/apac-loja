@@ -26,6 +26,7 @@ import ListItemText from '@mui/material/ListItemText';
 import FormControl from '@mui/material/FormControl';
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -181,15 +182,15 @@ export default function Navbar() {
                             <ShoppingCartOutlinedIcon
                                 sx={{ fontSize: '2rem' }}
                             />
+                            <HelpOutlineIcon sx={{ fontSize: '2rem' }} />
                              <FormControl sx={{ fontSize: '2rem' }}>
                                 <Select
                                     value={lng}
                                     onChange={handleChangeLng}
                                     displayEmpty
                                     inputProps={{ 'aria-label': 'select'}}
-                                    aria-expanded="false"
                                 >
-                                <MenuItem value="pt" aria-expanded="true">PT</MenuItem>
+                                <MenuItem value="pt">PT</MenuItem>
                                 <MenuItem value="en">EN</MenuItem>
                                 </Select>
                             </FormControl>

@@ -2,14 +2,14 @@ var express = require('express');
 var router = express.Router();
 
 var controllerUser = require('../controllers/user');
-var controllerAuth = require('../../auth/controllers/auth');
+var controllerAuth = require('../controllers/accessLevel');
 
 // ---------------------------------------------
 
 
-// GET User Info
-router.get('/user/:id', controllerAuth.hasAccess, controllerAuth.isMe, function (req, res, next) {
-    controllerUser.getUserInfo(req.params.id)
+// GET Client Info
+router.get('/client/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
+    controllerUser.getClientInfo(req.params.id)
         .then((info) => {
             res.jsonp(info);
         })
@@ -18,9 +18,9 @@ router.get('/user/:id', controllerAuth.hasAccess, controllerAuth.isMe, function 
         });
 });
 
-// POST User Info
-router.post('/user', controllerAuth.hasAccess, function (req, res, next) {
-    controllerUser.createUser(req.body)
+// POST Client Info
+router.post('/client', controllerAuth.hasAccess, controllerAuth.hasLevelAdmin, function (req, res, next) {
+    controllerUser.createClient(req.body)
         .then((info) => {
             res.jsonp(info);
         })
@@ -29,9 +29,9 @@ router.post('/user', controllerAuth.hasAccess, function (req, res, next) {
         });
 });
 
-// UPDATE User Info
-router.put('/user/:id', function (req, res, next) {
-    controllerUser.updateUserInfo(req.params.id, req.body)
+// UPDATE Client Info
+router.put('/client/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
+    controllerUser.updateClientInfo(req.params.id, req.body)
         .then((info) => {
             res.jsonp(info);
         })
@@ -40,9 +40,9 @@ router.put('/user/:id', function (req, res, next) {
         });
 });
 
-// DELETE User Info
-router.delete('/user/:id', function (req, res, next) {
-    controllerUser.deleteUser(req.params.id)
+// DELETE Client Info
+router.delete('/client/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
+    controllerUser.deleteClient(req.params.id)
         .then((info) => {
             res.jsonp(info);
         })
@@ -56,7 +56,7 @@ router.delete('/user/:id', function (req, res, next) {
 
 
 // GET Artist Info
-router.get('/artist/:id', function (req, res, next) {
+router.get('/artist/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
     controllerUser.getArtistInfo(req.params.id)
         .then((info) => {
             res.jsonp(info);
@@ -67,7 +67,7 @@ router.get('/artist/:id', function (req, res, next) {
 });
 
 // POST Artist Info
-router.post('/artist', function (req, res, next) {
+router.post('/artist', controllerAuth.hasAccess, controllerAuth.hasLevelAdmin, function (req, res, next) {
     controllerUser.createArtist(req.body)
         .then((info) => {
             res.jsonp(info);
@@ -78,7 +78,7 @@ router.post('/artist', function (req, res, next) {
 });
 
 // UPDATE Artist Info
-router.put('/artist/:id', function (req, res, next) {
+router.put('/artist/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
     controllerUser.updateArtistInfo(req.params.id, req.body)
         .then((info) => {
             res.jsonp(info);
@@ -89,7 +89,7 @@ router.put('/artist/:id', function (req, res, next) {
 });
 
 // DELETE Artist Info
-router.delete('/artist/:id', function (req, res, next) {
+router.delete('/artist/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
     controllerUser.deleteArtist(req.params.id)
         .then((info) => {
             res.jsonp(info);
@@ -101,4 +101,6 @@ router.delete('/artist/:id', function (req, res, next) {
 
 
 // ---------------------------------------------
+
+
 

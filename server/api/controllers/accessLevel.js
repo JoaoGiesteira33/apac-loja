@@ -4,7 +4,7 @@ var jwt = require('jsonwebtoken');
 function isAdmin(req, res, next) {
     var myToken = req.query.token || req.body.token || req.cookies.token
     if (myToken) {
-        jwt.verify(myToken, "rpcw2023", function (e, payload) { // esconder a chave ???????
+        jwt.verify(myToken, process.env.AUTH_KEY, function (e, payload) {
             if (e) {
                 res.status(401).render('error', { error: "Access denied!" })
             }
@@ -15,7 +15,7 @@ function isAdmin(req, res, next) {
                 next()
             }
             else {
-                res.status(401).render('error', { error: "Access denied!" })
+                res.status(401).render('error', { error: "Access denied, not admin!" })
             }
         })
     }
@@ -27,7 +27,7 @@ function isAdmin(req, res, next) {
 function hasAccess(req, res, next) {
     var myToken = req.query.token || req.body.token || req.cookies.token
     if (myToken) {
-        jwt.verify(myToken, "rpcw2023", function (e, payload) { // esconder a chave ???????
+        jwt.verify(myToken, process.env.AUTH_KEY, function (e, payload) {
             if (e) {
                 res.status(401).render('error', { error: "Access denied!" })
             }
@@ -41,8 +41,17 @@ function hasAccess(req, res, next) {
     }
 }
 
-function isMe(req, res, next){
-    if(req.params.id == req.user){
+function isMeOrAdmin(req, res, next){ // hasAccess must be called before this
+    if(req.params.id == req.user || req.level == "admin"){
+        next()
+    }
+    else{
+        res.status(401).render('error', { error: "Access denied!" })
+    }
+}
+
+function hasLevelAdmin(req, res, next){
+    if(req.level == "admin"){
         next()
     }
     else{

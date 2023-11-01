@@ -4,11 +4,10 @@ var path = require('path');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 
-// // TODO - TROCAR OS NOMES DOS ROUTERS
-// var indexRouter = require('./routes/acordao');
-// var userRouter = require('./routes/user');
-// var sugestaoRouter = require('./routes/sugestao');
-var productsRouter = require('./routes/product');
+// ROUTES:
+var userRouter = require('./routes/user');
+var productRouter = require('./routes/product');
+
 
 var db_url = "mongodb+srv://"+process.env.MONGO_USER+":"+process.env.MONGO_PASSWORD+"@"+process.env.MONGO_CLUSTER+".mongodb.net/?retryWrites=true&w=majority";
 console.log(db_url)
@@ -29,10 +28,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // TODO - ALTERAR PARA OS NOMES DEFINIDOS ACIMA
-//app.use('/acordaos', indexRouter);
-//app.use('/sugestoes', sugestaoRouter);
-//app.use('/user', userRouter);
-app.use("/product",productsRouter)
+app.use('/product', productRouter);
+app.use('/user', userRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
