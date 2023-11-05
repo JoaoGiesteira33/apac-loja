@@ -8,6 +8,10 @@ import Navbar from './components/navbar';
 
 import { Route, Routes } from 'react-router-dom';
 
+import { BasicSpeedDial } from './components/BasicSpeedDial';
+
+
+
 function App() {
     const [userID, setUserId] = useState('');
 
@@ -39,12 +43,16 @@ function App() {
     return (
         <div>
             <Navbar />
-            <Chat userID={userID} />
+            {/*<Chat userID={userID} />*/}
             <Routes>
                 <Route path="/" element={<MainPage />} />
                 <Route path="/collections/pintura" element={<></>} />
             </Routes>
+
+            <BasicSpeedDial />
+            
             <Footer />
+            
         </div>
     );
 }
