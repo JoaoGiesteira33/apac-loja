@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { socket } from './socket';
-import { ConnectionState } from './components/ConnectionState';
-import { ConnectionManager } from './components/ConnectionManager';
-import { Events } from "./components/Events";
-import { MyForm } from "./components/MyForm";
 
 import Footer from './components/footer';
 import MainPage from './components/mainPage';
 import Navbar from './components/navbar';
 
 import { Route, Routes } from 'react-router-dom';
+
+import { BasicSpeedDial } from './components/BasicSpeedDial';
+
+
 
 function App() {
     const [isConnected, setIsConnected] = useState(socket.connected);
@@ -42,15 +42,23 @@ function App() {
     return (
         <div>
             <Navbar />
-            <ConnectionState isConnected={ isConnected } />
+
+            {/*             <ConnectionState isConnected={ isConnected } />
             <Events events={ chatMessages } />
             <ConnectionManager />
-            <MyForm />
+            <ChatAvatars />
+            <MyForm /> */}
+
+            
             <Routes>
                 <Route path="/" element={<MainPage />} />
                 <Route path="/collections/pintura" element={<></>} />
             </Routes>
+
+            <BasicSpeedDial />
+            
             <Footer />
+            
         </div>
     );
 }
