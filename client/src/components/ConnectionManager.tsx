@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 
 export function ConnectionManager() {
   function connect() {
+    socket.auth = { username : 'teste' };
     socket.connect();
   }
 

@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
 import { socket } from './socket';
-import { ConnectionState } from './components/ConnectionState';
-import { ConnectionManager } from './components/ConnectionManager';
-import { Events } from "./components/Events";
-import { MyForm } from "./components/MyForm";
+import Chat from './components/Chat';
 
 import Footer from './components/footer';
 import MainPage from './components/mainPage';
@@ -12,40 +9,37 @@ import Navbar from './components/navbar';
 import { Route, Routes } from 'react-router-dom';
 
 function App() {
-    const [isConnected, setIsConnected] = useState(socket.connected);
-    const [chatMessages, setChatMessages] = useState<Array<any>>([]);
+    const [userID, setUserId] = useState('');
 
     useEffect(() => {
-        function onConnect() {
-            setIsConnected(true);
+        const sessionID = localStorage.getItem('sessionID');
+        
+        if (sessionID) {
+          socket.auth = { sessionID };
+          socket.connect();
         }
 
-        function onDisconnect() {
-            setIsConnected(false);
-        }
+        socket.on('session', ({ sessionID, userID }) => {
+          socket.auth = { sessionID };
+          localStorage.setItem('sessionID', sessionID);
+          setUserId(userID);
+        });
 
-        function onChatMessage(value: any) {
-            setChatMessages(previous => [...previous, value]);
-        }
+        socket.on('connect_error', (err) => {
+          if (err.message === 'invalid username') {
 
-        socket.on('connect', onConnect);
-        socket.on('disconnect', onDisconnect);
-        socket.on('chat message', onChatMessage);        
+          }
+        });       
     
         return () => {
-          socket.off('connect', onConnect);
-          socket.off('disconnect', onDisconnect);
-          socket.off('chat message', onChatMessage);
+          socket.off('connect_error');
         };
     }, []);
     
     return (
         <div>
             <Navbar />
-            <ConnectionState isConnected={ isConnected } />
-            <Events events={ chatMessages } />
-            <ConnectionManager />
-            <MyForm />
+            <Chat userID={userID} />
             <Routes>
                 <Route path="/" element={<MainPage />} />
                 <Route path="/collections/pintura" element={<></>} />

@@ -5,12 +5,18 @@ import { Button } from '@mui/material';
 
 export function MyForm() {
   const [value, setValue] = useState('');
-
+  const [counter, setCounter] = useState(0);
   function onSubmit(event : any) {
     event.preventDefault();
 
-    socket.emit('chat message', value);
-    setValue('');
+    if (value) {
+      // compute a unique offset
+
+      const clientOffset = `${socket.id}-${counter+1}`;
+      socket.emit('chat message', value, clientOffset);
+      setValue('');
+      setCounter(counter+1);
+    }
   }
 
   return (
