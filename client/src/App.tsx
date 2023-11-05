@@ -9,6 +9,7 @@ import Navbar from './components/navbar';
 import { Route, Routes } from 'react-router-dom';
 
 import { BasicSpeedDial } from './components/BasicSpeedDial';
+import { ChatWidget } from './components/ChatWidget';
 
 
 
@@ -49,10 +50,11 @@ function App() {
                 <Route path="/collections/pintura" element={<></>} />
             </Routes>
 
-            <BasicSpeedDial />
             
             <Footer />
             
+            <ChatWidget />
+
         </div>
     );
 }
