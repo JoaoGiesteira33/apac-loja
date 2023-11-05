@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { socket } from './socket';
-import Chat from './components/Chat';
+import Chat from './components/experinecia_chat/Chat';
 
 import Footer from './components/footer';
 import MainPage from './components/mainPage';

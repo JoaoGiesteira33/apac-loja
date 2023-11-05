@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import {socket} from '../socket';
+import {socket} from '../../socket';
 import MessagePanel from './MessagePanel';
 import { Button } from '@mui/material';
 import { ConnectionManager } from './ConnectionManager';

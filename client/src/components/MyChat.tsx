@@ -1,8 +1,5 @@
 import { Box } from '@mui/material';
 
-import { ConnectionState } from './ConnectionState';
-import { Events } from './Events';
-import { ConnectionManager } from './ConnectionManager';
 import { ChatAvatars } from './ChatAvatars';
 import { Toast } from './Toast';
 import { MyForm } from './MyForm';
@@ -20,9 +17,6 @@ export function MyChat() {
             }}>
 
                 <>
-                    {/* <ConnectionState isConnected={ isConnected } /> */}
-                    {/* <Events events={ chatMessages } /> */}
-                    {/* <ConnectionManager /> */}
                     <ChatAvatars />
                     <Toast />
                     <MyForm />

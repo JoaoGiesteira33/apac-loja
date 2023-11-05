@@ -1,4 +1,4 @@
-import { socket } from '../socket';
+import { socket } from '../../socket';
 import Button from '@mui/material/Button';
 
 export function ConnectionManager() {
@@ -13,6 +13,7 @@ export function ConnectionManager() {
 
   return (
     <>
+      <p>State: { '' + socket.connected }</p>
       <Button variant="contained" onClick={ connect } sx={{margin: 2}}>Connect</Button>
       <Button variant="outlined" onClick={ disconnect }>Disconnect</Button>
     </>
