@@ -25,12 +25,8 @@
     "react-dom": "^18.2.0",
     "react-i18next": "^13.3.1",
     "react-router-dom": "^6.17.0",
-<<<<<<< HEAD
     "socket.io-client": "^4.7.2",
     "three": "^0.158.0"
-=======
-    "socket.io-client": "^4.7.2"
->>>>>>> 99c6c9a68beef0fe3b4190ab4761518176f0ed1e
   },
   "devDependencies": {
     "@types/node": "^20.8.10",

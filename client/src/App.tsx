@@ -13,12 +13,6 @@ import { BasicSpeedDial } from './components/BasicSpeedDial';
 import { ChatWidget } from './components/ChatWidget';
 
 
-
-import { BasicSpeedDial } from './components/BasicSpeedDial';
-import { ChatWidget } from './components/ChatWidget';
-
-
-
 function App() {
     const [userID, setUserId] = useState('');
 
@@ -55,11 +49,8 @@ function App() {
                 <Route path="/" element={<MainPage />} />
                 <Route path="/collections/pintura" element={<></>} />
             </Routes>
-<<<<<<< HEAD
             
             <CanvasModel />
-=======
->>>>>>> 99c6c9a68beef0fe3b4190ab4761518176f0ed1e
 
             
             <Footer />
