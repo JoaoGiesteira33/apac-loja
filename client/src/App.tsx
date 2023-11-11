@@ -1,62 +1,95 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { socket } from './socket';
-import Chat from './components/experinecia_chat/Chat';
 
 import Footer from './components/footer';
-import MainPage from './components/mainPage';
 import Navbar from './components/navbar';
 
 import { Route, Routes } from 'react-router-dom';
 import { CanvasModel } from './components/canvasModel';
+import Product from './components/product';
 
-import { BasicSpeedDial } from './components/BasicSpeedDial';
-import { ChatWidget } from './components/ChatWidget';
-
+// dynamically load components as they are needed
+const HomePage = React.lazy(() => import('./pages/Home'));
 
 function App() {
     const [userID, setUserId] = useState('');
 
     useEffect(() => {
         const sessionID = localStorage.getItem('sessionID');
-        
+
         if (sessionID) {
-          socket.auth = { sessionID };
-          socket.connect();
+            socket.auth = { sessionID };
+            socket.connect();
         }
 
         socket.on('session', ({ sessionID, userID }) => {
-          socket.auth = { sessionID };
-          localStorage.setItem('sessionID', sessionID);
-          setUserId(userID);
+            socket.auth = { sessionID };
+            localStorage.setItem('sessionID', sessionID);
+            setUserId(userID);
         });
 
         socket.on('connect_error', (err) => {
-          if (err.message === 'invalid username') {
+            if (err.message === 'invalid username') {
+            }
+        });
 
-          }
-        });       
-    
         return () => {
-          socket.off('connect_error');
+            socket.off('connect_error');
         };
     }, []);
-    
+
+    // All routes for the app
+    const routes = [
+        {
+            path: '/',
+            element: <HomePage />,
+            requireAuth: false,
+        },
+        {
+            path: '/collections/pintura',
+            element: <Product />,
+            requireAuth: false,
+        },
+        {
+          path: '/3dmodel',
+          element: <CanvasModel />,
+          requireAuth: false,
+        }
+
+    ];
+
     return (
         <div>
             <Navbar />
             {/*<Chat userID={userID} />*/}
-            <Routes>
-                <Route path="/" element={<MainPage />} />
-                <Route path="/collections/pintura" element={<></>} />
-            </Routes>
-            
-            <CanvasModel />
+            {/*<ThemeProvider theme={{}}>*/}
+            <Suspense fallback={<p>Loading...</p>}>
+                <Routes>
+                    {/* <Suspense fallback={<Loading />}> *criar este componente depois* */}
+                    {routes.map((route, index) => (
+                        <Route
+                            key={index}
+                            path={route.path}
+                            element=
+                            {
+                                /*
+                          route.requireAuth ? (
+                            <RequireAuth loginPath="/login">
+                              {route.element}
+                            </RequireAuth>
+                          ) : (   *Implementar depois o componente RequireAuth na Autenticação*  */
+                                route.element
+                                /*)*/
+                            }
+                        ></Route>
+                    ))}
+                </Routes>
+            </Suspense>
 
-            
             <Footer />
-            
-            <ChatWidget />
+            {/*</ThemeProvider>*/}
 
+            {/*<ChatWidget />*/}
         </div>
     );
 }
