@@ -10,6 +10,7 @@ import Product from './components/product';
 
 // dynamically load components as they are needed
 const HomePage = React.lazy(() => import('./pages/Home'));
+const ProductPage = React.lazy(() => import('./pages/Product'));
 
 function App() {
     const [userID, setUserId] = useState('');
@@ -53,6 +54,11 @@ function App() {
         {
             path: '/3dmodel',
             element: <CanvasModel />,
+            requireAuth: false,
+        },
+        {
+            path: '/product',
+            element: <ProductPage />,
             requireAuth: false,
         }
 
