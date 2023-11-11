@@ -15,7 +15,7 @@ const Footer = () => {
                     flexGrow: 1, 
                     backgroundColor: "#f2f2f2"
                     }}>
-                    <Grid container spacing={{ xs:1 ,sm: 2, md: 3 }}>
+                    <Grid container rowSpacing={{xs:1, sm:2, md:3}} >
                         <Grid xs={12} sm={12} md={4} display="flex" justifyContent="center" alignItems="center">
                             <List>
                                 <h3>Sobre APAC</h3>
@@ -36,11 +36,11 @@ const Footer = () => {
                                 </ListItem>
                             </List>
                         </Grid>
-                        <Hidden mdUp>
+                        {/* <Hidden mdUp>
                         <Grid xs={12} sm={12} md={4}>
                             <Divider variant="middle" />
                         </Grid>
-                        </Hidden>
+                        </Hidden> */}
                         <Grid xs={12} sm={12} md={4} display="flex" justifyContent="center" alignItems="center">
                         
                             <List>
@@ -62,11 +62,11 @@ const Footer = () => {
                                 </ListItem>
                             </List>
                         </Grid>
-                        <Hidden mdUp>
+                        {/* <Hidden mdUp>
                             <Grid xs={12} sm={12} >
                                 <Divider variant="middle" />
                             </Grid>
-                        </Hidden>
+                        </Hidden> */}
                         <Grid xs={12} sm={12} md={4} display="flex" justifyContent="center" alignItems="center">
                             <List>
                                 <h3>Legal</h3>

@@ -51,9 +51,9 @@ function App() {
             requireAuth: false,
         },
         {
-          path: '/3dmodel',
-          element: <CanvasModel />,
-          requireAuth: false,
+            path: '/3dmodel',
+            element: <CanvasModel />,
+            requireAuth: false,
         }
 
     ];
