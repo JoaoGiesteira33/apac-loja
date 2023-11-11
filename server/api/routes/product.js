@@ -50,3 +50,4 @@ router.delete('/:id', controllerAuth.isAdmin, function (req, res, next) {
         });
 });
 
+module.exports = router;

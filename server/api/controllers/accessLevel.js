@@ -58,3 +58,5 @@ function hasLevelAdmin(req, res, next){
         res.status(401).render('error', { error: "Access denied!" })
     }
 }
+
+module.exports = { isAdmin, hasAccess, isMeOrAdmin, hasLevelAdmin }
