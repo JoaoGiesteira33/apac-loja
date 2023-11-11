@@ -1,21 +1,5 @@
 var mongoose = require('mongoose')
 
-/**
- * Purchase history associated with the client
- * @typedef {Object} Purchase
- * @property {String} product_id - Product id
- * @property {Date} date - Purchase date
- */
-var Purchase = new mongoose.Schema({
-    product_id: {
-        type: String,
-        required: true
-    },
-    date: {
-        type: Date,
-        default: Date.now
-    }
-});
 
 /**
  * Demographics associated with the client/seller
@@ -81,14 +65,28 @@ var ClientFields = new mongoose.Schema({
         type: Statistics,
         required: true
     },
-    purchases: {
-        type: [Purchase],
+    /**
+    events: {
+        type: [Event],
         default: []
     },
-    events: {
-        type: [Purchase],
+    */
+    search_history: {
+        type:[String],
         default: []
-    }
+    }, // struct Purchase ???
+    favorites: {
+        type:[String],
+        default: []
+    }, // struct Purchase ???
+    cart: {
+        type:[String],
+        default: []
+    }, // struct Purchase ???
+    interests: {
+        type:[String],
+        default: []
+    } // user set his interests
 });
 
 
@@ -99,13 +97,6 @@ var ClientFields = new mongoose.Schema({
  * @property {String} role - User role(seller/client/admin)
  * @property {Object} client_fields - Client fields
  * @property {Object} seller_fields - Seller fields
- * @property {Object} client_fields.demographics - Client demographics
- * @property {Object} client_fields.purchases - Client purchase history
- * @property {Object} client_fields.events - Client events that they are interested in
- * @property {Object} seller_fields.demographics - Seller demographics
- * @property {Object} seller_fields.profile_picture - Seller profile picture url
- * @property {Object} seller_fields.about - Seller about section
- * @property {Object} seller_fields.products - Seller products 
 */
 var User = new mongoose.Schema({
     email: {
