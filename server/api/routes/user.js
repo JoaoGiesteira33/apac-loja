@@ -9,7 +9,7 @@ var controllerAuth = require('../controllers/accessLevel');
 
 // GET Client Info
 router.get('/client/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
-    controllerUser.getClientInfo(req.params.id)
+    controllerUser.getUserInfo(req.params.id)
         .then((info) => {
             res.jsonp(info);
         })
@@ -20,7 +20,7 @@ router.get('/client/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, 
 
 // POST Client Info
 router.post('/client', controllerAuth.hasAccess, controllerAuth.hasLevelAdmin, function (req, res, next) {
-    controllerUser.createClient(req.body)
+    controllerUser.createUser(req.body)
         .then((info) => {
             res.jsonp(info);
         })
@@ -31,7 +31,7 @@ router.post('/client', controllerAuth.hasAccess, controllerAuth.hasLevelAdmin, f
 
 // UPDATE Client Info
 router.put('/client/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
-    controllerUser.updateClientInfo(req.params.id, req.body)
+    controllerUser.updateUserInfo(req.params.id, req.body)
         .then((info) => {
             res.jsonp(info);
         })
@@ -42,7 +42,7 @@ router.put('/client/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, 
 
 // DELETE Client Info
 router.delete('/client/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
-    controllerUser.deleteClient(req.params.id)
+    controllerUser.deleteUser(req.params.id)
         .then((info) => {
             res.jsonp(info);
         })
@@ -57,7 +57,7 @@ router.delete('/client/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmi
 
 // GET Artist Info
 router.get('/artist/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
-    controllerUser.getArtistInfo(req.params.id)
+    controllerUser.getUserInfo(req.params.id)
         .then((info) => {
             res.jsonp(info);
         })
@@ -68,7 +68,7 @@ router.get('/artist/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, 
 
 // POST Artist Info
 router.post('/artist', controllerAuth.hasAccess, controllerAuth.hasLevelAdmin, function (req, res, next) {
-    controllerUser.createArtist(req.body)
+    controllerUser.createUser(req.body)
         .then((info) => {
             res.jsonp(info);
         })
@@ -79,7 +79,7 @@ router.post('/artist', controllerAuth.hasAccess, controllerAuth.hasLevelAdmin, f
 
 // UPDATE Artist Info
 router.put('/artist/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
-    controllerUser.updateArtistInfo(req.params.id, req.body)
+    controllerUser.updateUserInfo(req.params.id, req.body)
         .then((info) => {
             res.jsonp(info);
         })
@@ -90,7 +90,7 @@ router.put('/artist/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, 
 
 // DELETE Artist Info
 router.delete('/artist/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
-    controllerUser.deleteArtist(req.params.id)
+    controllerUser.deleteUser(req.params.id)
         .then((info) => {
             res.jsonp(info);
         })
@@ -103,4 +103,4 @@ router.delete('/artist/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmi
 // ---------------------------------------------
 
 
-
+module.exports = router;
