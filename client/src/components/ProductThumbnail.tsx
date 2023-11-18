@@ -1,19 +1,27 @@
-export default function ProductThumbnail2({ product }) {
+import { Divider } from '@mui/material';
+import { ProductType } from '../types/product';
+
+export default function ProductThumbnail(props: { product: ProductType }) {
     return (
-        <div className="flex flex-col bg-white rounded shadow overflow-hidden transform transition-transform duration-200 hover:scale-105">
-            <div className="h-48 flex-shrink-0">
+        <div className="flex bg-[#EFF0F6] flex-col rounded shadow overflow-hidden transform transition-transform duration-200 hover:scale-105">
+            <div className="h-48 flex justify-center p-4 rounded-lg flex-shrink-0">
                 <img
-                    className="w-full h-full object-cover"
-                    src={product.image}
-                    alt={product.title}
+                    className="w-auto h-full border-2 border-[#a0a3bd] object-cover"
+                    src={props.product.thumbnailPhoto}
+                    alt={props.product.title}
                 />
             </div>
+            <Divider variant="middle" />
             <div className="p-4 flex-1">
                 <h3 className="text-lg font-semibold leading-6">
-                    {product.title}
+                    {props.product.title}
                 </h3>
-                <h4 className=" font-light leading-6">{product.artist}</h4>
-                <h3 className="mt-4 text-lg font-semibold">{product.price}€</h3>
+                <h4 className=" font-light leading-6">
+                    {props.product.author}
+                </h4>
+                <h3 className="mt-4 text-lg font-semibold">
+                    {props.product.price}€
+                </h3>
             </div>
         </div>
     );
