@@ -85,14 +85,12 @@ export default function ProductCarousel(props: {
 
     return (
         <>
-            <h2 className='text-2xl'>{props.title}</h2>
+            <h2 className="text-2xl">{props.title}</h2>
             <Carousel
-                className=""
                 responsive={responsive}
-                draggable={true}
+                draggable={false}
                 partialVisible={true}
                 keyBoardControl={true}
-                removeArrowOnDeviceType={['tablet', 'mobile']}
                 deviceType={props.deviceType}
                 containerClass="my-container-class"
                 itemClass="my-item-class">
