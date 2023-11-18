@@ -7,7 +7,7 @@ var mongoose = require('mongoose');
 // ROUTES:
 var userRouter = require('./routes/user');
 var productRouter = require('./routes/product');
-
+var paymentSerive = require('./routes/paymentRoutes');
 
 var db_url = "mongodb+srv://"+process.env.MONGO_USER+":"+process.env.MONGO_PASSWORD+"@"+process.env.MONGO_CLUSTER+".mongodb.net/?retryWrites=true&w=majority";
 console.log(db_url)
@@ -30,7 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // TODO - ALTERAR PARA OS NOMES DEFINIDOS ACIMA
 app.use('/product', productRouter);
 app.use('/user', userRouter);
-
+app.use('/payment', paymentSerive)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
