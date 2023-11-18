@@ -10,20 +10,20 @@ var Price = new mongoose.Schema({
         default: "EUR",
         enum: ["EUR", "USD", "GBP"] // DISCUSS
     }
-})
+}, {_id: false});
 
 var Dimensions = new mongoose.Schema({
     width: Number,
     height: Number,
     depth: Number
-})
+}, {_id: false});
 
 var PieceInfo = new mongoose.Schema({
     technique: String,
     material: String,
     dimensions: Dimensions,
     year: Number
-})
+}, {_id: false});
 
 var BookInfo = new mongoose.Schema({
     publisher: String,
@@ -32,7 +32,7 @@ var BookInfo = new mongoose.Schema({
         type: String,
         required: true
     },
-})
+}, {_id: false});
 
 var Product = new mongoose.Schema({
     title: {

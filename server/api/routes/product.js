@@ -7,7 +7,7 @@ var controllerAuth = require('../controllers/accessLevel');
 // ---------------------------------------------
 
 // GET Product Info
-router.get('/:id', controllerAuth.hasAccess, function (req, res, next) {
+router.get('/:id', /*controllerAuth.hasAccess,*/ function (req, res, next) {
     controllerProduct.getProductInfo(req.params.id)
         .then((info) => {
             res.jsonp(info);
@@ -18,7 +18,7 @@ router.get('/:id', controllerAuth.hasAccess, function (req, res, next) {
 });
 
 // POST Product Info
-router.post('/', controllerAuth.isAdmin, function (req, res, next) {
+router.post('/', /*controllerAuth.isAdmin,*/ function (req, res, next) {
     controllerProduct.createProduct(req.body)
         .then((info) => {
             res.jsonp(info);
@@ -29,7 +29,7 @@ router.post('/', controllerAuth.isAdmin, function (req, res, next) {
 });
 
 // UPDATE Product Info
-router.put('/:id', controllerAuth.isAdmin, function (req, res, next) {
+router.put('/:id', /*controllerAuth.isAdmin,*/ function (req, res, next) {
     controllerProduct.updateProductInfo(req.params.id, req.body)
         .then((info) => {
             res.jsonp(info);
@@ -40,7 +40,7 @@ router.put('/:id', controllerAuth.isAdmin, function (req, res, next) {
 });
 
 // DELETE Product Info
-router.delete('/:id', controllerAuth.isAdmin, function (req, res, next) {
+router.delete('/:id', /*controllerAuth.isAdmin,*/ function (req, res, next) {
     controllerProduct.deleteProduct(req.params.id)
         .then((info) => {
             res.jsonp(info);

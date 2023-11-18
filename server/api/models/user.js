@@ -23,7 +23,7 @@ var Demographics = new mongoose.Schema({
         required: true
     },
     phone: String
-});
+}, {_id: false});
 
 /**
  * Statistics associated with the client/seller
@@ -32,7 +32,7 @@ var Demographics = new mongoose.Schema({
  */
 var Statistics = new mongoose.Schema({
     lastLogin: Date
-});
+}, {_id: false});
 
 
 var SellerFields = new mongoose.Schema({
@@ -54,7 +54,7 @@ var SellerFields = new mongoose.Schema({
         type: String,
         enum: ['artist', 'bookseller']
     }
-});
+}, {_id: false});
 
 var ClientFields = new mongoose.Schema({
     demographics: {
@@ -87,7 +87,7 @@ var ClientFields = new mongoose.Schema({
         type:[String],
         default: []
     } // user set his interests
-});
+}, {_id: false});
 
 
 /** 
@@ -105,7 +105,7 @@ var User = new mongoose.Schema({
         unique: true
     },
     role: {
-        type: [String],
+        type: String,
         required: true,
         enum: ['client', 'seller', 'admin']
     },

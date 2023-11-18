@@ -8,7 +8,7 @@ var controllerAuth = require('../controllers/accessLevel');
 
 
 // GET Client Info
-router.get('/client/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
+router.get('/client/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin,*/ function (req, res, next) {
     controllerUser.getUserInfo(req.params.id)
         .then((info) => {
             res.jsonp(info);
@@ -19,7 +19,7 @@ router.get('/client/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, 
 });
 
 // POST Client Info
-router.post('/client', controllerAuth.hasAccess, controllerAuth.hasLevelAdmin, function (req, res, next) {
+router.post('/client', /*controllerAuth.hasAccess, controllerAuth.hasLevelAdmin,*/ function (req, res, next) {
     controllerUser.createUser(req.body)
         .then((info) => {
             res.jsonp(info);
@@ -30,7 +30,7 @@ router.post('/client', controllerAuth.hasAccess, controllerAuth.hasLevelAdmin, f
 });
 
 // UPDATE Client Info
-router.put('/client/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
+router.put('/client/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin,*/ function (req, res, next) {
     controllerUser.updateUserInfo(req.params.id, req.body)
         .then((info) => {
             res.jsonp(info);
@@ -41,7 +41,7 @@ router.put('/client/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, 
 });
 
 // DELETE Client Info
-router.delete('/client/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
+router.delete('/client/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin,*/ function (req, res, next) {
     controllerUser.deleteUser(req.params.id)
         .then((info) => {
             res.jsonp(info);
@@ -56,7 +56,7 @@ router.delete('/client/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmi
 
 
 // GET Artist Info
-router.get('/artist/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
+router.get('/artist/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin,*/ function (req, res, next) {
     controllerUser.getUserInfo(req.params.id)
         .then((info) => {
             res.jsonp(info);
@@ -67,7 +67,7 @@ router.get('/artist/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, 
 });
 
 // POST Artist Info
-router.post('/artist', controllerAuth.hasAccess, controllerAuth.hasLevelAdmin, function (req, res, next) {
+router.post('/artist', /*controllerAuth.hasAccess, controllerAuth.hasLevelAdmin,*/ function (req, res, next) {
     controllerUser.createUser(req.body)
         .then((info) => {
             res.jsonp(info);
@@ -78,7 +78,7 @@ router.post('/artist', controllerAuth.hasAccess, controllerAuth.hasLevelAdmin, f
 });
 
 // UPDATE Artist Info
-router.put('/artist/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
+router.put('/artist/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin,*/ function (req, res, next) {
     controllerUser.updateUserInfo(req.params.id, req.body)
         .then((info) => {
             res.jsonp(info);
@@ -89,7 +89,7 @@ router.put('/artist/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, 
 });
 
 // DELETE Artist Info
-router.delete('/artist/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmin, function (req, res, next) {
+router.delete('/artist/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin,*/ function (req, res, next) {
     controllerUser.deleteUser(req.params.id)
         .then((info) => {
             res.jsonp(info);
@@ -100,7 +100,17 @@ router.delete('/artist/:id', controllerAuth.hasAccess, controllerAuth.isMeOrAdmi
 });
 
 
-// ---------------------------------------------
+// ----------------------TEST-----------------------
+
+router.get('/client', /*controllerAuth.hasAccess, controllerAuth.hasLevelAdmin,*/ function (req, res, next) {
+    controllerUser.getAllUsers()
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((erro) => {
+            res.jsonp(erro);
+        });
+});
 
 
 module.exports = router;
