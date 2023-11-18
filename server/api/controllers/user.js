@@ -40,3 +40,14 @@ module.exports.deleteUser = function (id) {
             return erro;
         });
 };
+
+//      - getAllUsers
+module.exports.getAllUsers = function () {
+    return User.find()
+        .then((info) => {
+            return info;
+        })
+        .catch((erro) => {
+            return erro;
+        });
+};
