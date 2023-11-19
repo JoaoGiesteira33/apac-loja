@@ -20,7 +20,7 @@ export default function ProductThumbnail(props: { product: ProductType }) {
                     {props.product.author}
                 </h4>
                 <h3 className="mt-4 text-lg font-semibold">
-                    {props.product.price}€
+                    {props.product.price.amount['EUR']}€
                 </h3>
             </div>
         </div>
