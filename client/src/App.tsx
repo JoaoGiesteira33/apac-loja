@@ -6,7 +6,7 @@ import Navbar from './components/navbar';
 
 import { Route, Routes } from 'react-router-dom';
 import { CanvasModel } from './components/canvasModel';
-import Product from './components/product';
+import Product from './components/Product/ProductDetails';
 
 // dynamically load components as they are needed
 const HomePage = React.lazy(() => import('./pages/Home'));
