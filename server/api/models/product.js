@@ -22,12 +22,20 @@ var PieceInfo = new mongoose.Schema({
     technique: String,
     material: String,
     dimensions: Dimensions,
-    year: Number
+    year: Number,
+    state: {
+        type: String,
+        enum: ["submitted","rejected","available","unavailable"]
+    }
 }, {_id: false});
 
 var BookInfo = new mongoose.Schema({
     publisher: String,
     genre: String,
+    stock: {
+        type: Number,
+        default: 1
+    },
     isbn: {
         type: String,
         required: true
@@ -51,10 +59,6 @@ var Product = new mongoose.Schema({
     price: {
         type: Price,
         required: true
-    },
-    stock: {
-        type: Number,
-        default: 1
     },
     product_type: {
         type: String,

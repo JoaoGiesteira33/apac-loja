@@ -111,8 +111,14 @@ var User = new mongoose.Schema({
     },
     client_fields: ClientFields,
     seller_fields: SellerFields,
-    active_chat_id: [String],
-    tags: [String]
+    active_chat_id: {
+        type:[String],
+        default: []
+    },
+    tags: {
+        type:[String],
+        default: []
+    }
 })
 
 module.exports = mongoose.model('userModel', User, "users")

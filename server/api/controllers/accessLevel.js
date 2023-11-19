@@ -6,7 +6,7 @@ function isAdmin(req, res, next) {
     if (myToken) {
         jwt.verify(myToken, process.env.AUTH_KEY, function (e, payload) {
             if (e) {
-                res.status(401).render('error', { error: "Access denied!" })
+                res.status(401).jsonp(e)
             }
             else if (payload.level == "admin") {
                 req.user = payload.username
@@ -15,12 +15,12 @@ function isAdmin(req, res, next) {
                 next()
             }
             else {
-                res.status(401).render('error', { error: "Access denied, not admin!" })
+                res.status(401).jsonp(e)
             }
         })
     }
     else {
-        res.status(401).render('error', { error: "Token not found!" })
+        res.status(401).jsonp(e)
     }
 }
 
@@ -29,7 +29,7 @@ function hasAccess(req, res, next) {
     if (myToken) {
         jwt.verify(myToken, process.env.AUTH_KEY, function (e, payload) {
             if (e) {
-                res.status(401).render('error', { error: "Access denied!" })
+                res.status(401).jsonp(e)
             }
             else {
                 req.user = payload.username
@@ -46,7 +46,7 @@ function isMeOrAdmin(req, res, next){ // hasAccess must be called before this
         next()
     }
     else{
-        res.status(401).render('error', { error: "Access denied!" })
+        res.status(401).jsonp(e)
     }
 }
 
@@ -55,7 +55,7 @@ function hasLevelAdmin(req, res, next){
         next()
     }
     else{
-        res.status(401).render('error', { error: "Access denied!" })
+        res.status(401).jsonp(e)
     }
 }
 
