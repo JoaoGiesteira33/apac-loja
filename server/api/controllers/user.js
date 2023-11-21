@@ -1,4 +1,4 @@
-var User = require('../models/user');
+const User = require('../models/user');
 // METHODS:
 //      - getUserInfo
 module.exports.getUserInfo = function (id) {

@@ -1,6 +1,6 @@
-var mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
-var Price = new mongoose.Schema({
+const Price = new mongoose.Schema({
     price: {
         type: Number,
         required: true
@@ -12,13 +12,13 @@ var Price = new mongoose.Schema({
     }
 }, {_id: false});
 
-var Dimensions = new mongoose.Schema({
+const Dimensions = new mongoose.Schema({
     width: Number,
     height: Number,
     depth: Number
 }, {_id: false});
 
-var PieceInfo = new mongoose.Schema({
+const PieceInfo = new mongoose.Schema({
     technique: String,
     material: String,
     dimensions: Dimensions,
@@ -29,7 +29,7 @@ var PieceInfo = new mongoose.Schema({
     }
 }, {_id: false});
 
-var BookInfo = new mongoose.Schema({
+const BookInfo = new mongoose.Schema({
     publisher: String,
     genre: String,
     stock: {
@@ -42,7 +42,7 @@ var BookInfo = new mongoose.Schema({
     },
 }, {_id: false});
 
-var Product = new mongoose.Schema({
+const Product = new mongoose.Schema({
     title: {
         type: String,
         required: true

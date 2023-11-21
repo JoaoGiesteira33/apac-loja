@@ -1,4 +1,4 @@
-var Product = require('../models/product');
+const Product = require('../models/product');
 
 // METHODS:
 //      - getProductInfo

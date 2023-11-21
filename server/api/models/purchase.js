@@ -1,4 +1,4 @@
-var mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
 /**
  * Purchase history associated with the client
@@ -8,7 +8,7 @@ var mongoose = require('mongoose')
  * @property {Date} date - Purchase date
  */
 
-var Evaluation = new mongoose.Schema({
+const Evaluation = new mongoose.Schema({
     rating: {
         type: Number,
         min: 0,
@@ -17,7 +17,7 @@ var Evaluation = new mongoose.Schema({
     comment: String
 }, {_id: false});
 
-var Purchase = new mongoose.Schema({
+const Purchase = new mongoose.Schema({
     product_id: {
         type: String,
         required: true

@@ -1,11 +1,12 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var controllerUser = require('../controllers/user');
-var controllerAuth = require('../controllers/accessLevel');
+const controllerUser = require('../controllers/user');
+const controllerAuth = require('../controllers/accessLevel');
 
-// ---------------------------------------------
+// ---------------------CLIENT------------------------
 
+//Basic Methods
 
 // GET Client Info
 router.get('/client/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin,*/ function (req, res, next) {
@@ -50,6 +51,10 @@ router.delete('/client/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAd
             res.jsonp(erro);
         });
 });
+
+// Advanced Methods
+
+// Append to List
 
 
 // ---------------------------------------------

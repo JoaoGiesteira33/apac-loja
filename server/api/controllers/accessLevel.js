@@ -1,8 +1,7 @@
-var jwt = require('jsonwebtoken');
-
+const jwt = require('jsonwebtoken');
 
 function isAdmin(req, res, next) {
-    var myToken = req.query.token || req.body.token || req.cookies.token
+    let myToken = req.query.token || req.body.token || req.cookies.token
     if (myToken) {
         jwt.verify(myToken, process.env.AUTH_KEY, function (e, payload) {
             if (e) {
@@ -25,7 +24,7 @@ function isAdmin(req, res, next) {
 }
 
 function hasAccess(req, res, next) {
-    var myToken = req.query.token || req.body.token || req.cookies.token
+    let myToken = req.query.token || req.body.token || req.cookies.token
     if (myToken) {
         jwt.verify(myToken, process.env.AUTH_KEY, function (e, payload) {
             if (e) {

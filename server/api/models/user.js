@@ -1,5 +1,4 @@
-var mongoose = require('mongoose')
-
+const mongoose = require('mongoose')
 
 /**
  * Demographics associated with the client/seller
@@ -9,7 +8,7 @@ var mongoose = require('mongoose')
  * @property {String} address - Address of the client/seller
  * @property {String} phone - Phone number of the client/seller
  */
-var Demographics = new mongoose.Schema({
+const Demographics = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -30,12 +29,12 @@ var Demographics = new mongoose.Schema({
  * @typedef {Object} Statistics
  * @property {Date} lastLogin - Last login date of the client/seller
  */
-var Statistics = new mongoose.Schema({
+const Statistics = new mongoose.Schema({
     lastLogin: Date
 }, {_id: false});
 
 
-var SellerFields = new mongoose.Schema({
+const SellerFields = new mongoose.Schema({
     demographics: {
         type: Demographics,
         required: true
@@ -56,7 +55,7 @@ var SellerFields = new mongoose.Schema({
     }
 }, {_id: false});
 
-var ClientFields = new mongoose.Schema({
+const ClientFields = new mongoose.Schema({
     demographics: {
         type: Demographics,
         required: true
@@ -98,7 +97,7 @@ var ClientFields = new mongoose.Schema({
  * @property {Object} client_fields - Client fields
  * @property {Object} seller_fields - Seller fields
 */
-var User = new mongoose.Schema({
+const User = new mongoose.Schema({
     email: {
         type: String,
         required: true,

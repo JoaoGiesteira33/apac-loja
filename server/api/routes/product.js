@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var controllerProduct = require('../controllers/product');
-var controllerAuth = require('../controllers/accessLevel');
+const controllerProduct = require('../controllers/product');
+const controllerAuth = require('../controllers/accessLevel');
 
 // ---------------------------------------------
 
