@@ -3,7 +3,7 @@ const Redis = require("ioredis");
 const redisClient = new Redis();
 const io = require("socket.io")(httpServer, {
   cors: {
-    origin: "http://localhost:5174",
+    origin: "http://localhost:5173",
   },
   adapter: require("socket.io-redis")({
     pubClient: redisClient,
@@ -32,6 +32,7 @@ io.use(async (socket, next) => {
       return next();
     }
   }
+
   const username = socket.handshake.auth.username;
   if (!username) {
     return next(new Error("invalid username"));
@@ -44,11 +45,17 @@ io.use(async (socket, next) => {
 
 io.on("connection", async (socket) => {
   // persist session
+  console.log("Socket connected")
+  console.log("Socket sessionID", socket.sessionID)
+  console.log("Socket userID", socket.userID)
+
   sessionStore.saveSession(socket.sessionID, {
     userID: socket.userID,
     username: socket.username,
     connected: true,
   });
+
+  console.log("Socket session saved")
 
   // emit session details
   socket.emit("session", {

@@ -4,9 +4,12 @@ import { socket } from './socket';
 import Footer from './components/footer';
 import Navbar from './components/navbar';
 
+import Chat from './components/experinecia_chat/Chat';
+
 import { Route, Routes } from 'react-router-dom';
 import { CanvasModel } from './components/canvasModel';
 import Product from './components/product';
+
 
 // dynamically load components as they are needed
 const HomePage = React.lazy(() => import('./pages/Home'));
@@ -67,7 +70,7 @@ function App() {
     return (
         <div>
             <Navbar />
-            {/*<Chat userID={userID} />*/}
+            <Chat userID={userID}  />
             {/*<ThemeProvider theme={{}}>*/}
             <Suspense fallback={<p>Loading...</p>}>
                 <Routes>

@@ -151,7 +151,7 @@ function Chat({ userID }: { userID: string}) {
 return (
     <div>
         <div>
-          <>---CHAT----</>
+          <>---------------------    CHAT    ---------------------</>
           <ConnectionManager />
             {users.map((user) => (
                 <Button key={user.userID} onClick={() => onSelectUser(user)}>{user.username}</Button>
