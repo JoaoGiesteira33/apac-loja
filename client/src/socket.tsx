@@ -10,5 +10,5 @@ export const socket = io(URL, {
     },
     // enable retries
     ackTimeout: 10000,
-    retries: 3,
+    retries: 3
 });

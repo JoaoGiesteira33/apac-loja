@@ -24,6 +24,7 @@ const messageStore = new RedisMessageStore(redisClient);
 io.use(async (socket, next) => {
   const sessionID = socket.handshake.auth.sessionID;
   if (sessionID) {
+    // find existing session
     const session = await sessionStore.findSession(sessionID);
     if (session) {
       socket.sessionID = sessionID;
@@ -34,9 +35,12 @@ io.use(async (socket, next) => {
   }
 
   const username = socket.handshake.auth.username;
+
   if (!username) {
     return next(new Error("invalid username"));
   }
+
+  // create a new session
   socket.sessionID = randomId();
   socket.userID = randomId();
   socket.username = username;
@@ -108,6 +112,7 @@ io.on("connection", async (socket) => {
       from: socket.userID,
       to,
     };
+    // sends to destiny and to sender (to update the chat)
     socket.to(to).to(socket.userID).emit("private message", message);
     messageStore.saveMessage(message);
   });
