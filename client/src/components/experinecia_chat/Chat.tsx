@@ -20,11 +20,16 @@ interface Message {
     to?: string;
 }
 
-function Chat({ userID }: { userID: string}) {
+//function Chat({ userID }: { userID: string}) {
+function Chat() {
   const [selectedUser, setSelectedUser] = useState<User>({ userID: '', username: '', connected: false, self: false, messages: [], hasNewMessages: false });
   const [selected, setSelected] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
-
+  const [userID,setUserId] = useState('');
+  const [sessionID, setSessionID] = useState(() => {
+    // getting stored value
+    return localStorage.getItem("sessionID") || "";
+  });
   const initReactiveProperties = (user: User) => {
     user.hasNewMessages = false;
   };
@@ -50,6 +55,12 @@ function Chat({ userID }: { userID: string}) {
   };
 
   useEffect(() => {
+    if (sessionID) {
+      socket.auth = { sessionID };
+      socket.connect();
+    }
+
+
     socket.on('connect', () => {
       setUsers((prevUsers) =>
         prevUsers.map((user) => {
@@ -70,6 +81,16 @@ function Chat({ userID }: { userID: string}) {
           return user;
         })
       );
+    });
+
+    socket.on("session", ({ sessionID, userID }) => {
+      // attach the session ID to the next reconnection attempts
+      socket.auth = { sessionID, userID };
+      // store it in the localStorage
+      localStorage.setItem("sessionID", sessionID);
+      // save the ID of the user and ID of the session
+      setUserId(userID);
+      setSessionID(sessionID);
     });
 
     socket.on('users', (newUsers: User[]) => {
@@ -152,9 +173,13 @@ return (
     <div>
         <div>
           <>---------------------    CHAT    ---------------------</>
-          <ConnectionManager />
+          <ConnectionManager setUserID={setUserId} />
             {users.map((user) => (
-                <Button key={user.userID} onClick={() => onSelectUser(user)}>{user.username}</Button>
+                <Button 
+                  key={user.userID} 
+                  sx={{color: user.connected ? "green" : "red"}} 
+                  onClick={() => onSelectUser(user)}>{user.username + "-" + user.userID}
+                </Button>
             ))}
         </div>
         {(selected ? <MessagePanel user={selectedUser} onMessage={onMessage} /> : <></>)}

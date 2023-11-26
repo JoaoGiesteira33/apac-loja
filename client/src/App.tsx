@@ -70,37 +70,44 @@ function App() {
     return (
         <div>
             <Navbar />
-            <Chat userID={userID}  />
-            {/*<ThemeProvider theme={{}}>*/}
-            <Suspense fallback={<p>Loading...</p>}>
-                <Routes>
-                    {/* <Suspense fallback={<Loading />}> *criar este componente depois* */}
-                    {routes.map((route, index) => (
-                        <Route
-                            key={index}
-                            path={route.path}
-                            element=
-                            {
-                                /*
-                          route.requireAuth ? (
-                            <RequireAuth loginPath="/login">
-                              {route.element}
-                            </RequireAuth>
-                          ) : (   *Implementar depois o componente RequireAuth na Autenticação*  */
-                                route.element
-                                /*)*/
-                            }
-                        ></Route>
-                    ))}
-                </Routes>
-            </Suspense>
-
-            <Footer />
-            {/*</ThemeProvider>*/}
-
-            {/*<ChatWidget />*/}
+            <Chat />
         </div>
     );
 }
 
 export default App;
+
+// return (
+//    <div>
+//    <Navbar />
+//    <Chat />
+//    {/*<ThemeProvider theme={{}}>*/}
+//    <Suspense fallback={<p>Loading...</p>}>
+//        <Routes>
+//            {/* <Suspense fallback={<Loading />}> *criar este componente depois* */}
+//            {routes.map((route, index) => (
+//                <Route
+//                    key={index}
+//                    path={route.path}
+//                    element=
+//                    {
+//                        /*
+//                  route.requireAuth ? (
+//                    <RequireAuth loginPath="/login">
+//                      {route.element}
+//                    </RequireAuth>
+//                  ) : (   *Implementar depois o componente RequireAuth na Autenticação*  */
+//                        route.element
+//                        /*)*/
+//                    }
+//                ></Route>
+//            ))}
+//        </Routes>
+//    </Suspense>
+//
+//    {/*<Footer />*/}
+//    {/*</ThemeProvider>*/}
+//
+//    {/*<ChatWidget />*/}
+//</div>
+//);

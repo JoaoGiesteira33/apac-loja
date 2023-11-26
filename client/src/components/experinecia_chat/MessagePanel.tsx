@@ -1,3 +1,5 @@
+import { Typography, Button } from '@mui/material';
+import { TextField } from '@mui/material';
 import React, { useState } from 'react';
 
 interface MessagePanelProps {
@@ -28,34 +30,29 @@ function MessagePanel({ user, onMessage }: MessagePanelProps) {
 
   return (
     <div>
-      <div className="header">
-        {user.connected ? 'Connected' : 'Disconnected'}
-      </div>
-
       <ul className="messages">
         {user.messages.map((message, index) => (
           <li key={index} className="message">
             {displaySender(message, index) && (
               <div className="sender">
-                {message.fromSelf ? '(yourself)' : user.username}
+                <Typography sx={{fontSize: 20, fontWeight: "bold", ml: 1}}>{message.fromSelf ? '->  (yourself)' : "-> " + user.username}</Typography>
               </div>
             )}
-            {message.content}
+            <Typography sx={{ml: 1}}>{":: " + message.content}</Typography>
           </li>
         ))}
       </ul>
 
-      <form onSubmit={onSubmit} className="form">
-        <textarea
+        <TextField
+          id="message"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Your message..."
-          className="input"
+          multiline
         />
-        <button disabled={!isValid} type="submit" className="send-button">
+        <Button disabled={!isValid} variant='outlined' sx={{ml: 0.5}} onClick={onSubmit}>
           Send
-        </button>
-      </form>
+        </Button>
     </div>
   );
 };
