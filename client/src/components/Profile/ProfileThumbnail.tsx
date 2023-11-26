@@ -9,7 +9,7 @@ export default function ProfileThumbnail(props: {
                 <div className="shrink-0 flex items-center justify-center px-2">
                     {props.icon}
                 </div>
-                <div className="p-2">
+                <div className="p-2 pr-8">
                     <p className="block mt-1 text-lg leading-tight font-medium text-black">
                         {props.title}
                     </p>

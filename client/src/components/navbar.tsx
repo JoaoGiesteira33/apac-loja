@@ -178,20 +178,21 @@ export default function Navbar() {
                             </Search>
                         </div>
                         <div className="flex justify-end items-center">
-                            <PersonOutlinedIcon sx={{ fontSize: '2rem' }} />
+                            <Link to="/profile">
+                                <PersonOutlinedIcon sx={{ fontSize: '2rem' }} />
+                            </Link>
                             <ShoppingCartOutlinedIcon
                                 sx={{ fontSize: '2rem' }}
                             />
                             <HelpOutlineIcon sx={{ fontSize: '2rem' }} />
-                             <FormControl sx={{ fontSize: '2rem' }}>
+                            <FormControl sx={{ fontSize: '2rem' }}>
                                 <Select
                                     value={lng}
                                     onChange={handleChangeLng}
                                     displayEmpty
-                                    inputProps={{ 'aria-label': 'select'}}
-                                >
-                                <MenuItem value="pt">PT</MenuItem>
-                                <MenuItem value="en">EN</MenuItem>
+                                    inputProps={{ 'aria-label': 'select' }}>
+                                    <MenuItem value="pt">PT</MenuItem>
+                                    <MenuItem value="en">EN</MenuItem>
                                 </Select>
                             </FormControl>
                         </div>

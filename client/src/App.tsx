@@ -7,6 +7,8 @@ import Navbar from './components/navbar';
 import { Route, Routes } from 'react-router-dom';
 import { CanvasModel } from './components/canvasModel';
 import Product from './components/Product/ProductDetails';
+import ProfileInfo from './pages/Profile/ProfileInfo';
+import ProfileIndex from './pages/Profile/ProfileIndex';
 
 // dynamically load components as they are needed
 const HomePage = React.lazy(() => import('./pages/Home'));
@@ -60,8 +62,16 @@ function App() {
             path: '/product',
             element: <ProductPage />,
             requireAuth: false,
-        }
-
+        },{
+            path: '/profile',
+            element: <ProfileIndex />,
+            requireAuth: false,
+        },
+        {
+            path: '/profile/info',
+            element: <ProfileInfo />,
+            requireAuth: false,
+        },
     ];
 
     return (
@@ -76,8 +86,7 @@ function App() {
                         <Route
                             key={index}
                             path={route.path}
-                            element=
-                            {
+                            element={
                                 /*
                           route.requireAuth ? (
                             <RequireAuth loginPath="/login">
@@ -86,8 +95,7 @@ function App() {
                           ) : (   *Implementar depois o componente RequireAuth na Autenticação*  */
                                 route.element
                                 /*)*/
-                            }
-                        ></Route>
+                            }></Route>
                     ))}
                 </Routes>
             </Suspense>
