@@ -4,11 +4,14 @@ import { socket } from './socket';
 import Footer from './components/new_footer';
 import Navbar from './components/pintar_o_7/Navbar';
 
+import Chat from './components/experinecia_chat/Chat';
+
 import { Route, Routes } from 'react-router-dom';
 import { CanvasModel } from './components/canvasModel';
 import ProfileInfo from './pages/Profile/ProfileInfo';
 import ProfileIndex from './pages/Profile/ProfileIndex';
 import { ChatWidget } from './components/ChatWidget';
+
 
 // dynamically load components as they are needed
 const HomePage = React.lazy(() => import('./pages/Home'));
@@ -79,7 +82,7 @@ function App() {
     return (
         <div>
             <Navbar />
-            {/*<Chat userID={userID} />*/}
+            <Chat userID={userID}  />
             {/*<ThemeProvider theme={{}}>*/}
             <Suspense fallback={<p>Loading...</p>}>
                 <Routes>
