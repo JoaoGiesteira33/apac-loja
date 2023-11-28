@@ -3,15 +3,15 @@ var express = require('express');
 var path = require('path');
 var logger = require('morgan');
 var mongoose = require('mongoose');
+var secrets = require('docker-secret').secrets;
 
 // ROUTES:
 var userRouter = require('./routes/user');
 var productRouter = require('./routes/product');
 
 
-var db_url = "mongodb+srv://"+process.env.MONGO_USER+":"+process.env.MONGO_PASSWORD+"@"+process.env.MONGO_CLUSTER+".mongodb.net/?retryWrites=true&w=majority";
-console.log(db_url)
-mongoose.connect(db_url, {dbName: process.env.MONGO_DB_NAME , useNewUrlParser: true , useUnifiedTopology: true});
+var db_url = "mongodb+srv://"+secrets.mongo_user+":"+secrets.mongo_password+"@"+secrets.mongo_cluster+".mongodb.net/?retryWrites=true&w=majority";
+mongoose.connect(db_url, {dbName: secrets.mongo_db_name , useNewUrlParser: true , useUnifiedTopology: true});
 var db = mongoose.connection;
 db.on('open', function(){console.log("Conexão do Servidor de Autenticação ao MongoDB realizada com sucesso...")});
 db.on('error', function(){console.log("Erro de conexão ao MongoDB...")});

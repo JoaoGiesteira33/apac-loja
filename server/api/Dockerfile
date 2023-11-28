@@ -1,6 +1,6 @@
 FROM node:20-bullseye
-WORKDIR /api
+#WORKDIR /api
 EXPOSE 80
-COPY . ./
-RUN npm i
-CMD ["npm", "start"]
+#COPY . ./
+#RUN npm i
+#CMD ["npm", "start"]

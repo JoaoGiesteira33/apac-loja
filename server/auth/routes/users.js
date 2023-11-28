@@ -4,7 +4,6 @@ var User = require('../controllers/user')
 var userModel = require('../models/user')
 var passport = require('passport')
 var jwt = require('jsonwebtoken')
-var telegram = require('../otp/telegram')
 
 function getDateTime(){
   // timezone de portugal

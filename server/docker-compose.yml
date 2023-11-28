@@ -1,30 +1,50 @@
-version: '1'
+version: '3.8'
 
 services:
   api:
-    container_name: api
-    build: ./api
-#    restart: always
-    depends_on:
-      - auth
-    env_file:
-      - .env
+    container_name: api-container
+    image: apac_api_img
+    command: /bin/bash -c "cd code && npm i && npm start"
+    secrets:
+      - mongo_cluster
+      - mongo_db_name
+      - mongo_user
+      - mongo_password
+      - auth_key
     ports:
       - 11000:80
     networks:
       - apac-network
 
   auth:
-    container_name: auth
-    build: ./auth
-#    restart: always
-    env_file:
-      - .env
+    container_name: auth-container
+    image: apac_auth_img
+    command: /bin/bash -c "cd code && npm i &&  npm start"
+    secrets:
+      - mongo_cluster
+      - mongo_db_name
+      - mongo_user
+      - mongo_password
+      - auth_key
+    
     networks:
       - apac-network
 
 volumes:
   dbdata:
+
+secrets:
+  mongo_cluster:
+    file: ./env/MONGO_CLUSTER.txt
+  mongo_db_name:
+    file: ./env/MONGO_DB_NAME.txt
+  mongo_user:
+    file: ./env/MONGO_USER.txt
+  mongo_password:
+    file: ./env/MONGO_PASSWORD.txt
+  auth_key:
+    file: ./env/AUTH_KEY.txt
+
 
 networks:
   # tcp-ip
