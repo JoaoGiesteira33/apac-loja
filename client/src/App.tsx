@@ -6,9 +6,9 @@ import Navbar from './components/navbar';
 
 import { Route, Routes } from 'react-router-dom';
 import { CanvasModel } from './components/canvasModel';
-import Product from './components/Product/ProductDetails';
 import ProfileInfo from './pages/Profile/ProfileInfo';
 import ProfileIndex from './pages/Profile/ProfileIndex';
+import { ChatWidget } from './components/ChatWidget';
 
 // dynamically load components as they are needed
 const HomePage = React.lazy(() => import('./pages/Home'));
@@ -50,7 +50,7 @@ function App() {
         },
         {
             path: '/collections/pintura',
-            element: <Product />,
+            element: <ProductPage />,
             requireAuth: false,
         },
         {
@@ -71,7 +71,7 @@ function App() {
             path: '/profile/info',
             element: <ProfileInfo />,
             requireAuth: false,
-        },
+        }
     ];
 
     return (
@@ -103,7 +103,7 @@ function App() {
             <Footer />
             {/*</ThemeProvider>*/}
 
-            {/*<ChatWidget />*/}
+            {/* <ChatWidget /> */}
         </div>
     );
 }

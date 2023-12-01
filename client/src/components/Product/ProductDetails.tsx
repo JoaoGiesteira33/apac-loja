@@ -1,4 +1,4 @@
-import { Box, Button, ImageList, ImageListItem, Typography } from '@mui/material';
+import { Box, ImageList, ImageListItem, Stack, Typography } from '@mui/material';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -6,6 +6,13 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Grid from '@mui/material/Unstable_Grid2'; 
 import { ProductType } from '../../types/product';
 import { useState } from 'react';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import ImageMagnifier from './ImageMagnifier';
+import { ImageLightBox } from './ImageLightBox';
+
+import { Button } from '@material-tailwind/react';
+
+
 
 
 const ProductDetails = (data: { product: ProductType}) => {
@@ -14,59 +21,74 @@ const ProductDetails = (data: { product: ProductType}) => {
     const [selectedImage, setSelectedImage] = useState(product.photos[0]);
     const [isInStock, setIsInStock] = useState(product.stock > 0); 
 
-    const [lightboxOpen, setLightboxOpen] = useState(false);
+    const [lightboxStatus, setLightboxStatus] = useState(false);
 
-    const openLightbox = () => {
-        setLightboxOpen(true);
-    };
+    const handleLightbox = () => { setLightboxStatus (!lightboxStatus) };   
 
     return (
-        <Grid container component='div' columnSpacing={2}>
-            <Grid  xs={12} sm={12} md={6}>
-                <Grid container component='div'>
-                    <Grid xs={12} sm={12} md={10} order={{ md: 2 }}>
-                        
-                        <img
-                            src={selectedImage}
-                            alt={product.title}
-                            style={{ border: '1px solid #999999',  maxHeight: '700px', maxWidth: '500px',}}
-                        />
-
+        <Grid container component='div' columnSpacing={2} justifyContent="space-evenly" alignItems="flex-start">
+            <Grid xs={12} sm={12} md={6}>
+                <Grid container component='div' direction={{xs:'column', sm:'column', md:'column', lg:'row'}} alignContent='center'>
+                    <Grid sm={12} md={12} order={{ lg: 2 }} sx={{}} >
+                        <Box component='div'sx={{ 
+                            width: '100%', // Set the width to 100% to ensure responsiveness within its container
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            }}>
+                            <img
+                                src={selectedImage}
+                                alt={product.title}
+                                style={{ border: '1px solid #999999', maxHeight:'700px', maxWidth:'650px', cursor:'pointer'}}
+                                onClick={() => handleLightbox()}
+                            />
+                            {/* <ImageMagnifier src={selectedImage} alt={product.title} width={500 } height={700} magnifierHeight={200} magnifierWidth={200} zoomLevel={1.5} /> */}
+                            <ImageLightBox status={lightboxStatus} statusFunc={setLightboxStatus} images={product.photos}/>
+                        </Box>
                     </Grid>
-                    <Grid xs={12} sm={12} md={2} order={{ md: 1 }}>
-                        <ImageList
-                            sx={{
-                                width: '72px',
-                                height: '300px',
-                                mr: '20px',
-                                justifyContent: 'flex-start',
-                            }}
-                            cols={1}
-                            rowHeight={50}>
-                            {product.photos.map((item) => (
-                                <ImageListItem 
-                                    key={item}
-                                    sx={{
-                                        '&:hover': {
-                                            border: '2px solid #0ea6e9',
-                                        },
-                                    }}>
-                                    <button
-                                        type="button"
-                                        onMouseOver={()=>setSelectedImage(item)}
-                                        onClick={openLightbox}
-                                        >   
-                                        
+                    <Grid sm={12} md={12} order={{ lg: 1 }}>
+                        <Stack spacing={2} direction={{xs:'row', sm:'row', md:'row', lg:'column' }} sx={{ mt: {xs:2, lg:0}, mb: 2, mr:2}}>
+                            
+                                <ImageList key={0} sx={{ width: 70, height: 70, overflow: 'hidden', borderRadius: '5px', cursor: 'pointer', border: '1px solid #999999'}} variant="woven" cols={1}>
+                                    <ImageListItem key={0} onClick={() => setSelectedImage(product.photos[0])}>
                                         <img
-                                            srcSet={`${item}?w=70&h=50&fit=crop&auto=format&dpr=2 2x`}
-                                            src={`${item}?w=70&h=50&fit=crop&auto=format`}
+                                            src={product.photos[0]}
                                             alt={product.title}
                                             loading="lazy"
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center'}}
+                                            onMouseOver={() => setSelectedImage(product.photos[0])}
                                         />
-                                    </button>
-                                </ImageListItem>
-                            ))}
-                        </ImageList>
+                                    </ImageListItem>
+                                </ImageList>
+                                <ImageList key={1} sx={{ width: 70, height: 70, overflow: 'hidden', borderRadius: '5px', cursor: 'pointer', border: '1px solid #999999'}} variant="woven" cols={1}>
+                                    <ImageListItem key={1} onClick={() => setSelectedImage(product.photos[1])}>
+                                        <img
+                                            src={product.photos[1]}
+                                            alt={product.title}
+                                            loading="lazy"
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center'}}
+                                            onMouseOver={() => setSelectedImage(product.photos[1])}
+                                        />
+                                    </ImageListItem>
+                                </ImageList>
+                                <ImageList key={2} sx={{ width: 70, height: 70, overflow: 'hidden', borderRadius: '5px', cursor: 'pointer', border: '1px solid #999999'}} variant="woven" cols={1}>
+                                    <ImageListItem key={2} onClick={() => setSelectedImage(product.photos[2])}>
+                                        <img
+                                            src={product.photos[2]}
+                                            alt={product.title}
+                                            loading="lazy"
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center'}}
+                                            onMouseOver={() => setSelectedImage(product.photos[2])}
+                                        />
+                                    </ImageListItem>
+                                </ImageList>
+                                <ImageList key={3} sx={{ width: 70, height: 70, overflow: 'hidden', borderRadius: '5px', cursor: 'pointer', border: '1px solid #999999'}} variant="woven" cols={1}>
+                                    <ImageListItem key={3} onClick={() => setSelectedImage(product?.photos[3])} sx={{backgroundColor:'#e8e8e8'}}>
+                                        <MoreHorizIcon fontSize='small' sx={{width:'100%' }} />
+                                    </ImageListItem>
+                                </ImageList>
+                            
+                        </Stack>
                     </Grid>
                 </Grid>
             </Grid>
@@ -91,7 +113,7 @@ const ProductDetails = (data: { product: ProductType}) => {
                         )}
                         </Typography>
     
-                        <Button variant="contained" disabled={!isInStock} sx={{ width: '100%'}}>
+                        <Button variant="gradient" disabled={!isInStock} fullWidth>
                             <Typography variant="button" sx={{ margin: 0.5}}>
                                 Compre Já!
                             </Typography>

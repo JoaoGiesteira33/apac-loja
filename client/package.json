@@ -13,6 +13,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
+    "@material-tailwind/react": "^2.1.5",
     "@mui/icons-material": "^5.14.14",
     "@mui/material": "^5.14.12",
     "@react-three/drei": "^9.88.11",
@@ -24,7 +25,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.3.1",
-    "react-image-magnify": "^2.7.4",
     "react-multi-carousel": "^2.8.4",
     "react-router-dom": "^6.17.0",
     "socket.io-client": "^4.7.2",
@@ -42,7 +42,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "postcss": "^8.4.31",
-    "tailwindcss": "^3.3.3",
+    "tailwindcss": "^3.3.5",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
   }
