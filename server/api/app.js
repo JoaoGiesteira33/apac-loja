@@ -4,10 +4,11 @@ var path = require('path');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 
+require('dotenv').config();
 // ROUTES:
 var userRouter = require('./routes/user');
 var productRouter = require('./routes/product');
-var paymentSerive = require('./routes/paymentRoutes');
+var paymentRouter = require('./routes/paymentRoutes');
 
 var db_url = "mongodb+srv://"+process.env.MONGO_USER+":"+process.env.MONGO_PASSWORD+"@"+process.env.MONGO_CLUSTER+".mongodb.net/?retryWrites=true&w=majority";
 console.log(db_url)

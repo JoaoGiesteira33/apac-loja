@@ -1,46 +1,61 @@
 // FIXME CORRIGIR PÁGINA NO GERAL, APENA EXEMPLO DE ESTRUTURA
 
-const paypal = require('paypal-sdk'); // TODO - isto é só exemplo
+//const endpointURL = environment === 'sandbox' ? proccess.env.PAYPAL_SANDBOX_URL : proccess.env.PAYPAL_URL
+const clientId = proccess.env.PAYPAL_CLIENT_ID;
+const clientSecret = proccess.env.PAYPAL_CLIENT_SECRET_KEY;
+const Environment = 
+    proccess.env.PAYPAL_ENVIRONMENT === 'sandbox'
+        ? paypal.core.LiveEnvironment
+        : paypal.core.SandboxEnvironment;
 
-async function initiatePayPalPayment(amount, otherPaymentDetails) {
-    try {
-        const paypalClient = paypal.configure({
-            clientId: 'YOUR_PAYPAL_CLIENT_ID',
-            clientSecret: 'YOUR_PAYPAL_CLIENT_SECRET',
-            environment: 'sandbox', // Change to 'live' for production
-        }); // TODO - ver o que é sandbox
+const paypal = require('@paypal/checkout-server-sdk');
+const paypalClient = new paypal.core.PayPalHttpClient(
+    new Environment(clientId, clientSecret)
+);
 
-        // Set up the payment details
-        const paymentDetails = {
-            intent: 'sale',
-            payer: {
-                payment_method: 'paypal',
-            },
-            transactions: [
-                {
-                    amount: {
-                        total: amount.toString(),
-                        currency: 'USD',
-                    },
-                    description: 'Payment for art purchase',
+async function createOrder (req, res) {
+    const request = paypal.orders.OrdersCreateRequest();
+    const total = req.body.items.reduce((sum, item) => {
+        return sum + storeItems.get(item.id).price * item.quantity // FIXME storeItems = serviço catálogo
+    }, 0);
+    request.prefer('return=representation');
+    request.requestBody({
+        intent: 'CAPTURE',
+        purchase_units: [
+            {
+                amount: {
+                    currency_code: 'EUR', // TODO confirmar código
+                    value: total,
+                    breakdown: {
+                        // TODO ver como adicionar tax total ou shipment total aqui
+                        item_total: {
+                            currency_code: 'EUR',
+                            value: total
+                        }
+                    }
                 },
-            ],
-            // TODO - adicionar mais cenas de acordo com o preciso
-        };
+                items: req.body.items.map(item => {
+                    const storeItem = storeItems.get(item.id) // FIXME storeItems = serviço catálogo
+                    return {
+                        name: storeItem.name,
+                        unit_amount: {
+                            currency_code: 'EUR',
+                            value: item.price
+                        },
+                        quantity: item.quantity
+                    }
+                })
+            }
+        ]
+    });
 
-        // Create a PayPal payment
-        const createPaymentResponse = await paypalClient.payment.create(paymentDetails);
-
-        // Redirect the user to PayPal for payment approval
-        const approvalUrl = createPaymentResponse.links.find(link => link.rel === 'approval_url').href;
-
-        return { success: true, approvalUrl };
-    } catch (error) {
-        console.error('PayPal payment error:', error.message);
-        return { success: false, message: 'PayPal payment initiation failed' };
+    try {
+        const order = await paypalClient.execute(request);
+        console.log(order);
+        res.status(200).json({ id: order.result.id });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
     }
 }
 
-module.exports = {
-  initiatePayPalPayment,
-};
+module.exports.createOrder = createOrder;
