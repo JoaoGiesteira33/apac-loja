@@ -4,6 +4,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import logo from '../assets/LOGO.png';
+import "@fontsource/poppins";
 
 const Footer = () => {
 
@@ -12,14 +13,14 @@ const Footer = () => {
 
         function MY_LNK ({link, text} : {link: string, text: string}) {
             return (
-                <Link href={link} color={COLOR} underline="none">{text}</Link>
+                <Link href={link} color={COLOR} underline="none" fontFamily="Poppins">{text}</Link>
             );
         }
 
         return (
                 <Box component="div" sx={{ 
                     flexGrow: 1, 
-                    backgroundColor: "#f2f2f2"
+                    backgroundColor: "white"
                     }}>
                     
                     <Grid container >
@@ -46,8 +47,8 @@ const Footer = () => {
                         <Grid xs={6} sm={5} md={5} display="flex" justifyContent="center" alignItems="center">
                         
                             <List>
-                                <ListItem disablePadding sx={{color: COLOR, paddingBottom: 2}}>
-                                    menu
+                                <ListItem disablePadding sx={{paddingBottom: 2}}>
+                                    <Typography color="gray" fontFamily="Poppins">menu</Typography>
                                 </ListItem>
                                 <ListItem disablePadding>
                                     <MY_LNK link="#" text="a galeria"/>
@@ -72,7 +73,7 @@ const Footer = () => {
                             <MY_LNK link="#" text="política de privacidade"/>
                         </Grid>
                         <Grid xs={12} md={3} lg={6} display="flex" alignItems="center" justifyContent="center">
-                            <Typography color="gray">uma iniciativa associação portuguesa das artes e da cultura © 2023</Typography>
+                            <Typography color="gray" fontFamily="Poppins">uma iniciativa associação portuguesa das artes e da cultura © 2023</Typography>
                         </Grid>
                     </Grid>
                 </Box>

@@ -2,7 +2,7 @@
 
 import { Link } from 'react-router-dom';
 
-import logoApac from '../../assets/logo_apac.png';
+import logoApac from '../../assets/LOGO_negrito.png';
 
 import {
     CustomFlowbiteTheme,
