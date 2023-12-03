@@ -19,6 +19,7 @@
     "@react-three/drei": "^9.88.11",
     "@react-three/fiber": "^8.15.9",
     "@types/three": "^0.158.1",
+    "flowbite-react": "^0.7.0",
     "i18next": "^23.6.0",
     "i18next-browser-languagedetector": "^7.1.0",
     "i18next-http-backend": "^2.3.1",
