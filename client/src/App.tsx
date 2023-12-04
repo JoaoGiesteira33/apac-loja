@@ -1,8 +1,8 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { socket } from './socket';
 
-import Footer from './components/footer';
-import Navbar from './components/navbar';
+import Footer from './components/new_footer';
+import Navbar from './components/pintar_o_7/Navbar';
 
 import { Route, Routes } from 'react-router-dom';
 import { CanvasModel } from './components/canvasModel';
