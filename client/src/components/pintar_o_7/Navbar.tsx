@@ -2,7 +2,7 @@
 
 import { Link } from 'react-router-dom';
 
-import logoApac from '../../assets/logo_apac.png';
+import logoApac from '../../assets/LOGO.png';
 
 import {
     CustomFlowbiteTheme,
@@ -38,7 +38,7 @@ export default function Navbar() {
                 <FlowbiteNavbar.Brand as={Link} href="/">
                     <img
                         src={logoApac}
-                        className="mr-3 h-6 sm:h-9"
+                        className="mr-3 h-4 md:h-28 sm:h-9"
                         alt="Logo"
                     />
                 </FlowbiteNavbar.Brand>
