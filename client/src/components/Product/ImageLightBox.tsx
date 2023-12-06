@@ -43,7 +43,7 @@ export function ImageLightBox(data : { status: boolean, statusFunc: any, images:
                 <Carousel className="flex min-h-screen h-screen" transition={{ type: "spring", duration: 1 }} loop={true}>
                     {images.map((image, index) => (
                         
-                        <ImageMagnifier src={image} alt={"image " + index} width={'auto'} height={'auto'} magnifierHeight={200} magnifierWidth={200} zoomLevel={1.5} />
+                        <ImageMagnifier src={image} alt={"image " + index} width={'650'} height={'auto'} magnifierHeight={200} magnifierWidth={200} zoomLevel={1.5} />
                     ))}
 
                     {/* <img 

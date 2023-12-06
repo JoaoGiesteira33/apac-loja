@@ -1,9 +1,10 @@
 import { Box, ImageList, ImageListItem, Stack, Typography } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Grid from '@mui/material/Unstable_Grid2'; 
+//import Grid from '@mui/material/Unstable_Grid2'; 
 import { ProductType } from '../../types/product';
 import { useState } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -26,7 +27,7 @@ const ProductDetails = (data: { product: ProductType}) => {
     const handleLightbox = () => { setLightboxStatus (!lightboxStatus) };   
 
     return (
-        <Grid container component='div' columnSpacing={2} justifyContent="space-evenly" alignItems="flex-start">
+        <Grid container component='div' columnSpacing={2} justifyContent="center" alignItems="flex-start">
             <Grid xs={12} sm={12} md={6}>
                 <Grid container component='div' direction={{xs:'column', sm:'column', md:'column', lg:'row'}} alignContent='center'>
                     <Grid sm={12} md={12} order={{ lg: 2 }} sx={{}} >
@@ -46,10 +47,10 @@ const ProductDetails = (data: { product: ProductType}) => {
                             <ImageLightBox status={lightboxStatus} statusFunc={setLightboxStatus} images={product.photos}/>
                         </Box>
                     </Grid>
-                    <Grid sm={12} md={12} order={{ lg: 1 }}>
+                    <Grid  sm={12} md={12} order={{ lg: 1 }}>
                         <Stack spacing={2} direction={{xs:'row', sm:'row', md:'row', lg:'column' }} sx={{ mt: {xs:2, lg:0}, mb: 2, mr:2}}>
                             
-                                <ImageList key={0} sx={{ width: 70, height: 70, overflow: 'hidden', borderRadius: '5px', cursor: 'pointer', border: '1px solid #999999'}} variant="woven" cols={1}>
+                                <ImageList key={0} sx={{ width: 50, height: 50, overflow: 'hidden', borderRadius: '5px', cursor: 'pointer', border: '1px solid #999999'}} variant="woven" cols={1}>
                                     <ImageListItem key={0} onClick={() => setSelectedImage(product.photos[0])}>
                                         <img
                                             src={product.photos[0]}
@@ -60,7 +61,7 @@ const ProductDetails = (data: { product: ProductType}) => {
                                         />
                                     </ImageListItem>
                                 </ImageList>
-                                <ImageList key={1} sx={{ width: 70, height: 70, overflow: 'hidden', borderRadius: '5px', cursor: 'pointer', border: '1px solid #999999'}} variant="woven" cols={1}>
+                                <ImageList key={1} sx={{ width: 50, height: 50, overflow: 'hidden', borderRadius: '5px', cursor: 'pointer', border: '1px solid #999999'}} variant="woven" cols={1}>
                                     <ImageListItem key={1} onClick={() => setSelectedImage(product.photos[1])}>
                                         <img
                                             src={product.photos[1]}
@@ -71,7 +72,7 @@ const ProductDetails = (data: { product: ProductType}) => {
                                         />
                                     </ImageListItem>
                                 </ImageList>
-                                <ImageList key={2} sx={{ width: 70, height: 70, overflow: 'hidden', borderRadius: '5px', cursor: 'pointer', border: '1px solid #999999'}} variant="woven" cols={1}>
+                                <ImageList key={2} sx={{ width: 50, height: 50, overflow: 'hidden', borderRadius: '5px', cursor: 'pointer', border: '1px solid #999999'}} variant="woven" cols={1}>
                                     <ImageListItem key={2} onClick={() => setSelectedImage(product.photos[2])}>
                                         <img
                                             src={product.photos[2]}
@@ -82,7 +83,7 @@ const ProductDetails = (data: { product: ProductType}) => {
                                         />
                                     </ImageListItem>
                                 </ImageList>
-                                <ImageList key={3} sx={{ width: 70, height: 70, overflow: 'hidden', borderRadius: '5px', cursor: 'pointer', border: '1px solid #999999'}} variant="woven" cols={1}>
+                                <ImageList key={3} sx={{ width: 50, height: 50, overflow: 'hidden', borderRadius: '5px', cursor: 'pointer', border: '1px solid #999999'}} variant="woven" cols={1}>
                                     <ImageListItem key={3} onClick={() => setSelectedImage(product?.photos[3])} sx={{backgroundColor:'#e8e8e8'}}>
                                         <MoreHorizIcon fontSize='small' sx={{width:'100%' }} />
                                     </ImageListItem>
@@ -92,13 +93,13 @@ const ProductDetails = (data: { product: ProductType}) => {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid xs={12} sm={12} md={6}>
+            <Grid xs={12} sm={12} md={6} sx={{maxWidth: '600px'}}>
                 <Box component='div'>
                     <Box component='div'>
                         <Typography variant="h3" sx={{ margin: 1}}>
                             {product.author}
                         </Typography>
-                        <Typography variant="h4" sx={{ maxWidth: '650px', margin: 1}}>
+                        <Typography variant="h4" sx={{ margin: 1}}>
                             {product.title}, {product.piece_info?.year}
                         </Typography>
                     </Box>

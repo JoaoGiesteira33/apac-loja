@@ -5,7 +5,7 @@ import { ProductType } from '../types/product';
 
 const Product = () => {
     // fetch pruduct data from backend or pass it as props from parent component
-    const product1: ProductType = products[0];
+    const product1: ProductType = products[1];
 
     return (
         <Box
