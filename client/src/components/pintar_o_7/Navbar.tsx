@@ -31,10 +31,7 @@ const customTheme: CustomFlowbiteTheme = {
 export default function Navbar() {
     return (
         <Flowbite theme={{ theme: customTheme }}>
-            <FlowbiteNavbar
-                className="border-black border-2 mb-10"
-                fluid
-                rounded>
+            <FlowbiteNavbar className="mb-10" fluid rounded>
                 <FlowbiteNavbar.Brand as={Link} href="/">
                     <img
                         src={logoApac}

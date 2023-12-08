@@ -12,6 +12,7 @@ import { ChatWidget } from './components/ChatWidget';
 
 // dynamically load components as they are needed
 const HomePage = React.lazy(() => import('./pages/Home'));
+const HomePagePintarO7 = React.lazy(() => import('./pages/pintar_o_7/Home'));
 const ProductPage = React.lazy(() => import('./pages/Product'));
 
 function App() {
@@ -45,7 +46,7 @@ function App() {
     const routes = [
         {
             path: '/',
-            element: <HomePage />,
+            element: <HomePagePintarO7 />,
             requireAuth: false,
         },
         {
@@ -62,7 +63,8 @@ function App() {
             path: '/product',
             element: <ProductPage />,
             requireAuth: false,
-        },{
+        },
+        {
             path: '/profile',
             element: <ProfileIndex />,
             requireAuth: false,
@@ -71,7 +73,7 @@ function App() {
             path: '/profile/info',
             element: <ProfileInfo />,
             requireAuth: false,
-        }
+        },
     ];
 
     return (
