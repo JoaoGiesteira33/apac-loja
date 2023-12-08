@@ -6,11 +6,14 @@ import Navbar from './components/pintar_o_7/Navbar';
 
 import Chat from './components/experinecia_chat/Chat';
 
+import Chat from './components/experinecia_chat/Chat';
+
 import { Route, Routes } from 'react-router-dom';
 import { CanvasModel } from './components/canvasModel';
 import ProfileInfo from './pages/Profile/ProfileInfo';
 import ProfileIndex from './pages/Profile/ProfileIndex';
 import { ChatWidget } from './components/ChatWidget';
+
 
 
 // dynamically load components as they are needed
