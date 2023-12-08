@@ -34,5 +34,43 @@
 
         },
         "book_info": null
+    },
+    {
+        "id": 2,
+        "title": "Industrial smoke-1",
+        "author": "TOMAS CASTAÑO",
+        "thumbnailPhoto": "https://zet.gallery/storage/images/products/c3b2/a821/ac2a/4db3/b5bb/4a30/d051/0972.jpg?mode=max&bgcolor=ffffff&width=717&height=717&quality=70",
+        "photos": [
+            "https://zet.gallery/storage/images/products/c3b2/a821/ac2a/4db3/b5bb/4a30/d051/0972.jpg?mode=max&bgcolor=ffffff&width=717&height=717&quality=70",
+            "https://zet.gallery/storage/images/products/69b2/d297/915d/42f8/8815/44ef/4efe/4cad.jpg?maxwidth=2000&maxheight=2000",
+            "https://zet.gallery/storage/images/products/63ba/568a/239a/4ae7/8813/fafe/b585/add7.jpg?maxwidth=2000&maxheight=2000",
+            "https://zet.gallery/storage/images/products/199b/fbf2/b261/4574/86a3/9408/3fac/2636.jpg?maxwidth=2000&maxheight=2000",
+            "https://zet.gallery/storage/images/products/70ca/bc42/670b/43cf/9a8f/c6f4/7b34/cfe1.jpg?maxwidth=2000&maxheight=2000",
+            "https://zet.gallery/storage/images/products/b46b/75d4/eeb5/42e3/9d9c/eddb/3b03/7e0b.jpg?quality=70?maxwidth=2000&maxheight=2000"
+        ],
+        "description": "Contaminación industrial. Forma parte de una serie dedicada a los cielos en todas su facetas, tormentas, lluvias, contaminación, amaneceres, mostrando las múltiples tonalidades que la naturaleza nos ofrece en las puestas de sol, cielos iluminados por los vertidos de las fábricas. En esta serie trato de mostrar todas las posibles escenas utilizando una exigente paleta de colores para lograr la meta que me he propuesto. ",
+        "price": {
+            "amount": {
+                "EUR": 2000,
+                "USD": 2300,
+                "GBP": 1948
+            },
+            "discount": 0
+        },
+        "stock": 1,
+        "product_type": "piece",
+        "piece_info": {
+            "technique": "Oil on linen",
+            "material": "Framed",
+            "dimensions": {
+                "height": 60,
+                "width": 60,
+                "depth": 1,
+                "measure": "cm"
+            },
+            "year": 2023
+
+        },
+        "book_info": null
     }
 ]
