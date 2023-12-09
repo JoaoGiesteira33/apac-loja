@@ -9,21 +9,14 @@ import MultipleSelectTypes from '../../components/pintar_o_7/MultipleSelectTypes
 export default function Home() {
     const [selectedTypes, setSelectedTypes] = React.useState<string[]>([]);
 
-    const handleSelectedTypesChange = (
-        event: SelectChangeEvent<typeof selectedTypes>
-    ) => {
-        const {
-            target: { value },
-        } = event;
-        setSelectedTypes(typeof value === 'string' ? value.split(',') : value);
-    };
-
     return (
         <div>
             <Hero />
             <div className="flex w-full items-center py-12 justify-evenly font-poppins text-black dark:text-white font-normal">
-                <MultipleSelectTypes handleChange={handleSelectedTypesChange} values={selectedTypes}/>
-                <div className="w-20 flex justify-center">tipo</div>
+                <MultipleSelectTypes
+                    values={selectedTypes}
+                    setValues={setSelectedTypes}
+                />
                 <div className="w-20 flex justify-center">preço</div>
                 <div className="w-20 flex justify-center">batatas</div>
             </div>
