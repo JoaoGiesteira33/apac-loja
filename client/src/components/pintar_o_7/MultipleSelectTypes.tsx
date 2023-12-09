@@ -1,23 +1,23 @@
-import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
-import { Input } from '@mui/material';
+import Button from '@mui/material/Button';
+import { ListItemIcon } from '@mui/material';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
     PaperProps: {
         style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            maxHeight: ITEM_HEIGHT * 10 + ITEM_PADDING_TOP,
             width: 250,
         },
     },
 };
-const availableTypes = [
+const availableTypes: string[] = [
     'Pintura',
     'Escultura',
     'Fotografia',
@@ -31,25 +31,59 @@ const availableTypes = [
 ];
 
 export default function MultipleSelectTypes({
-    handleChange,
     values,
+    setValues,
 }: {
-    handleChange: (event: SelectChangeEvent<typeof values>) => void;
     values: string[];
+    setValues: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
+    const handleSelectedTypesChange = (
+        event: SelectChangeEvent<typeof values>
+    ) => {
+        const value = event.target.value;
+        if (value[value.length - 1] === 'all') {
+            setValues(
+                values.length === availableTypes.length ? [] : availableTypes
+            );
+            return;
+        }
+        setValues(typeof value === 'string' ? value.split(',') : value);
+    };
+
     return (
         <div>
-            <FormControl sx={{ m: 1, width: 200 }}>
-                <InputLabel id="multiple-checkbox-label">tipo</InputLabel>
+            <FormControl variant="standard" sx={{ m: 1, minWidth: 60 }}>
+                <InputLabel
+                    shrink={false}
+                    sx={{ color: 'black', fontFamily: 'Poppins' }}
+                    id="multiple-checkbox-label">
+                    {values.length < 1 && 'tipos'}
+                </InputLabel>
                 <Select
                     labelId="multiple-checkbox-label"
                     id="multiple-checkbox"
                     multiple
+                    disableUnderline
                     value={values}
-                    onChange={handleChange}
-                    input={<Input />}
+                    autoWidth
+                    onChange={handleSelectedTypesChange}
                     renderValue={(selected) => selected.join(', ')}
                     MenuProps={MenuProps}>
+                    <MenuItem value="all">
+                        <ListItemIcon>
+                            <Checkbox
+                                checked={
+                                    availableTypes.length > 0 &&
+                                    values.length === availableTypes.length
+                                }
+                                indeterminate={
+                                    values.length > 0 &&
+                                    values.length < availableTypes.length
+                                }
+                            />
+                        </ListItemIcon>
+                        <ListItemText primary="Todos" />
+                    </MenuItem>
                     {availableTypes.map((type) => (
                         <MenuItem key={type} value={type}>
                             <Checkbox checked={values.indexOf(type) > -1} />

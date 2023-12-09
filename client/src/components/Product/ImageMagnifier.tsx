@@ -1,92 +1,49 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
-function ImageMagnifier({
-    src,
-    alt,
-    width,
-    height,
-    magnifierHeight = 100,
-    magnifierWidth = 100,
-    zoomLevel = 1.5
-}: {
-    src: string,
-    alt: string,
-    width: string,
-    height: string,
-    magnifierHeight?: number,
-    magnifierWidth?: number,
-    zoomLevel?: number
-}) {
+function ImageMagnifier( data: {src: string} ) {
+    const imgUrl = data.src;
+
+    const [position, setPosition] = useState({ x: 0, y: 0 });
     const [showMagnifier, setShowMagnifier] = useState(false);
-    const [[imgWidth, imgHeight], setSize] = useState([0, 0]);
-    const [[x,y], setXY] = useState([0,0]);
-  return (
-    // the container
-    <div
-        style={{
-            position: 'relative',
-            width: width,
-            height: height
-        }}
-    >
-        
-        <img
-            src={src}
-            style={{ width: width, height: height, cursor: "zoom-in"}}
-            onClick={(e) => {
-                // update image size and turn-on magnifier
-                const elem = e.currentTarget;
-                const { width, height } = elem.getBoundingClientRect();
-                setSize([width, height]);
-                setShowMagnifier(!showMagnifier);
-            }}
-            onMouseMove={(e) => {
-                // update cursor position
-                const elem = e.currentTarget;
-                const { top, left } = elem.getBoundingClientRect();
+    const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
-                // calculate cursor position on the image
-                const x = e.pageX - left - window.pageXOffset;
-                const y = e.pageY - top - window.pageYOffset;
-                setXY([x, y]);
-            }}
-            onMouseLeave={() => {
-                // close magnifier
-                setShowMagnifier(false);
-            }}
-            alt={alt}
-        />
-        
+    const handleMouseHover = (e: React.MouseEvent<HTMLDivElement>) => {
+        const { left, top, width, height } =
+            e.currentTarget.getBoundingClientRect();
+        const x = ((e.pageX - left) / width) * 100;
+        const y = ((e.pageY - top) / height) * 100;
+        setPosition({ x, y });
+
+        setCursorPosition({ x: e.pageX - left, y: e.pageY - top });
+    };
+
+    return (
         <div
-            style={{
-                display: showMagnifier ? "" : "none",
-                position: "absolute",
+            className="img-magnifier-container relative"
+            onMouseEnter={() => setShowMagnifier(true)}
+            onMouseLeave={() => setShowMagnifier(false)}
+            onMouseMove={handleMouseHover}>
+            <img className="magnifier-img w-auto h-4/5" src={imgUrl} alt="" />
 
-                // prevent magnifier blocks the mousemove event of img
-                pointerEvents: "none",
-                // set size of magnifier
-                height: `${magnifierHeight}px`,
-                width: `${magnifierWidth}px`,
-                // move element center to cursor pos
-                top: `${y - magnifierHeight / 2}px`,
-                left: `${x - magnifierWidth / 2}px`,
-                opacity: "1", // reduce opacity so you can verify position
-                border: "1px solid lightgray",
-                backgroundColor: "white",
-                backgroundImage: `url('${src}')`,
-                backgroundRepeat: "no-repeat",
-
-                //calculate zoomed image size
-                backgroundSize: `${imgWidth * zoomLevel}px ${
-                    imgHeight * zoomLevel
-                }px`,
-
-                //calculate position of zoomed image.
-                backgroundPositionX: `${-x * zoomLevel + magnifierWidth / 2}px`,
-                backgroundPositionY: `${-y * zoomLevel + magnifierHeight / 2}px`
-            }}
-        ></div>
-    </div>
-  );
+            {showMagnifier && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        left: `${cursorPosition.x - 100}px`,
+                        top: `${cursorPosition.y - 100}px`,
+                        pointerEvents: 'none',
+                    }}>
+                    <div
+                        className="magnifier-image w-52 h-52 border-2 border-gray-400 rounded-full"
+                        style={{
+                            backgroundImage: `url(${imgUrl})`,
+                            backgroundPosition: `${position.x}% ${position.y}%`,
+                        }}
+                    />
+                </div>
+            )}
+        </div>
+    );
 }
+
 export default ImageMagnifier;
