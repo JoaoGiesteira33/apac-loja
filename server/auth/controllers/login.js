@@ -1,51 +1,119 @@
-var jwt = require('jsonwebtoken');
-var secrets = require('docker-secret').secrets;
+// Login API controller
+//
+var Login = require('../models/login')
 
-function isAdmin(req, res, next) {
-    var myToken = req.query.token || req.body.token || req.cookies.token
-    if (myToken) {
-        jwt.verify(myToken, secrets.auth_key, function (e, payload) { // esconder a chave ???????
-            if (e) {
-                res.status(401).render('error', { error: "Access denied!" })
-            }
-            else if (payload.level == "admin") {
-                req.user = payload.username
-                req.level = payload.level
-                req.token = myToken
-                next()
-            }
-            else {
-                res.status(401).render('error', { error: "Access denied!" })
-            }
-        })
-    }
-    else {
-        res.status(401).render('error', { error: "Token not found!" })
-    }
+// ---------------------------------------------
+
+module.exports.register = login => {
+	return Login.findOne({ email: login.email })
+		.then(resposta => {
+			if (resposta) {
+				return { error: "Email already in use!" }
+			}
+			else {
+				return Login.create(login)
+					.then(resposta => {
+						return resposta
+					})
+					.catch(erro => {
+						return erro
+					})
+			}
+		})
+		.catch(erro => {
+			return erro
+		})
 }
 
-function hasAccess(req, res, next) {
-    var myToken = req.query.token || req.body.token || req.cookies.token
-    if (myToken) {
-        jwt.verify(myToken, secrets.auth_key, function (e, payload) { // esconder a chave ???????
-            if (e) {
-                res.status(401).render('error', { error: "Access denied!" })
-            }
-            else {
-                req.user = payload.username
-                req.level = payload.level
-                req.token = myToken
-                next()
-            }
-        })
-    }
+module.exports.list = () => {
+	return Login
+		.find()
+		.then(resposta => {
+			return resposta
+		})
+		.catch(erro => {
+			return erro
+		})
 }
 
-function isMe(req, res, next){
-    if(req.params.id == req.user){
-        next()
-    }
-    else{
-        res.status(401).render('error', { error: "Access denied!" })
-    }
+module.exports.getLogin = mail => {
+	return Login.findOne({ email: mail })
+		.then(resposta => {
+			return resposta
+		})
+		.catch(erro => {
+			return erro
+		})
+}
+
+module.exports.updateLogin = info => {
+	return Login.findOne({ email: info.email }).
+		then(resposta => {
+			if (resposta) {
+				return { error: "Email already in use!" }
+			}
+			else {
+				return Login.updateOne({ email: info.email }, info)
+					.then(resposta => {
+						return resposta
+					})
+					.catch(erro => {
+						return erro
+					})
+			}
+		})
+		.catch(erro => {
+			return erro
+		})
+}
+
+module.exports.updateLoginEmail = (mail, newMail) => {
+	return Login.findOne({ email: newMail }).
+		then(resposta => {
+			if (resposta) {
+				return { error: "Email already in use!" }
+			}
+			else {
+				return Login.updateOne({ email: mail }, { "$set": { "email": newMail } })
+					.then(resposta => {
+						return resposta
+					})
+					.catch(erro => {
+						return erro
+					})
+			}
+		})
+		.catch(erro => {
+			return erro
+		})
+}
+
+module.exports.updateLoginPassword = (mail, password) => {
+	return Login.updateOne({ email: mail }, { "$set": { "password": password } })
+		.then(resposta => {
+			return resposta
+		})
+		.catch(erro => {
+			return erro
+		})
+}
+
+module.exports.updateLoginNivel = (mail, nivel) => {
+	return Login.updateOne({ email: mail }, { "$set": { "nivel": nivel } })
+		.then(resposta => {
+			return resposta
+		})
+		.catch(erro => {
+			return erro
+		})
+}
+
+module.exports.deleteLogin = mail => {
+	return Login.deleteOne({ email: mail })
+		.then(resposta => {
+			return resposta
+		})
+		.catch(erro => {
+			return erro
+		})
 }
