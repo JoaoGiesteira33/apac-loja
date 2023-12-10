@@ -12,6 +12,7 @@ import { ChatWidget } from './components/ChatWidget';
 import { ThemeProvider, useTheme, createTheme } from '@mui/material/styles';
 import { amber, deepOrange, grey } from '@mui/material/colors';
 import { IconButton, PaletteMode } from '@mui/material';
+import { CssBaseline } from '@mui/material/';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 
@@ -22,6 +23,9 @@ const ProductPage = React.lazy(() => import('./pages/Product'));
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 const getDesignTokens = (mode: PaletteMode) => ({
+    typography: {
+        fontFamily: 'Poppins',
+    },
     palette: {
         mode,
         ...(mode === 'light'
@@ -47,6 +51,15 @@ const getDesignTokens = (mode: PaletteMode) => ({
                       secondary: grey[500],
                   },
               }),
+    },
+    components: {
+        MuiSelect: {
+            styleOverrides: {
+                icon: {
+                    color: mode === 'light' ? grey[800] : '#fff',
+                },
+            },
+        },
     },
 });
 
@@ -132,6 +145,7 @@ function App() {
     return (
         <ColorModeContext.Provider value={colorMode}>
             <ThemeProvider theme={theme}>
+                <CssBaseline />
                 <div className={theme.palette.mode === 'dark' ? 'dark' : ''}>
                     <IconButton
                         sx={{ ml: 1, position: 'absolute', right: 0, top: 0 }}

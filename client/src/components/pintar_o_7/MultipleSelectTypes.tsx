@@ -60,18 +60,10 @@ export default function MultipleSelectTypes({
     return (
         <div>
             <FormControl variant="standard" sx={{ m: 1, width: 70 }}>
-                <InputLabel
-                    shrink={false}
-                    sx={{ color: 'black', fontFamily: 'Poppins' }}
-                    id="multiple-checkbox-label">
+                <InputLabel shrink={false} id="multiple-checkbox-label">
                     {values.length < 1 && 'tipos'}
                 </InputLabel>
                 <Select
-                    sx={{
-                        color: 'black',
-                        fontFamily: 'Poppins',
-                        '& .MuiSelect-icon': { color: 'black' },
-                    }}
                     labelId="multiple-checkbox-label"
                     id="multiple-checkbox"
                     multiple
