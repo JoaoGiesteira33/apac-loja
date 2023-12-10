@@ -21,6 +21,15 @@ const sessionStore = new RedisSessionStore(redisClient);
 const { RedisMessageStore } = require("./messageStore");
 const messageStore = new RedisMessageStore(redisClient);
 
+function isOnList(list, username) {
+  for (let i = 0; i < list.length; i++) {
+    if (list[i].username === username) {
+      return true;
+    }
+  }
+}
+
+
 io.use(async (socket, next) => {
   const sessionID = socket.handshake.auth.sessionID;
   if (sessionID) {
@@ -28,7 +37,6 @@ io.use(async (socket, next) => {
     const session = await sessionStore.findSession(sessionID);
     if (session) {
       socket.sessionID = sessionID;
-      socket.userID = session.userID;
       socket.username = session.username;
       return next();
     }
@@ -42,19 +50,18 @@ io.use(async (socket, next) => {
 
   // create a new session
   socket.sessionID = randomId();
-  socket.userID = randomId();
   socket.username = username;
   next();
 });
 
 io.on("connection", async (socket) => {
   // persist session
+  console.log("<<<<<<<<<<<<<<<<<<<<")
   console.log("Socket connected")
   console.log("Socket sessionID", socket.sessionID)
-  console.log("Socket userID", socket.userID)
+  console.log("Socket username", socket.username)
 
   sessionStore.saveSession(socket.sessionID, {
-    userID: socket.userID,
     username: socket.username,
     connected: true,
   });
@@ -64,22 +71,21 @@ io.on("connection", async (socket) => {
   // emit session details
   socket.emit("session", {
     sessionID: socket.sessionID,
-    userID: socket.userID,
   });
 
-  // join the "userID" room
-  socket.join(socket.userID);
+  // join the <username> room
+  socket.join(socket.username);
 
   // fetch existing users
-  const users = [];
+  const users = {};
   const [messages, sessions] = await Promise.all([
-    messageStore.findMessagesForUser(socket.userID),
+    messageStore.findMessagesForUser(socket.username),
     sessionStore.findAllSessions(),
   ]);
   const messagesPerUser = new Map();
   messages.forEach((message) => {
-    const { from, to } = message;
-    const otherUser = socket.userID === from ? to : from;
+    const { from, to, date } = message;
+    const otherUser = socket.username === from ? to : from;
     if (messagesPerUser.has(otherUser)) {
       messagesPerUser.get(otherUser).push(message);
     } else {
@@ -88,18 +94,33 @@ io.on("connection", async (socket) => {
   });
 
   sessions.forEach((session) => {
-    users.push({
-      userID: session.userID,
-      username: session.username,
-      connected: session.connected,
-      messages: messagesPerUser.get(session.userID) || [],
-    });
+    // tratar isto para remover repetidos (se 1 estiver 1, é o que ganha)
+    if(session.username in users) {
+      users[session.username]["connected"] = session.connected || 
+                                             users[session.username].connected;
+    }
+    else{
+      users[session.username] = {
+        username: session.username,
+        connected: session.connected,
+        messages: messagesPerUser.get(session.username) || [],
+      };  
+      console.log(messagesPerUser.get(session.username))
+    }
   });
-  socket.emit("users", users);
+  console.log("--------- Users ---------")
+  console.log(users)
+  const usernames = Object.keys(users);
+  const sendingUsers = [];
+  for (var key in usernames){
+    sendingUsers.push(users[usernames[key]]);
+  } 
+  console.log(sendingUsers)
+  console.log("--------- ---- ---------")
+  socket.emit("users", sendingUsers);
 
   // notify existing users
   socket.broadcast.emit("user connected", {
-    userID: socket.userID,
     username: socket.username,
     connected: true,
     messages: [],
@@ -109,29 +130,34 @@ io.on("connection", async (socket) => {
   socket.on("private message", ({ content, to }) => {
     const message = {
       content,
-      from: socket.userID,
+      from: socket.username,
       to,
+      date: new Date().toLocaleString(),
     };
+    console.log(message.date)
     // sends to destiny and to sender (to update the chat)
-    socket.to(to).to(socket.userID).emit("private message", message);
+    socket.to(to).to(socket.username).emit("private message", message);
     messageStore.saveMessage(message);
   });
 
   // notify users upon disconnection
   socket.on("disconnect", async () => {
-    const matchingSockets = await io.in(socket.userID).allSockets();
+    console.log("Socket disconnected:" + " " + socket.username)
+    // mark user as disconnected
+    const matchingSockets = await io.in(socket.username).allSockets();
     const isDisconnected = matchingSockets.size === 0;
     if (isDisconnected) {
+      console.log("User disconnected:" + " " + socket.username)
       // notify other users
-      socket.broadcast.emit("user disconnected", socket.userID);
+      socket.broadcast.emit("user disconnected", socket.username);
       // update the connection status of the session
       sessionStore.saveSession(socket.sessionID, {
-        userID: socket.userID,
         username: socket.username,
         connected: false,
       });
     }
   });
+  console.log(">>>>>>>>>>>>>>>>>>>>")
 });
 
 setupWorker(io);

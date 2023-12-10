@@ -4,16 +4,24 @@ import Button from '@mui/material/Button';
 
 import { useState } from 'react';
 
-export function ConnectionManager({ setUserID }: { setUserID: (userID: string) => void}) {
-  const [username, setUsername] = useState("");
+export function ConnectionManager({ username, setUsername, setSessionID, unselectUser }:
+                                  { username: string ,
+                                    setUsername: (userID: string) => void, 
+                                    setSessionID: (sessionID: string) => void,
+                                    unselectUser: () => void}) {
   function connect() {
-    setUserID(username);
-    socket.auth = { username, userID: username };
+    setUsername(username);
+    localStorage.setItem("username", username);
+    socket.auth = { username };
     socket.connect();
   }
 
-  function disconnect() {
-    localStorage.removeItem("sessionID");
+  async function disconnect() {
+    await localStorage.removeItem("sessionID");
+    await localStorage.removeItem("username");
+    setUsername("");
+    setSessionID("");
+    unselectUser();
     socket.disconnect();
   }
 

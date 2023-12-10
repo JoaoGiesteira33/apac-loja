@@ -9,6 +9,6 @@ export const socket = io(URL, {
         serverOffset: 0
     },
     // enable retries
-    ackTimeout: 10000,
-    retries: 3
+    //ackTimeout: 10000,
+    //retries: 3
 });

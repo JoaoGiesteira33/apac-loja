@@ -9,6 +9,7 @@ interface MessagePanelProps {
     messages: Array<{
       content: string;
       fromSelf: boolean;
+      date: string;
     }>;
   };
   onMessage: (content: string) => void;
@@ -38,7 +39,7 @@ function MessagePanel({ user, onMessage }: MessagePanelProps) {
                 <Typography sx={{fontSize: 20, fontWeight: "bold", ml: 1}}>{message.fromSelf ? '->  (yourself)' : "-> " + user.username}</Typography>
               </div>
             )}
-            <Typography sx={{ml: 1}}>{":: " + message.content}</Typography>
+            <Typography sx={{ml: 1}}>{message.date + " :: " + message.content}</Typography>
           </li>
         ))}
       </ul>

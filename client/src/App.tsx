@@ -1,18 +1,13 @@
-import React, { useState, useEffect, Suspense } from 'react';
-import { socket } from './socket';
+import React, { useState, useEffect } from 'react';
 
-import Footer from './components/new_footer';
+import Footer from './components/pintar_o_7/Footer';
 import Navbar from './components/pintar_o_7/Navbar';
-
 import Chat from './components/experinecia_chat/Chat';
 
-import Chat from './components/experinecia_chat/Chat';
-
-import { Route, Routes } from 'react-router-dom';
+//import { Route, Routes } from 'react-router-dom';
 import { CanvasModel } from './components/canvasModel';
 import ProfileInfo from './pages/Profile/ProfileInfo';
 import ProfileIndex from './pages/Profile/ProfileIndex';
-import { ChatWidget } from './components/ChatWidget';
 
 
 
@@ -22,31 +17,6 @@ const HomePagePintarO7 = React.lazy(() => import('./pages/pintar_o_7/Home'));
 const ProductPage = React.lazy(() => import('./pages/Product'));
 
 function App() {
-    const [userID, setUserId] = useState('');
-
-    useEffect(() => {
-        const sessionID = localStorage.getItem('sessionID');
-
-        if (sessionID) {
-            socket.auth = { sessionID };
-            socket.connect();
-        }
-
-        socket.on('session', ({ sessionID, userID }) => {
-            socket.auth = { sessionID };
-            localStorage.setItem('sessionID', sessionID);
-            setUserId(userID);
-        });
-
-        socket.on('connect_error', (err) => {
-            if (err.message === 'invalid username') {
-            }
-        });
-
-        return () => {
-            socket.off('connect_error');
-        };
-    }, []);
 
     // All routes for the app
     const routes = [
@@ -86,6 +56,7 @@ function App() {
         <div>
             <Navbar />
             <Chat />
+            <Footer />
         </div>
     );
 }

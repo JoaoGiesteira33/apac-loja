@@ -5,7 +5,6 @@ import { Button } from '@mui/material';
 import { ConnectionManager } from './ConnectionManager';
 
 interface User {
-  userID: string;
   username: string;
   connected: boolean;
   self: boolean;
@@ -18,18 +17,25 @@ interface Message {
   fromSelf: boolean;
     from?: string;
     to?: string;
+  date: string;
 }
 
 //function Chat({ userID }: { userID: string}) {
 function Chat() {
-  const [selectedUser, setSelectedUser] = useState<User>({ userID: '', username: '', connected: false, self: false, messages: [], hasNewMessages: false });
+  const defaultUser = { username: '', connected: false, self: false, messages: [], hasNewMessages: false };
+  const [selectedUser, setSelectedUser] = useState<User>(defaultUser);
   const [selected, setSelected] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
-  const [userID,setUserId] = useState('');
-  const [sessionID, setSessionID] = useState(() => {
-    // getting stored value
-    return localStorage.getItem("sessionID") || "";
+  const [username,setUsername] = useState(() => {
+    const savedUsername = localStorage.getItem("username");
+    return savedUsername ? savedUsername : "";
   });
+  const [sessionID, setSessionID] = useState(() => {
+    const savedSessionID = localStorage.getItem("sessionID");
+    return savedSessionID ? savedSessionID : "";
+  });
+
+
   const initReactiveProperties = (user: User) => {
     user.hasNewMessages = false;
   };
@@ -38,11 +44,12 @@ function Chat() {
     if (selected) {
       socket.emit('private message', {
         content,
-        to: selectedUser.userID,
+        to: selectedUser.username,
       });
       selectedUser.messages.push({
         content,
         fromSelf: true,
+        date: new Date().toLocaleString(),
       });
       setUsers([...users]);
     }
@@ -54,8 +61,18 @@ function Chat() {
     user.hasNewMessages = false;
   };
 
+  const unselectUser = () => {
+    setSelectedUser(defaultUser);
+    setSelected(false);
+  }
+
   useEffect(() => {
     if (sessionID) {
+      console.log("--- INIT ---")
+      console.log("sessionID: " + sessionID);
+      console.log("username: " + username);
+      console.log("--- ---- ---")
+      // apenas é necessario enviar o sessionID pois o username esta ligado
       socket.auth = { sessionID };
       socket.connect();
     }
@@ -83,29 +100,28 @@ function Chat() {
       );
     });
 
-    socket.on("session", ({ sessionID, userID }) => {
+    socket.on("session", ({ sessionID }) => {
       // attach the session ID to the next reconnection attempts
-      socket.auth = { sessionID, userID };
+      socket.auth = { sessionID };
       // store it in the localStorage
       localStorage.setItem("sessionID", sessionID);
-      // save the ID of the user and ID of the session
-      setUserId(userID);
+      // save the ID of the session
       setSessionID(sessionID);
     });
 
     socket.on('users', (newUsers: User[]) => {
       const updatedUsers = newUsers.map((user) => {
         user.messages.forEach((message) => {
-          message.fromSelf = message.from === userID;
+          message.fromSelf = message.from === username;
         });
         const existingUserIndex = users.findIndex(
-          (existingUser) => existingUser.userID === user.userID
+          (existingUser) => existingUser.username === user.username
         );
         if (existingUserIndex !== -1) {
           users[existingUserIndex] = { ...users[existingUserIndex], ...user };
           return users[existingUserIndex];
         } else {
-          user.self = user.userID === userID;
+          user.self = user.username === username;
           initReactiveProperties(user);
           return user;
         }
@@ -123,7 +139,7 @@ function Chat() {
 
     socket.on('user connected', (user: User) => {
       const existingUserIndex = users.findIndex(
-        (existingUser) => existingUser.userID === user.userID
+        (existingUser) => existingUser.username === user.username
       );
       if (existingUserIndex !== -1) {
         users[existingUserIndex].connected = true;
@@ -135,20 +151,21 @@ function Chat() {
     });
 
     socket.on('user disconnected', (id: string) => {
-      const existingUserIndex = users.findIndex((user) => user.userID === id);
+      const existingUserIndex = users.findIndex((user) => user.username === id);
       if (existingUserIndex !== -1) {
         users[existingUserIndex].connected = false;
         setUsers([...users]);
       }
     });
 
-    socket.on('private message', ({ content, from, to }: Message) => {
+    socket.on('private message', ({ content, from, to, date }: Message) => {
       users.forEach((user) => {
-        const fromSelf = userID === from;
-        if (user.userID === (fromSelf ? to : from)) {
+        const fromSelf = username === from;
+        if (user.username === (fromSelf ? to : from)) {
           user.messages.push({
             content,
             fromSelf,
+            date
           });
           if (user !== selectedUser) {
             user.hasNewMessages = true;
@@ -173,14 +190,19 @@ return (
     <div>
         <div>
           <>---------------------    CHAT    ---------------------</>
-          <ConnectionManager setUserID={setUserId} />
-            {users.map((user) => (
+          <ConnectionManager username={username} setUsername={setUsername} setSessionID={setSessionID} unselectUser={unselectUser} />
+            {socket.connected ? users.map((user) => (
+              user.username == username ?
+                <></>
+                  :
                 <Button 
-                  key={user.userID} 
-                  sx={{color: user.connected ? "green" : "red"}} 
-                  onClick={() => onSelectUser(user)}>{user.username + "-" + user.userID}
+                  key={user.username} 
+                  sx={{color: user.connected ? "green" : "red",
+                       border: selectedUser.username == user.username ? "2px solid black" : "none"}} 
+                  onClick={() => onSelectUser(user)}>
+                      { user.username + (user.hasNewMessages ? ' (+)' : '') }
                 </Button>
-            ))}
+            )) : <></>}
         </div>
         {(selected ? <MessagePanel user={selectedUser} onMessage={onMessage} /> : <></>)}
     </div>
