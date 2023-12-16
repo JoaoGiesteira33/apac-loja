@@ -10,7 +10,9 @@
   "license": "MIT",
   "dependencies": {
     "@socket.io/sticky": "^1.0.0",
+    "dotenv": "^16.3.1",
     "ioredis": "^4.22.0",
+    "nodemailer": "^6.9.7",
     "socket.io": "^4.0.0",
     "socket.io-redis": "^6.0.1"
   }

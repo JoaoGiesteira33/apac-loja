@@ -52,6 +52,15 @@ function Chat() {
         date: new Date().toLocaleString(),
       });
       setUsers([...users]);
+
+      if(!selectedUser.connected){
+
+        socket.emit('send email', {
+          email: "fgoncalo061@gmail.com",
+          subject: selectedUser.username,
+          text: content
+        });
+      } 
     }
   };
 
@@ -175,6 +184,10 @@ function Chat() {
       setUsers([...users]);
     });
 
+    socket.on('email sent', () => {
+      console.log("Email sent");
+    })
+
     return () => {
       // Cleanup socket event listeners when the component unmounts
       socket.off('connect');
@@ -183,6 +196,7 @@ function Chat() {
       socket.off('user connected');
       socket.off('user disconnected');
       socket.off('private message');
+      socket.off('email sent')
     };
   }, [selectedUser, users]);
 

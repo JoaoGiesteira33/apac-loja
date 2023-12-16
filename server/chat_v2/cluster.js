@@ -1,6 +1,7 @@
 const cluster = require("cluster");
 const http = require("http");
 const { setupMaster } = require("@socket.io/sticky");
+require('dotenv').config()
 
 const WORKERS_COUNT = 1;
 
