@@ -5,39 +5,33 @@ import Divider from '@mui/material/Divider';
 
 import Hero from '../../components/pintar_o_7/Hero';
 import MultipleSelectTypes from '../../components/pintar_o_7/MultipleSelectTypes';
+import Box from '@mui/system/Box';
+import Stack from '@mui/material/Stack';
 
 export default function Home() {
     const [selectedTypes, setSelectedTypes] = React.useState<string[]>([]);
 
     return (
-        <div>
+        <Box component="div">
             <Hero />
-            <div className="flex w-full items-center py-12 justify-evenly font-poppins text-black dark:text-white font-normal">
+            <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="space-evenly"
+                className="p-12 font-normal">
                 <MultipleSelectTypes
                     values={selectedTypes}
                     setValues={setSelectedTypes}
                 />
-                <div className="w-20 flex justify-center">preço</div>
-                <div className="w-20 flex justify-center">batatas</div>
-            </div>
+                <Box component="div" className="w-20 flex justify-center">
+                    preço
+                </Box>
+                <Box component="div" className="w-20 flex justify-center">
+                    batatas
+                </Box>
+            </Stack>
             <Divider variant="middle" />
-            <div className="grid grid-cols-3 gap-6 justify-items-center py-12">
-                <div className="bg-black w-40 h-40"></div>
-                <div className="bg-black w-40 h-40"></div>
-                <div className="bg-black w-40 h-40"></div>
-                <div className="bg-black w-40 h-40"></div>
-                <div className="bg-black w-40 h-40"></div>
-                <div className="bg-black w-40 h-40"></div>
-                <div className="bg-black w-40 h-40"></div>
-                <div className="bg-black w-40 h-40"></div>
-                <div className="bg-black w-40 h-40"></div>
-                <div className="bg-black w-40 h-40"></div>
-                <div className="bg-black w-40 h-40"></div>
-                <div className="bg-black w-40 h-40"></div>
-                <div className="bg-black w-40 h-40"></div>
-                <div className="bg-black w-40 h-40"></div>
-            </div>
             <Divider variant="middle" />
-        </div>
+        </Box>
     );
 }

@@ -5,8 +5,15 @@ import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
-import { ListItemIcon } from '@mui/material';
+import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
+import { ListItemIcon, styled } from '@mui/material';
 
+const MyKeyboardArrowDownOutlinedIcon = styled('KeyboardArrowDownOutlinedIcon')(
+    ({ primary }) => ({
+        backgroundColor: primary ? 'palevioletred' : 'white',
+        color: primary ? 'white' : 'palevioletred',
+    })
+);
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -52,11 +59,8 @@ export default function MultipleSelectTypes({
 
     return (
         <div>
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 60 }}>
-                <InputLabel
-                    shrink={false}
-                    sx={{ color: 'black', fontFamily: 'Poppins' }}
-                    id="multiple-checkbox-label">
+            <FormControl variant="standard" sx={{ m: 1, width: 70 }}>
+                <InputLabel shrink={false} id="multiple-checkbox-label">
                     {values.length < 1 && 'tipos'}
                 </InputLabel>
                 <Select
@@ -65,11 +69,11 @@ export default function MultipleSelectTypes({
                     multiple
                     disableUnderline
                     value={values}
-                    autoWidth
                     onChange={handleSelectedTypesChange}
-                    renderValue={(selected) => selected.join(', ')}
+                    IconComponent={KeyboardArrowDownOutlinedIcon}
+                    renderValue={() => ['tipos']}
                     MenuProps={MenuProps}>
-                    <MenuItem value="all">
+                    <MenuItem divider value="all">
                         <ListItemIcon>
                             <Checkbox
                                 checked={
@@ -85,7 +89,7 @@ export default function MultipleSelectTypes({
                         <ListItemText primary="Todos" />
                     </MenuItem>
                     {availableTypes.map((type) => (
-                        <MenuItem key={type} value={type}>
+                        <MenuItem divider key={type} value={type}>
                             <Checkbox checked={values.indexOf(type) > -1} />
                             <ListItemText primary={type} />
                         </MenuItem>
