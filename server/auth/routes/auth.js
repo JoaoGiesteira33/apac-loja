@@ -21,7 +21,7 @@ function getDateTime() {
 function isAdmin(req, res, next) {
 	var myToken = req.query.token || req.body.token || req.cookies.token
 	if (myToken) {
-		jwt.verify(myToken, secrets.auth_key, function (e, payload) {
+		jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
 			if (e) {
 				res.status(401).render('error', { error: "Invalid Token!" })
 			}
@@ -44,7 +44,7 @@ function isAdmin(req, res, next) {
 function hasAccess(req, res, next) {
 	var myToken = req.query.token || req.body.token || req.cookies.token
 	if (myToken) {
-		jwt.verify(myToken, secrets.auth_key, function (e, payload) {
+		jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
 			if (e) {
 				res.status(401).render('error', { error: "Invalid Token!" })
 			}
@@ -61,7 +61,7 @@ function hasAccess(req, res, next) {
 function isMe(req, res, next) {
 	var myToken = req.query.token || req.body.token || req.cookies.token
 	if (myToken) {
-		jwt.verify(myToken, secrets.auth_key, function (e, payload) {
+		jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
 			if (e) {
 				res.status(401).render('error', { error: "Invalid Token!" })
 			}

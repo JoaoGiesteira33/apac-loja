@@ -10,8 +10,8 @@ var userRouter = require('./routes/user');
 var productRouter = require('./routes/product');
 
 
-var db_url = "mongodb+srv://"+secrets.mongo_user+":"+secrets.mongo_password+"@"+secrets.mongo_cluster+".mongodb.net/?retryWrites=true&w=majority";
-mongoose.connect(db_url, {dbName: secrets.mongo_db_name , useNewUrlParser: true , useUnifiedTopology: true});
+var db_url = "mongodb+srv://"+secrets.MONGO_USER+":"+secrets.MONGO_PASSWORD+"@"+secrets.MONGO_CLUSTER+".mongodb.net/?retryWrites=true&w=majority";
+mongoose.connect(db_url, {dbName: secrets.MONGO_DB_NAME , useNewUrlParser: true , useUnifiedTopology: true});
 var db = mongoose.connection;
 db.on('open', function(){console.log("Conexão do Servidor de Autenticação ao MongoDB realizada com sucesso...")});
 db.on('error', function(){console.log("Erro de conexão ao MongoDB...")});

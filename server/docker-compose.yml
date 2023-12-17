@@ -6,11 +6,11 @@ services:
     image: apac_api_img
     command: /bin/bash -c "cd code && npm i && npm start"
     secrets:
-      - mongo_cluster
-      - mongo_db_name
-      - mongo_user
-      - mongo_password
-      - auth_key
+      - MONGO_CLUSTER
+      - MONGO_DB_NAME
+      - MONGO_USER
+      - MONGO_PASSWORD
+      - AUTH_KEY
     ports:
       - 11000:80
     networks:
@@ -19,13 +19,13 @@ services:
   auth:
     container_name: auth-container
     image: apac_auth_img
-    command: /bin/bash -c "cd code && npm i &&  npm start"
+    command: /bin/bash -c "cd code && npm i && npm start"
     secrets:
-      - mongo_cluster
-      - mongo_db_name
-      - mongo_user
-      - mongo_password
-      - auth_key
+      - MONGO_CLUSTER
+      - MONGO_DB_NAME
+      - MONGO_USER
+      - MONGO_PASSWORD
+      - AUTH_KEY
     
     networks:
       - apac-network
@@ -34,15 +34,15 @@ volumes:
   dbdata:
 
 secrets:
-  mongo_cluster:
+  MONGO_CLUSTER:
     file: ./env/MONGO_CLUSTER.txt
-  mongo_db_name:
+  MONGO_DB_NAME:
     file: ./env/MONGO_DB_NAME.txt
-  mongo_user:
+  MONGO_USER:
     file: ./env/MONGO_USER.txt
-  mongo_password:
+  MONGO_PASSWORD:
     file: ./env/MONGO_PASSWORD.txt
-  auth_key:
+  AUTH_KEY:
     file: ./env/AUTH_KEY.txt
 
 
