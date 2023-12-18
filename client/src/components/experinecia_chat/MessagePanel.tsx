@@ -1,12 +1,15 @@
 import { Typography, Button } from '@mui/material';
 import { TextField } from '@mui/material';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { IconButton } from '@mui/material';
+import { ChatAvatar } from '../ChatAvatar';
 
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { ChatMessage } from '../ChatMessage';
 
 interface MessagePanelProps {
     user: {
@@ -51,22 +54,24 @@ function MessagePanel({ user, onMessage }: MessagePanelProps) {
                 {user.messages.map((message, index) => (
                     <li key={index} className="message">
                         {displaySender(message, index) && (
-                            <div className="sender">
-                                <Typography
-                                    sx={{
-                                        fontSize: 20,
-                                        fontWeight: 'bold',
-                                        ml: 1,
-                                    }}>
-                                    {message.fromSelf
-                                        ? '->  (yourself)'
-                                        : '-> ' + user.username}
-                                </Typography>
+                            <div className="flex flex-row text-left">
+                                <ChatAvatar
+                                    username={
+                                        message.fromSelf ? 'Eu' : user.username
+                                    }
+                                />
                             </div>
                         )}
-                        <Typography sx={{ ml: 1 }}>
-                            {message.date + ' :: ' + message.content}
-                        </Typography>
+
+                        <div className="flex flex-row text-left">
+                            <ChatMessage
+                                username={
+                                    message.fromSelf ? 'Eu' : user.username
+                                }
+                                text={message.content}
+                                date={message.date}
+                            />
+                        </div>
                     </li>
                 ))}
             </ul>
