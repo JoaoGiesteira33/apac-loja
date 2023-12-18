@@ -2,6 +2,9 @@ import { TextField, Typography } from '@mui/material';
 import { socket } from '../../socket';
 import Button from '@mui/material/Button';
 
+import { IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+
 import { useState } from 'react';
 
 export function ConnectionManager({ username, setUsername, setSessionID, unselectUser }:
@@ -27,6 +30,7 @@ export function ConnectionManager({ username, setUsername, setSessionID, unselec
 
   return (
     <>
+
       <Typography variant="h4">{(socket.connected ? "Connected as " + username : "Disconnected") }</Typography>
       
       {
@@ -45,7 +49,7 @@ export function ConnectionManager({ username, setUsername, setSessionID, unselec
             <Button variant="contained" onClick={ connect } sx={{margin: 2}}>Connect</Button>
           </>
         : // ELSE show the disconnect button
-          <Button variant="outlined" onClick={ disconnect }>Disconnect</Button>
+          <Button variant="contained" onClick={ disconnect }>Disconnect</Button>
       }
     </>
   );

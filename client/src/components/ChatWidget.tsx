@@ -4,7 +4,7 @@ import SpeedDial from '@mui/material/SpeedDial';
 import CloseIcon from '@mui/icons-material/Close';
 import ChatIcon from '@mui/icons-material/Chat';
 
-import { ChatInterface } from './ChatInterface';
+import Chat from './experinecia_chat/Chat';
 
 
 export function ChatWidget() {
@@ -22,7 +22,7 @@ export function ChatWidget() {
         >
       </SpeedDial>
 
-      {open && <ChatInterface />}
+      {open && <Chat />}
     </>
   );
 }
