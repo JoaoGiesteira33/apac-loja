@@ -4,6 +4,14 @@ import MessagePanel from './MessagePanel';
 import { Button } from '@mui/material';
 import { ConnectionManager } from './ConnectionManager';
 
+
+import { Box } from '@mui/material';
+
+
+import CloseIcon from '@mui/icons-material/Close';
+
+import { ChatForm } from '../ChatForm';
+
 interface User {
   username: string;
   connected: boolean;
@@ -201,24 +209,44 @@ function Chat() {
   }, [selectedUser, users]);
 
 return (
-    <div>
-        <div>
-          <>---------------------    CHAT    ---------------------</>
-          <ConnectionManager username={username} setUsername={setUsername} setSessionID={setSessionID} unselectUser={unselectUser} />
-            {socket.connected ? users.map((user) => (
-              user.username == username ?
-                <></>
-                  :
-                <Button 
-                  key={user.username} 
-                  sx={{color: user.connected ? "green" : "red",
-                       border: selectedUser.username == user.username ? "2px solid black" : "none"}} 
-                  onClick={() => onSelectUser(user)}>
-                      { user.username + (user.hasNewMessages ? ' (+)' : '') }
-                </Button>
-            )) : <></>}
-        </div>
-        {(selected ? <MessagePanel user={selectedUser} onMessage={onMessage} /> : <></>)}
+    <div>  
+      <Box component="div" sx={{ backgroundColor: '#1976d2', width: 2 / 5, p: 1, position: 'fixed', bottom: 446, right: 16}}>
+        
+        <ConnectionManager username={username} setUsername={setUsername} setSessionID={setSessionID} unselectUser={unselectUser} />
+        
+        {socket.connected ? users.map((user) => (
+          user.username == username ? <></> :
+            <Button 
+              key={user.username}
+              sx={{color: user.connected ? "green" : "red", border: selectedUser.username == user.username ? "2px solid black" : "none"}}
+              onClick={() => onSelectUser(user)}>
+                  { user.username + (user.hasNewMessages ? ' (+)' : '') }
+            </Button>
+        )) : <></>}
+
+      </Box>
+              
+
+        <Box
+            component="div"
+            sx={{
+                backgroundColor: '#f6f6f6',
+                width: 2 / 5,
+                height: 350,
+                overflow: 'auto',
+                position: 'fixed',
+                bottom: 96,
+                right: 16,
+                p: 2,
+            }}>
+
+          {(selected ? <MessagePanel user={selectedUser} onMessage={onMessage} /> : <></>)}
+
+        </Box>
+
+
+        <ChatForm user={selectedUser} onMessage={onMessage}/>
+        
     </div>
 );
 }
