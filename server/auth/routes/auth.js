@@ -6,6 +6,7 @@ var jwt = require('jsonwebtoken')
 var secrets = require('docker-secret').secrets;
 
 const controllerLogin = require('../controllers/login');
+const sendEmail = require('../../chat_v2/utils').send_email;
 
 // ---------------------------------------------
 
@@ -81,352 +82,309 @@ function isMe(req, res, next) {
 	}
 }
 
+// GET verifica se é admin
+router.get('/admin/verificar', isAdmin, function (req, res) {
+	res.status(200).jsonp({ message: "OK" })
+});
+// GET verifica se é seller
+router.get('/seller/verificar', hasAccess, function (req, res) {
+	if (req.level == "seller") {
+		res.status(200).jsonp({ message: "OK" })
+	}
+	else {
+		res.status(401).render('error', { error: "Access denied!" })
+	}
+});
+// GET verifica se o token é valido
+router.get('/verificar', hasAccess, function (req, res) {
+	res.status(200).jsonp({ message: "OK" })
+});
+
+
 // GET login list
 router.get('/admin/all', isAdmin, function (req, res) {
 	controllerLogin.list()
 		.then(users => {
 			res.jsonp(users)
 		})
-		.catch(err => {
-			res.jsonp({ error: err, message: "Erro na obtenção da lista de utilizadores" })
+		.catch(erro => {
+			res.jsonp({ error: erro, message: "Erro na obtenção da lista de utilizadores" })
 		})
 });
 
+// GET login from email admin
+router.get('/admin', isAdmin, function (req, res) {
+
+	controllerLogin.getLogin(req.body.userEmail)
+	.then(u => {
+		res.jsonp(u)
+	})
+	.catch(erro => {
+		res.jsonp({ error: erro, message: "Erro na obtenção do utilizador: " + req.body.userEmail })
+	})
+
+});
 // GET login from email
-router.get('/admin/:email', isAdmin, function (req, res) {
-	if(!req.body.userEmail){
-		res.jsonp({error: "Email a modificar inexistente!"})
-	}
-	else{
-		controllerLogin.getLogin(req.body.userEmail)
+router.get('/', isMe, function (req, res) {
+	controllerLogin.getLogin(req.user)
 		.then(u => {
 			res.jsonp(u)
 		})
 		.catch(erro => {
-			res.jsonp({ error: erro, message: "Erro na obtenção do utilizador: " + req.params.email })
-		})
-	}
-});
-
-// GET login from email
-router.get('/:email', isMe, function (req, res) {
-	controllerLogin.getLogin(req.params.email) // vem da barra de navegacao????
-		.then(u => {
-			res.jsonp(u)
-		})
-		.catch(erro => {
-			res.jsonp({ error: erro, message: "Erro na obtenção do utilizador " + req.params.email })
+			res.jsonp({ error: erro, message: "Erro na obtenção do utilizador " + req.user })
 		})
 });
 
-// POST login admin
-//router.post('/admin/register', isAdmin, function (req, res) {
-// POST login
-//router.post('/register', isMe, function (req, res) 
-// fazer o resgitro de um utilizador
-
-//UPDATE login info admin
-router.update('/admin/:email', isAdmin, function (req, res) {
-	if(req.body.userEmail && req.body.userPassword && req.body.userNivel){
+// PUT login admin
+router.put('/admin/registo', isAdmin, function (req, res) {
+	if (req.body.userEmail && req.body.userPassword && req.body.userNivel) {
 		var info = {
 			email: req.body.userEmail,
 			password: req.body.userPassword,
-			nivel: req.body.userNivel
+			nivel: req.body.userNivel,
+			dataRegisto: getDateTime(),
+			dataUltimoAcesso: ""
 		}
 
-		controllerLogin.updateLogin(info)
-		.then(u => {
-			res.jsonp(u)
-		})
-		.catch(erro => {
-			res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.params.email })
-		})
+		controllerLogin.registar(info)
+			.then(u => {
+				res.jsonp(u)
+			})
+			.catch(erro => {
+				res.jsonp({ error: erro, message: "Erro na criação do utilizador " + req.body.userEmail })
+			})
 	}
-	else{
-		res.jsonp({error: "Falta de parametros!"})
+	else {
+		res.jsonp({ error: "Falta de parametros!" })
+	}
+});
+// PUT login
+router.put('/registo', function (req, res) { // usar um chapta para verificar se é humano e não encher a base de dados com muitos registos de utilizadores !!!!!!
+	if (req.body.userEmail && req.body.userPassword) {
+		var info = {
+			email: req.body.userEmail,
+			password: req.body.userPassword,
+			nivel: "client",
+			dataRegisto: getDateTime(),
+			dataUltimoAcesso: ""
+		}
+
+		controllerLogin.registar(info)
+			.then(u => {
+				res.jsonp(u)
+			})
+			.catch(erro => {
+				res.jsonp({ error: erro, message: "Erro na criação do utilizador " + req.body.userEmail })
+			})
+	}
+	else {
+		res.jsonp({ error: "Falta de parametros!" })
 	}
 });
 
-// UPDATE login info
-router.update('/:email', isMe, function (req, res) {
-	var info = {
-		email: req.params.email, // vem da barra de navegacao????
-		password: req.params.password, // vem da barra de navegacao????
-		nivel: req.level
-	}
+// ver mensagem de erros !!!!!!!!!!!!!!!!!!!!
 
-	controllerLogin.updateLogin(info)
-	.then(u => {
-		res.jsonp(u)
-	})
-	.catch(erro => {
-		res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.params.email })
-	})
+
+// GET fazer login
+router.get('/login', function (req, res) {
+	if (req.body.email && req.body.password) {
+		controllerLogin.login(req.body.email, req.body.password, getDateTime())
+			.then(l => {
+				if (l) {
+					jwt.sign({
+						username: l.email,
+						level: l.nivel
+					},
+					req.body.password+secrets.AUTH_KEY, // rever !!!!
+					{ expiresIn: "1h" }, //mudar aqui para o tempo de login que for decidido
+					function (e, token) {
+						if (e) 
+							res.status(500).jsonp({ error: "Erro na geração do token: " + e })
+						else 
+							res.status(201).jsonp({ token: token })
+					});
+				}
+				else {
+					res.status(401).jsonp({ error: "Invalid credentials!" })
+				}
+			})
+			.catch(erro => {
+				res.jsonp({ error: erro, message: "Erro no login do utilizador " + req.body.email })
+			})
+	}
+	else {
+		res.jsonp({ error: "Falta de parametros!" })
+	}
 });
 
 // UPDATE login email Admin
-router.update('/admin/email/:email', isAdmin, function (req, res) {
-	if(req.body.userEmail && req.body.newEmail){
+router.update('/admin/email', isAdmin, function (req, res) {
+	if (req.body.userEmail && req.body.newEmail) {
 		controllerLogin.updateLoginEmail(req.body.userEmail, req.body.newEmail)
+			.then(u => {
+				res.jsonp(u)
+			})
+			.catch(erro => {
+				res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.body.userEmail })
+			})
+	}
+	else {
+		res.jsonp({ error: "Falta de parametros!" })
+	}
+});
+// UPDATE login email
+router.update('/email', isMe, function (req, res) {
+	controllerLogin.updateLoginEmail(req.user, req.body.newEmail) // newEmail tem de ser passado no body
 		.then(u => {
 			res.jsonp(u)
 		})
 		.catch(erro => {
-			res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.params.email })
+			res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.user })
 		})
-	}
-	else{
-		res.jsonp({error: "Falta de parametros!"})
-	}
-});
-
-// UPDATE login email
-router.update('/email/:email', isMe, function (req, res) {
-	controllerLogin.updateLoginEmail(req.user, req.params.newEmail) // vem da barra de navegacao????
-	.then(u => {
-		res.jsonp(u)
-	})
-	.catch(erro => {
-		res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.params.email })
-	})
 });
 
 // UPDATE login password Admin
-router.update('/admin/password/:email', isAdmin, function (req, res) {
-	if(req.body.userEmail && req.body.userPassword){
-		controllerLogin.updateLoginPassword(req.body.userEmail, req.body.userPassword)
+router.update('/admin/password', isAdmin, function (req, res) {
+	if (req.body.userEmail && req.body.userPassword) {
+		controllerLogin.updateLoginPassword(req.body.userEmail, req.body.userPassword) // userEmail e userPassword tem de ser passados no body
+			.then(u => {
+				res.jsonp(u)
+			})
+			.catch(erro => {
+				res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.body.userEmail })
+			})
+	}
+	else {
+		res.jsonp({ error: "Falta de parametros!" })
+	}
+});
+// UPDATE login password
+router.update('/password', isMe, function (req, res) {
+	controllerLogin.updateLoginPassword(req.user, req.body.newPassword) // newPassword tem de ser passado no body
 		.then(u => {
 			res.jsonp(u)
 		})
 		.catch(erro => {
-			res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.params.email })
+			res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.user })
 		})
-	}
-	else{
-		res.jsonp({error: "Falta de parametros!"})
-	}
-});
-
-// UPDATE login password
-router.update('/password/:email', isMe, function (req, res) {
-	controllerLogin.updateLoginPassword(req.user, req.params.newPassword) // vem da barra de navegacao????
-	.then(u => {
-		res.jsonp(u)
-	})
-	.catch(erro => {
-		res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.params.email })
-	})
 });
 
 // UPDATE login nivel Admin, apenas faz sentido os admins poderem alterar o nivel de acesso
-router.update('/admin/nivel/:email', isAdmin, function (req, res) {
-	if(req.body.userEmail && req.body.userNivel){
+router.update('/admin/nivel', isAdmin, function (req, res) {
+	if (req.body.userEmail && req.body.userNivel) { // userEmail e userNivel tem de ser passados no body
 		controllerLogin.updateLoginNivel(req.body.userEmail, req.body.userNivel)
-		.then(u => {
-			res.jsonp(u)
-		})
-		.catch(erro => {
-			res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.params.email })
-		})
+			.then(u => {
+				res.jsonp(u)
+			})
+			.catch(erro => {
+				res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.body.userEmail })
+			})
 	}
-	else{
-		res.jsonp({error: "Falta de parametros!"})
+	else {
+		res.jsonp({ error: "Falta de parametros!" })
 	}
 });
 
-
 // DELETE login Admin
-router.delete('/admin/:email', isAdmin, function (req, res) {
-	if(!req.body.userEmail){
+router.delete('/admin', isAdmin, function (req, res) {
+	if (req.body.userEmail) { // userEmail tem de ser passado no body
 		controllerLogin.deleteLogin(req.body.userEmail)
-		.then(u => {
-			res.jsonp(u)
-		})
-		.catch(erro => {
-			res.jsonp({ error: erro, message: "Erro na remoção do utilizador " + req.params.email })
-		})
+			.then(u => {
+				res.jsonp(u)
+			})
+			.catch(erro => {
+				res.jsonp({ error: erro, message: "Erro na remoção do utilizador " + req.body.userEmail })
+			})
 	}
-	else{
-		res.jsonp({error: "Falta de parametros!"})
+	else {
+		res.jsonp({ error: "Falta de parametros!" })
 	}
 });
 
 // DELETE login
-router.delete('/:email', isMe, function (req, res) {
-	controllerLogin.deleteLogin(req.user)
-	.then(u => {
-		res.jsonp(u)
-	})
-	.catch(erro => {
-		res.jsonp({ error: erro, message: "Erro na remoção do utilizador " + req.params.email })
-	})
+router.delete('/apagar', isMe, async function (req, res) { // tirar o isMe e meter a enviar um email, criar funcao separada para verificar delete a receber o codigo
+	if(controllerLogin.existsEmail(req.user)){
+		const code = controllerLogin.generateRecoveryCode(req.user);
+
+		try {
+			const message = `Foi efetuado um pedido de remoção da sua conta.\n\n
+			O código para remover a conta é:  ${code}`;
+
+			await sendEmail(req.user, message); // fazer a funcao de enviar email !!!!!!!
+			res.status(200).jsonp({ message: "OK" })
+		}
+		catch (erro) {
+			console.log(erro)
+			res.status(500).jsonp({ error: "Falha ao enviar email!" })
+		}
+	}
 });
 
+// DELETE login
+router.delete('/apagar-verificar', isMe, function (req, res) {
+	if(controllerLogin.checkRecoveryCode(req.user, req.body.code)){ // code tem de ser passado no body
+		controllerLogin.deleteLogin(req.user)
+		.then(u => {
+			res.status(200).jsonp({ message: "OK" })
+		})
+		.catch(erro => {
+			res.status(507).jsonp({ error: erro, message: "Erro na remoção do utilizador " + req.user })
+		})
+	}
+	else{
+		res.status(401).jsonp({ error: "Invalid code!" })
+	}
+});
 
+router.get('/admin/esqueci', isAdmin, function (req, res) { // admin mudar a palavra pass de um utilizador sem precisar do recovery code
+	if(controllerLogin.existsEmail(req.body.email)){ // email tem de ser passado no body
+		controllerLogin.updateLoginPassword(req.body.email, req.body.password) // newPassword tem de ser passado no body
+		.then(u => {
+			res.status(200).jsonp({ message: "OK" })
+		})
+		.catch(erro => {
+			res.status(507).jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.body.email })
+		})
+	}
+	else{
+		res.status(401).jsonp({ error: "Email not found!" })
+	}
+});
+router.get('/esqueci', async function (req, res) {
+	if(controllerLogin.existsEmail(req.body.email)){ // email tem de ser passado no body
+		const code = controllerLogin.generateRecoveryCode(req.body.email);
 
-// // Send OTP to user
-// router.get('/otp/:id', function (req, res) {
-// 	User.getUser(req.params.id)
-// 		.then(u => {
-// 			if (u == null) {
-// 				res.status(203).send("Utilizador inexistente!")
-// 			}
-// 			telegram.send_otp(u.idTelegram).
-// 				then(otp => {
-// 					var otp = otp.data.result.text.split(":")[1].trim()
-// 					console.log(otp)
-// 					User.updateUserOTP(req.params.id, otp).
-// 						then(u => {
-// 							res.status(200).send("OTP criado com sucesso!")
-// 						}).
-// 						catch(err => {
-// 							console.log(err)
-// 							res.status(201).send("Erro na atualização do OTP!")
-// 						})
-// 				}).
-// 				catch(err => {
-// 					console.log(err)
-// 					res.status(202).send("Erro no envio do OTP!")
-// 				})
-// 		})
-// 		.catch(erro => {
-// 			console.dir(erro)
-// 			res.status(204)
-// 		})
-// })
+		try {
+			const message = `Foi efetuado um pedido de alteração da password da sua conta.\n\n
+			O código para recuperar a password é:  ${code}`;
 
-// // GET user from id
-// router.get('/:id', verificaAcesso, function (req, res) {
-// 	User.getUser(req.params.id)
-// 		.then(u => {
-// 			res.jsonp(u)
-// 		})
-// 		.catch(erro => {
-// 			res.jsonp({ error: erro, message: "Erro na obtenção do utilizador " + req.params.id })
-// 		})
-// });
+			await sendEmail(req.body.email, message); // fazer a funcao de enviar email !!!!!!!
+			res.status(200).jsonp({ message: "OK" })
+		}
+		catch (erro) {
+			console.log(erro)
+			res.status(500).jsonp({ error: "Falha ao enviar email!" })
+		}
+	}
+	else{
+		res.status(401).jsonp({ error: "Email not found!" })
+	}
 
-// router.post('/registar', function (req, res) {
-// 	var data = getDateTime()
-// 	userModel.register(
-// 		new userModel({
-// 			_id: req.body.username,
-// 			username: req.body.username,
-// 			idTelegram: req.body.idTelegram,
-// 			nivel: req.body.nivel,
-// 			filiacao: req.body.filiacao,
-// 			ativo: false,
-// 			dataRegisto: data,
-// 			dataUltimoAcesso: ""
-// 		}),
-// 		req.body.password,
-// 		function (err, user) {
-// 			if (err)
-// 				res.status(520).jsonp({ error: err, message: "Register error: " + err })
-// 			else
-// 				res.status(201).jsonp('OK')
-// 		})
-// })
-
-// router.post('/login', passport.authenticate('local'), function (req, res) {
-// 	jwt.sign({
-// 		username: req.user.username,
-// 		nivel: req.user.nivel,
-// 		sub: 'Acordaos'
-// 	},
-// 		"acordaos-secret-key",
-// 		{ expiresIn: "1h" },
-// 		function (e, token) {
-// 			if (e) res.status(500).jsonp({ error: "Erro na geração do token: " + e })
-// 			else res.status(201).jsonp({ token: token })
-// 		});
-
-// })
-
-// router.post('/verificar', function (req, res) {
-// 	jwt.verify(req.body.token, "acordaos-secret-key", function (e, payload) {
-// 		if (e) {
-// 			res.status(401).jsonp({ error: e })
-// 		}
-// 		else {
-// 			res.status(200).jsonp(payload)
-// 		}
-// 	})
-// })
-
-// // check if otp sent is equal to user otp
-// router.post('/esqueci', function (req, res) {
-// 	User.getUser(req.body.username)
-// 		.then(u => {
-// 			if (u.otp == req.body.otp) {
-// 				User.updateUserPassword(u._id, req.body.password).
-// 					then(u => {
-// 						res.status(200).jsonp({ message: "OK" })
-// 					}).
-// 					catch(err => {
-// 						res.status(500).jsonp({ error: err })
-// 					})
-// 			}
-// 			else {
-// 				res.status(401).jsonp({ error: "OTP inválido!" })
-// 			}
-// 		})
-// 		.catch(erro => {
-// 			res.status(401).jsonp({ error: erro })
-// 		})
-// })
-
-// router.put("/editar", function (req, res) {
-// 	var atualizacao = req.body.dados
-// 	User.updateUser(req.body.username, atualizacao).
-// 		then(u => {
-// 			res.status(200).jsonp({ message: "OK" })
-// 		}).
-// 		catch(err => {
-// 			res.status(500).jsonp({ error: err })
-// 		})
-// })
-
-// router.put('/:id', verificaAcesso, function (req, res) {
-// 	User.updateUser(req.params.id, req.body)
-// 		.then(u => {
-// 			res.jsonp(u)
-// 		})
-// 		.catch(erro => {
-// 			res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.params.id })
-// 		})
-// })
-
-// // ativa o utilizador e atualiza a data do ultimo acesso
-// router.put('/:id/ativar', verificaAcesso, function (req, res) {
-// 	User.updateUserStatus(req.params.id, true, getDateTime())
-// 		.then(u => {
-// 			res.jsonp(u)
-// 		})
-// 		.catch(erro => {
-// 			res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.params.id })
-// 		})
-// })
-
-// router.put('/:id/desativar', function (req, res) {
-// 	User.updateUserStatus(req.params.id, false, getDateTime())
-// 		.then(u => {
-// 			console.dir(u)
-// 			res.jsonp(u)
-// 		})
-// 		.catch(erro => {
-// 			res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.params.id })
-// 		})
-// })
-
-// router.delete('/:id', verificaAcesso, function (req, res) {
-// 	User.deleteUser(req.params.id)
-// 		.then(u => {
-// 			res.jsonp(u)
-// 		})
-// 		.catch(erro => {
-// 			res.jsonp({ error: erro, message: "Erro na remoção do utilizador " + req.params.id })
-// 		})
-// })
+});
+router.post('/esqueci-verificar', function (req, res) {
+	if(controllerLogin.checkRecoveryCode(req.body.email, req.body.code)){ // email e code tem de ser passados no body
+		//change password
+		controllerLogin.updateLoginPassword(req.body.email, req.body.password) // newPassword tem de ser passado no body
+		.then(u => {
+			res.status(200).jsonp({ message: "OK" })
+		})
+		.catch(erro => {
+			res.status(507).jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.body.email })
+		})
+	}
+	else{
+		res.status(401).jsonp({ error: "Invalid code!" })
+	}
+});
 
 module.exports = router;

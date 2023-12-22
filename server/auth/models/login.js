@@ -1,4 +1,6 @@
-var mongoose = require('mongoose')
+var mongoose = require('mongoose'),
+	Schema = mongoose.Schema,
+	passportLocalMongoose = require('passport-local-mongoose')
 
 var Login = new mongoose.Schema({
 	email: String, // é unico
@@ -6,8 +8,11 @@ var Login = new mongoose.Schema({
 	nivel: { // admin, client, seller
 		type: String,
 		enum: ['client', 'seller', 'admin']
-	}
+	},
+	dataRegisto: String,
+	dataUltimoAcesso: String
 }, { _id: false })
 
+Login.plugin(passportLocalMongoose)
 
-module.exports = mongoose.model('loginModel', Login, "logins")
+module.exports = mongoose.model('login', Login, "logins")

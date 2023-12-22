@@ -3,6 +3,7 @@ var express = require('express');
 var logger = require('morgan');
 var mongoose = require('mongoose')
 var secrets = require('docker-secret').secrets;
+var passport = require('passport')
 
 // ROUTES:
 // ??????
@@ -13,6 +14,11 @@ var db = mongoose.connection;
 db.on('open', function(){console.log("Conexão do Servidor de Autenticação ao MongoDB realizada com sucesso...")});
 db.on('error', function(){console.log("Erro de conexão ao MongoDB...")});
 
+// Configuração do passport
+var Login = require('./models/login')
+passport.use(Login.createStrategy())
+passport.serializeLogin(Login.serializeLogin())
+passport.deserializeLogin(Login.deserializeLogin())
 
 var authRouter = require('./routes/auth');
 
