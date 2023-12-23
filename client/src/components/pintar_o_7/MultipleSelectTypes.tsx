@@ -4,9 +4,10 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
-import Button from '@mui/material/Button';
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
+import Box from '@mui/system/Box';
 import { ListItemIcon, styled } from '@mui/material';
+
+import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 
 const MyKeyboardArrowDownOutlinedIcon = styled('KeyboardArrowDownOutlinedIcon')(
     ({ primary }) => ({
@@ -58,7 +59,7 @@ export default function MultipleSelectTypes({
     };
 
     return (
-        <div>
+        <Box component="div">
             <FormControl variant="standard" sx={{ m: 1, width: 70 }}>
                 <InputLabel shrink={false} id="multiple-checkbox-label">
                     {values.length < 1 && 'tipos'}
@@ -96,6 +97,6 @@ export default function MultipleSelectTypes({
                     ))}
                 </Select>
             </FormControl>
-        </div>
+        </Box>
     );
 }

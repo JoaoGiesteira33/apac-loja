@@ -1,6 +1,27 @@
 import { useEffect, useState } from 'react';
 import axios, { Canceler } from 'axios';
 
+const MockData: {
+    id: number;
+    name: string;
+    price: number;
+    description: string;
+    image: string;
+}[] = [];
+
+for (let i = 1; i < 30; i++) {
+    const width = Math.floor(Math.random() * 1000) + 200;
+    const height = Math.floor(Math.random() * 1000) + 200;
+
+    MockData.push({
+        id: i,
+        name: `Product ${i}`,
+        price: Math.floor(Math.random() * 1000) + 100,
+        description: `This is product ${i}`,
+        image: `https://picsum.photos/${width}/${height}`,
+    });
+}
+
 export default function useProductSearch(query: string, pageNumber: number) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -9,7 +30,7 @@ export default function useProductSearch(query: string, pageNumber: number) {
 
     useEffect(() => {
         setProducts([]);
-    }, [query])
+    }, [query]);
 
     useEffect(() => {
         let cancel: Canceler;
@@ -34,11 +55,11 @@ export default function useProductSearch(query: string, pageNumber: number) {
             .catch((e) => {
                 // Ignore the error if it's a request cancellation.
                 if (axios.isCancel(e)) return;
-                else setError(true);
+                //else setError(true);
             });
 
         return () => cancel();
     }, [query, pageNumber]);
 
-    return { loading, error, products, hasMore };
+    return { loading, error, MockData, hasMore };
 }
