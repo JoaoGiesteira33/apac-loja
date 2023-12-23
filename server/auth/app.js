@@ -1,9 +1,15 @@
 var createError = require('http-errors');
 var express = require('express');
 var logger = require('morgan');
+
 var mongoose = require('mongoose')
+
 var secrets = require('docker-secret').secrets;
+
 var passport = require('passport')
+const { v4: uuidv4 } = require('uuid')
+var session = require('express-session')
+var LocalStrategy = require('passport-local').Strategy
 
 // ROUTES:
 // ??????
@@ -14,19 +20,36 @@ var db = mongoose.connection;
 db.on('open', function(){console.log("Conexão do Servidor de Autenticação ao MongoDB realizada com sucesso...")});
 db.on('error', function(){console.log("Erro de conexão ao MongoDB...")});
 
-// Configuração do passport
-var Login = require('./models/login')
-passport.use(Login.createStrategy())
-passport.serializeLogin(Login.serializeLogin())
-passport.deserializeLogin(Login.deserializeLogin())
-
 var authRouter = require('./routes/auth');
 
 var app = express();
 
+app.use(session({
+  genid: req => {
+    return uuidv4()},
+  secret: secrets.AUTH_KEY,
+  resave: false,
+  saveUninitialized: true
+}))
+
+// Configuração do passport
+var Login = require('./models/login')
+passport.use(new LocalStrategy(Login.authenticate()))
+passport.serializeUser(function(l, done) {
+  done(null, l.username);
+});
+passport.deserializeUser(function(mail, done) {
+  const l = Login.findOne({ username: mail })
+  done(err, l);
+});
+
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', authRouter);
 

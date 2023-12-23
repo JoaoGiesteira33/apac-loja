@@ -3,16 +3,18 @@ var mongoose = require('mongoose'),
 	passportLocalMongoose = require('passport-local-mongoose')
 
 var Login = new mongoose.Schema({
-	email: String, // é unico
+	username: String, // é unico
 	password: String, // password encriptada aparece como "hash" na bd
-	nivel: { // admin, client, seller
+	nivel:
+	{ // admin, client, seller
 		type: String,
 		enum: ['client', 'seller', 'admin']
 	},
 	dataRegisto: String,
 	dataUltimoAcesso: String
-}, { _id: false })
+})
 
-Login.plugin(passportLocalMongoose)
+Login.plugin(passportLocalMongoose )
+
 
 module.exports = mongoose.model('login', Login, "logins")

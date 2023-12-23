@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const controllerProduct = require('../controllers/product');
-const controllerAuth = require('../controllers/accessLevel');
+//const controllerAuth = require('../controllers/accessLevel');
 
 // ---------------------------------------------
 
