@@ -20,6 +20,8 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 const HomePage = React.lazy(() => import('./pages/Home'));
 const HomePagePintarO7 = React.lazy(() => import('./pages/pintar_o_7/Home'));
 const ProductPage = React.lazy(() => import('./pages/Product'));
+const LoginPage = React.lazy(() => import('./pages/pintar_o_7/Login'));
+const RegisterPage = React.lazy(() => import('./pages/pintar_o_7/Register'));
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 const getDesignTokens = (mode: PaletteMode) => ({
@@ -110,6 +112,16 @@ function App() {
             element: <ProfileInfo />,
             requireAuth: false,
         },
+        {
+            path: '/login',
+            element: <LoginPage />,
+            requireAuth: false,
+        },
+        {
+            path: '/register',
+            element: <RegisterPage />,
+            requireAuth: false,
+        }
     ];
 
     const theme = React.useMemo(
