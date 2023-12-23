@@ -23,6 +23,7 @@
     "@react-three/fiber": "^8.15.9",
     "@types/three": "^0.158.1",
     "emoji-mart": "^5.5.2",
+    "axios": "^1.6.2",
     "flowbite-react": "^0.7.0",
     "i18next": "^23.6.0",
     "i18next-browser-languagedetector": "^7.1.0",

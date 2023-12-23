@@ -35,7 +35,7 @@ export default function Navbar() {
                 <FlowbiteNavbar.Brand as={Link} href="/">
                     <img
                         src={logoApac}
-                        className="mr-3 h-4 md:h-28 sm:h-9"
+                        className="mr-3 h-9 md:h-28 sm:h-9"
                         alt="Logo"
                     />
                 </FlowbiteNavbar.Brand>
