@@ -8,7 +8,7 @@ var Login = new mongoose.Schema({
 	nivel:
 	{ // admin, client, seller
 		type: String,
-		enum: ['client', 'seller', 'admin']
+		enum: ['client', 'artist', 'admin']
 	},
 	dataRegisto: String,
 	dataUltimoAcesso: String

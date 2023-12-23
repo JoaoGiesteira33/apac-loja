@@ -30,7 +30,10 @@ const Demographics = new mongoose.Schema({
  * @property {Date} lastLogin - Last login date of the client/seller
  */
 const Statistics = new mongoose.Schema({
-    lastLogin: Date
+    lastLogin: { 
+        type: Date,
+        default: Date.now
+    },
 }, {_id: false});
 
 
@@ -39,10 +42,7 @@ const SellerFields = new mongoose.Schema({
         type: Demographics,
         required: true
     },
-    statistics: {
-        type: Statistics,
-        required: true
-    },
+    statistics: Statistics,
     profile_picture: String,
     about: String,
     products: {
@@ -60,10 +60,7 @@ const ClientFields = new mongoose.Schema({
         type: Demographics,
         required: true
     },
-    statistics: {
-        type: Statistics,
-        required: true
-    },
+    statistics: Statistics,
     /**
     events: {
         type: [Event],

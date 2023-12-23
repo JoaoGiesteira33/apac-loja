@@ -1,23 +1,44 @@
 import axios from 'axios';
 //import mime from 'mime';
 
-export const BASE_URL = 'http://ec2-16-171-137-116.eu-north-1.compute.amazonaws.com/api';
+export const AUTH_URL = 'http://localhost:7777';
+export const API_URL = 'http://localhost:8000/';
 //export const BASE_URL = 'http:/192.168.1.68:8000/api';
-axios.defaults.withCredentials = true;
 
 export const loginUser = async (email: string, password: string) => {
     console.log("Logging in user");
     console.log("credentials: ", email, "|", password)
     try {
-        const response = await axios.post(`${BASE_URL}/authentication/login`, { email, password });
+        const response = await axios.post(`${AUTH_URL}/login`, { username: email, password });
         console.log("resposta: ", response.data)
         return response.data;
     }
     catch (err) {
         console.log("Error during login: " + err.message);
-        throw err;
+        return err.response;
     }
 }
+
+export const fetchUser = async (email: string, level: string) => {
+    console.log("Fetching user with email " + email);
+
+    try {
+        var response;
+        if(level === "admin" || level === "client"){
+            response = await axios.get(`${API_URL}/client/${email}`);
+        }
+        else // if(level == "artist")
+            response = await axios.get(`${API_URL}/artist/${email}`);
+        
+        return response.data;
+    }
+    catch (err) {
+        console.log("Error fetching user: " + err.message);
+        return -1;
+    }
+}
+
+
 
 /*
 export const sendEmail = async (toEmail, subject, message) => {
@@ -460,3 +481,4 @@ export const uploadPhotos = async (photos) => {
     }
 }
 
+*/

@@ -1,6 +1,7 @@
 var createError = require('http-errors');
 var express = require('express');
 var logger = require('morgan');
+var cors = require('cors')
 
 var mongoose = require('mongoose')
 
@@ -50,6 +51,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(cors())
 
 app.use('/', authRouter);
 

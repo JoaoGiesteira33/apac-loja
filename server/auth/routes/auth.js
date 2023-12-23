@@ -140,8 +140,8 @@ router.get('/', isMe, function (req, res) {
 		})
 });
 
-// PUT login admin
-router.put('/admin/registo', isAdmin, function (req, res) {
+// POST login admin
+router.post('/admin/registo', isAdmin, function (req, res) {
 	if (req.body.userEmail && req.body.userPassword && req.body.userNivel) {
 		var info = {
 			email: req.body.userEmail,
@@ -163,8 +163,8 @@ router.put('/admin/registo', isAdmin, function (req, res) {
 		res.jsonp({ error: "Falta de parametros!" })
 	}
 });
-// PUT login
-router.put('/registo', function (req, res) { // usar um chapta para verificar se é humano e não encher a base de dados com muitos registos de utilizadores !!!!!!
+// POST login
+router.post('/registo', function (req, res) { // usar um chapta para verificar se é humano e não encher a base de dados com muitos registos de utilizadores !!!!!!
 	if (req.body.userEmail && req.body.userPassword) {
 		var info = {
 			email: req.body.userEmail,
@@ -191,23 +191,36 @@ router.put('/registo', function (req, res) { // usar um chapta para verificar se
 // ver mensagem de erros !!!!!!!!!!!!!!!!!!!!
 
 
-// GET fazer login
-router.get('/login', passport.authenticate('local'), function (req, res) {
+// POST fazer login
+router.post('/login', passport.authenticate('local'), function (req, res) {
 	controllerLogin.login(req.body.username, getDateTime())
-		.then(l => {
-			if (l) {
-				jwt.sign({
-					username: l.username,
-					level: l.nivel
-				},
-					secrets.AUTH_KEY, // rever !!!!
-					{ expiresIn: "1h" }, //mudar aqui para o tempo de login que for decidido
-					function (e, token) {
-						if (e)
-							res.status(500).jsonp({ error: "Erro na geração do token: " + e })
-						else
-							res.status(201).jsonp({ token: token })
-					});
+		.then(u => {
+			if (u) {
+				if(u.modifiedCount == 1){
+					controllerLogin.getLogin(req.body.username)
+						.then(l => {
+							console.log("L: ", l);
+							jwt.sign({
+								username: l.username,
+								level: l.nivel
+							},
+								secrets.AUTH_KEY, // rever !!!!
+								{ expiresIn: "1h" }, //mudar aqui para o tempo de login que for decidido
+								function (e, token) {
+									if (e)
+										res.status(500).jsonp({ error: "Erro na geração do token: " + e })
+									else
+										{
+											console.log("Login do utilizador ", token)
+											console.log(jwt.decode(token))
+											res.status(201).jsonp({ token: token })
+										}
+									});
+						})
+						.catch(erro => {
+							res.jsonp({ error: erro, message: "Erro na obtenção do utilizador " + req.body.username })
+						})
+				}
 			}
 			else {
 				res.status(401).jsonp({ error: "Invalid credentials!" })

@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Paper, CssBaseline, Grid, Alert } from '@mui/material';
-import { loginUser } from '../../fetchers';
+import { loginUser, fetchUser } from '../../fetchers';
+import { Link, useNavigate } from 'react-router-dom';
+import { red } from '@mui/material/colors';
+import { useJwt, decodeToken } from "react-jwt";
+
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -8,17 +12,20 @@ const Login = () => {
 
     const [showEmailAlert, setShowEmailAlert] = useState(false);
     const [showPassAlert, setShowPassAlert] = useState(false);
-
+    const [showCredAlert, setShowCredAlert] = useState(false);
+    const navigate = useNavigate();
     const checkEmail = (email: string) => {
       // eslint-disable-next-line no-useless-escape
       const re = /\S+@\S+\.\S+/;
       return re.test(email);
     };
 
-    const handleLogin = (e) => {
+    async function handleLogin(e){
         e.preventDefault();
         setShowEmailAlert(false);
         setShowPassAlert(false);
+        setShowCredAlert(false);
+
         console.log('Login clicked');
         if (!checkEmail(email)) {
             setShowEmailAlert(true);
@@ -27,6 +34,27 @@ const Login = () => {
         if (password.length < 6) {
             setShowPassAlert(true);
             return;
+        }
+        console.log("Email: ", email);
+        console.log("Password: ", password);
+        const response = await loginUser(email, password);
+        if (response.status === 401){
+            setShowCredAlert(true);
+        }
+        else{
+            console.log("Susexo: ", response.token);
+            const decodedToken = decodeToken(response.token);
+            //localStorage.setItem('token', decodedToken);
+
+            const response2 = await fetchUser(decodedToken.username, decodedToken.level);
+            if (response2 !== -1){
+                console.log("User: ", response2.user);
+                // TODO - store user in local storage
+                // localStorage.setItem('user', JSON.stringify(response2.user));
+                navigate('/');
+            }else{
+                console.log("Erro ao buscar user");
+            }
         }
     };
 
@@ -82,6 +110,9 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              {showCredAlert && <Alert onClose={() => {setShowCredAlert(false)}} variant="filled" severity="error">
+                  Credenciais inválidas!
+              </Alert>}
               <Button
                 type="submit"
                 fullWidth
@@ -95,7 +126,7 @@ const Login = () => {
                 Entrar
               </Button>
                 <Typography fontStyle="italic" sx={{textDecoration: 'underline'}} display="inline" style={{ margin: '20px 0', color: 'black' }}>
-                    <a href='/register'>Não tem conta? Registe-se!</a>
+                    <Link to={'/register'}>Não tem conta? Registe-se!</Link>
                 </Typography>
             </form>
             
