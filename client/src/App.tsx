@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import Footer from './components/pintar_o_7/Footer';
 import Navbar from './components/pintar_o_7/Navbar';
-import { ChatWidget } from './components/ChatWidget';
+import Chat from './components/experinecia_chat/Chat';
 
 //import { Route, Routes } from 'react-router-dom';
 import { CanvasModel } from './components/canvasModel';
@@ -55,7 +55,7 @@ function App() {
     return (
         <div>
             <Navbar />
-            <ChatWidget />
+            <Chat />
             <Footer />
         </div>
     );

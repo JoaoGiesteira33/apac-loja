@@ -4,11 +4,10 @@ import MessagePanel from './MessagePanel';
 import { Button } from '@mui/material';
 import { ConnectionManager } from './ConnectionManager';
 
-
-import { Box } from '@mui/material';
-
-
+import SpeedDial from '@mui/material/SpeedDial';
 import CloseIcon from '@mui/icons-material/Close';
+import ChatIcon from '@mui/icons-material/Chat';
+import { Box } from '@mui/material';
 
 import { ChatForm } from '../ChatForm';
 
@@ -43,6 +42,8 @@ function Chat() {
     return savedSessionID ? savedSessionID : "";
   });
 
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(!open);
 
   const initReactiveProperties = (user: User) => {
     user.hasNewMessages = false;
@@ -209,7 +210,17 @@ function Chat() {
   }, [selectedUser, users]);
 
 return (
-    <div>  
+    <div>
+      <SpeedDial
+          ariaLabel="Icon fixo para chat"
+          sx={{ position: 'fixed', bottom: 16, right: 16 }}
+          icon={open ? <CloseIcon /> : <ChatIcon />}
+          onClick={handleOpen}
+          open={open}
+        >
+      </SpeedDial>
+
+      {open && <>
       <Box component="div" sx={{ backgroundColor: '#1976d2', width: 2 / 5, p: 1, position: 'fixed', bottom: 446, right: 16}}>
         
         <ConnectionManager username={username} setUsername={setUsername} setSessionID={setSessionID} unselectUser={unselectUser} />
@@ -246,7 +257,7 @@ return (
 
 
         <ChatForm user={selectedUser} onMessage={onMessage}/>
-        
+        </>}
     </div>
 );
 }
