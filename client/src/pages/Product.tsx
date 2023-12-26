@@ -21,6 +21,7 @@ const Product = () => {
                 </h2>
             </div>
             <div>
+               {/*  <Divider variant="middle" /> */}
                 <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
                 <h2 className="font-poppins text-xl">
                     You may also like these artworks

@@ -43,7 +43,7 @@ export function ImageLightBox(data: {
                 <DialogBody className="flex flex-col items-center justify-center">
                     <Carousel
                         className="flex aspect-w-1 aspect-h-1 w-auto max-h-160 sm:max-h-176 lg:max-h-192"
-                        transition={{ type: 'spring', duration: 1 }}
+                        transition={{ type: 'tween', duration: 0.5}}
                         loop={true}>
                         {images.map((image, index) => (
                             <img
