@@ -21,7 +21,7 @@ const sessionStore = new RedisSessionStore(redisClient);
 const { RedisMessageStore } = require("./messageStore");
 const messageStore = new RedisMessageStore(redisClient);
 
-const { send_email } = require("./utils");
+const { send_email } = require("../utils/utils");
 
 function isOnList(list, username) {
   for (let i = 0; i < list.length; i++) {

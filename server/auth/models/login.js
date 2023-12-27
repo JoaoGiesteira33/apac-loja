@@ -3,14 +3,21 @@ var mongoose = require('mongoose'),
 	passportLocalMongoose = require('passport-local-mongoose')
 
 var Login = new mongoose.Schema({
-	username: String, // é unico
-	password: String, // password encriptada aparece como "hash" na bd
+	username: {
+		type: String,
+		required: true,
+		unique: true
+	},
 	nivel:
 	{ // admin, client, seller
 		type: String,
+		required: true,
 		enum: ['client', 'artist', 'admin']
 	},
-	dataRegisto: String,
+	dataRegisto: {
+		type: String,
+		required: true
+	},
 	dataUltimoAcesso: String
 })
 
