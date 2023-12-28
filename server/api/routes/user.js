@@ -4,12 +4,14 @@ const router = express.Router();
 const controllerUser = require('../controllers/user');
 //const controllerAuth = require('../controllers/accessLevel');
 
+const middleware = require('./myMiddleware')
+
 // ---------------------CLIENT------------------------
 
 //Basic Methods
 
 // GET Client Info
-router.get('/client/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin,*/ function (req, res, next) {
+router.get('/client/:id', middleware.extractFilters, middleware.fieldSelector, /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin,*/ function (req, res, next) {
     controllerUser.getUserInfo(req.params.id)
         .then((info) => {
             res.jsonp(info);
@@ -52,16 +54,24 @@ router.delete('/client/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAd
         });
 });
 
-// Advanced Methods
 
-// Append to List
+//GET Clients
+router.get('/clients', middleware.extractFilters, middleware.fieldSelector, /*controllerAuth.hasAccess, controllerAuth.hasLevelAdmin,*/ function (req, res, next) {
+    controllerUser.getClients(req.filters, req.fields, req.query.page || 0)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((erro) => {
+            res.jsonp(erro)
+        });
+});
 
 
 // ---------------------------------------------
 
 
 // GET Artist Info
-router.get('/artist/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin,*/ function (req, res, next) {
+router.get('/artist/:id', middleware.fieldSelector, /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin,*/ function (req, res, next) {
     controllerUser.getUserInfo(req.params.id)
         .then((info) => {
             res.jsonp(info);
@@ -104,18 +114,20 @@ router.delete('/artist/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAd
         });
 });
 
-
-// ----------------------TEST-----------------------
-
-router.get('/client', /*controllerAuth.hasAccess, controllerAuth.hasLevelAdmin,*/ function (req, res, next) {
-    controllerUser.getAllUsers()
+//GET Artists
+router.get('/artists', middleware.extractFilters, middleware.fieldSelector, /*controllerAuth.hasAccess, controllerAuth.hasLevelAdmin,*/ function (req, res, next) {
+    controllerUser.getArtists(req.filters, req.fields, req.query.page || 0)
         .then((info) => {
             res.jsonp(info);
         })
         .catch((erro) => {
-            res.jsonp(erro);
+            res.jsonp(erro)
         });
 });
+
+
+// ----------------------TEST-----------------------
+
 
 
 module.exports = router;

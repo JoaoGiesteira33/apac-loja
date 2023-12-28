@@ -42,3 +42,13 @@ module.exports.deleteProduct = function (id) {
         });
 };
 
+//      - getProducts
+module.exports.getProducts = function (filters, fields, page) {
+    return Product.find(filters, fields).skip(page * 30).limit(30)
+        .then((info) => {
+            return info;
+        })
+        .catch((erro) => {
+            return erro;
+        });
+};

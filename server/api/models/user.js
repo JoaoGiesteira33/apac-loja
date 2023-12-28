@@ -27,13 +27,9 @@ const Demographics = new mongoose.Schema({
 /**
  * Statistics associated with the client/seller
  * @typedef {Object} Statistics
- * @property {Date} lastLogin - Last login date of the client/seller
  */
 const Statistics = new mongoose.Schema({
-    lastLogin: { 
-        type: Date,
-        default: Date.now
-    },
+    // Por enquanto não temos estatísticas
 }, {_id: false});
 
 
