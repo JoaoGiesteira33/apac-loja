@@ -10,7 +10,7 @@ import { CanvasModel } from './components/canvasModel';
 import ProfileInfo from './pages/Profile/ProfileInfo';
 import ProfileIndex from './pages/Profile/ProfileIndex';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { amber, deepOrange, grey } from '@mui/material/colors';
+import { amber, blue, deepOrange, grey } from '@mui/material/colors';
 import { IconButton, PaletteMode } from '@mui/material';
 import { CssBaseline } from '@mui/material/';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
@@ -34,8 +34,8 @@ const getDesignTokens = (mode: PaletteMode) => ({
         ...(mode === 'light'
             ? {
                   // palette values for light mode
-                  primary: amber,
-                  divider: amber[200],
+                  primary: blue,
+                  divider: blue[200],
                   text: {
                       primary: grey[900],
                       secondary: grey[800],

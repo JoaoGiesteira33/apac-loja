@@ -73,7 +73,7 @@ const Register = () => {
             return;
         }
         else {
-            disableAlerts();
+            disableAlerts();         
         }
     };
 

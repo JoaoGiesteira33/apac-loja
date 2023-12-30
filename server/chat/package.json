@@ -1,16 +1,19 @@
 {
-  "name": "chat",
+  "name": "server",
   "version": "1.0.0",
-  "description": "Module responsible for chat service",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node cluster.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Damien Arrachequesne <damien.arrachequesne@gmail.com>",
+  "license": "MIT",
   "dependencies": {
-    "@socket.io/cluster-adapter": "^0.2.2",
-    "express": "^4.18.2",
-    "socket.io": "^4.7.2"
+    "@socket.io/sticky": "^1.0.0",
+    "dotenv": "^16.3.1",
+    "ioredis": "^4.22.0",
+    "nodemailer": "^6.9.7",
+    "socket.io": "^4.0.0",
+    "socket.io-redis": "^6.0.1"
   }
 }

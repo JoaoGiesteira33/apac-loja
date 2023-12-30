@@ -13,6 +13,9 @@ const Login = () => {
     const [showEmailAlert, setShowEmailAlert] = useState(false);
     const [showPassAlert, setShowPassAlert] = useState(false);
     const [showCredAlert, setShowCredAlert] = useState(false);
+    const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
     const navigate = useNavigate();
     const checkEmail = (email: string) => {
       // eslint-disable-next-line no-useless-escape
@@ -20,11 +23,12 @@ const Login = () => {
       return re.test(email);
     };
 
-    async function handleLogin(e){
+    const handleLogin = async (e) => {
         e.preventDefault();
         setShowEmailAlert(false);
         setShowPassAlert(false);
         setShowCredAlert(false);
+        setShowErrorAlert(false);
 
         console.log('Login clicked');
         if (!checkEmail(email)) {
@@ -44,16 +48,25 @@ const Login = () => {
         else{
             console.log("Susexo: ", response.token);
             const decodedToken = decodeToken(response.token);
-            //localStorage.setItem('token', decodedToken);
+            localStorage.setItem('token', response.token);
 
-            const response2 = await fetchUser(decodedToken.username, decodedToken.level);
-            if (response2 !== -1){
-                console.log("User: ", response2.user);
+            try{
+              const response2 = await fetchUser(decodedToken.username, decodedToken.level);
+              if (response2 !== undefined){
+                console.log("User: ", response2);
                 // TODO - store user in local storage
                 // localStorage.setItem('user', JSON.stringify(response2.user));
                 navigate('/');
-            }else{
-                console.log("Erro ao buscar user");
+              }else{
+                  setErrorMessage("#1")
+                  setShowErrorAlert(true);
+                  console.log("User não encontrado");
+              }
+            }
+            catch(e){
+              setErrorMessage("#2")
+              setShowErrorAlert(true);
+              console.log("Erro ao buscar user: ", e);
             }
         }
     };
@@ -112,6 +125,9 @@ const Login = () => {
               />
               {showCredAlert && <Alert onClose={() => {setShowCredAlert(false)}} variant="filled" severity="error">
                   Credenciais inválidas!
+              </Alert>}
+              {showErrorAlert && <Alert onClose={() => {setShowErrorAlert(false)}} variant="filled" severity="error">
+                  Erro de Servidor, contacte o suporte! {errorMessage}
               </Alert>}
               <Button
                 type="submit"
