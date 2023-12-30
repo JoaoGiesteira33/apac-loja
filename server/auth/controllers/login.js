@@ -9,29 +9,18 @@ let bruteForceProtection = {};
 // ---------------------------------------------
 
 module.exports.registar = async info => {
-
-	const resposta = await Login.findOne({ username: info.email })
-	if (resposta)
-		throw { error: "Email already in use!" }
-
-	const l = new Login({
-		username: info.email,
-		nivel: info.nivel,
-		dataRegisto: info.dataRegisto,
-		dataUltimoAcesso: info.dataUltimoAcesso
-	})
 	return await Login.register(
-		l,
+		new Login({
+			username: info.email,
+			nivel: info.nivel,
+			dataRegisto: info.dataRegisto,
+			dataUltimoAcesso: info.dataUltimoAcesso
+		}),
 		info.password)
-
 }
 
-module.exports.list = async () => {
-	try {
-		return Login.find()
-	} catch (erro) {
-		return erro
-	}
+module.exports.login = async (email, data) => {
+	return Login.updateOne({ username: email }, { "$set": { "dataUltimoAcesso": data } })
 }
 
 module.exports.existsEmail = async mail => {
@@ -43,55 +32,29 @@ module.exports.existsEmail = async mail => {
 	}
 }
 
-module.exports.login = async (email, data) => {
-	return Login.updateOne({ username: email }, { "$set": { "dataUltimoAcesso": data } })
-}
-
 module.exports.getLogin = async mail => {
-	try {
-		return Login.findOne({ username: mail })
-	} catch (erro) {
-		return erro
-	}
+	return Login.findOne({ username: mail })
 }
 
-module.exports.updateLoginEmail = async (mail, newMail) => {
-	try {
-		const l = await Login.findOne({ username: newMail })
-		if (l)
-			return { error: "Email already in use!" }
+module.exports.updateLoginEmail = async (oldEmail, newMail) => {
+	const l = await Login.findOne({ username: newMail })
+	if (l)
+		throw new Error("Email already in use!")
 
-		return Login.updateOne({ username: mail }, { "$set": { "username": newMail } })
-	}
-	catch (erro) {
-		return erro;
-	}
+	return Login.updateOne({ username: oldEmail }, { "$set": { "username": newMail } })
 }
 
 module.exports.updateLoginPassword = async (mail, password) => {
-	try {
-		const l = await Login.findOne({ username: mail })
-		await l.setPassword(password)
-		return l.save()
-	} catch (erro) {
-		return erro
-	}
+	const l = await Login.findOne({ username: mail })
+	if (!l)
+		throw new Error("User not found!")
+	await l.setPassword(password)
+	await l.save()
+	return l
 }
 
 module.exports.updateLoginNivel = async (mail, nivel) => {
-	try {
-		return Login.updateOne({ username: mail }, { "$set": { "nivel": nivel } })
-	} catch (erro) {
-		return erro
-	}
-}
-
-module.exports.updateLoginUltimoAcesso = async (mail, data) => {
-	try {
-		return Login.updateOne({ username: mail }, { "$set": { "dataUltimoAcesso": data } })
-	} catch (erro) {
-		return erro
-	}
+	return Login.updateOne({ username: mail }, { "$set": { "nivel": nivel } })
 }
 
 module.exports.deleteLogin = async mail => {
@@ -151,5 +114,5 @@ module.exports.verifyRecoveryCode = async (userEmail, submittedCode) => {
 		}
 	}
 	else
-		return false; // ou throw error de tentativas excedidas ??????
+		throw new Error("Too many attempts!");
 }

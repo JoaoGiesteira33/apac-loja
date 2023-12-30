@@ -59,8 +59,17 @@ export default function MultipleSelectTypes({
     };
 
     return (
-        <Box component="div">
-            <FormControl variant="standard" sx={{ m: 1, width: 70 }}>
+        <Box
+            component="div"
+            sx={{
+                flexGrow: '1',
+                paddingX: { xs: '2rem', sm: '4rem', md: '6rem', lg: '8rem' },
+                display: 'flex',
+                alignItems: 'center',
+            }}>
+            <FormControl
+                variant="standard"
+                sx={{ m: 1, width: 70, margin: '0' }}>
                 <InputLabel shrink={false} id="multiple-checkbox-label">
                     {values.length < 1 && 'tipos'}
                 </InputLabel>

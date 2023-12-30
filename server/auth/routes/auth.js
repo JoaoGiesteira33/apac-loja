@@ -6,7 +6,13 @@ var jwt = require('jsonwebtoken')
 var secrets = require('docker-secret').secrets;
 
 const controllerLogin = require('../controllers/login');
-//const sendEmail = require('../../chat_v2/utils').send_email;
+const { sendEmail } = require('../../utils/utils');
+
+// GET -> nao tem body o get
+// POST -> adicionar algo
+// PUT -> alterar algo
+// DELETE -> remover algo
+
 
 // ---------------------------------------------
 
@@ -22,7 +28,7 @@ function getDateTime() {
 	// time offset for Portugal is 0, so:
 	var PortugalTime = new Date(utcTime)
 
-	return PortugalTime.toISOString().substring(0, 16)
+	return PortugalTime.toISOString().substring(0, 19)
 }
 
 function isAdmin(req, res, next) {
@@ -30,7 +36,7 @@ function isAdmin(req, res, next) {
 	if (myToken) {
 		jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
 			if (e) {
-				res.status(401).jsonp({ error: "Invalid Token!" })
+				res.status(403).jsonp({ error: "Invalid Token!" })
 			}
 			else if (payload.level == "admin") {
 				req.user = payload.username
@@ -44,7 +50,7 @@ function isAdmin(req, res, next) {
 		})
 	}
 	else {
-		res.status(401).jsonp({ error: "Token not found!" })
+		res.status(400).jsonp({ error: "Token not found!" })
 	}
 }
 
@@ -53,7 +59,7 @@ function hasAccess(req, res, next) {
 	if (myToken) {
 		jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
 			if (e) {
-				res.status(401).jsonp({ error: "Invalid Token!" })
+				res.status(403).jsonp({ error: "Invalid Token!" })
 			}
 			else {
 				req.user = payload.username
@@ -62,29 +68,37 @@ function hasAccess(req, res, next) {
 				next()
 			}
 		})
+	}
+	else {
+		res.status(400).jsonp({ error: "Token not found!" })
 	}
 }
 
 function isMe(req, res, next) {
 	var myToken = req.query.token || req.body.token || req.cookies.token
 	if (myToken) {
-		jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
-			if (e) {
-				res.status(401).jsonp({ error: "Invalid Token!" })
-			}
-			else if (payload.username == req.params.id) {
-				req.user = payload.username
-				req.level = payload.level
-				req.token = myToken
-				next()
-			}
-			else {
-				res.status(401).jsonp({ error: "Access denied!" })
-			}
-		})
+		if (req.params.username) {
+			jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
+				if (e) {
+					res.status(403).jsonp({ error: "Invalid Token!" })
+				}
+				else if (payload.username == req.params.username) {
+					req.user = payload.username
+					req.level = payload.level
+					req.token = myToken
+					next()
+				}
+				else {
+					res.status(401).jsonp({ error: "Access denied!" })
+				}
+			})
+		}
+		else {
+			res.status(400).jsonp({ error: "Falta de parametros" })
+		}
 	}
 	else {
-		res.status(401).jsonp({ error: "Token not found!" })
+		res.status(400).jsonp({ error: "Token not found!" })
 	}
 }
 
@@ -92,9 +106,9 @@ function isMe(req, res, next) {
 router.get('/admin/verificar', isAdmin, function (req, res) {
 	res.status(200).jsonp({ message: "OK" })
 });
-// GET verifica se é seller
-router.get('/seller/verificar', hasAccess, function (req, res) {
-	if (req.level == "seller") {
+// GET verifica se é artist
+router.get('/artist/verificar', hasAccess, function (req, res) {
+	if (req.level == "artist") {
 		res.status(200).jsonp({ message: "OK" })
 	}
 	else {
@@ -106,41 +120,7 @@ router.get('/verificar', hasAccess, function (req, res) {
 	res.status(200).jsonp({ message: "OK" })
 });
 
-
-// GET login list
-router.get('/admin/all', isAdmin, function (req, res) {
-	controllerLogin.list()
-		.then(users => {
-			res.jsonp(users)
-		})
-		.catch(erro => {
-			res.jsonp({ error: erro, message: "Erro na obtenção da lista de utilizadores" })
-		})
-});
-
-// GET login from email admin
-router.get('/admin', isAdmin, function (req, res) {
-	controllerLogin.getLogin(req.body.userEmail)
-		.then(u => {
-			res.jsonp(u)
-		})
-		.catch(erro => {
-			res.jsonp({ error: erro, message: "Erro na obtenção do utilizador: " + req.body.userEmail })
-		})
-
-});
-// GET login from email
-router.get('/', isMe, function (req, res) {
-	controllerLogin.getLogin(req.user)
-		.then(u => {
-			res.jsonp(u)
-		})
-		.catch(erro => {
-			res.jsonp({ error: erro, message: "Erro na obtenção do utilizador " + req.user })
-		})
-});
-
-// POST login admin
+// POST admin fazer um registo
 router.post('/admin/registo', isAdmin, function (req, res) {
 	if (req.body.userEmail && req.body.userPassword && req.body.userNivel) {
 		var info = {
@@ -153,22 +133,22 @@ router.post('/admin/registo', isAdmin, function (req, res) {
 
 		controllerLogin.registar(info)
 			.then(u => {
-				res.jsonp(u)
+				res.status(201).jsonp({ message: "OK" })
 			})
 			.catch(erro => {
-				res.jsonp({ error: erro, message: "Erro na criação do utilizador " + req.body.userEmail })
+				res.status(400).jsonp({ error: "Erro na criação do utilizador: " + erro })
 			})
 	}
 	else {
-		res.jsonp({ error: "Falta de parametros!" })
+		res.status(400).jsonp({ error: "Falta de parametros" })
 	}
 });
-// POST login
+// POST fazer um registo
 router.post('/registo', function (req, res) { // usar um chapta para verificar se é humano e não encher a base de dados com muitos registos de utilizadores !!!!!!
-	if (req.body.userEmail && req.body.userPassword) {
+	if (req.body.email && req.body.password) {
 		var info = {
-			email: req.body.userEmail,
-			password: req.body.userPassword,
+			email: req.body.email,
+			password: req.body.password,
 			nivel: "client",
 			dataRegisto: getDateTime(),
 			dataUltimoAcesso: ""
@@ -176,111 +156,152 @@ router.post('/registo', function (req, res) { // usar um chapta para verificar s
 
 		controllerLogin.registar(info)
 			.then(u => {
-				res.jsonp(u)
+				res.status(201).jsonp({ message: "OK" })
 			})
 			.catch(erro => {
-				console.log(erro)
-				res.jsonp({ error: erro, message: "Erro na criação do utilizador " + req.body.userEmail })
+				res.status(400).jsonp({ error: "Erro na criação do utilizador: " + erro })
 			})
 	}
 	else {
-		res.status(400).jsonp({ error: "Falta de parametros!" })
+		res.status(400).jsonp({ error: "Falta de parametros" })
 	}
 });
-
-// ver mensagem de erros !!!!!!!!!!!!!!!!!!!!
-
 
 // POST fazer login
 router.post('/login', passport.authenticate('local'), function (req, res) {
 	controllerLogin.login(req.body.username, getDateTime())
 		.then(u => {
-			if (u) {
-				if(u.modifiedCount == 1){
-					controllerLogin.getLogin(req.body.username)
-						.then(l => {
-							console.log("L: ", l);
-							jwt.sign({
-								username: l.username,
-								level: l.nivel
-							},
-								secrets.AUTH_KEY, // rever !!!!
-								{ expiresIn: "1h" }, //mudar aqui para o tempo de login que for decidido
-								function (e, token) {
-									if (e)
-										res.status(500).jsonp({ error: "Erro na geração do token: " + e })
-									else
-										{
-											console.log("Login do utilizador ", token)
-											console.log(jwt.decode(token))
-											res.status(201).jsonp({ token: token })
-										}
-									});
-						})
-						.catch(erro => {
-							res.jsonp({ error: erro, message: "Erro na obtenção do utilizador " + req.body.username })
-						})
-				}
+			if (u && u.modifiedCount == 1) {
+				controllerLogin.getLogin(req.body.username)
+					.then(l => {
+						jwt.sign({
+							username: l.username,
+							level: l.nivel
+						},
+							secrets.AUTH_KEY, // rever !!!!
+							{ expiresIn: "1h" }, //mudar aqui para o tempo de login que for decidido
+							function (e, token) {
+								if (e)
+									res.status(500).jsonp({ error: "Erro na geração do token: " + e })
+								else {
+									res.status(200).jsonp({ token: token })
+								}
+							});
+					})
+					.catch(erro => {
+						res.status(401).jsonp({ error: erro, message: "Erro na obtenção do utilizador: " + erro })
+					})
 			}
 			else {
-				res.status(401).jsonp({ error: "Invalid credentials!" })
+				res.status(401).jsonp({ error: "Erro ao processar o pedido" })
 			}
 		})
 		.catch(erro => {
-			res.jsonp({ error: erro, message: "Erro no login do utilizador " + req.body.username })
+			res.status(401).jsonp({ error: erro, message: "Erro no login do utilizador: " + erro })
+		})
+});
+
+// GET login information from email admin
+router.get('/admin', isAdmin, function (req, res) {
+	if (req.body.userEmail) {
+		controllerLogin.getLogin(req.body.userEmail)
+			.then(u => {
+				if (u) {
+					info = {
+						username: u.username,
+						nivel: u.nivel,
+						dataRegisto: u.dataRegisto,
+						dataUltimoAcesso: u.dataUltimoAcesso
+					}
+					res.status(200).jsonp(info)
+				}
+				else
+					res.status(401).jsonp({ error: "Utilizador não encontrado" })
+			})
+			.catch(erro => {
+				res.status(401).jsonp({ error: "Erro na obtenção do utilizador: " + erro })
+			})
+	}
+	else {
+		res.status(400).jsonp({ error: "Falta de parametros" })
+	}
+});
+// GET login from email
+router.get('/', isMe, function (req, res) { // tem de ter o parametro "username", por causa do isMe
+	controllerLogin.getLogin(req.user)
+		.then(u => {
+			if (u) {
+				info = {
+					username: u.username,
+					nivel: u.nivel,
+					dataRegisto: u.dataRegisto,
+					dataUltimoAcesso: u.dataUltimoAcesso
+				}
+				res.status(200).jsonp(info)
+			}
+			else
+				res.status(401).jsonp({ error: "Utilizador não encontrado" })
+		})
+		.catch(erro => {
+			res.status(401).jsonp({ error: "Erro na obtenção do utilizador: " + erro })
 		})
 });
 
 // UPDATE login email Admin
 router.put('/admin/email', isAdmin, function (req, res) {
-	if (req.body.userEmail && req.body.newEmail) {
-		controllerLogin.updateLoginEmail(req.body.userEmail, req.body.newEmail)
+	if (req.body.oldEmail && req.body.newEmail) {
+		controllerLogin.updateLoginEmail(req.body.oldEmail, req.body.newEmail)
 			.then(u => {
-				res.jsonp(u)
+				if (u && u.modifiedCount == 1)
+					res.status(200).jsonp({ message: "OK" })
+				else
+					res.status(401).jsonp({ error: "Erro ao processar o pedido" })
 			})
 			.catch(erro => {
-				res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.body.userEmail })
+				res.status(401).jsonp({ error: "Erro na alteração do utilizador: " + erro })
 			})
 	}
 	else {
-		res.jsonp({ error: "Falta de parametros!" })
+		res.status(400).jsonp({ error: "Falta de parametros" })
 	}
 });
-// UPDATE login email
-router.put('/email', isMe, function (req, res) {
-	controllerLogin.updateLoginEmail(req.user, req.body.newEmail) // newEmail tem de ser passado no body
-		.then(u => {
-			res.jsonp(u)
-		})
-		.catch(erro => {
-			res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.user })
-		})
-});
 
-// UPDATE login password Admin
+// UPDATE password Admin
 router.put('/admin/password', isAdmin, function (req, res) {
 	if (req.body.userEmail && req.body.userPassword) {
 		controllerLogin.updateLoginPassword(req.body.userEmail, req.body.userPassword) // userEmail e userPassword tem de ser passados no body
 			.then(u => {
-				res.jsonp(u)
+				if (u)
+					res.status(200).jsonp({ message: "OK" })
+				else
+					res.status(401).jsonp({ error: "Erro ao processar o pedido" })
 			})
 			.catch(erro => {
-				res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.body.userEmail })
+				res.status(401).jsonp({ error: "Erro na alteração do utilizador: " + erro })
 			})
 	}
 	else {
-		res.jsonp({ error: "Falta de parametros!" })
+		res.status(400).jsonp({ error: "Falta de parametros" })
 	}
 });
-// UPDATE login password
-router.put('/password', isMe, function (req, res) {
-	controllerLogin.updateLoginPassword(req.user, req.body.newPassword) // newPassword tem de ser passado no body
-		.then(u => {
-			res.jsonp(u)
-		})
-		.catch(erro => {
-			res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.user })
-		})
+// UPDATE password
+router.put('/password', isMe, function (req, res) { // tem de ter o parametro "username", por causa do isMe
+	if (req.body.newPassword) {
+		//inserir aqui a verificação da password antiga !!!!
+		controllerLogin.updateLoginPassword(req.user, req.body.newPassword) // newPassword tem de ser passado no body
+			.then(u => {
+				if (u)
+					res.status(200).jsonp({ message: "OK" })
+				else
+					res.status(401).jsonp({ error: "Erro ao processar o pedido" })
+			})
+			.catch(erro => {
+				res.status(401).jsonp({ error: "Erro na alteração do utilizador: " + erro })
+			})
+	}
+	else {
+		res.status(400).jsonp({ error: "Falta de parametros" })
+	}
 });
 
 // UPDATE login nivel Admin, apenas faz sentido os admins poderem alterar o nivel de acesso
@@ -288,14 +309,17 @@ router.put('/admin/nivel', isAdmin, function (req, res) {
 	if (req.body.userEmail && req.body.userNivel) { // userEmail e userNivel tem de ser passados no body
 		controllerLogin.updateLoginNivel(req.body.userEmail, req.body.userNivel)
 			.then(u => {
-				res.jsonp(u)
+				if (u && u.modifiedCount == 1)
+					res.status(200).jsonp({ message: "OK" })
+				else
+					res.status(401).jsonp({ error: "Erro ao processar o pedido" })
 			})
 			.catch(erro => {
-				res.jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.body.userEmail })
+				res.status(401).jsonp({ error: "Erro na alteração do utilizador: " + erro })
 			})
 	}
 	else {
-		res.jsonp({ error: "Falta de parametros!" })
+		res.status(400).jsonp({ error: "Falta de parametros" })
 	}
 });
 
@@ -304,19 +328,21 @@ router.delete('/admin', isAdmin, function (req, res) {
 	if (req.body.userEmail) { // userEmail tem de ser passado no body
 		controllerLogin.deleteLogin(req.body.userEmail)
 			.then(u => {
-				res.jsonp(u)
+				if (u && u.ok == 1 && u.deletedCount == 1)
+					res.status(200).jsonp({ message: "OK" })
+				else
+					res.status(401).jsonp({ error: "Erro ao processar o pedido" })
 			})
 			.catch(erro => {
-				res.jsonp({ error: erro, message: "Erro na remoção do utilizador " + req.body.userEmail })
+				res.status(401).jsonp({ error: "Erro na remoção do utilizador: " + erro })
 			})
 	}
 	else {
-		res.jsonp({ error: "Falta de parametros!" })
+		res.status(400).jsonp({ error: "Falta de parametros" })
 	}
 });
-
-// DELETE login
-router.delete('/apagar', isMe, async function (req, res) { // tirar o isMe e meter a enviar um email, criar funcao separada para verificar delete a receber o codigo
+// DELETE login, send email to confirm
+router.delete('/apagar', isMe, async function (req, res) { // tem de ter o parametro "username", por causa do isMe
 	if (controllerLogin.existsEmail(req.user)) {
 		const code = controllerLogin.generateRecoveryCode(req.user);
 
@@ -324,7 +350,8 @@ router.delete('/apagar', isMe, async function (req, res) { // tirar o isMe e met
 			const message = `Foi efetuado um pedido de remoção da sua conta.\n\n
 			O código para remover a conta é:  ${code}`;
 
-			//await sendEmail(req.user, message); // fazer a funcao de enviar email !!!!!!!
+			await sendEmail(req.user, "Remoção de conta", message); //rever funcao implementada !!!!!
+
 			res.status(200).jsonp({ message: "OK" })
 		}
 		catch (erro) {
@@ -332,39 +359,37 @@ router.delete('/apagar', isMe, async function (req, res) { // tirar o isMe e met
 			res.status(500).jsonp({ error: "Falha ao enviar email!" })
 		}
 	}
+	else {
+		res.status(401).jsonp({ error: "Utilizador não encontrado" })
+	}
+});
+// DELETE login, verify code and delete
+router.post('/apagar-verificar', isMe, function (req, res) { // tem de ter o parametro "username", por causa do isMe
+	controllerLogin.verifyRecoveryCode(req.user, req.body.code)
+		.then(b => {
+			if (b) { // code tem de ser passado no body
+				controllerLogin.deleteLogin(req.user)
+					.then(u => {
+						if (u && u.ok == 1 && u.deletedCount == 1)
+							res.status(200).jsonp({ message: "OK" })
+						else
+							res.status(401).jsonp({ error: "Erro ao processar o pedido" })
+					})
+					.catch(erro => {
+						res.status(401).jsonp({ error: "Erro na remoção do utilizador: " + erro })
+					})
+			}
+			else {
+				res.status(401).jsonp({ error: "Invalid code!" })
+			}
+		})
+		.catch(erro => {
+			res.status(403).jsonp({ error: "Erro na verificação do código: " + erro })
+		})
 });
 
-// DELETE login
-router.delete('/apagar-verificar', isMe, function (req, res) {
-	if (controllerLogin.checkRecoveryCode(req.user, req.body.code)) { // code tem de ser passado no body
-		controllerLogin.deleteLogin(req.user)
-			.then(u => {
-				res.status(200).jsonp({ message: "OK" })
-			})
-			.catch(erro => {
-				res.status(507).jsonp({ error: erro, message: "Erro na remoção do utilizador " + req.user })
-			})
-	}
-	else {
-		res.status(401).jsonp({ error: "Invalid code!" })
-	}
-});
-
-router.get('/admin/esqueci', isAdmin, function (req, res) { // admin mudar a palavra pass de um utilizador sem precisar do recovery code
-	if (controllerLogin.existsEmail(req.body.email)) { // email tem de ser passado no body
-		controllerLogin.updateLoginPassword(req.body.email, req.body.password) // newPassword tem de ser passado no body
-			.then(u => {
-				res.status(200).jsonp({ message: "OK" })
-			})
-			.catch(erro => {
-				res.status(507).jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.body.email })
-			})
-	}
-	else {
-		res.status(401).jsonp({ error: "Email not found!" })
-	}
-});
-router.get('/esqueci', async function (req, res) {
+// POST esqueci-me da password, send email to confirm
+router.post('/esqueci', async function (req, res) {
 	if (controllerLogin.existsEmail(req.body.email)) { // email tem de ser passado no body
 		const code = controllerLogin.generateRecoveryCode(req.body.email);
 
@@ -372,7 +397,8 @@ router.get('/esqueci', async function (req, res) {
 			const message = `Foi efetuado um pedido de alteração da password da sua conta.\n\n
 			O código para recuperar a password é:  ${code}`;
 
-			//await sendEmail(req.body.email, message); // fazer a funcao de enviar email !!!!!!!
+			await sendEmail(req.body.email, message); // rever funcao implementada !!!!!!
+
 			res.status(200).jsonp({ message: "OK" })
 		}
 		catch (erro) {
@@ -381,24 +407,33 @@ router.get('/esqueci', async function (req, res) {
 		}
 	}
 	else {
-		res.status(401).jsonp({ error: "Email not found!" })
+		res.status(401).jsonp({ error: "Utilizador não encontrado" })
 	}
 
 });
+// POST esqueci-me da password, verify code and change password
 router.post('/esqueci-verificar', function (req, res) {
-	if (controllerLogin.checkRecoveryCode(req.body.email, req.body.code)) { // email e code tem de ser passados no body
-		//change password
-		controllerLogin.updateLoginPassword(req.body.email, req.body.password) // newPassword tem de ser passado no body
-			.then(u => {
-				res.status(200).jsonp({ message: "OK" })
-			})
-			.catch(erro => {
-				res.status(507).jsonp({ error: erro, message: "Erro na alteração do utilizador " + req.body.email })
-			})
-	}
-	else {
-		res.status(401).jsonp({ error: "Invalid code!" })
-	}
+	controllerLogin.verifyRecoveryCode(req.body.email, req.body.code)
+		.then(b => {
+			if (b) { // email e code tem de ser passados no body
+				controllerLogin.updateLoginPassword(req.body.email, req.body.password) // newPassword tem de ser passado no body
+					.then(u => {
+						if(u && u.modifiedCount == 1)
+							res.status(200).jsonp({ message: "OK" })
+						else
+							res.status(401).jsonp({ error: "Erro ao processar o pedido" })
+					})
+					.catch(erro => {
+						res.status(507).jsonp({ error: erro, message: "Erro na alteração do utilizador: " + erro})
+					})
+			}
+			else {
+				res.status(401).jsonp({ error: "Invalid code!" })
+			}
+		})
+		.catch(erro => {
+			res.status(403).jsonp({ error: "Erro na verificação do código: " + erro })
+		})
 });
 
 module.exports = router;

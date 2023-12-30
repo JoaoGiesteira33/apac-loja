@@ -3,9 +3,11 @@ import { ProductType } from '../../types/product';
 import { useState } from 'react';
 import ProductAccordion from './ProductAccordion';
 import { ImageLightBox } from './ImageLightBox';
+import { useNavigate } from 'react-router-dom';
 
 const ProductDetails = (data: { product: ProductType }) => {
     const product = data.product;
+    const navigate = useNavigate();
 
     const [selectedImage, setSelectedImage] = useState(product.photos[0]);
     const [lightboxStatus, setLightboxStatus] = useState(false);
@@ -13,6 +15,10 @@ const ProductDetails = (data: { product: ProductType }) => {
     const handleLightbox = () => {
         setLightboxStatus(!lightboxStatus);
     };
+
+    const handleBuyNow = () => {
+        navigate('/cart')
+    }
 
     return (
         <div className="grid gap-4 lg:gap-8 grid-cols-1 lg:grid-cols-12">
@@ -80,8 +86,10 @@ const ProductDetails = (data: { product: ProductType }) => {
                         </div>
                         <div className="flex flex-col space-y-1">
                         <button
-                                type="button"
-                                className="text-white bg-gradient-to-r from-gray-700 to-gray-900 hover:bg-gradient-to-br font-poppins rounded-lg text-md px-5 py-2.5 text-center mb-4 mx-4">
+                            type="button"
+                            className="text-white bg-gradient-to-r from-gray-700 to-gray-900 hover:bg-gradient-to-br font-poppins rounded-lg text-md px-5 py-2.5 text-center mb-4 mx-4"
+                            onClick={handleBuyNow}
+                            >
                                 BUY NOW
                             </button>
                         </div>

@@ -1,30 +1,21 @@
-import { Divider } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import Box from '@mui/system/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 
 export default function ProductThumbnail(props) {
-    const theme = useTheme();
+    const [isHovered, setIsHovered] = useState(false);
 
     return (
         <Box component="div">
-            <Box
-                component="div"
-                sx={{
-                    backgroundColor:
-                        theme.palette.mode === 'dark' ? '#000000' : '#F4F4F4',
-                    borderRadius: '0.125rem',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    width: '100%',
-                    maxWidth: '350px',
-                    paddingTop: 'min(100%, 350px)',
-                }}>
-                <img
-                    className="max-h-[95%] max-w-[95%] rounded-sm w-auto h-auto absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] object-cover"
-                    src={props.product.image}></img>
-            </Box>
+            <Link to={`/product/${props.product.id}`}>
+                <Box component="div" className="w-full aspect-square">
+                    <img
+                        className="w-full h-full aspect-square object-cover"
+                        src={props.product.image}></img>
+                </Box>
+            </Link>
             <Box component="div">
                 <Grid
                     container

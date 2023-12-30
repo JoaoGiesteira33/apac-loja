@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import Hero from '../../components/pintar_o_7/Hero';
 import MultipleSelectTypes from '../../components/pintar_o_7/MultipleSelectTypes';
+import SelectPrice from '../../components/pintar_o_7/SelectPrice';
 
 import Divider from '@mui/material/Divider';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -17,7 +18,11 @@ import ProductThumbnail from '../../components/pintar_o_7/ProductThumbnail';
 export default function Home() {
     const [productQuery, setProductQuery] = useState('');
     const [productPage, setProductPage] = useState(1);
+
     const [selectedTypes, setSelectedTypes] = React.useState<string[]>([]);
+    const [selectedPrice, setSelectedPrice] = React.useState<number[]>([
+        0, 9999,
+    ]);
 
     const { MockData, hasMore, loading, error } = useProductSearch(
         productQuery,
@@ -31,17 +36,16 @@ export default function Home() {
                 direction="row"
                 alignItems="center"
                 justifyContent="space-evenly"
-                className="p-12 font-normal">
+                sx={{ paddingY: '2rem' }}>
                 <MultipleSelectTypes
                     values={selectedTypes}
                     setValues={setSelectedTypes}
                 />
-                <Box component="div" className="w-20 flex justify-center">
-                    preço
-                </Box>
-                <Box component="div" className="w-20 flex justify-center">
-                    batatas
-                </Box>
+                <SelectPrice
+                    maxPrice={9999}
+                    value={selectedPrice}
+                    changeValue={setSelectedPrice}
+                />
             </Stack>
             <Divider variant="middle" />
 

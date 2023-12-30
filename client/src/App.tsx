@@ -22,6 +22,7 @@ const HomePagePintarO7 = React.lazy(() => import('./pages/pintar_o_7/Home'));
 const ProductPage = React.lazy(() => import('./pages/Product'));
 const LoginPage = React.lazy(() => import('./pages/pintar_o_7/Login'));
 const RegisterPage = React.lazy(() => import('./pages/pintar_o_7/Register'));
+const CartPage = React.lazy(() => import('./pages/Cart'));
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 const getDesignTokens = (mode: PaletteMode) => ({
@@ -121,6 +122,11 @@ function App() {
             path: '/register',
             element: <RegisterPage />,
             requireAuth: false,
+        },
+        {
+            path: '/cart',
+            element: <CartPage />,
+            requireAuth: false, // TODO: change to true
         }
     ];
 
