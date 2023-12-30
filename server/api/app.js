@@ -4,6 +4,7 @@ var path = require('path');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 var secrets = require('docker-secret').secrets;
+var cors = require('cors')
 
 // ROUTES:
 var userRouter = require('./routes/user');
@@ -26,6 +27,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors())
 
 // TODO - ALTERAR PARA OS NOMES DEFINIDOS ACIMA
 app.use('/product', productRouter);

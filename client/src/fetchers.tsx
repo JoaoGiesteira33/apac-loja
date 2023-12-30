@@ -1,8 +1,9 @@
 import axios from 'axios';
 //import mime from 'mime';
 
-export const AUTH_URL = 'http://localhost:7777';
-export const API_URL = 'http://localhost:8000/';
+export const API_URL_USER = 'http://localhost:11000/user';
+export const API_URL_PROD = 'http://localhost:11000/product';
+export const AUTH_URL     = 'http://localhost:11001';
 //export const BASE_URL = 'http:/192.168.1.68:8000/api';
 
 export const loginUser = async (email: string, password: string) => {
@@ -22,20 +23,25 @@ export const loginUser = async (email: string, password: string) => {
 export const fetchUser = async (email: string, level: string) => {
     console.log("Fetching user with email " + email);
 
-    try {
-        var response;
-        if(level === "admin" || level === "client"){
-            response = await axios.get(`${API_URL}/client/${email}`);
-        }
-        else // if(level == "artist")
-            response = await axios.get(`${API_URL}/artist/${email}`);
-        
-        return response.data;
+    if(level === "admin" || level === "client"){
+        axios.get(`${API_URL_USER}/client/${email}`)
+            .then(response => {
+                return response.data;
+            })
+            .catch(err => {
+                console.log("Error fetching client: " + err.message);
+                throw err.message;
+            });
     }
-    catch (err) {
-        console.log("Error fetching user: " + err.message);
-        return -1;
-    }
+    else // if(level == "artist")
+        axios.get(`${API_URL_USER}/artist/${email}`)
+            .then(response => {
+                return response.data;
+            })
+            .catch(err => {
+                console.log("Error fetching artist: " + err.message);
+                throw err.message;
+            });
 }
 
 
