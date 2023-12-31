@@ -19,11 +19,12 @@ import { input } from '@material-tailwind/react';
 import { rootCertificates } from 'tls';
 
 // dynamically load components as they are needed
-const HomePage = React.lazy(() => import('./pages/Home'));
+const InitialPage = React.lazy(() => import('./pages/pintar_o_7/Initial'));
 const HomePagePintarO7 = React.lazy(() => import('./pages/pintar_o_7/Home'));
 const ProductPage = React.lazy(() => import('./pages/Product'));
 const LoginPage = React.lazy(() => import('./pages/pintar_o_7/Login'));
 const RegisterPage = React.lazy(() => import('./pages/pintar_o_7/Register'));
+const ArtistsPage = React.lazy(() => import('./pages/pintar_o_7/Artistas'));
 const CartPage = React.lazy(() => import('./pages/Cart'));
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
@@ -36,8 +37,8 @@ const getDesignTokens = (mode: PaletteMode) => ({
         ...(mode === 'light'
             ? {
                   // palette values for light mode
-                  primary: blue,
-                  divider: blue[200],
+                  primary: grey,
+                  divider: grey[900],
                   text: {
                       primary: grey[900],
                       secondary: grey[800],
@@ -107,7 +108,17 @@ function App() {
     const routes = [
         {
             path: '/',
+            element: <InitialPage />,
+            requireAuth: false,
+        },
+        {
+            path: '/gallery',
             element: <HomePagePintarO7 />,
+            requireAuth: false,
+        },
+        {
+            path: "/artists",
+            element: <ArtistsPage />,
             requireAuth: false,
         },
         {
@@ -172,7 +183,7 @@ function App() {
                             <Brightness4Icon />
                         )}
                     </IconButton>
-                    <Navbar />
+                    {window.location.pathname !== "/" ? <Navbar />: <></>}
                     {/*<Chat userID={userID} />*/}
                     {/*<ThemeProvider theme={{}}>*/}
                     <Suspense fallback={<p>Loading...</p>}>
@@ -195,8 +206,8 @@ function App() {
                             ))}
                         </Routes>
                     </Suspense>
-                    <Chat />
-                    <Footer />
+                    {window.location.pathname !== "/" ? <Chat />: <></>}
+                    {window.location.pathname !== "/" ? <Footer />: <></>}
                     {/*</ThemeProvider>*/}
                 </div>
             </ThemeProvider>

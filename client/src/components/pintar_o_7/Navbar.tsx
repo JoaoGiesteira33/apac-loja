@@ -13,7 +13,7 @@ import {
 const customTheme: CustomFlowbiteTheme = {
     navbar: {
         root: {
-            base: 'bg-white px-2 py-4 md:py-20 dark:border-gray-700 dark:bg-gray-800 sm:px-4 font-poppins',
+            base: 'bg-white px-2 py-4 md:py-20 dark:border-gray-700 dark:bg-gray-800 sm:px-20 font-poppins',
         },
         link: {
             base: 'block py-2 pr-4 pl-3 md:p-0 text-xl',
@@ -32,7 +32,7 @@ export default function Navbar() {
     return (
         <Flowbite theme={{ theme: customTheme }}>
             <FlowbiteNavbar className="" fluid>
-                <FlowbiteNavbar.Brand as={Link} href="/">
+                <FlowbiteNavbar.Brand href="/">
                     <img
                         src={logoApac}
                         className="mr-3 h-9 md:h-28 sm:h-9"
@@ -41,14 +41,40 @@ export default function Navbar() {
                 </FlowbiteNavbar.Brand>
                 <FlowbiteNavbar.Toggle />
                 <FlowbiteNavbar.Collapse>
-                    <FlowbiteNavbar.Link href="/">
+                    <FlowbiteNavbar.Link
+                        href="/gallery"
+                        className={
+                            window.location.pathname == '/gallery'
+                                ? 'font-bold text-black'
+                                : ''
+                        }>
                         a galeria
                     </FlowbiteNavbar.Link>
-                    <FlowbiteNavbar.Link as={Link} href="/">
+                    <FlowbiteNavbar.Link
+                        href="/artists"
+                        className={
+                            window.location.pathname == '/artists'
+                                ? 'font-bold text-black'
+                                : ''
+                        }>
                         artistas
                     </FlowbiteNavbar.Link>
-                    <FlowbiteNavbar.Link href="/">contacto</FlowbiteNavbar.Link>
-                    <FlowbiteNavbar.Link href="/login">
+                    <FlowbiteNavbar.Link
+                        href="/contact"
+                        className={
+                            window.location.pathname == '/contact'
+                                ? 'font-bold text-black'
+                                : ''
+                        }>
+                        contacto
+                    </FlowbiteNavbar.Link>
+                    <FlowbiteNavbar.Link
+                        href="/login"
+                        className={
+                            window.location.pathname == '/login'
+                                ? 'font-bold text-black'
+                                : ''
+                        }>
                         login
                     </FlowbiteNavbar.Link>
                 </FlowbiteNavbar.Collapse>
