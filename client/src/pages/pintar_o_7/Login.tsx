@@ -75,10 +75,10 @@ const Login = () => {
       <Box component="div" maxWidth="xs">
         <CssBaseline />
           <Paper
-            elevation={3}
             style={{
               paddingLeft: '10%',
               paddingRight: '10%',
+              paddingBottom: 10,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'left',
@@ -105,6 +105,7 @@ const Login = () => {
                 autoComplete="email"
                 autoFocus
                 value={email}
+                sx={{borderWidth: 10}}
                 onChange={(e) => setEmail(e.target.value)}
               />
               {showPassAlert && <Alert onClose={() => {setShowPassAlert(false)}} variant="filled" severity="error">
