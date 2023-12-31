@@ -15,6 +15,8 @@ import { IconButton, PaletteMode } from '@mui/material';
 import { CssBaseline } from '@mui/material/';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { input } from '@material-tailwind/react';
+import { rootCertificates } from 'tls';
 
 // dynamically load components as they are needed
 const HomePage = React.lazy(() => import('./pages/Home'));
@@ -60,6 +62,26 @@ const getDesignTokens = (mode: PaletteMode) => ({
             styleOverrides: {
                 icon: {
                     color: mode === 'light' ? grey[800] : '#fff',
+                },
+            },
+        },
+        MuiTextField: {
+            styleOverrides: {
+                root: {
+                    '& .MuiInputBase-root': {
+                        outline: 'none',
+                        border: 'none',
+                    },
+                    '& .MuiInputBase-root:before': {
+                        outline: 'none',
+                    },
+                    '& .MuiInputBase-root:after': {
+                        outline: 'none',
+                    },
+                    '& .MuiInputBase-input': {
+                        outline: 'none',
+                        border: 'none',
+                    },
                 },
             },
         },
@@ -127,7 +149,7 @@ function App() {
             path: '/cart',
             element: <CartPage />,
             requireAuth: false, // TODO: change to true
-        }
+        },
     ];
 
     const theme = React.useMemo(
@@ -176,7 +198,6 @@ function App() {
                     <Chat />
                     <Footer />
                     {/*</ThemeProvider>*/}
-
                 </div>
             </ThemeProvider>
         </ColorModeContext.Provider>

@@ -48,7 +48,9 @@ export default function Navbar() {
                         artistas
                     </FlowbiteNavbar.Link>
                     <FlowbiteNavbar.Link href="/">contacto</FlowbiteNavbar.Link>
-                    <FlowbiteNavbar.Link href="/login">login</FlowbiteNavbar.Link>
+                    <FlowbiteNavbar.Link href="/login">
+                        login
+                    </FlowbiteNavbar.Link>
                 </FlowbiteNavbar.Collapse>
             </FlowbiteNavbar>
         </Flowbite>
