@@ -1,17 +1,5 @@
 const mongoose = require('mongoose')
 
-const Price = new mongoose.Schema({
-    price: {
-        type: Number,
-        required: true
-    },
-    currency: {
-        type: String,
-        default: "EUR",
-        enum: ["EUR", "USD", "GBP"] // DISCUSS
-    }
-}, {_id: false});
-
 const Dimensions = new mongoose.Schema({
     width: Number,
     height: Number,
@@ -57,7 +45,7 @@ const Product = new mongoose.Schema({
     },
     description: String,
     price: {
-        type: Price,
+        type: Number,
         required: true
     },
     product_type: {

@@ -54,7 +54,7 @@ router.delete('/:id', /*controllerAuth.isAdmin,*/ function (req, res, next) {
 
 // GET Products
 router.get('/', middleware.extractFilters, middleware.fieldSelector, /*controllerAuth.hasAccess,*/ function (req, res, next) {
-    controllerProduct.getProducts(req.filters, req.fields, req.query.page || 0)
+    controllerProduct.getProducts(req.filters, req.fields, req.query.page || 0, req.query.limit || 28)
         .then((info) => {
             res.jsonp(info);
         })

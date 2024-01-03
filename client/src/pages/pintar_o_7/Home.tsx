@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Hero from '../../components/pintar_o_7/Hero';
 import MultipleSelectTypes from '../../components/pintar_o_7/MultipleSelectTypes';
@@ -16,7 +16,7 @@ import useProductSearch from '../../hooks/useProductSearch';
 import ProductThumbnail from '../../components/pintar_o_7/ProductThumbnail';
 
 export default function Home() {
-    const [productQuery, setProductQuery] = useState('');
+    const [productQuery, setProductQuery] = useState({"piece_info.state": "available"});
     const [productPage, setProductPage] = useState(1);
 
     const [selectedTypes, setSelectedTypes] = React.useState<string[]>([]);
@@ -24,7 +24,7 @@ export default function Home() {
         0, 9999,
     ]);
 
-    const { MockData, hasMore, loading, error } = useProductSearch(
+    const { MockData, hasMore, loading, error, products} = useProductSearch(
         productQuery,
         productPage
     );

@@ -57,7 +57,7 @@ router.delete('/client/:id', isMeOrAdmin, function (req, res) {
 
 //GET Clients
 router.get('/clients', isAdmin, middleware.extractFilters, middleware.fieldSelector, function (req, res) {
-    controllerUser.getClients(req.filters, req.fields, req.query.page || 0)
+    controllerUser.getUsers(req.filters, req.fields, req.query.page || 0)
         .then((info) => {
             res.jsonp(info);
         })
@@ -70,8 +70,8 @@ router.get('/clients', isAdmin, middleware.extractFilters, middleware.fieldSelec
 // ---------------------------------------------
 
 
-// GET Artist Info
-router.get('/artist/:id', isMeOrAdmin, middleware.fieldSelector, function (req, res) {
+// GET Seller Info
+router.get('/seller/:id', isMeOrAdmin, middleware.fieldSelector, function (req, res) {
     controllerUser.getUserInfo(req.params.id)
         .then((info) => {
             res.jsonp(info);
@@ -81,8 +81,8 @@ router.get('/artist/:id', isMeOrAdmin, middleware.fieldSelector, function (req, 
         });
 });
 
-// POST Artist Info
-router.post('/artist', isMeOrAdmin, function (req, res) {
+// POST Seller Info
+router.post('/seller', isMeOrAdmin, function (req, res) {
     controllerUser.createUser(req.body)
         .then((info) => {
             res.jsonp(info);
@@ -92,8 +92,8 @@ router.post('/artist', isMeOrAdmin, function (req, res) {
         });
 });
 
-// UPDATE Artist Info
-router.put('/artist/:id', isMeOrAdmin, function (req, res) {
+// UPDATE Seller Info
+router.put('/seller/:id', isMeOrAdmin, function (req, res) {
     controllerUser.updateUserInfo(req.params.id, req.body)
         .then((info) => {
             res.jsonp(info);
@@ -103,8 +103,8 @@ router.put('/artist/:id', isMeOrAdmin, function (req, res) {
         });
 });
 
-// DELETE Artist Info
-router.delete('/artist/:id', isMeOrAdmin, function (req, res) {
+// DELETE Seller Info
+router.delete('/seller/:id', isMeOrAdmin, function (req, res) {
     controllerUser.deleteUser(req.params.id)
         .then((info) => {
             res.jsonp(info);
@@ -114,9 +114,9 @@ router.delete('/artist/:id', isMeOrAdmin, function (req, res) {
         });
 });
 
-//GET Artists
-router.get('/artists', isAdmin, middleware.extractFilters, middleware.fieldSelector, function (req, res) {
-    controllerUser.getArtists(req.filters, req.fields, req.query.page || 0)
+//GET Sellers
+router.get('/sellers', isAdmin, middleware.extractFilters, middleware.fieldSelector, function (req, res) {
+    controllerUser.getUsers(req.filters, req.fields, req.query.page || 0, req.query.limit || 28)
         .then((info) => {
             res.jsonp(info);
         })

@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Paper, CssBaseline, Grid, Alert } from '@mui/material';
 import { registerUser } from '../../fetchers';
-
+import { useNavigate } from 'react-router-dom';
 const Register = () => {
+
+    const navigate = useNavigate();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
@@ -79,7 +82,13 @@ const Register = () => {
             const data = new FormData(e.target);
             console.log("Body:", data)
 
-            const response = await registerUser(data);
+            try{
+              const response = await registerUser(data);
+              navigate('/login');
+            }catch(error){
+              console.log(error);
+            }
+
             // TO DO - verificar formatacao dos campos + fazer ligacao com backend     
         }
     };

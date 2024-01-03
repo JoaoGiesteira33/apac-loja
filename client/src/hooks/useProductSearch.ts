@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios, { Canceler } from 'axios';
+import { API_URL_PROD } from '../fetchers';
 
 const MockData: {
     id: number;
@@ -22,7 +23,7 @@ for (let i = 1; i < 30; i++) {
     });
 }
 
-export default function useProductSearch(query: string, pageNumber: number) {
+export default function useProductSearch(query: object, pageNumber: number) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [products, setProducts] = useState([]);
@@ -40,16 +41,13 @@ export default function useProductSearch(query: string, pageNumber: number) {
 
         axios({
             method: 'GET',
-            url: 'http://localhost:5000/api/products',
-            params: { q: query, _page: pageNumber, _limit: 10 },
+            url: API_URL_PROD,
+            params: { page: pageNumber - 1, ...query}, //Limit é opcional, default=28
             cancelToken: new axios.CancelToken((c) => (cancel = c)),
         })
             .then((res) => {
-                console.log(res);
-                //setProducts((prevProducts) => {
-                //   return [...prevProducts, ...res.data];
-                //});
-                //setHasMore(res.data.length > 0);
+                setProducts(products.concat(res.data));
+                setHasMore(res.data.length > 0);
                 setLoading(false);
             })
             .catch((e) => {
@@ -57,9 +55,7 @@ export default function useProductSearch(query: string, pageNumber: number) {
                 if (axios.isCancel(e)) return;
                 //else setError(true);
             });
-
-        return () => cancel();
     }, [query, pageNumber]);
 
-    return { loading, error, MockData, hasMore };
+    return { loading, error, MockData, hasMore, products};
 }

@@ -43,8 +43,8 @@ module.exports.deleteProduct = function (id) {
 };
 
 //      - getProducts
-module.exports.getProducts = function (filters, fields, page) {
-    return Product.find(filters, fields).skip(page * 28).limit(28)
+module.exports.getProducts = function (filters, fields, page, limit) {
+    return Product.find(filters, fields).skip(page * limit).limit(limit)
         .then((info) => {
             return info;
         })
