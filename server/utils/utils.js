@@ -91,12 +91,12 @@ function hasAccess(req, res, next) {
 function isMe(req, res, next) {
 	var myToken = req.query.token || req.body.token || req.cookies.token
 	if (myToken) {
-		if (req.params.username) {
 			jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
+				me = req.params.username || req.body.username
 				if (e) {
 					res.status(403).jsonp({ error: "Invalid Token!" })
 				}
-				else if (payload.username == req.params.username) {
+				else if (me && payload.username == me) {
 					req.user = payload.username
 					req.level = payload.level
 					req.token = myToken
@@ -106,10 +106,30 @@ function isMe(req, res, next) {
 					res.status(401).jsonp({ error: "Access denied!" })
 				}
 			})
-		}
-		else {
-			res.status(400).jsonp({ error: "Falta de parametros" })
-		}
+	}
+	else {
+		res.status(400).jsonp({ error: "Token not found!" })
+	}
+}
+
+function isMeOrAdmin(req, res, next){
+	var myToken = req.query.token || req.body.token || req.cookies.token
+	if (myToken) {
+		jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
+			var me = req.params.username || req.body.username
+			if (e) {
+				res.status(403).jsonp({ error: "Invalid Token!" })
+			}
+			else if (payload.level == "admin" || (me && payload.username == me) ) {
+				req.user = payload.username
+				req.level = payload.level
+				req.token = myToken
+				next()
+			}
+			else {
+				res.status(401).render({ error: "Access denied!" })
+			}
+		})
 	}
 	else {
 		res.status(400).jsonp({ error: "Token not found!" })
@@ -121,5 +141,6 @@ module.exports = {
     getDateTime,
     isAdmin,
     hasAccess,
-    isMe
+    isMe,
+	isMeOrAdmin
 }
