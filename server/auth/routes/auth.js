@@ -6,7 +6,7 @@ var jwt = require('jsonwebtoken')
 var secrets = require('docker-secret').secrets;
 
 const controllerLogin = require('../controllers/login');
-const { sendEmail, getDateTime, isAdmin, hasAccess, isMe } = require('../../utils/utils');
+const { sendEmail, getDateTime, isAdmin, hasAccess, isMe } = require('../utils/utils');
 
 var axios = require('axios');
 
