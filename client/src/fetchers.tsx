@@ -21,27 +21,49 @@ export const loginUser = async (email: string, password: string) => {
 }
 
 export const fetchUser = async (email: string, level: string) => {
-    console.log("Fetching user with email " + email);
+    console.log("Fetching user " + email);
 
     if(level === "admin" || level === "client"){
-        axios.get(`${API_URL_USER}/client/${email}`)
-            .then(response => {
-                return response.data;
-            })
-            .catch(err => {
-                console.log("Error fetching client: " + err.message);
-                throw err.message;
-            });
+        try{
+            const response = await axios.get(`${API_URL_USER}/clients?email=${email}`);
+            return response.data;
+        }
+        catch(err){
+            console.log("Error fetching client: " + err.message);
+            throw err.message;
+        }
     }
-    else // if(level == "artist")
-        axios.get(`${API_URL_USER}/artist/${email}`)
-            .then(response => {
-                return response.data;
-            })
-            .catch(err => {
-                console.log("Error fetching artist: " + err.message);
-                throw err.message;
-            });
+    else {// if(level == "artist")
+        try{
+            const response = axios.get(`${API_URL_USER}/artists?email=${email}`);
+            return response.data;
+        }
+        catch(err){
+            console.log("Error fetching artist: " + err.message);
+            throw err.message;
+        }
+    }
+}
+
+export const registerUser = async (body: FormData) => {
+    console.log("Registering user");
+    console.log("body: ", body)
+    var object = {};
+    body.forEach(function(value, key){
+        object[key] = value;
+    });
+    var json = JSON.stringify(object);
+    console.log("json: ", object);
+
+    try {
+        const response = await axios.post(`${AUTH_URL}/registo`, object);
+        console.log("resposta: ", response.data)
+        return response.data;
+    }
+    catch (err) {
+        console.log("Error during register: " + err.message);
+        return err.response;
+    }
 }
 
 

@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Paper, CssBaseline, Grid, Alert } from '@mui/material';
-
+import { registerUser } from '../../fetchers';
+import { useNavigate } from 'react-router-dom';
 const Register = () => {
+
+    const navigate = useNavigate();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
@@ -34,9 +38,10 @@ const Register = () => {
     const checkOver18 = (date: string) => {
         const today = new Date();
         const birthDate = new Date(date);
+
         const age = today.getFullYear() - birthDate.getFullYear();
         const m = today.getMonth() - birthDate.getMonth();
-    
+
         if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
             return age - 1;
         }
@@ -51,7 +56,7 @@ const Register = () => {
         setShowOver18Alert(false);
     }
 
-    const handleRegisto = (e) => {
+    const handleRegisto = async (e) => {
         e.preventDefault();
         disableAlerts();
 
@@ -68,12 +73,23 @@ const Register = () => {
             setShowPhoneAlert(true);
             return;
         }
-        else if( checkOver18(birth_date) ) {
+        else if( checkOver18(birth_date) < 18 ) {
             setShowOver18Alert(true);
             return;
         }
         else {
-            disableAlerts();         
+            disableAlerts();
+            const data = new FormData(e.target);
+            console.log("Body:", data)
+
+            try{
+              const response = await registerUser(data);
+              navigate('/login');
+            }catch(error){
+              console.log(error);
+            }
+
+            // TO DO - verificar formatacao dos campos + fazer ligacao com backend     
         }
     };
 
