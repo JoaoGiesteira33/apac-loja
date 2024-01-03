@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Paper, CssBaseline, Grid, Alert } from '@mui/material';
+import { Box, TextField, Button, Typography, Paper, CssBaseline } from '@mui/material';
 import { loginUser, fetchUser } from '../../fetchers';
 import { Link, useNavigate } from 'react-router-dom';
-import { red } from '@mui/material/colors';
 import { useJwt, decodeToken } from "react-jwt";
 
 
@@ -58,9 +57,9 @@ const Login = () => {
                 // localStorage.setItem('user', JSON.stringify(response2.user));
                 navigate('/');
               }else{
-                  setErrorMessage("#1")
-                  setShowErrorAlert(true);
-                  console.log("User não encontrado");
+                setErrorMessage("#1")
+                setShowErrorAlert(true);
+                console.log("User não encontrado");
               }
             }
             catch(e){

@@ -62,6 +62,7 @@ router.post('/admin/registo', isAdmin, function (req, res) {
 });
 // POST fazer um registo
 router.post('/registo', function (req, res) { // usar um chapta para verificar se é humano e não encher a base de dados com muitos registos de utilizadores !!!!!!
+	console.log(req.body)
 	if (req.body.email && req.body.password) {
 		var info = {
 			email: req.body.email,
@@ -70,6 +71,7 @@ router.post('/registo', function (req, res) { // usar um chapta para verificar s
 			dataRegisto: getDateTime(),
 			dataUltimoAcesso: ""
 		}
+		console.log("Info:", info)
 
 		controllerLogin.registar(info)
 			.then(u => {

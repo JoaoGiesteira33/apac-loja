@@ -20,11 +20,11 @@ export const loginUser = async (email: string, password: string) => {
     }
 }
 
-export const fetchUser = async (email: string, level: string) => {
-    console.log("Fetching user with email " + email);
+export const fetchUser = async (id: string, level: string) => {
+    console.log("Fetching user " + id);
 
     if(level === "admin" || level === "client"){
-        axios.get(`${API_URL_USER}/client/${email}`)
+        axios.get(`${API_URL_USER}/client/${id}`)
             .then(response => {
                 return response.data;
             })
@@ -34,7 +34,7 @@ export const fetchUser = async (email: string, level: string) => {
             });
     }
     else // if(level == "artist")
-        axios.get(`${API_URL_USER}/artist/${email}`)
+        axios.get(`${API_URL_USER}/artist/${id}`)
             .then(response => {
                 return response.data;
             })
@@ -42,6 +42,27 @@ export const fetchUser = async (email: string, level: string) => {
                 console.log("Error fetching artist: " + err.message);
                 throw err.message;
             });
+}
+
+export const registerUser = async (body: FormData) => {
+    console.log("Registering user");
+    console.log("body: ", body)
+    var object = {};
+    body.forEach(function(value, key){
+        object[key] = value;
+    });
+    var json = JSON.stringify(object);
+    console.log("json: ", object);
+
+    try {
+        const response = await axios.post(`${AUTH_URL}/registo`, object);
+        console.log("resposta: ", response.data)
+        return response.data;
+    }
+    catch (err) {
+        console.log("Error during register: " + err.message);
+        return err.response;
+    }
 }
 
 

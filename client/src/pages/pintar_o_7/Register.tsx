@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Paper, CssBaseline, Grid, Alert } from '@mui/material';
+import { registerUser } from '../../fetchers';
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -34,9 +35,10 @@ const Register = () => {
     const checkOver18 = (date: string) => {
         const today = new Date();
         const birthDate = new Date(date);
+
         const age = today.getFullYear() - birthDate.getFullYear();
         const m = today.getMonth() - birthDate.getMonth();
-    
+
         if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
             return age - 1;
         }
@@ -51,7 +53,7 @@ const Register = () => {
         setShowOver18Alert(false);
     }
 
-    const handleRegisto = (e) => {
+    const handleRegisto = async (e) => {
         e.preventDefault();
         disableAlerts();
 
@@ -68,12 +70,17 @@ const Register = () => {
             setShowPhoneAlert(true);
             return;
         }
-        else if( checkOver18(birth_date) ) {
+        else if( checkOver18(birth_date) < 18 ) {
             setShowOver18Alert(true);
             return;
         }
         else {
-            disableAlerts();         
+            disableAlerts();
+            const data = new FormData(e.target);
+            console.log("Body:", data)
+
+            const response = await registerUser(data);
+            // TO DO - verificar formatacao dos campos + fazer ligacao com backend     
         }
     };
 
