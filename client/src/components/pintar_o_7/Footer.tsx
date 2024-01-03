@@ -35,10 +35,17 @@ const Footer = () => {
             sx={{
                 flexGrow: 1,
                 backgroundColor: 'white',
+                paddingBottom: 5,
+                paddingX: {
+                    xs: '2rem',
+                    sm: '4rem',
+                    md: '6rem',
+                    lg: '8rem',
+                },
             }}>
-            <Grid container>
+            <Grid container sx={{paddingBottom:5}}>
                 <Grid xs={12}>
-                    <Divider variant="middle" />
+                    <Divider  />
                 </Grid>
                 <Grid
                     xs={6}
@@ -46,17 +53,17 @@ const Footer = () => {
                     md={3}
                     lg={2}
                     display="flex"
-                    justifyContent="center"
+                    justifyContent="left"
                     alignItems="center">
                     <List>
-                        <ListItem>
+                        <ListItem sx={{paddingX:0}}>
                             <img
                                 className="max-h-16 my-4"
                                 alt="logo"
                                 src={logo}
                             />
                         </ListItem>
-                        <ListItem>
+                        <ListItem sx={{paddingX:0}}>
                             <FacebookIcon
                                 sx={{ color: COLOR, margin: ICON_MARGIN }}
                             />
@@ -86,13 +93,13 @@ const Footer = () => {
                             </Typography>
                         </ListItem>
                         <ListItem disablePadding>
-                            <MY_LNK link="#" text="a galeria" />
+                            <MY_LNK link="gallery" text="a galeria" />
                         </ListItem>
                         <ListItem disablePadding>
-                            <MY_LNK link="#" text="artistas" />
+                            <MY_LNK link="artists" text="artistas" />
                         </ListItem>
                         <ListItem disablePadding>
-                            <MY_LNK link="#" text="contacto" />
+                            <MY_LNK link="contact" text="contacto" />
                         </ListItem>
                     </List>
                 </Grid>
@@ -104,7 +111,7 @@ const Footer = () => {
                     lg={2}
                     display="flex"
                     alignItems="center"
-                    justifyContent="center">
+                    justifyContent="left">
                     <MY_LNK link="#" text="termos e condições" />
                 </Grid>
                 <Grid

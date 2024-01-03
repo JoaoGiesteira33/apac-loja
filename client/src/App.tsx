@@ -10,18 +10,21 @@ import { CanvasModel } from './components/canvasModel';
 import ProfileInfo from './pages/Profile/ProfileInfo';
 import ProfileIndex from './pages/Profile/ProfileIndex';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { amber, deepOrange, grey } from '@mui/material/colors';
+import { amber, blue, deepOrange, grey } from '@mui/material/colors';
 import { IconButton, PaletteMode } from '@mui/material';
 import { CssBaseline } from '@mui/material/';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { input } from '@material-tailwind/react';
+import { rootCertificates } from 'tls';
 
 // dynamically load components as they are needed
-const HomePage = React.lazy(() => import('./pages/Home'));
+const InitialPage = React.lazy(() => import('./pages/pintar_o_7/Initial'));
 const HomePagePintarO7 = React.lazy(() => import('./pages/pintar_o_7/Home'));
 const ProductPage = React.lazy(() => import('./pages/Product'));
 const LoginPage = React.lazy(() => import('./pages/pintar_o_7/Login'));
 const RegisterPage = React.lazy(() => import('./pages/pintar_o_7/Register'));
+const ArtistsPage = React.lazy(() => import('./pages/pintar_o_7/Artistas'));
 const CartPage = React.lazy(() => import('./pages/Cart'));
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
@@ -34,8 +37,8 @@ const getDesignTokens = (mode: PaletteMode) => ({
         ...(mode === 'light'
             ? {
                   // palette values for light mode
-                  primary: amber,
-                  divider: amber[200],
+                  primary: grey,
+                  divider: grey[900],
                   text: {
                       primary: grey[900],
                       secondary: grey[800],
@@ -63,6 +66,26 @@ const getDesignTokens = (mode: PaletteMode) => ({
                 },
             },
         },
+        MuiTextField: {
+            styleOverrides: {
+                root: {
+                    '& .MuiInputBase-root': {
+                        outline: 'none',
+                        border: 'none',
+                    },
+                    '& .MuiInputBase-root:before': {
+                        outline: 'none',
+                    },
+                    '& .MuiInputBase-root:after': {
+                        outline: 'none',
+                    },
+                    '& .MuiInputBase-input': {
+                        outline: 'none',
+                        border: 'none',
+                    },
+                },
+            },
+        },
     },
 });
 
@@ -85,7 +108,17 @@ function App() {
     const routes = [
         {
             path: '/',
+            element: <InitialPage />,
+            requireAuth: false,
+        },
+        {
+            path: '/gallery',
             element: <HomePagePintarO7 />,
+            requireAuth: false,
+        },
+        {
+            path: "/artists",
+            element: <ArtistsPage />,
             requireAuth: false,
         },
         {
@@ -127,7 +160,7 @@ function App() {
             path: '/cart',
             element: <CartPage />,
             requireAuth: false, // TODO: change to true
-        }
+        },
     ];
 
     const theme = React.useMemo(
@@ -150,7 +183,7 @@ function App() {
                             <Brightness4Icon />
                         )}
                     </IconButton>
-                    <Navbar />
+                    {window.location.pathname !== "/" ? <Navbar />: <></>}
                     {/*<Chat userID={userID} />*/}
                     {/*<ThemeProvider theme={{}}>*/}
                     <Suspense fallback={<p>Loading...</p>}>
@@ -173,10 +206,9 @@ function App() {
                             ))}
                         </Routes>
                     </Suspense>
-                    <Chat />
-                    <Footer />
+                    {window.location.pathname !== "/" ? <Chat />: <></>}
+                    {window.location.pathname !== "/" ? <Footer />: <></>}
                     {/*</ThemeProvider>*/}
-
                 </div>
             </ThemeProvider>
         </ColorModeContext.Provider>
