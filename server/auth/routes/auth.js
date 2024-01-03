@@ -8,11 +8,14 @@ var secrets = require('docker-secret').secrets;
 const controllerLogin = require('../controllers/login');
 const { sendEmail } = require('../../utils/utils');
 
+var axios = require('axios');
+
 // GET -> nao tem body o get
 // POST -> adicionar algo
 // PUT -> alterar algo
 // DELETE -> remover algo
 
+export const API_URL_USER = 'http://localhost:11000/user';
 
 // ---------------------------------------------
 
@@ -156,7 +159,20 @@ router.post('/registo', function (req, res) { // usar um chapta para verificar s
 
 		controllerLogin.registar(info)
 			.then(u => {
-				res.status(201).jsonp({ message: "OK" })
+				data = {
+					...req.body,
+					_id: u._id,
+					role: u.nivel
+				}
+				// fazer o registo na outra DB
+				axios.post(API_URL_USER + '/client', data)
+					.then(response => {
+						res.jsonp(response)
+					})
+					.catch(error => {
+						res.status(400).jsonp({ error: "Erro na criação do utilizador: " + error })
+					})
+
 			})
 			.catch(erro => {
 				res.status(400).jsonp({ error: "Erro na criação do utilizador: " + erro })
@@ -170,8 +186,8 @@ router.post('/registo', function (req, res) { // usar um chapta para verificar s
 // POST fazer login
 router.post('/login', passport.authenticate('local'), function (req, res) {
 	controllerLogin.login(req.body.username, getDateTime())
-		.then(u => {
-			if (u && u.modifiedCount == 1) {
+		.then(m => {
+			if (m && m.modifiedCount == 1) {
 				controllerLogin.getLogin(req.body.username)
 					.then(l => {
 						jwt.sign({
@@ -418,13 +434,13 @@ router.post('/esqueci-verificar', function (req, res) {
 			if (b) { // email e code tem de ser passados no body
 				controllerLogin.updateLoginPassword(req.body.email, req.body.password) // newPassword tem de ser passado no body
 					.then(u => {
-						if(u && u.modifiedCount == 1)
+						if (u && u.modifiedCount == 1)
 							res.status(200).jsonp({ message: "OK" })
 						else
 							res.status(401).jsonp({ error: "Erro ao processar o pedido" })
 					})
 					.catch(erro => {
-						res.status(507).jsonp({ error: erro, message: "Erro na alteração do utilizador: " + erro})
+						res.status(507).jsonp({ error: erro, message: "Erro na alteração do utilizador: " + erro })
 					})
 			}
 			else {
