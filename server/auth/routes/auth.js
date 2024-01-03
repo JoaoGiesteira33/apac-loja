@@ -6,7 +6,7 @@ var jwt = require('jsonwebtoken')
 var secrets = require('docker-secret').secrets;
 
 const controllerLogin = require('../controllers/login');
-const { sendEmail } = require('../utils/utils');
+const { sendEmail, getDateTime, isAdmin, hasAccess, isMe } = require('../../utils/utils');
 
 var axios = require('axios');
 
@@ -18,92 +18,6 @@ var axios = require('axios');
 const API_URL_USER = 'http://api/user';
 
 // ---------------------------------------------
-
-// GET Product Info
-
-function getDateTime() {
-	const date = new Date();
-	const utcTime = date.getTime() + (date.getTimezoneOffset() * 60000);
-
-	// var timeOffset = 0;
-	// var PortugalTime = new Date(utcTime + (3600000 * timeOffset));
-
-	// time offset for Portugal is 0, so:
-	var PortugalTime = new Date(utcTime)
-
-	return PortugalTime.toISOString().substring(0, 19)
-}
-
-function isAdmin(req, res, next) {
-	var myToken = req.query.token || req.body.token || req.cookies.token
-	if (myToken) {
-		jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
-			if (e) {
-				res.status(403).jsonp({ error: "Invalid Token!" })
-			}
-			else if (payload.level == "admin") {
-				req.user = payload.username
-				req.level = payload.level
-				req.token = myToken
-				next()
-			}
-			else {
-				res.status(401).render({ error: "Access denied!" })
-			}
-		})
-	}
-	else {
-		res.status(400).jsonp({ error: "Token not found!" })
-	}
-}
-
-function hasAccess(req, res, next) {
-	var myToken = req.query.token || req.body.token || req.cookies.token
-	if (myToken) {
-		jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
-			if (e) {
-				res.status(403).jsonp({ error: "Invalid Token!" })
-			}
-			else {
-				req.user = payload.username
-				req.level = payload.level
-				req.token = myToken
-				next()
-			}
-		})
-	}
-	else {
-		res.status(400).jsonp({ error: "Token not found!" })
-	}
-}
-
-function isMe(req, res, next) {
-	var myToken = req.query.token || req.body.token || req.cookies.token
-	if (myToken) {
-		if (req.params.username) {
-			jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
-				if (e) {
-					res.status(403).jsonp({ error: "Invalid Token!" })
-				}
-				else if (payload.username == req.params.username) {
-					req.user = payload.username
-					req.level = payload.level
-					req.token = myToken
-					next()
-				}
-				else {
-					res.status(401).jsonp({ error: "Access denied!" })
-				}
-			})
-		}
-		else {
-			res.status(400).jsonp({ error: "Falta de parametros" })
-		}
-	}
-	else {
-		res.status(400).jsonp({ error: "Token not found!" })
-	}
-}
 
 // GET verifica se é admin
 router.get('/admin/verificar', isAdmin, function (req, res) {
