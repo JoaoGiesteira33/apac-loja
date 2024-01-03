@@ -57,7 +57,7 @@ router.delete('/client/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAd
 
 //GET Clients
 router.get('/clients', middleware.extractFilters, middleware.fieldSelector, /*controllerAuth.hasAccess, controllerAuth.hasLevelAdmin,*/ function (req, res, next) {
-    controllerUser.getClients(req.filters, req.fields, req.query.page || 0)
+    controllerUser.getUsers(req.filters, req.fields, req.query.page || 0)
         .then((info) => {
             res.jsonp(info);
         })
@@ -116,7 +116,7 @@ router.delete('/artist/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAd
 
 //GET Artists
 router.get('/artists', middleware.extractFilters, middleware.fieldSelector, /*controllerAuth.hasAccess, controllerAuth.hasLevelAdmin,*/ function (req, res, next) {
-    controllerUser.getArtists(req.filters, req.fields, req.query.page || 0)
+    controllerUser.getUsers(req.filters, req.fields, req.query.page || 0)
         .then((info) => {
             res.jsonp(info);
         })

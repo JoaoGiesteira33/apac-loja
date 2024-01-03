@@ -20,28 +20,29 @@ export const loginUser = async (email: string, password: string) => {
     }
 }
 
-export const fetchUser = async (id: string, level: string) => {
-    console.log("Fetching user " + id);
+export const fetchUser = async (email: string, level: string) => {
+    console.log("Fetching user " + email);
 
     if(level === "admin" || level === "client"){
-        axios.get(`${API_URL_USER}/client/${id}`)
-            .then(response => {
-                return response.data;
-            })
-            .catch(err => {
-                console.log("Error fetching client: " + err.message);
-                throw err.message;
-            });
+        try{
+            const response = await axios.get(`${API_URL_USER}/clients?email=${email}`);
+            return response.data;
+        }
+        catch(err){
+            console.log("Error fetching client: " + err.message);
+            throw err.message;
+        }
     }
-    else // if(level == "artist")
-        axios.get(`${API_URL_USER}/artist/${id}`)
-            .then(response => {
-                return response.data;
-            })
-            .catch(err => {
-                console.log("Error fetching artist: " + err.message);
-                throw err.message;
-            });
+    else {// if(level == "artist")
+        try{
+            const response = axios.get(`${API_URL_USER}/artists?email=${email}`);
+            return response.data;
+        }
+        catch(err){
+            console.log("Error fetching artist: " + err.message);
+            throw err.message;
+        }
+    }
 }
 
 export const registerUser = async (body: FormData) => {

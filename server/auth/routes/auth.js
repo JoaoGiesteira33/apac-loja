@@ -15,7 +15,7 @@ var axios = require('axios');
 // PUT -> alterar algo
 // DELETE -> remover algo
 
-export const API_URL_USER = 'http://localhost:11000/user';
+const API_URL_USER = 'http://api/user';
 
 // ---------------------------------------------
 
@@ -148,7 +148,6 @@ router.post('/admin/registo', isAdmin, function (req, res) {
 });
 // POST fazer um registo
 router.post('/registo', function (req, res) { // usar um chapta para verificar se é humano e não encher a base de dados com muitos registos de utilizadores !!!!!!
-	console.log(req.body)
 	if (req.body.email && req.body.password) {
 		var info = {
 			email: req.body.email,
@@ -157,19 +156,20 @@ router.post('/registo', function (req, res) { // usar um chapta para verificar s
 			dataRegisto: getDateTime(),
 			dataUltimoAcesso: ""
 		}
-		console.log("Info:", info)
 
 		controllerLogin.registar(info)
 			.then(u => {
+				console.log("U:", u)
 				data = {
 					...req.body,
 					_id: u._id,
 					role: u.nivel
 				}
+				
 				// fazer o registo na outra DB
 				axios.post(API_URL_USER + '/client', data)
 					.then(response => {
-						res.jsonp(response)
+						res.status(200).jsonp({ message: "OK" })
 					})
 					.catch(error => {
 						res.status(400).jsonp({ error: "Erro na criação do utilizador: " + error })

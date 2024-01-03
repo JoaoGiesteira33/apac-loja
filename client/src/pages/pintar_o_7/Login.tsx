@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Paper, CssBaseline } from '@mui/material';
+import { Box, TextField, Button, Typography, Paper, CssBaseline, Alert } from '@mui/material';
 import { loginUser, fetchUser } from '../../fetchers';
 import { Link, useNavigate } from 'react-router-dom';
 import { useJwt, decodeToken } from "react-jwt";
@@ -51,6 +51,7 @@ const Login = () => {
 
             try{
               const response2 = await fetchUser(decodedToken.username, decodedToken.level);
+              console.log("Response2: ", response2);
               if (response2 !== undefined){
                 console.log("User: ", response2);
                 // TODO - store user in local storage
