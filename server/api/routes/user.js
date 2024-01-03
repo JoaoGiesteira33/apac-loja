@@ -56,8 +56,8 @@ router.delete('/client/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAd
 
 
 //GET Clients
-router.get('/clients', middleware.extractFilters, middleware.fieldSelector, /*controllerAuth.hasAccess, controllerAuth.hasLevelAdmin,*/ function (req, res, next) {
-    controllerUser.getClients(req.filters, req.fields, req.query.page || 0)
+router.get('/client', middleware.extractFilters, middleware.fieldSelector, /*controllerAuth.hasAccess, controllerAuth.hasLevelAdmin,*/ function (req, res, next) {
+    controllerUser.getUsers(req.filters, req.fields, req.query.page || 0)
         .then((info) => {
             res.jsonp(info);
         })
@@ -70,8 +70,8 @@ router.get('/clients', middleware.extractFilters, middleware.fieldSelector, /*co
 // ---------------------------------------------
 
 
-// GET Artist Info
-router.get('/artist/:id', middleware.fieldSelector, /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin,*/ function (req, res, next) {
+// GET Seller Info
+router.get('/seller/:id', middleware.fieldSelector, /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin,*/ function (req, res, next) {
     controllerUser.getUserInfo(req.params.id)
         .then((info) => {
             res.jsonp(info);
@@ -81,8 +81,8 @@ router.get('/artist/:id', middleware.fieldSelector, /*controllerAuth.hasAccess, 
         });
 });
 
-// POST Artist Info
-router.post('/artist', /*controllerAuth.hasAccess, controllerAuth.hasLevelAdmin,*/ function (req, res, next) {
+// POST Seller Info
+router.post('/seller', /*controllerAuth.hasAccess, controllerAuth.hasLevelAdmin,*/ function (req, res, next) {
     controllerUser.createUser(req.body)
         .then((info) => {
             res.jsonp(info);
@@ -92,8 +92,8 @@ router.post('/artist', /*controllerAuth.hasAccess, controllerAuth.hasLevelAdmin,
         });
 });
 
-// UPDATE Artist Info
-router.put('/artist/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin,*/ function (req, res, next) {
+// UPDATE Seller Info
+router.put('/seller/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin,*/ function (req, res, next) {
     controllerUser.updateUserInfo(req.params.id, req.body)
         .then((info) => {
             res.jsonp(info);
@@ -103,8 +103,8 @@ router.put('/artist/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin
         });
 });
 
-// DELETE Artist Info
-router.delete('/artist/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin,*/ function (req, res, next) {
+// DELETE Seller Info
+router.delete('/seller/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAdmin,*/ function (req, res, next) {
     controllerUser.deleteUser(req.params.id)
         .then((info) => {
             res.jsonp(info);
@@ -114,9 +114,9 @@ router.delete('/artist/:id', /*controllerAuth.hasAccess, controllerAuth.isMeOrAd
         });
 });
 
-//GET Artists
-router.get('/artists', middleware.extractFilters, middleware.fieldSelector, /*controllerAuth.hasAccess, controllerAuth.hasLevelAdmin,*/ function (req, res, next) {
-    controllerUser.getArtists(req.filters, req.fields, req.query.page || 0)
+//GET Sellers
+router.get('/seller', middleware.extractFilters, middleware.fieldSelector, /*controllerAuth.hasAccess, controllerAuth.hasLevelAdmin,*/ function (req, res, next) {
+    controllerUser.getUsers(req.filters, req.fields, req.query.page || 0, req.query.limit || 28)
         .then((info) => {
             res.jsonp(info);
         })

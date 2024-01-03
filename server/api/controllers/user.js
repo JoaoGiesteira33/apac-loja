@@ -42,8 +42,8 @@ module.exports.deleteUser = function (id) {
 };
 
 //      - getAllUsers
-module.exports.getUsers = function (filters, fields, page) {
-    return User.find(filters, fields).skip(page * 28).limit(28)
+module.exports.getUsers = function (filters, fields, page, limit) {
+    return User.find(filters, fields).skip(page * limit).limit(limit)
         .then((info) => {
             return info;
         })
