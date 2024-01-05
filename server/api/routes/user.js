@@ -14,15 +14,15 @@ const middleware = require('./myMiddleware')
 router.get('/client/:id', isMeOrAdmin, middleware.extractFilters, middleware.fieldSelector, function (req, res) {
     controllerUser.getUserInfo(req.params.id)
         .then((info) => {
-            res.jsonp(info); 
+            res.status(200).jsonp(info); 
         })
         .catch((erro) => {
-            res.jsonp(erro);
+            res.status(400).jsonp(erro);
         });
 });
 
 // POST Client Info
-router.post('/client', isMeOrAdmin, function (req, res) {
+router.post('/client', function (req, res) {
     controllerUser.createUser(req.body)
         .then((info) => {
             res.jsonp(info);
@@ -82,7 +82,7 @@ router.get('/seller/:id', isMeOrAdmin, middleware.fieldSelector, function (req, 
 });
 
 // POST Seller Info
-router.post('/seller', isMeOrAdmin, function (req, res) {
+router.post('/seller', function (req, res) {
     controllerUser.createUser(req.body)
         .then((info) => {
             res.jsonp(info);

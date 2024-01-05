@@ -50,12 +50,12 @@ const Login = () => {
             localStorage.setItem('token', response.token);
 
             try{
-              const response2 = await fetchUser(decodedToken.username, decodedToken.level);
-              console.log("Response2: ", response2);
-              if (response2 !== undefined){
-                console.log("User: ", response2);
+              const user = await fetchUser(decodedToken._id, decodedToken.level, response.token);
+              console.log("user: ", user);
+              if (user !== undefined){
+                console.log("User: ", user);
                 // TODO - store user in local storage
-                // localStorage.setItem('user', JSON.stringify(response2.user));
+                localStorage.setItem('user', JSON.stringify(user));
                 navigate('/');
               }else{
                 setErrorMessage("#1")
