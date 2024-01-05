@@ -3,7 +3,7 @@ import React, { Suspense } from 'react';
 import Footer from './components/pintar_o_7/Footer';
 import Navbar from './components/pintar_o_7/Navbar';
 import Chat from './components/experinecia_chat/Chat';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
 //import { Route, Routes } from 'react-router-dom';
 import { CanvasModel } from './components/canvasModel';
@@ -91,6 +91,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
 
 function App() {
     const [mode, setMode] = React.useState<PaletteMode>('light');
+    const location = useLocation();
 
     const colorMode = React.useMemo(
         () => ({
@@ -183,7 +184,7 @@ function App() {
                             <Brightness4Icon />
                         )}
                     </IconButton>
-                    {window.location.pathname !== "/" ? <Navbar />: <></>}
+                    {location.pathname !== "/" ? <Navbar />: <></>}
                     {/*<Chat userID={userID} />*/}
                     {/*<ThemeProvider theme={{}}>*/}
                     <Suspense fallback={<p>Loading...</p>}>
@@ -206,8 +207,8 @@ function App() {
                             ))}
                         </Routes>
                     </Suspense>
-                    {window.location.pathname !== "/" ? <Chat />: <></>}
-                    {window.location.pathname !== "/" ? <Footer />: <></>}
+                    {location.pathname !== "/" ? <Chat />: <></>}
+                    {location.pathname !== "/" ? <Footer />: <></>}
                     {/*</ThemeProvider>*/}
                 </div>
             </ThemeProvider>

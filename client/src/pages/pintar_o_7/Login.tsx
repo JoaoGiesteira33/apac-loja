@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, TextField, Button, Typography, Paper, CssBaseline, Alert } from '@mui/material';
 import { loginUser, fetchUser } from '../../fetchers';
 import { Link, useNavigate } from 'react-router-dom';
@@ -56,7 +56,8 @@ const Login = () => {
                 console.log("User: ", user);
                 // TODO - store user in local storage
                 localStorage.setItem('user', JSON.stringify(user));
-                navigate('/');
+                localStorage.setItem('loggedIn', "true");
+                navigate('/gallery');
               }else{
                 setErrorMessage("#1")
                 setShowErrorAlert(true);
@@ -70,6 +71,10 @@ const Login = () => {
             }
         }
     };
+
+    useEffect(() => {
+        localStorage.setItem('loggedIn', "false");
+    });
 
     return (
       <Box component="div" maxWidth="xs">

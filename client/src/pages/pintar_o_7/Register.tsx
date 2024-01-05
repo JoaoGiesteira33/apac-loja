@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Paper, CssBaseline, Grid, Alert } from '@mui/material';
 import { registerUser } from '../../fetchers';
 import { useNavigate } from 'react-router-dom';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 const Register = () => {
 
     const navigate = useNavigate();
@@ -19,6 +22,7 @@ const Register = () => {
     const [showPass2Alert, setShowPass2Alert] = useState(false);
     const [showPhoneAlert, setShowPhoneAlert] = useState(false);
     const [showOver18Alert, setShowOver18Alert] = useState(false);
+    const [showError, setShowError] = useState(false);
 
     const checkEmail = (email: string) => {
       // eslint-disable-next-line no-useless-escape
@@ -86,6 +90,7 @@ const Register = () => {
               const response = await registerUser(data);
               navigate('/login');
             }catch(error){
+
               console.log(error);
             }
 
@@ -198,23 +203,25 @@ const Register = () => {
               {showOver18Alert && <Alert onClose={() => {setShowOver18Alert(false)}} variant="filled" severity="error">
                   Deve ter mais de 18 anos!
               </Alert>}
-              <TextField
-                variant="standard"
-                margin="normal"
-                required
-                fullWidth
-                name="client_fields.demographics.birth_date"
-                label="Data de Nascimento"
-                type="date"
-                id="birth_date"
-                autoComplete="dateOfBirth"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={birth_date}
-                onChange={(e) => setBirthDate(e.target.value)}
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  disableFuture
+                  openTo="day"
+                  views={['year', 'month', 'day']}
+                  format="DD/MM/YYYY"                                
+                  label="Data de Nascimento"
+                  value={birth_date}
+                  slotProps={{ textField: { variant: 'standard', 
+                                            fullWidth: true, 
+                                            required: true,
+                                            name: "client_fields.demographics.birth_date",
+                                            margin: "normal",
+                                          }
+                            }}
 
-              />
+                  onChange={(value) => setBirthDate(value)}
+                />
+              </LocalizationProvider>
 
               {/* ----------- ADDRESS ---------------- */}
               <TextField
@@ -248,6 +255,9 @@ const Register = () => {
               />
 
               {/* ----------- SUBMIT ---------------- */}
+              {showError && <Alert onClose={() => {setShowError(false)}} variant="filled" severity="error">
+                    Erro ao registar, contacte o suporte!
+              </Alert>}
               <Button
                 type="submit"
                 fullWidth

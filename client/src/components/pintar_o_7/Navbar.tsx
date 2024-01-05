@@ -1,6 +1,7 @@
 'use client';
 
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 import logoApac from '../../assets/LOGO_negrito.png';
 
@@ -9,6 +10,7 @@ import {
     Flowbite,
     Navbar as FlowbiteNavbar,
 } from 'flowbite-react';
+import { log } from 'console';
 
 const customTheme: CustomFlowbiteTheme = {
     navbar: {
@@ -29,6 +31,9 @@ const customTheme: CustomFlowbiteTheme = {
 };
 
 export default function Navbar() {
+    const location = useLocation();
+    const [loggedIn, setLoggedIn] = useState<string | null>(localStorage.getItem('loggedIn'));
+
     return (
         <Flowbite theme={{ theme: customTheme }}>
             <FlowbiteNavbar className="" fluid>
@@ -44,7 +49,7 @@ export default function Navbar() {
                     <FlowbiteNavbar.Link
                         href="/gallery"
                         className={
-                            window.location.pathname == '/gallery'
+                            location.pathname == '/gallery'
                                 ? 'font-bold text-black'
                                 : ''
                         }>
@@ -53,7 +58,7 @@ export default function Navbar() {
                     <FlowbiteNavbar.Link
                         href="/artists"
                         className={
-                            window.location.pathname == '/artists'
+                            location.pathname == '/artists'
                                 ? 'font-bold text-black'
                                 : ''
                         }>
@@ -62,21 +67,32 @@ export default function Navbar() {
                     <FlowbiteNavbar.Link
                         href="/contact"
                         className={
-                            window.location.pathname == '/contact'
+                            location.pathname == '/contact'
                                 ? 'font-bold text-black'
                                 : ''
                         }>
                         contacto
                     </FlowbiteNavbar.Link>
-                    <FlowbiteNavbar.Link
+                    { "true" !== "true" ?
+                        <FlowbiteNavbar.Link
                         href="/login"
                         className={
-                            window.location.pathname == '/login'
+                            location.pathname == '/login'
                                 ? 'font-bold text-black'
                                 : ''
                         }>
                         login
+                    </FlowbiteNavbar.Link> :
+                     <FlowbiteNavbar.Link
+                        href="/profile"
+                        className={
+                            location.pathname == '/profile'
+                                ? 'font-bold text-black'
+                                : ''
+                        }>
+                        perfil
                     </FlowbiteNavbar.Link>
+                    }
                 </FlowbiteNavbar.Collapse>
             </FlowbiteNavbar>
         </Flowbite>

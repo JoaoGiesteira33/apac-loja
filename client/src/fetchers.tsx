@@ -62,7 +62,7 @@ export const registerUser = async (body: FormData) => {
     }
     catch (err) {
         console.log("Error during register: " + err.message);
-        return err.response;
+        throw err.response;
     }
 }
 

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import ProfileThumbnail from '../../components/Profile/ProfileThumbnail';
 
@@ -43,11 +44,11 @@ export default function ProfileIndex() {
                         icon={<AccountCircleIcon />}
                     />
                 </Link>
-                <Link className="inline-block" to="/profile/orderHistory">
+                <Link className="inline-block" to="/login">
                     <ProfileThumbnail
-                        title="Order History"
-                        description="Check your order history"
-                        icon={<AccountCircleIcon />}
+                        title="Sair"
+                        description="Sair da conta"
+                        icon={<LogoutIcon />}
                     />
                 </Link>
             </div>
