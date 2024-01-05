@@ -16,6 +16,7 @@ import logo from '../../assets/LOGO.png';
 const Footer = () => {
     const COLOR = 'gray';
     const ICON_MARGIN = 0.5;
+    const year = new Date().getFullYear();
 
     function MY_LNK({ link, text }: { link: string; text: string }) {
         return (
@@ -141,7 +142,7 @@ const Footer = () => {
                     justifyContent="center">
                     <Typography color="gray" className="font-poppins">
                         uma iniciativa associação portuguesa das artes e da
-                        cultura © 2023
+                        cultura &copy; {year}
                     </Typography>
                 </Grid>
             </Grid>

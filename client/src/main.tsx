@@ -11,13 +11,15 @@ import './i18n';
 // Tirar no futuro.
 import { ViewportProvider } from './contexts/viewPortContext';
 import { BrowserRouter } from 'react-router-dom';
-
+import { CartProvider } from './contexts/cartProvider.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <ViewportProvider>
             <BrowserRouter>
-                <App />
+                <CartProvider>
+                    <App />
+                </CartProvider>
             </BrowserRouter>
         </ViewportProvider>
     </React.StrictMode>
