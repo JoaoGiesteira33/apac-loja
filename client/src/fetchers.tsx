@@ -20,12 +20,12 @@ export const loginUser = async (email: string, password: string) => {
     }
 }
 
-export const fetchUser = async (email: string, level: string) => {
+export const fetchUser = async (id: string, level: string) => {
     console.log("Fetching user " + email);
 
     if(level === "admin" || level === "client"){
         try{
-            const response = await axios.get(`${API_URL_USER}/clients?email=${email}`);
+            const response = await axios.get(`${API_URL_USER}/clients/${id}`);
             return response.data;
         }
         catch(err){
@@ -35,7 +35,7 @@ export const fetchUser = async (email: string, level: string) => {
     }
     else {// if(level == "artist")
         try{
-            const response = axios.get(`${API_URL_USER}/artists?email=${email}`);
+            const response = axios.get(`${API_URL_USER}/artists/${id}`);
             return response.data;
         }
         catch(err){
