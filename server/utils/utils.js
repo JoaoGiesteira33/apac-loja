@@ -56,12 +56,13 @@ function isAdmin(req, res, next) {
 			}
 			else if (payload.level == "admin") {
 				req.user = payload.username
+				req._id = payload._id
 				req.level = payload.level
 				req.token = myToken
 				next()
 			}
 			else {
-				res.status(401).render({ error: "Access denied!" })
+				res.status(401).jsonp({ error: "Access denied!" })
 			}
 		})
 	}

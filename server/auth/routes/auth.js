@@ -50,7 +50,33 @@ router.post('/admin/registo', isAdmin, function (req, res) {
 
 		controllerLogin.registar(info)
 			.then(u => {
-				res.status(201).jsonp({ message: "OK" })
+				data = {
+					// meter aqui os dados necessários !!!!!
+					...req.body,
+					_id: u._id,
+					role: u.nivel
+				}
+
+				axios.post(API_URL_USER, data)
+					.then(response => {
+						res.status(201).jsonp({ message: "OK" })
+					})
+					.catch(error => {
+						//apagar do login !!!
+						controllerLogin.deleteLogin(u.username)
+							.then(d => {
+								if (d && d.ok == 1 && d.deletedCount == 1) {
+									res.status(400).jsonp({ error: "Erro na criação do utilizador: " + error })
+								}
+								else {
+									res.status(400).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+								}
+							})
+							.catch(errorr => {
+								res.status(401).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+							})
+					})
+
 			})
 			.catch(erro => {
 				res.status(400).jsonp({ error: "Erro na criação do utilizador: " + erro })
@@ -71,7 +97,7 @@ router.post('/registo', function (req, res) { // usar um chapta para verificar s
 			dataRegisto: getDateTime(),
 			dataUltimoAcesso: ""
 		}
-		console.log("info:", info)
+
 		controllerLogin.registar(info)
 			.then(u => {
 				console.log("U:", u)
@@ -80,14 +106,26 @@ router.post('/registo', function (req, res) { // usar um chapta para verificar s
 					_id: u._id,
 					role: u.nivel
 				}
-				
+
 				// fazer o registo na outra DB
 				axios.post(API_URL_USER + '/client', data)
 					.then(response => {
 						res.status(200).jsonp({ message: "OK" })
 					})
 					.catch(error => {
-						res.status(400).jsonp({ error: "Erro na criação do utilizador: " + error })
+						//apagar do login !!!
+						controllerLogin.deleteLogin(u.username)
+							.then(d => {
+								if (d && d.ok == 1 && d.deletedCount == 1) {
+									res.status(400).jsonp({ error: "Erro na criação do utilizador: " + error })
+								}
+								else {
+									res.status(400).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+								}
+							})
+							.catch(errorr => {
+								res.status(401).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+							})
 					})
 
 			})
@@ -220,7 +258,7 @@ router.put('/admin/password', isAdmin, function (req, res) {
 	}
 });
 // UPDATE password
-router.put('/password', isMe, function (req, res) { // tem de ter o parametro "username", por causa do isMe
+router.put('/password', isMe, passport.authenticate('local'), function (req, res) { // tem de ter o parametro "username", por causa do isMe, e o parametro password por causa do authenticate
 	if (req.body.newPassword) {
 		//inserir aqui a verificação da password antiga !!!!
 		controllerLogin.updateLoginPassword(req.user, req.body.newPassword) // newPassword tem de ser passado no body
@@ -300,9 +338,9 @@ router.delete('/apagar', isMe, async function (req, res) { // tem de ter o param
 });
 // DELETE login, verify code and delete
 router.post('/apagar-verificar', isMe, function (req, res) { // tem de ter o parametro "username", por causa do isMe
-	controllerLogin.verifyRecoveryCode(req.user, req.body.code)
+	controllerLogin.verifyRecoveryCode(req.user, req.body.code) // code tem de ser passado no body
 		.then(b => {
-			if (b) { // code tem de ser passado no body
+			if (b) {
 				controllerLogin.deleteLogin(req.user)
 					.then(u => {
 						if (u && u.ok == 1 && u.deletedCount == 1)
@@ -348,9 +386,9 @@ router.post('/esqueci', async function (req, res) {
 });
 // POST esqueci-me da password, verify code and change password
 router.post('/esqueci-verificar', function (req, res) {
-	controllerLogin.verifyRecoveryCode(req.body.email, req.body.code)
+	controllerLogin.verifyRecoveryCode(req.body.email, req.body.code)// email e code tem de ser passados no body
 		.then(b => {
-			if (b) { // email e code tem de ser passados no body
+			if (b) {
 				controllerLogin.updateLoginPassword(req.body.email, req.body.password) // newPassword tem de ser passado no body
 					.then(u => {
 						if (u && u.modifiedCount == 1)
