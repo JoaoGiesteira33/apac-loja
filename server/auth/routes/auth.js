@@ -6,7 +6,7 @@ var jwt = require('jsonwebtoken')
 var secrets = require('docker-secret').secrets;
 
 const controllerLogin = require('../controllers/login');
-const { sendEmail, getDateTime, isAdmin, hasAccess, isMe } = require('../../utils/utils');
+const { sendEmail, getDateTime, isAdmin, hasAccess, isMe } = require('../utils/utils');
 
 var axios = require('axios');
 
@@ -62,6 +62,7 @@ router.post('/admin/registo', isAdmin, function (req, res) {
 });
 // POST fazer um registo
 router.post('/registo', function (req, res) { // usar um chapta para verificar se é humano e não encher a base de dados com muitos registos de utilizadores !!!!!!
+	console.log("req.body:", req.body)
 	if (req.body.email && req.body.password) {
 		var info = {
 			email: req.body.email,
@@ -70,7 +71,7 @@ router.post('/registo', function (req, res) { // usar um chapta para verificar s
 			dataRegisto: getDateTime(),
 			dataUltimoAcesso: ""
 		}
-
+		console.log("info:", info)
 		controllerLogin.registar(info)
 			.then(u => {
 				console.log("U:", u)
@@ -106,13 +107,14 @@ router.post('/login', passport.authenticate('local'), function (req, res) {
 			if (m && m.modifiedCount == 1) {
 				controllerLogin.getLogin(req.body.username)
 					.then(l => {
+						console.log("L:", l);
 						jwt.sign({
 							username: l.username,
 							level: l.nivel,
 							_id: l._id
 						},
 							secrets.AUTH_KEY, // rever !!!!
-							{ expiresIn: "1h" }, //mudar aqui para o tempo de login que for decidido
+							{ expiresIn: "24h" }, //mudar aqui para o tempo de login que for decidido
 							function (e, token) {
 								if (e)
 									res.status(500).jsonp({ error: "Erro na geração do token: " + e })

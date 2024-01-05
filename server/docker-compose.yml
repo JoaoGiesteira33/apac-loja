@@ -10,6 +10,7 @@ services:
       - MONGO_DB_NAME
       - MONGO_USER
       - MONGO_PASSWORD
+      - AUTH_KEY
     ports:
       - 11000:80
     networks:

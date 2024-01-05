@@ -1,4 +1,6 @@
 const nodemailer = require('nodemailer');
+var jwt = require('jsonwebtoken')
+var secrets = require('docker-secret').secrets;
 
 async function send_email(email, subject, text) {
     try{
@@ -113,21 +115,23 @@ function isMe(req, res, next) {
 }
 
 function isMeOrAdmin(req, res, next){
-	var myToken = req.query.token || req.body.token || req.cookies.token
+	var myToken = req.query.token  || req.body.token || req.cookies.token
+
 	if (myToken) {
 		jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
-			var me = req.params.username || req.body.username
+			var me = req.params.id
 			if (e) {
 				res.status(403).jsonp({ error: "Invalid Token!" })
 			}
-			else if (payload.level == "admin" || (me && payload.username == me) ) {
+			else if (payload.level == "admin" || (me && (payload._id == me)) ) {
 				req.user = payload.username
+				req._id = payload._id
 				req.level = payload.level
 				req.token = myToken
 				next()
 			}
 			else {
-				res.status(401).render({ error: "Access denied!" })
+				res.status(401).jsonp({ error: "Access denied!" })
 			}
 		})
 	}
