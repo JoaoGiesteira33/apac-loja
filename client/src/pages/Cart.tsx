@@ -11,7 +11,7 @@ const Cart = () => {
 
     return (
         <Box component="div" sx={{ paddingX: '1rem' }}>
-            <CartDetails  products={products}/>
+            <CartDetails />
 
             <Link
                 component="button"
