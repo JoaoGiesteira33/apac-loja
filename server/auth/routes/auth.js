@@ -108,7 +108,8 @@ router.post('/login', passport.authenticate('local'), function (req, res) {
 					.then(l => {
 						jwt.sign({
 							username: l.username,
-							level: l.nivel
+							level: l.nivel,
+							_id: l._id
 						},
 							secrets.AUTH_KEY, // rever !!!!
 							{ expiresIn: "1h" }, //mudar aqui para o tempo de login que for decidido
