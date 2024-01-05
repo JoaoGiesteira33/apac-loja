@@ -18,10 +18,29 @@ const Demographics = new mongoose.Schema({
         required: true
     },
     address: {
-        type: String,
+        type: Address,
         required: true
     },
     phone: String
+}, {_id: false});
+
+const Address = new mongoose.Schema({
+    street: {
+        type: String,
+        required: true
+    },
+    postal_code: {
+        type: String,
+        required: true
+    },
+    city: {
+        type: String,
+        required: true
+    },
+    country: {
+        type: String,
+        required: true
+    }
 }, {_id: false});
 
 /**
