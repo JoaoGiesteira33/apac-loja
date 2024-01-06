@@ -125,6 +125,52 @@ router.get('/sellers', isAdmin, middleware.extractFilters, middleware.fieldSelec
         });
 });
 
+// ----------------------ANY USER-----------------------
+
+// GET User Info
+router.get('/:id', isMeOrAdmin, middleware.fieldSelector, function (req, res) {
+    controllerUser.getUserInfo(req.params.id)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((erro) => {
+            res.jsonp(erro);
+        });
+});
+
+// POST User Info
+router.post('/', function (req, res) {
+    controllerUser.createUser(req.body)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((erro) => {
+            res.jsonp(erro);
+        });
+});
+
+// UPDATE User Info
+router.put('/:id', isMeOrAdmin, function (req, res) {
+    controllerUser.updateUserInfo(req.params.id, req.body)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((erro) => {
+            res.jsonp(erro);
+        });
+});
+
+// DELETE User Info
+router.delete('/:id', isMeOrAdmin, function (req, res) {
+    controllerUser.deleteUser(req.params.id)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((erro) => {
+            res.jsonp(erro);
+        });
+});
+
 
 // ----------------------TEST-----------------------
 

@@ -43,11 +43,13 @@ module.exports.deleteUser = function (id) {
 
 //      - getAllUsers
 module.exports.getUsers = function (filters, fields, page, limit) {
-    return User.find(filters, fields).skip(page * limit).limit(limit)
-        .then((info) => {
-            return info;
-        })
-        .catch((erro) => {
-            return erro;
-        });
+    return Promise.all([
+        User.find(filters, fields).sort({_id:'asc'}).skip(page * limit).limit(limit),
+        User.countDocuments(filters)
+    ]).then(([users,count]) => {
+        let hasMore = count > ((page + 1) * limit);
+        return {users: users, hasMore: hasMore};
+    }).catch((erro) => {
+        return erro;
+    });
 };
