@@ -16,7 +16,9 @@ import useProductSearch from '../../hooks/useProductSearch';
 import ProductThumbnail from '../../components/pintar_o_7/ProductThumbnail';
 
 export default function Home() {
-    const [productQuery, setProductQuery] = useState({"piece_info.state": "available"});
+    const [productQuery, setProductQuery] = useState({
+        'piece_info.state': 'available',
+    });
     const [productPage, setProductPage] = useState(1);
 
     const [selectedTypes, setSelectedTypes] = React.useState<string[]>([]);
@@ -24,19 +26,25 @@ export default function Home() {
         0, 9999,
     ]);
 
-    const { MockData, hasMore, loading, error, products} = useProductSearch(
+    const { MockData, hasMore, loading, error, products } = useProductSearch(
         productQuery,
         productPage
     );
 
     return (
-        <Box component="div">
+        <Box
+            component="div"
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                flexDirection: 'column',
+            }}>
             <Hero />
             <Stack
                 direction="row"
                 alignItems="center"
                 justifyContent="space-evenly"
-                sx={{ paddingY: '2rem' }}>
+                sx={{ paddingY: '2rem', maxWidth: 'xl', width: '100%' }}>
                 <MultipleSelectTypes
                     values={selectedTypes}
                     setValues={setSelectedTypes}
@@ -59,16 +67,27 @@ export default function Home() {
                         lg: '8rem',
                     },
                     paddingTop: '3rem',
+                    display: 'flex',
+                    justifyContent: 'center',
                 }}>
                 <Grid
                     container
                     sx={{
                         justifyContent: { xs: 'center', sm: 'space-between' },
+                        maxWidth: 'xl',
                     }}
                     spacing={{ xs: 2, md: 4, lg: 8 }}>
                     {MockData &&
                         MockData.map((product, index) => (
-                            <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
+                            <Grid
+                                key={index}
+                                display={'flex'}
+                                justifyContent={'center'}
+                                alignItems={'flex-start'}
+                                xs={12}
+                                sm={6}
+                                md={4}
+                                lg={3}>
                                 <ProductThumbnail product={product} />
                             </Grid>
                         ))}

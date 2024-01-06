@@ -17,6 +17,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { input } from '@material-tailwind/react';
 import { rootCertificates } from 'tls';
+import ProfileOrderHistory from './pages/Profile/ProfileOrderHistory';
 
 // dynamically load components as they are needed
 const InitialPage = React.lazy(() => import('./pages/pintar_o_7/Initial'));
@@ -118,7 +119,7 @@ function App() {
             requireAuth: false,
         },
         {
-            path: "/artists",
+            path: '/artists',
             element: <ArtistsPage />,
             requireAuth: false,
         },
@@ -162,6 +163,11 @@ function App() {
             element: <CartPage />,
             requireAuth: false, // TODO: change to true
         },
+        {
+            path: '/profile/order-history',
+            element: <ProfileOrderHistory />,
+            requireAuth: false,
+        },
     ];
 
     const theme = React.useMemo(
@@ -184,7 +190,7 @@ function App() {
                             <Brightness4Icon />
                         )}
                     </IconButton>
-                    {location.pathname !== "/" ? <Navbar />: <></>}
+                    {location.pathname !== '/' ? <Navbar /> : <></>}
                     {/*<Chat userID={userID} />*/}
                     {/*<ThemeProvider theme={{}}>*/}
                     <Suspense fallback={<p>Loading...</p>}>
@@ -207,8 +213,8 @@ function App() {
                             ))}
                         </Routes>
                     </Suspense>
-                    {location.pathname !== "/" ? <Chat />: <></>}
-                    {location.pathname !== "/" ? <Footer />: <></>}
+                    {location.pathname !== '/' ? <Chat /> : <></>}
+                    {location.pathname !== '/' ? <Footer /> : <></>}
                     {/*</ThemeProvider>*/}
                 </div>
             </ThemeProvider>

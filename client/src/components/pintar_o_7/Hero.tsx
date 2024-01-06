@@ -1,6 +1,6 @@
 export default function Hero() {
     return (
-        <div className="flex flex-col md:flex-row md:items-stretch justify-center md:justify-between">
+        <div className="flex flex-col md:flex-row md:items-stretch justify-center md:justify-between w-full">
             <div className="flex justify-center">
                 <img
                     src="https://picsum.photos/2000/1000"
