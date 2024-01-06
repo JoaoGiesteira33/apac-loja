@@ -11,6 +11,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import SaveSharpIcon from '@mui/icons-material/SaveSharp';
+import dayjs, { Dayjs } from 'dayjs';
+
+const TODAY_MINUS_18_YEARS: Dayjs = dayjs().subtract(18, 'year');
 
 export default function ProfileInfo() {
     const [name, setName] = useState('');
@@ -20,7 +23,7 @@ export default function ProfileInfo() {
     const [postlaCode, setPostalCode] = useState('');
     const [city, setCity] = useState('');
     const [phone, setPhone] = useState('');
-    const [birth_date, setBirthDate] = useState('');
+    const [birth_date, setBirthDate] = useState<Dayjs | null>(dayjs());
 
     const originalName = useRef('');
     const originalEmail = useRef('');
@@ -29,7 +32,7 @@ export default function ProfileInfo() {
     const originalPostalCode = useRef('');
     const originalCity = useRef('');
     const originalPhone = useRef('');
-    const originalBirthDate = useRef('');
+    const originalBirthDate = useRef(dayjs());
 
     const [profileChanged, setProfileChanged] = useState(true);
 
@@ -40,25 +43,21 @@ export default function ProfileInfo() {
     const [showCityError, setShowCityError] = useState(false);
     const [showAddressError, setShowAddressError] = useState(false);
     const [showPostalCodeError, setShowPostalCodeError] = useState(false);
-    const [showError, setShowError] = useState(false);
+    const [showCountryAlert, setShowCountryAlert] = useState(false);
 
     const checkEmail = (email: string) => {
-        // eslint-disable-next-line no-useless-escape
         const re = /\S+@\S+\.\S+/;
         return re.test(email);
     };
 
-    const checkOver18 = (date: string) => {
-        const today = new Date();
-        const birthDate = new Date(date);
-
-        const age = today.getFullYear() - birthDate.getFullYear();
-        const m = today.getMonth() - birthDate.getMonth();
-
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-            return age - 1;
-        }
-        return age;
+    const disableAllAlerts = () => {
+        setShowNameAlert(false);
+        setShowEmailAlert(false);
+        setShowPhoneAlert(false);
+        setShowOver18Alert(false);
+        setShowCityError(false);
+        setShowAddressError(false);
+        setShowPostalCodeError(false);
     };
 
     const hasProfileChanged = () => {
@@ -74,8 +73,52 @@ export default function ProfileInfo() {
         );
     };
 
+    const handleProfileSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        disableAllAlerts();
+
+        if (!hasProfileChanged()) return;
+        let hasErrors: boolean = false;
+
+        if (name === '') {
+            setShowNameAlert(true);
+            hasErrors = true;
+        }
+        if (!checkEmail(email)) {
+            setShowEmailAlert(true);
+            hasErrors = true;
+        }
+        if (phone.length !== 9) {
+            setShowPhoneAlert(true);
+            hasErrors = true;
+        }
+        if (birth_date === null) {
+            hasErrors = true;
+        } else if (birth_date.isAfter(TODAY_MINUS_18_YEARS)) {
+            hasErrors = true;
+        }
+        if (city === '') {
+            setShowCityError(true);
+            hasErrors = true;
+        }
+        if (address === '') {
+            setShowAddressError(true);
+            hasErrors = true;
+        }
+        if (postlaCode === '') {
+            setShowPostalCodeError(true);
+            hasErrors = true;
+        }
+        if (country === '') {
+            setShowCountryAlert(true);
+            hasErrors = true;
+        }
+        if (hasErrors) return;
+    };
+
     return (
         <Box
+            onSubmit={(e) => handleProfileSubmit(e)}
             component="form"
             sx={{
                 paddingY: '2rem',
@@ -100,8 +143,9 @@ export default function ProfileInfo() {
                     <TextField
                         variant="standard"
                         margin="normal"
-                        required
                         fullWidth
+                        error={showNameAlert}
+                        helperText={showNameAlert ? 'Nome inválido' : ' '}
                         label="Nome"
                         type="text"
                         id="name"
@@ -112,8 +156,9 @@ export default function ProfileInfo() {
                     <TextField
                         variant="standard"
                         margin="normal"
-                        required
                         fullWidth
+                        error={showEmailAlert}
+                        helperText={showEmailAlert ? 'Email Inválido' : ' '}
                         label="Email"
                         type="email"
                         id="email"
@@ -126,7 +171,8 @@ export default function ProfileInfo() {
                         margin="normal"
                         fullWidth
                         label="Phone"
-                        required
+                        error={showPhoneAlert}
+                        helperText={showPhoneAlert ? 'Telemóvel Inválido' : ' '}
                         type="tel"
                         id="phone"
                         autoComplete="tel"
@@ -139,6 +185,7 @@ export default function ProfileInfo() {
                             openTo="day"
                             views={['year', 'month', 'day']}
                             format="DD/MM/YYYY"
+                            maxDate={TODAY_MINUS_18_YEARS}
                             label="Data de Nascimento"
                             value={birth_date}
                             slotProps={{
@@ -168,6 +215,7 @@ export default function ProfileInfo() {
                             selection={country}
                             setSelection={setCountry}
                             sx={{ marginTop: '1rem', flex: 1 }}
+                            showCountryAlert={showCountryAlert}
                         />
                         <TextField
                             variant="standard"
@@ -175,7 +223,8 @@ export default function ProfileInfo() {
                             label="City"
                             type="text"
                             id="city"
-                            required
+                            error={showCityError}
+                            helperText={showCityError ? 'Cidade Inválida' : ' '}
                             autoComplete="city"
                             value={city}
                             sx={{ maxWidth: { sx: '100%', sm: '40%' } }}
@@ -192,7 +241,10 @@ export default function ProfileInfo() {
                             label="Address"
                             type="text"
                             fullWidth
-                            required
+                            error={showAddressError}
+                            helperText={
+                                showAddressError ? 'Morada Inválida' : ' '
+                            }
                             id="address"
                             autoComplete="address"
                             value={address}
@@ -203,7 +255,12 @@ export default function ProfileInfo() {
                             margin="normal"
                             label="Postal Code"
                             type="text"
-                            required
+                            error={showPostalCodeError}
+                            helperText={
+                                showPostalCodeError
+                                    ? 'Código Postal Inválido'
+                                    : ' '
+                            }
                             id="postalCode"
                             autoComplete="postalCode"
                             value={postlaCode}
@@ -212,7 +269,11 @@ export default function ProfileInfo() {
                     </Stack>
                 </Paper>
                 {profileChanged && (
-                    <Button startIcon={<SaveSharpIcon />} variant="contained">
+                    <Button
+                        fullWidth
+                        type="submit"
+                        startIcon={<SaveSharpIcon />}
+                        variant="contained">
                         Guardar Alterações
                     </Button>
                 )}
