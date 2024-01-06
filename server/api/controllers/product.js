@@ -1,3 +1,4 @@
+const product = require('../models/product');
 const Product = require('../models/product');
 
 // METHODS:
@@ -44,11 +45,13 @@ module.exports.deleteProduct = function (id) {
 
 //      - getProducts
 module.exports.getProducts = function (filters, fields, page, limit) {
-    return Product.find(filters, fields).skip(page * limit).limit(limit)
-        .then((info) => {
-            return info;
-        })
-        .catch((erro) => {
-            return erro;
-        });
+    return Promise.all([
+        Product.find(filters, fields).sort({_id:'asc'}).skip(page * limit).limit(limit),
+        Product.countDocuments(filters)
+    ]).then(([products,count]) => {
+        let hasMore = count > ((page + 1) * limit);
+        return {products: products, hasMore: hasMore};
+    }).catch((erro) => {
+        return erro;
+    });
 };
