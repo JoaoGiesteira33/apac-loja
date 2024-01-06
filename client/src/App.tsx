@@ -1,7 +1,8 @@
 import React, { Suspense } from 'react';
 
 import Footer from './components/pintar_o_7/Footer';
-import Navbar from './components/pintar_o_7/Navbar';
+import ReactNavbar from './components/pintar_o_7/ReactNavbar';
+//import Navbar from './components/pintar_o_7/Navbar';
 import Chat from './components/experinecia_chat/Chat';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
@@ -190,7 +191,8 @@ function App() {
                             <Brightness4Icon />
                         )}
                     </IconButton>
-                    {location.pathname !== '/' ? <Navbar /> : <></>}
+
+                    {location.pathname !== '/' ? <ReactNavbar /> : <></>}
                     {/*<Chat userID={userID} />*/}
                     {/*<ThemeProvider theme={{}}>*/}
                     <Suspense fallback={<p>Loading...</p>}>
