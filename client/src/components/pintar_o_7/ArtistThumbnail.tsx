@@ -5,16 +5,12 @@ import Box from '@mui/system/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Divider, Typography } from '@mui/material';
 
-
 // TO DO - TROCAR DE PRODUCT PARA ARTIST
 
 export default function ArtistThumbnail(props) {
-
     return (
         <Box component="div">
-            <Typography variant="subtitle1">
-                {props.product.name}
-            </Typography>
+            <Typography variant="subtitle1">{props.product.name}</Typography>
             <Typography variant="h2" fontWeight="bold">
                 {props.product.name}
             </Typography>
@@ -33,13 +29,14 @@ export default function ArtistThumbnail(props) {
                         justifyContent: 'space-between',
                         marginTop: 0,
                     }}>
-                    <Grid xs={12}>{props.product.description + 
-                                   props.product.description + 
-                                   props.product.description + 
-                                   props.product.description + 
-                                   props.product.description + 
-                                   props.product.description + 
-                                   props.product.description}
+                    <Grid item xs={12}>
+                        {props.product.description +
+                            props.product.description +
+                            props.product.description +
+                            props.product.description +
+                            props.product.description +
+                            props.product.description +
+                            props.product.description}
                     </Grid>
                 </Grid>
             </Box>

@@ -31,8 +31,7 @@ export default function Home() {
                         lg: '8rem',
                     },
                 }}>
-                
-                <Divider sx={{marginBottom: 10}} />
+                <Divider sx={{ marginBottom: 10 }} />
 
                 <Grid
                     container
@@ -72,7 +71,6 @@ export default function Home() {
                     Load More
                 </Button>
             )}
-
         </Box>
     );
 }
