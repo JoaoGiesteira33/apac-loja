@@ -40,7 +40,6 @@ function ReactNavbar(props) {
             position="static"
             elevation={0}
             sx={{
-                backgroundColor: 'white',
                 fontSize: '1.2rem',
                 color: 'gray',
             }}>
