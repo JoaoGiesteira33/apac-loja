@@ -7,7 +7,7 @@ import MuiAccordionSummary, {
 } from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import { Box, Divider, Paper } from '@mui/material';
+import { Box, Divider, Paper, Step, StepLabel, Stepper } from '@mui/material';
 import { OrderType } from '../../types/order';
 
 const Accordion = styled((props: AccordionProps) => (
@@ -75,25 +75,18 @@ export default function Order(props: { order: OrderType }) {
                                 </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
-                                <Typography variant="h6">
-                                    Nome do Vendedor
-                                </Typography>
-                                {shipment.states.map((state) => {
-                                    return (
-                                        <Box
-                                            component={'div'}
-                                            sx={{
-                                                paddingX: '1rem',
-                                            }}>
-                                            <Typography variant="h6">
-                                                {state.value}
-                                            </Typography>
-                                            <Typography variant="h6">
-                                                {state.date.toLocaleString()}
-                                            </Typography>
-                                        </Box>
-                                    );
-                                })}
+                                <Stepper orientation="vertical" activeStep={-1}>
+                                    {shipment.states.map((state, index) => {
+                                        return (
+                                            <Step key={index}>
+                                                <StepLabel
+                                                    optional={state.date.toDateString()}>
+                                                    {state.value}
+                                                </StepLabel>
+                                            </Step>
+                                        );
+                                    })}
+                                </Stepper>
                             </AccordionDetails>
                         </Accordion>
                     );

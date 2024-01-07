@@ -47,7 +47,7 @@ const createRandomOrder = (): OrderType => {
 };
 const createRandomOrders = (): OrderType[] => {
     const orders = [];
-    const number_of_orders = Math.floor(Math.random() * 5);
+    const number_of_orders = Math.floor(Math.random() * 3) + 2;
     for (let i = 0; i < number_of_orders; i++) {
         orders.push(createRandomOrder());
     }
