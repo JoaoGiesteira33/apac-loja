@@ -14,8 +14,8 @@ router.get('/:id', middleware.fieldSelector, /*controllerAuth.hasAccess,*/ funct
         .then((info) => {
             res.jsonp(info);
         })
-        .catch((erro) => {
-            res.jsonp(erro);
+        .catch((error) => {
+            res.jsonp(error);
         });
 });
 
@@ -25,8 +25,8 @@ router.post('/', /*controllerAuth.isAdmin,*/ function (req, res, next) {
         .then((info) => {
             res.jsonp(info);
         })
-        .catch((erro) => {
-            res.jsonp(erro);
+        .catch((error) => {
+            res.jsonp(error);
         });
 });
 
@@ -36,8 +36,8 @@ router.put('/:id', /*controllerAuth.isAdmin,*/ function (req, res, next) {
         .then((info) => {
             res.jsonp(info);
         })
-        .catch((erro) => {
-            res.jsonp(erro);
+        .catch((error) => {
+            res.jsonp(error);
         });
 });
 
@@ -47,8 +47,8 @@ router.delete('/:id', /*controllerAuth.isAdmin,*/ function (req, res, next) {
         .then((info) => {
             res.jsonp(info);
         })
-        .catch((erro) => {
-            res.jsonp(erro);
+        .catch((error) => {
+            res.jsonp(error);
         });
 });
 
@@ -58,8 +58,8 @@ router.get('/', middleware.extractFilters, middleware.fieldSelector, /*controlle
         .then((info) => {
             res.jsonp(info);
         })
-        .catch((erro) => {
-            res.jsonp(erro);
+        .catch((error) => {
+            res.jsonp(error);
         });
 });
 

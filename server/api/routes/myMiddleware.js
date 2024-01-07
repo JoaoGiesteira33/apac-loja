@@ -18,7 +18,7 @@ function flatten(fields) {
 }
 
 function fieldSelector(req, res, next) {
-    let fields = req.query.fields
+    let fields = req.query.select
     if (fields) {
         flatFields = flatten(fields.match(/([^,()]+)(\(.*\))?/g))
         let obj = {}
@@ -32,9 +32,9 @@ function fieldSelector(req, res, next) {
 
 // Serve para poder passar valores de filtros, para pesquisas
 // Exemplo: /artist?nome=joao&idade=18
-// campo fields é reservado para a seleção de campos
+// campo select é reservado para a seleção de campos
 function extractFilters(req, res, next) {
-    let { fields, page , limit, ...filters } = req.query || {}
+    let { select, page , limit, expand, ...filters } = req.query || {}
     // Para cada filtro que é objeto, adicionar um $ ao início
     for (let i in filters) {
         if (typeof filters[i] === 'object') {
