@@ -9,7 +9,7 @@ var cors = require('cors')
 // ROUTES:
 var userRouter = require('./routes/user');
 var productRouter = require('./routes/product');
-
+var orderRouter = require('./routes/order');
 
 var db_url = "mongodb+srv://"+secrets.MONGO_USER+":"+secrets.MONGO_PASSWORD+"@"+secrets.MONGO_CLUSTER+".mongodb.net/?retryWrites=true&w=majority";
 mongoose.connect(db_url, {dbName: secrets.MONGO_DB_NAME , useNewUrlParser: true , useUnifiedTopology: true});
@@ -32,6 +32,7 @@ app.use(cors())
 // TODO - ALTERAR PARA OS NOMES DEFINIDOS ACIMA
 app.use('/product', productRouter);
 app.use('/user', userRouter);
+app.use('/order', orderRouter);
 
 
 // catch 404 and forward to error handler
