@@ -105,10 +105,11 @@ const Register = () => {
         <Box component="div" maxWidth="xs">
             <CssBaseline />
             <Paper
-                elevation={3}
+                elevation={0}
                 style={{
                     paddingLeft: '10%',
                     paddingRight: '10%',
+                    paddingBottom: 10,
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'left',

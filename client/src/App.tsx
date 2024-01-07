@@ -28,6 +28,7 @@ const LoginPage = React.lazy(() => import('./pages/pintar_o_7/Login'));
 const RegisterPage = React.lazy(() => import('./pages/pintar_o_7/Register'));
 const ArtistsPage = React.lazy(() => import('./pages/pintar_o_7/Artistas'));
 const CartPage = React.lazy(() => import('./pages/Cart'));
+const PageNotFound = React.lazy(() => import('./pages/NotFound'));
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 const getDesignTokens = (mode: PaletteMode) => ({
@@ -93,6 +94,8 @@ const getDesignTokens = (mode: PaletteMode) => ({
 
 function App() {
     const [mode, setMode] = React.useState<PaletteMode>('light');
+    const [navbarSize, setNavbarSize] = React.useState<number>(0);
+    const [footerSize, setFooterSize] = React.useState<number>(0);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -174,6 +177,11 @@ function App() {
             element: <ProfileOrderHistory />,
             requireAuth: true,
         },
+        {
+            path: '*',
+            element: <PageNotFound />,
+            requireAuth: false,
+        },
     ];
 
     const theme = React.useMemo(
@@ -204,7 +212,10 @@ function App() {
                     </IconButton>
 
                     {location.pathname !== '/' ? (
-                        <ReactNavbar loggedIn={loggedIn} />
+                        <ReactNavbar
+                            loggedIn={loggedIn}
+                            setHeight={setNavbarSize}
+                        />
                     ) : (
                         <></>
                     )}
@@ -229,7 +240,11 @@ function App() {
                         </Routes>
                     </Suspense>
                     {location.pathname !== '/' ? <Chat /> : <></>}
-                    {location.pathname !== '/' ? <Footer /> : <></>}
+                    {location.pathname !== '/' ? (
+                        <Footer setHeight={setFooterSize} />
+                    ) : (
+                        <></>
+                    )}
                     {/*</ThemeProvider>*/}
                 </div>
             </ThemeProvider>

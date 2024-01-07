@@ -5,9 +5,9 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import logo from '../../assets/LOGO.png';
+import { useRef, useEffect } from 'react';
 
-const Footer = () => {
-    const navigate = useNavigate();
+const Footer = (props) => {
     const COLOR = 'gray';
     const ICON_MARGIN = 0.5;
     const year = new Date().getFullYear();
@@ -25,7 +25,6 @@ const Footer = () => {
             component="div"
             sx={{
                 flexGrow: 1,
-                backgroundColor: 'white',
                 paddingBottom: 5,
                 paddingX: {
                     xs: '2rem',
@@ -105,7 +104,7 @@ const Footer = () => {
                     lg={2}
                     display="flex"
                     alignItems="center"
-                    justifyContent="left">
+                    justifyContent="center">
                     <MY_LNK link="#" text="termos e condições" />
                 </Grid>
                 <Grid
