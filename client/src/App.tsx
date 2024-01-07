@@ -95,6 +95,10 @@ function App() {
     const [mode, setMode] = React.useState<PaletteMode>('light');
     const location = useLocation();
 
+    const [loggedIn, setLoggedIn] = React.useState<boolean | null>(
+        localStorage.getItem('loggedIn') ? true : false
+    );
+
     const colorMode = React.useMemo(
         () => ({
             // The dark mode switch would invoke this method
@@ -111,7 +115,7 @@ function App() {
     const routes = [
         {
             path: '/',
-            element: <InitialPage />,
+            element: <InitialPage loggedIn={loggedIn} />,
             requireAuth: false,
         },
         {
@@ -141,7 +145,7 @@ function App() {
         },
         {
             path: '/profile',
-            element: <ProfileIndex />,
+            element: <ProfileIndex logout={setLoggedIn} />,
             requireAuth: false,
         },
         {
@@ -151,7 +155,7 @@ function App() {
         },
         {
             path: '/login',
-            element: <LoginPage />,
+            element: <LoginPage setLoggedIn={setLoggedIn} />,
             requireAuth: false,
         },
         {
@@ -192,7 +196,11 @@ function App() {
                         )}
                     </IconButton>
 
-                    {location.pathname !== '/' ? <ReactNavbar /> : <></>}
+                    {location.pathname !== '/' ? (
+                        <ReactNavbar loggedIn={loggedIn} />
+                    ) : (
+                        <></>
+                    )}
                     {/*<Chat userID={userID} />*/}
                     {/*<ThemeProvider theme={{}}>*/}
                     <Suspense fallback={<p>Loading...</p>}>

@@ -1,11 +1,4 @@
-import {
-    Grid,
-    Box,
-    Divider,
-    List,
-    ListItem,
-    Typography,
-} from '@mui/material';
+import { Grid, Box, Divider, List, ListItem, Typography } from '@mui/material';
 import { useNavigate, Link } from 'react-router-dom';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -21,11 +14,7 @@ const Footer = () => {
 
     function MY_LNK({ link, text }: { link: string; text: string }) {
         return (
-            <Link
-                className="font-poppins"
-                color={COLOR}
-                to={link}
-                >
+            <Link className="font-poppins" color={COLOR} to={link}>
                 {text}
             </Link>
         );
@@ -45,11 +34,12 @@ const Footer = () => {
                     lg: '8rem',
                 },
             }}>
-            <Grid container sx={{paddingBottom:5}}>
-                <Grid xs={12}>
-                    <Divider  />
+            <Grid container sx={{ paddingBottom: 5 }}>
+                <Grid item xs={12}>
+                    <Divider />
                 </Grid>
                 <Grid
+                    item
                     xs={6}
                     sm={3}
                     md={3}
@@ -58,14 +48,14 @@ const Footer = () => {
                     justifyContent="left"
                     alignItems="center">
                     <List>
-                        <ListItem sx={{paddingX:0}}>
+                        <ListItem sx={{ paddingX: 0 }}>
                             <img
                                 className="max-h-16 my-4"
                                 alt="logo"
                                 src={logo}
                             />
                         </ListItem>
-                        <ListItem sx={{paddingX:0}}>
+                        <ListItem sx={{ paddingX: 0 }}>
                             <FacebookIcon
                                 sx={{ color: COLOR, margin: ICON_MARGIN }}
                             />
@@ -82,6 +72,7 @@ const Footer = () => {
                     </List>
                 </Grid>
                 <Grid
+                    item
                     xs={6}
                     sm={5}
                     md={5}
@@ -108,6 +99,7 @@ const Footer = () => {
             </Grid>
             <Grid container>
                 <Grid
+                    item
                     xs={12}
                     md={3}
                     lg={2}
@@ -117,6 +109,7 @@ const Footer = () => {
                     <MY_LNK link="#" text="termos e condições" />
                 </Grid>
                 <Grid
+                    item
                     xs={12}
                     md={3}
                     lg={2}
@@ -126,6 +119,7 @@ const Footer = () => {
                     <MY_LNK link="#" text="suporte" />
                 </Grid>
                 <Grid
+                    item
                     xs={12}
                     md={3}
                     lg={2}
@@ -135,6 +129,7 @@ const Footer = () => {
                     <MY_LNK link="#" text="política de privacidade" />
                 </Grid>
                 <Grid
+                    item
                     xs={12}
                     md={3}
                     lg={6}

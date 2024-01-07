@@ -1,4 +1,26 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
+
+const Address = new mongoose.Schema(
+  {
+    street: {
+      type: String,
+      required: true,
+    },
+    postal_code: {
+      type: String,
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    country: {
+      type: String,
+      required: true,
+    },
+  },
+  { _id: false }
+);
 
 /**
  * Demographics associated with the client/seller
@@ -8,72 +30,62 @@ const mongoose = require('mongoose')
  * @property {String} address - Address of the client/seller
  * @property {String} phone - Phone number of the client/seller
  */
-const Demographics = new mongoose.Schema({
+const Demographics = new mongoose.Schema(
+  {
     name: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     birth_date: {
-        type: Date,
-        required: true
+      type: Date,
+      required: true,
     },
     address: {
-        type: Address,
-        required: true
+      type: Address,
+      required: true,
     },
-    phone: String
-}, {_id: false});
-
-const Address = new mongoose.Schema({
-    street: {
-        type: String,
-        required: true
-    },
-    postal_code: {
-        type: String,
-        required: true
-    },
-    city: {
-        type: String,
-        required: true
-    },
-    country: {
-        type: String,
-        required: true
-    }
-}, {_id: false});
+    phone: String,
+  },
+  { _id: false }
+);
 
 /**
  * Statistics associated with the client/seller
  * @typedef {Object} Statistics
  */
-const Statistics = new mongoose.Schema({
+const Statistics = new mongoose.Schema(
+  {
     // Por enquanto não temos estatísticas
-}, {_id: false});
+  },
+  { _id: false }
+);
 
-
-const SellerFields = new mongoose.Schema({
+const SellerFields = new mongoose.Schema(
+  {
     demographics: {
-        type: Demographics,
-        required: true
+      type: Demographics,
+      required: true,
     },
     statistics: Statistics,
     profile_picture: String,
     about: String,
     products: {
-        type: [String],
-        default: []
+      type: [String],
+      default: [],
     },
     seller_type: {
-        type: String,
-        enum: ['artist', 'bookseller']
-    }
-}, {_id: false});
+      type: String,
+      enum: ["artist", "bookseller"],
+    },
+  },
+  { _id: false }
+);
 
-const ClientFields = new mongoose.Schema({
+const ClientFields = new mongoose.Schema(
+  {
     demographics: {
-        type: Demographics,
-        required: true
+      type: Demographics,
+      required: true,
     },
     statistics: Statistics,
     /**
@@ -83,53 +95,54 @@ const ClientFields = new mongoose.Schema({
     },
     */
     search_history: {
-        type:[String],
-        default: []
+      type: [String],
+      default: [],
     }, // struct Purchase ???
     favorites: {
-        type:[String],
-        default: []
+      type: [String],
+      default: [],
     }, // struct Purchase ???
     cart: {
-        type:[String],
-        default: []
+      type: [String],
+      default: [],
     }, // struct Purchase ???
     interests: {
-        type:[String],
-        default: []
-    } // user set his interests
-}, {_id: false});
+      type: [String],
+      default: [],
+    }, // user set his interests
+  },
+  { _id: false }
+);
 
-
-/** 
+/**
  * User
  * @typedef {Object} User
  * @property {String} email - User email
  * @property {String} role - User role(seller/client/admin)
  * @property {Object} client_fields - Client fields
  * @property {Object} seller_fields - Seller fields
-*/
+ */
 const User = new mongoose.Schema({
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    role: {
-        type: String,
-        required: true,
-        enum: ['client', 'seller', 'admin']
-    },
-    client_fields: ClientFields,
-    seller_fields: SellerFields,
-    active_chat_id: {
-        type:[String],
-        default: []
-    },
-    tags: {
-        type:[String],
-        default: []
-    }
-})
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  role: {
+    type: String,
+    required: true,
+    enum: ["client", "seller", "admin"],
+  },
+  client_fields: ClientFields,
+  seller_fields: SellerFields,
+  active_chat_id: {
+    type: [String],
+    default: [],
+  },
+  tags: {
+    type: [String],
+    default: [],
+  },
+});
 
-module.exports = mongoose.model('userModel', User, "users")
+module.exports = mongoose.model("userModel", User, "users");
