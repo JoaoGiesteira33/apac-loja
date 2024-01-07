@@ -16,7 +16,7 @@ export default function ProfileIndex(props) {
                         icon={<AccountCircleIcon />}
                     />
                 </Link>
-                <Link className="inline-block" to="/profile/orderHistory">
+                <Link className="inline-block" to="/profile/order-history">
                     <ProfileThumbnail
                         title="Order History"
                         description="Check your order history"
@@ -30,7 +30,7 @@ export default function ProfileIndex(props) {
                         icon={<AccountCircleIcon />}
                     />
                 </Link>
-                <Link className="inline-block" to="/profile/orderHistory">
+                <Link className="inline-block" to="/profile/order-history">
                     <ProfileThumbnail
                         title="Order History"
                         description="Check your order history"

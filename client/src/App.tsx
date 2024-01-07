@@ -18,6 +18,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { input } from '@material-tailwind/react';
 import { rootCertificates } from 'tls';
+import ProfileOrderHistory from './pages/Profile/ProfileOrderHistory';
 
 // dynamically load components as they are needed
 const InitialPage = React.lazy(() => import('./pages/pintar_o_7/Initial'));
@@ -166,6 +167,11 @@ function App() {
             path: '/cart',
             element: <CartPage />,
             requireAuth: false, // TODO: change to true
+        },
+        {
+            path: '/profile/order-history',
+            element: <ProfileOrderHistory />,
+            requireAuth: false,
         },
     ];
 
