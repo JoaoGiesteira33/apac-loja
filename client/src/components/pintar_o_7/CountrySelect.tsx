@@ -8,6 +8,7 @@ export default function CountrySelect(props: {
     selection: string;
     setSelection: (value: string) => void;
     sx?: SxProps<Theme>;
+    showCountryAlert: boolean;
 }) {
     return (
         <Autocomplete
@@ -40,6 +41,10 @@ export default function CountrySelect(props: {
                     {...params}
                     label="Choose a country"
                     variant="standard"
+                    error={props.showCountryAlert}
+                    helperText={
+                        props.showCountryAlert ? 'Please select a country' : ' '
+                    }
                     inputProps={{
                         ...params.inputProps,
                         autoComplete: 'new-password',

@@ -30,7 +30,6 @@ export default function Home() {
                         md: '6rem',
                         lg: '8rem',
                     },
-                    paddingTop: '3rem',
                 }}>
                 
                 <Divider sx={{marginBottom: 10}} />

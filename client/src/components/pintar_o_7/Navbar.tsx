@@ -1,6 +1,6 @@
 'use client';
 
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import logoApac from '../../assets/LOGO_negrito.png';
@@ -32,6 +32,7 @@ const customTheme: CustomFlowbiteTheme = {
 
 export default function Navbar() {
     const location = useLocation();
+    const navigate = useNavigate();
     const [loggedIn, setLoggedIn] = useState<string | null>(localStorage.getItem('loggedIn'));
 
     return (
@@ -47,7 +48,7 @@ export default function Navbar() {
                 <FlowbiteNavbar.Toggle />
                 <FlowbiteNavbar.Collapse>
                     <FlowbiteNavbar.Link
-                        href="/gallery"
+                        onClick={() => { navigate('/gallery'); }}
                         className={
                             location.pathname == '/gallery'
                                 ? 'font-bold text-black'
@@ -56,7 +57,7 @@ export default function Navbar() {
                         a galeria
                     </FlowbiteNavbar.Link>
                     <FlowbiteNavbar.Link
-                        href="/artists"
+                        onClick={() => { navigate('/artists'); }}
                         className={
                             location.pathname == '/artists'
                                 ? 'font-bold text-black'
@@ -65,7 +66,7 @@ export default function Navbar() {
                         artistas
                     </FlowbiteNavbar.Link>
                     <FlowbiteNavbar.Link
-                        href="/contact"
+                        onClick={() => { navigate('/contact'); }}
                         className={
                             location.pathname == '/contact'
                                 ? 'font-bold text-black'
@@ -75,7 +76,7 @@ export default function Navbar() {
                     </FlowbiteNavbar.Link>
                     { "true" !== "true" ?
                         <FlowbiteNavbar.Link
-                        href="/login"
+                        onClick={() => { navigate('/login'); }}
                         className={
                             location.pathname == '/login'
                                 ? 'font-bold text-black'
@@ -84,7 +85,7 @@ export default function Navbar() {
                         login
                     </FlowbiteNavbar.Link> :
                      <FlowbiteNavbar.Link
-                        href="/profile"
+                        onClick={() => { navigate('/profile'); }}
                         className={
                             location.pathname == '/profile'
                                 ? 'font-bold text-black'
