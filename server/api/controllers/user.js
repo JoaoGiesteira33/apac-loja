@@ -6,8 +6,8 @@ module.exports.getUserInfo = function (id) {
         .then((info) => {
             return info;
         })
-        .catch((erro) => {
-            return erro;
+        .catch((error) => {
+            return error;
         });
 };
 //      - createUser
@@ -16,18 +16,18 @@ module.exports.createUser = function (data) {
         .then((info) => {
             return info;
         })
-        .catch((erro) => {
-            return erro;
+        .catch((error) => {
+            return error;
         });
 };
 //      - updateUserInfo
 module.exports.updateUserInfo = function (id, data) {
-    return User.update({ _id: id }, data)
+    return User.updateOne({ _id: id }, data)
         .then((info) => {
             return info;
         })
-        .catch((erro) => {
-            return erro;
+        .catch((error) => {
+            return error;
         });
 };
 //      - deleteUser
@@ -36,8 +36,8 @@ module.exports.deleteUser = function (id) {
         .then((info) => {
             return info;
         })
-        .catch((erro) => {
-            return erro;
+        .catch((error) => {
+            return error;
         });
 };
 
@@ -46,10 +46,11 @@ module.exports.getUsers = function (filters, fields, page, limit) {
     return Promise.all([
         User.find(filters, fields).sort({_id:'asc'}).skip(page * limit).limit(limit),
         User.countDocuments(filters)
-    ]).then(([users,count]) => {
+    ])
+    .then(([users,count]) => {
         let hasMore = count > ((page + 1) * limit);
-        return {users: users, hasMore: hasMore};
-    }).catch((erro) => {
-        return erro;
+        return {results: users, hasMore: hasMore};
+    }).catch((error) => {
+        return error;
     });
 };

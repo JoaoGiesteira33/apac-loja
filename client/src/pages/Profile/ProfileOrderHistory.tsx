@@ -1,37 +1,65 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import Order from '../../components/pintar_o_7/Order';
-import { title } from 'process';
+import { OrderType, ShipmentType, StateType } from '../../types/order';
+import dayjs from 'dayjs';
+
+const createRandomOrder = (): OrderType => {
+    const _id = Math.floor(Math.random() * 1000).toString();
+    const client_id = Math.floor(Math.random() * 1000).toString();
+    const date = dayjs().toDate();
+    const shipments: ShipmentType[] = [];
+
+    const number_of_shipments = Math.floor(Math.random() * 3) + 1;
+    for (let i = 0; i < number_of_shipments; i++) {
+        const evaluation = {
+            rating: Math.floor(Math.random() * 5),
+            comment: 'mui bom',
+        };
+        const states: StateType[] = [
+            {
+                value: 'processing',
+                date: new Date(),
+            },
+            {
+                value: 'delivering',
+                date: new Date(),
+            },
+            {
+                value: 'delivered',
+                date: new Date(),
+            },
+        ];
+        shipments.push({
+            seller_id: Math.floor(Math.random() * 1000).toString(),
+            product_id: Math.floor(Math.random() * 1000).toString(),
+            shipping_proof: 'proof',
+            evaluation: evaluation,
+            states: states,
+        });
+    }
+    return {
+        _id: _id,
+        client_id: client_id,
+        date: date,
+        shipments: shipments,
+    };
+};
+const createRandomOrders = (): OrderType[] => {
+    const orders = [];
+    const number_of_orders = Math.floor(Math.random() * 5);
+    for (let i = 0; i < number_of_orders; i++) {
+        orders.push(createRandomOrder());
+    }
+    return orders;
+};
 
 export default function ProfileOrderHistory() {
-    const [orders, setOrders] = useState([
-        {
-            id: '1231454d2-1231-1231-1231-123123123123',
-            date: '2021-10-01',
-            total: 1000,
-        },
-        {
-            id: '1231454d2-1231-1231-1231-123123123123',
-            date: '2021-10-01',
-            total: 1000,
-        },
-        {
-            id: '1231454d2-1231-1231-1231-123123123123',
-            date: '2021-10-01',
-            total: 1000,
-        },
-        {
-            id: '1231454d2-1231-1231-1231-123123123123',
-            date: '2021-10-01',
-            total: 1000,
-        },
-        {
-            id: '1231454d2-1231-1231-1231-123123123123',
-            date: '2021-10-01',
-            total: 1000,
-        },
-    ]);
-
+    const [orders, setOrders] = useState<OrderType[]>([]);
+    useEffect(() => {
+        const MOCK_ORDERS = createRandomOrders();
+        setOrders(MOCK_ORDERS);
+    }, []);
     return (
         <Box
             component="div"
@@ -51,7 +79,7 @@ export default function ProfileOrderHistory() {
                 justifyContent={'flex-start'}>
                 <Typography variant="h3">Order History</Typography>
                 {orders.map((order) => {
-                    return <Order key={order.id} order={order}></Order>;
+                    return <Order key={order._id} order={order}></Order>;
                 })}
             </Stack>
         </Box>

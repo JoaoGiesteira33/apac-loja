@@ -1,24 +1,24 @@
 export type OrderType = {
     _id: string;
     client_id: string;
-    date: string;
+    date: Date;
     shipments: ShipmentType[];
-}
+};
 
-type ShipmentType = {
+export type ShipmentType = {
     seller_id: string;
     product_id: string;
     states: StateType[];
     shipping_proof: string;
     evaluation: EvaluationType;
-}
+};
 
-type StateType = {
+export type StateType = {
     value: string;
-    date: string;
-}
+    date: Date;
+};
 
-type EvaluationType = {
+export type EvaluationType = {
     rating: number;
     comment: string;
-}
+};

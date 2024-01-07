@@ -52,6 +52,11 @@ const Product = new mongoose.Schema({
         type: String,
         enum: ["book", "piece"],
     },
+    _seller: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'userModel',
+        required: true
+    },
     piece_info: PieceInfo,
     book_info: BookInfo
 })

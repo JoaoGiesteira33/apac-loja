@@ -1,4 +1,3 @@
-const product = require('../models/product');
 const Product = require('../models/product');
 
 // METHODS:
@@ -8,8 +7,8 @@ module.exports.getProductInfo = function (id) {
         .then((info) => {
             return info;
         })
-        .catch((erro) => {
-            return erro;
+        .catch((error) => {
+            return error;
         });
 };
 //      - createProduct
@@ -18,18 +17,18 @@ module.exports.createProduct = function (data) {
         .then((info) => {
             return info;
         })
-        .catch((erro) => {
-            return erro;
+        .catch((error) => {
+            return error;
         });
 };
 //      - updateProductInfo
 module.exports.updateProductInfo = function (id, data) {
-    return Product.update({ _id: id }, data)
+    return Product.updateOne({ _id: id }, data)
         .then((info) => {
             return info;
         })
-        .catch((erro) => {
-            return erro;
+        .catch((error) => {
+            return error;
         });
 };
 //      - deleteProduct
@@ -38,8 +37,8 @@ module.exports.deleteProduct = function (id) {
         .then((info) => {
             return info;
         })
-        .catch((erro) => {
-            return erro;
+        .catch((error) => {
+            return error;
         });
 };
 
@@ -48,10 +47,12 @@ module.exports.getProducts = function (filters, fields, page, limit) {
     return Promise.all([
         Product.find(filters, fields).sort({_id:'asc'}).skip(page * limit).limit(limit),
         Product.countDocuments(filters)
-    ]).then(([products,count]) => {
+    ])
+    .then(([products,count]) => {
         let hasMore = count > ((page + 1) * limit);
-        return {products: products, hasMore: hasMore};
-    }).catch((erro) => {
-        return erro;
+        return {results: products, hasMore: hasMore};
+    })
+    .catch((error) => {
+        return error;
     });
 };
