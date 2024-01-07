@@ -22,11 +22,15 @@ export default function ProductThumbnail(props) {
                     justifyContent: 'space-between',
                     width: '100%',
                 }}>
-                <Grid xs={8}>{props.product.name} </Grid>
-                <Grid xs={4} sx={{ textAlign: 'right' }}>
+                <Grid item xs={8}>
+                    {props.product.name}{' '}
+                </Grid>
+                <Grid item xs={4} sx={{ textAlign: 'right' }}>
                     {props.product.price}€
                 </Grid>
-                <Grid xs={12}>{props.product.description}</Grid>
+                <Grid item xs={12}>
+                    {props.product.description}
+                </Grid>
             </Grid>
         </Box>
     );
