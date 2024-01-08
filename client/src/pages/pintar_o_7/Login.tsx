@@ -83,9 +83,10 @@ const Login = (props) => {
     };
 
     return (
-        <Box component="div" maxWidth="xs">
+        <Box component="div" maxWidth="xs" style={{}}>
             <CssBaseline />
             <Paper
+                elevation={0}
                 style={{
                     paddingLeft: '10%',
                     paddingRight: '10%',
@@ -93,8 +94,6 @@ const Login = (props) => {
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'left',
-                    background: 'white',
-                    color: 'black',
                 }}>
                 <Typography
                     component="h1"

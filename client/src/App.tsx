@@ -4,7 +4,7 @@ import Footer from './components/pintar_o_7/Footer';
 import ReactNavbar from './components/pintar_o_7/ReactNavbar';
 //import Navbar from './components/pintar_o_7/Navbar';
 import Chat from './components/experinecia_chat/Chat';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 //import { Route, Routes } from 'react-router-dom';
 import { CanvasModel } from './components/canvasModel';
@@ -28,6 +28,7 @@ const LoginPage = React.lazy(() => import('./pages/pintar_o_7/Login'));
 const RegisterPage = React.lazy(() => import('./pages/pintar_o_7/Register'));
 const ArtistsPage = React.lazy(() => import('./pages/pintar_o_7/Artistas'));
 const CartPage = React.lazy(() => import('./pages/Cart'));
+const PageNotFound = React.lazy(() => import('./pages/NotFound'));
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 const getDesignTokens = (mode: PaletteMode) => ({
@@ -93,7 +94,10 @@ const getDesignTokens = (mode: PaletteMode) => ({
 
 function App() {
     const [mode, setMode] = React.useState<PaletteMode>('light');
+    const [navbarSize, setNavbarSize] = React.useState<number>(0);
+    const [footerSize, setFooterSize] = React.useState<number>(0);
     const location = useLocation();
+    const navigate = useNavigate();
 
     const [loggedIn, setLoggedIn] = React.useState<boolean | null>(
         localStorage.getItem('loggedIn') ? true : false
@@ -146,12 +150,12 @@ function App() {
         {
             path: '/profile',
             element: <ProfileIndex logout={setLoggedIn} />,
-            requireAuth: false,
+            requireAuth: true,
         },
         {
             path: '/profile/info',
             element: <ProfileInfo />,
-            requireAuth: false,
+            requireAuth: true,
         },
         {
             path: '/login',
@@ -166,11 +170,16 @@ function App() {
         {
             path: '/cart',
             element: <CartPage />,
-            requireAuth: false, // TODO: change to true
+            requireAuth: true,
         },
         {
             path: '/profile/order-history',
             element: <ProfileOrderHistory />,
+            requireAuth: true,
+        },
+        {
+            path: '*',
+            element: <PageNotFound />,
             requireAuth: false,
         },
     ];
@@ -186,7 +195,13 @@ function App() {
                 <CssBaseline />
                 <div className={theme.palette.mode === 'dark' ? 'dark' : ''}>
                     <IconButton
-                        sx={{ ml: 1, position: 'absolute', right: 0, top: 0 }}
+                        sx={{
+                            ml: 1,
+                            position: 'absolute',
+                            right: 0,
+                            top: 0,
+                            zIndex: 1,
+                        }}
                         onClick={colorMode.toggleColorMode}
                         color="inherit">
                         {theme.palette.mode === 'dark' ? (
@@ -197,12 +212,13 @@ function App() {
                     </IconButton>
 
                     {location.pathname !== '/' ? (
-                        <ReactNavbar loggedIn={loggedIn} />
+                        <ReactNavbar
+                            loggedIn={loggedIn}
+                            setHeight={setNavbarSize}
+                        />
                     ) : (
                         <></>
                     )}
-                    {/*<Chat userID={userID} />*/}
-                    {/*<ThemeProvider theme={{}}>*/}
                     <Suspense fallback={<p>Loading...</p>}>
                         <Routes>
                             {/* <Suspense fallback={<Loading />}> *criar este componente depois* */}
@@ -211,20 +227,24 @@ function App() {
                                     key={index}
                                     path={route.path}
                                     element={
-                                        /*
-                          route.requireAuth ? (
-                            <RequireAuth loginPath="/login">
-                              {route.element}
-                            </RequireAuth>
-                          ) : (   *Implementar depois o componente RequireAuth na Autenticação*  */
+                                        // TO DO -> DESCOMENTAR ISTO ESTÁ FUNCIONAL
+                                        //       route.requireAuth && !loggedIn ? (
+                                        //           <LoginPage
+                                        //               setLoggedIn={setLoggedIn}
+                                        //           />
+                                        //       ) : (
                                         route.element
-                                        /*)*/
+                                        //       )
                                     }></Route>
                             ))}
                         </Routes>
                     </Suspense>
                     {location.pathname !== '/' ? <Chat /> : <></>}
-                    {location.pathname !== '/' ? <Footer /> : <></>}
+                    {location.pathname !== '/' ? (
+                        <Footer setHeight={setFooterSize} />
+                    ) : (
+                        <></>
+                    )}
                     {/*</ThemeProvider>*/}
                 </div>
             </ThemeProvider>

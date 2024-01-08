@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-import { ObjectId } from 'mongodb';
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 /**
  * Purchase history associated with the client
@@ -57,13 +57,15 @@ const State = new mongoose.Schema({
 }, {_id: false});
 
 const Shipment = new mongoose.Schema({
-    seller_id:{
+    _seller:{
         type: ObjectId,
-        required: true
+        required: true,
+        ref: 'userModel'
     },
-    product_id: {
+    _product: {
         type: ObjectId,
-        required: true
+        required: true,
+        ref: 'productModel'
     },
     states: { // Last state represents the current state
         type: [State],
@@ -74,18 +76,16 @@ const Shipment = new mongoose.Schema({
 }, {_id: false});
 
 const Order = new mongoose.Schema({
-    client_id:{
+    _client:{
         type: ObjectId,
-        required: true
+        required: true,
+        ref: 'userModel'
     },
     date: {
         type: Date,
         default: Date.now
     },
-    shipments: {
-        type: [Shipment],
-        default: []
-    }
+    shipments: [Shipment]
     //Falta adicionar a parte do pagamento. Guardado aqui, ou na parte do shipment
 });
 
