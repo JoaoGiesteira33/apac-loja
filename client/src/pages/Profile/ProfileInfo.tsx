@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 import Box from '@mui/system/Box';
 import Paper from '@mui/material/Paper';
@@ -16,23 +16,51 @@ import dayjs, { Dayjs } from 'dayjs';
 const TODAY_MINUS_18_YEARS: Dayjs = dayjs().subtract(18, 'year');
 
 export default function ProfileInfo() {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [country, setCountry] = useState('');
-    const [address, setAddress] = useState('');
-    const [postlaCode, setPostalCode] = useState('');
-    const [city, setCity] = useState('');
-    const [phone, setPhone] = useState('');
-    const [birth_date, setBirthDate] = useState<Dayjs | null>(dayjs());
+    const userInfo = JSON.parse(localStorage.getItem('user') as string);
 
-    const originalName = useRef('');
-    const originalEmail = useRef('');
-    const originalCountry = useRef('');
-    const originalAddress = useRef('');
-    const originalPostalCode = useRef('');
-    const originalCity = useRef('');
-    const originalPhone = useRef('');
-    const originalBirthDate = useRef(dayjs());
+    const [name, setName] = useState(
+        userInfo.client_fields.demographics.name || ''
+    );
+    const [email, setEmail] = useState(userInfo.email || '');
+    const [country, setCountry] = useState(
+        userInfo.client_fields.demographics.address.country || ''
+    );
+    const [address, setAddress] = useState(
+        userInfo.client_fields.demographics.address.street || ''
+    );
+    const [postalCode, setPostalCode] = useState(
+        userInfo.client_fields.demographics.address.postal_code || ''
+    );
+    const [city, setCity] = useState(
+        userInfo.client_fields.demographics.address.city || ''
+    );
+    const [phone, setPhone] = useState(
+        userInfo.client_fields.demographics.phone || ''
+    );
+    const [birth_date, setBirthDate] = useState<Dayjs | null>(
+        dayjs(userInfo.client_fields.demographics.birth_date)
+    );
+
+    const originalName = useRef(userInfo.client_fields.demographics.name || '');
+    const originalEmail = useRef(userInfo.email || '');
+    const originalCountry = useRef(
+        userInfo.client_fields.demographics.address.country || ''
+    );
+    const originalAddress = useRef(
+        userInfo.client_fields.demographics.address.street || ''
+    );
+    const originalPostalCode = useRef(
+        userInfo.client_fields.demographics.address.postal_code || ''
+    );
+    const originalCity = useRef(
+        userInfo.client_fields.demographics.address.city || ''
+    );
+    const originalPhone = useRef(
+        userInfo.client_fields.demographics.phone || ''
+    );
+    const originalBirthDate = useRef(
+        dayjs(userInfo.client_fields.demographics.birth_date) || dayjs()
+    );
 
     const [profileChanged, setProfileChanged] = useState(true);
 
@@ -66,7 +94,7 @@ export default function ProfileInfo() {
             email !== originalEmail.current ||
             country !== originalCountry.current ||
             address !== originalAddress.current ||
-            postlaCode !== originalPostalCode.current ||
+            postalCode !== originalPostalCode.current ||
             city !== originalCity.current ||
             phone !== originalPhone.current ||
             birth_date !== originalBirthDate.current
@@ -105,7 +133,7 @@ export default function ProfileInfo() {
             setShowAddressError(true);
             hasErrors = true;
         }
-        if (postlaCode === '') {
+        if (postalCode === '') {
             setShowPostalCodeError(true);
             hasErrors = true;
         }
@@ -115,6 +143,11 @@ export default function ProfileInfo() {
         }
         if (hasErrors) return;
     };
+
+    useEffect(() => {
+        console.log(userInfo.client_fields.demographics.address.country);
+        console.log('Country: ', country);
+    }, [country]);
 
     return (
         <Box
@@ -193,7 +226,7 @@ export default function ProfileInfo() {
                                     variant: 'standard',
                                     fullWidth: true,
                                     required: true,
-                                    name: 'client_fields.demographics.birth_date',
+                                    name: 'client_fields.client_fields.demographics.birth_date',
                                     margin: 'normal',
                                 },
                             }}
@@ -263,7 +296,7 @@ export default function ProfileInfo() {
                             }
                             id="postalCode"
                             autoComplete="postalCode"
-                            value={postlaCode}
+                            value={postalCode}
                             onChange={(e) => setPostalCode(e.target.value)}
                         />
                     </Stack>

@@ -8,6 +8,7 @@ import logo from '../../assets/LOGO.png';
 import { useRef, useEffect } from 'react';
 
 const Footer = (props) => {
+    const navigate = useNavigate();
     const COLOR = 'gray';
     const ICON_MARGIN = 0.5;
     const year = new Date().getFullYear();
@@ -55,18 +56,45 @@ const Footer = (props) => {
                             />
                         </ListItem>
                         <ListItem sx={{ paddingX: 0 }}>
-                            <FacebookIcon
-                                sx={{ color: COLOR, margin: ICON_MARGIN }}
-                            />
-                            <InstagramIcon
-                                sx={{ color: COLOR, margin: ICON_MARGIN }}
-                            />
-                            <YouTubeIcon
-                                sx={{ color: COLOR, margin: ICON_MARGIN }}
-                            />
-                            <LinkedInIcon
-                                sx={{ color: COLOR, margin: ICON_MARGIN }}
-                            />
+                            <a
+                                target="_blank"
+                                href={
+                                    'https://www.facebook.com/associacaoportuguesartecultura'
+                                }>
+                                <FacebookIcon
+                                    sx={{ color: COLOR, margin: ICON_MARGIN }}
+                                />
+                            </a>
+
+                            <a
+                                target="_blank"
+                                href={
+                                    'https://www.instagram.com/associacaoportuguesartecultura/'
+                                }>
+                                <InstagramIcon
+                                    sx={{ color: COLOR, margin: ICON_MARGIN }}
+                                />
+                            </a>
+
+                            <a
+                                target="_blank"
+                                href={
+                                    'https://associacaoportuguesaartesecultura.pt/projetos/'
+                                }>
+                                <YouTubeIcon
+                                    sx={{ color: COLOR, margin: ICON_MARGIN }}
+                                />
+                            </a>
+
+                            <a
+                                target="_blank"
+                                href={
+                                    'https://associacaoportuguesaartesecultura.pt/projetos/'
+                                }>
+                                <LinkedInIcon
+                                    sx={{ color: COLOR, margin: ICON_MARGIN }}
+                                />
+                            </a>
                         </ListItem>
                     </List>
                 </Grid>
@@ -105,7 +133,7 @@ const Footer = (props) => {
                     display="flex"
                     alignItems="center"
                     justifyContent="center">
-                    <MY_LNK link="#" text="termos e condições" />
+                    <MY_LNK link="terms&conditions" text="termos e condições" />
                 </Grid>
                 <Grid
                     item
@@ -115,7 +143,7 @@ const Footer = (props) => {
                     display="flex"
                     alignItems="center"
                     justifyContent="center">
-                    <MY_LNK link="#" text="suporte" />
+                    <MY_LNK link="support" text="suporte" />
                 </Grid>
                 <Grid
                     item
@@ -125,7 +153,10 @@ const Footer = (props) => {
                     display="flex"
                     alignItems="center"
                     justifyContent="center">
-                    <MY_LNK link="#" text="política de privacidade" />
+                    <MY_LNK
+                        link="privacy_policy"
+                        text="política de privacidade"
+                    />
                 </Grid>
                 <Grid
                     item

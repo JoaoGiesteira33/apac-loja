@@ -8,12 +8,15 @@ import {
     CssBaseline,
     Grid,
     Alert,
+    Stack,
 } from '@mui/material';
 import { registerUser } from '../../fetchers';
 import { useNavigate } from 'react-router-dom';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import CountrySelect from '../../components/pintar_o_7/CountrySelect';
+
 const Register = () => {
     const navigate = useNavigate();
 
@@ -22,8 +25,12 @@ const Register = () => {
     const [password2, setPassword2] = useState('');
     const [name, setName] = useState('');
     const [birth_date, setBirthDate] = useState('');
-    const [address, setAddress] = useState('');
     const [phone, setPhone] = useState('');
+
+    const [country, setCountry] = useState('');
+    const [address, setAddress] = useState('');
+    const [postlaCode, setPostalCode] = useState('');
+    const [city, setCity] = useState('');
 
     const [showEmailAlert, setShowEmailAlert] = useState(false);
     const [showPassAlert, setShowPassAlert] = useState(false);
@@ -31,6 +38,11 @@ const Register = () => {
     const [showPhoneAlert, setShowPhoneAlert] = useState(false);
     const [showOver18Alert, setShowOver18Alert] = useState(false);
     const [showError, setShowError] = useState(false);
+
+    const [showCityError, setShowCityError] = useState(false);
+    const [showAddressError, setShowAddressError] = useState(false);
+    const [showPostalCodeError, setShowPostalCodeError] = useState(false);
+    const [showCountryAlert, setShowCountryAlert] = useState(false);
 
     const checkEmail = (email: string) => {
         // eslint-disable-next-line no-useless-escape
@@ -60,12 +72,20 @@ const Register = () => {
         return age;
     };
 
+    const checkPostalCode = (postalCode: string) => {
+        const re = /^[0-9]{4}-[0-9]{3}$/;
+        return re.test(postalCode);
+    };
+
     const disableAlerts = () => {
         setShowEmailAlert(false);
         setShowPassAlert(false);
         setShowPass2Alert(false);
         setShowPhoneAlert(false);
         setShowOver18Alert(false);
+        setShowCityError(false);
+        setShowAddressError(false);
+        setShowPostalCodeError(false);
     };
 
     const handleRegisto = async (e) => {
@@ -85,10 +105,23 @@ const Register = () => {
         } else if (checkOver18(birth_date) < 18) {
             setShowOver18Alert(true);
             return;
+        } else if (city === '') {
+            setShowCityError(true);
+            return;
+        } else if (address === '') {
+            setShowAddressError(true);
+            return;
+        } else if (checkPostalCode(postlaCode)) {
+            setShowPostalCodeError(true);
+            return;
+        } else if (country === '') {
+            setShowCountryAlert(true);
+            return;
         } else {
             disableAlerts();
-            const data = new FormData(e.target);
+            let data = new FormData(e.target);
             console.log('Body:', data);
+            data.set('client_fields.demographics.address.country', country);
 
             try {
                 const response = await registerUser(data);
@@ -243,19 +276,69 @@ const Register = () => {
                         />
                     </LocalizationProvider>
                     {/* ----------- ADDRESS ---------------- */}
-                    <TextField
-                        variant="standard"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="client_fields.demographics.address"
-                        label="Morada"
-                        type="text"
-                        id="address"
-                        autoComplete="address"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                    />
+                    <Stack
+                        direction={{ xs: 'column', sm: 'row' }}
+                        spacing={{ xs: 1, sm: 2 }}
+                        sx={{ marginTop: 2 }}>
+                        <CountrySelect
+                            selection={country}
+                            setSelection={setCountry}
+                            sx={{ marginTop: '1rem', flex: 1 }}
+                            showCountryAlert={showCountryAlert}
+                        />
+                        <TextField
+                            variant="standard"
+                            margin="normal"
+                            label="Cidade"
+                            type="text"
+                            id="city"
+                            name="client_fields.demographics.address.city"
+                            error={showCityError}
+                            helperText={showCityError ? 'Cidade Inválida' : ' '}
+                            autoComplete="city"
+                            value={city}
+                            sx={{ maxWidth: { sx: '100%', sm: '40%' } }}
+                            onChange={(e) => setCity(e.target.value)}
+                        />
+                    </Stack>
+                    <Stack
+                        direction={{ xs: 'column', sm: 'row' }}
+                        spacing={{ xs: 1, sm: 2 }}
+                        sx={{ marginBottom: 1, marginTop: 2 }}>
+                        <TextField
+                            variant="standard"
+                            margin="normal"
+                            label="Morada"
+                            type="text"
+                            name="client_fields.demographics.address.street"
+                            fullWidth
+                            error={showAddressError}
+                            helperText={
+                                showAddressError ? 'Morada Inválida' : ' '
+                            }
+                            id="address"
+                            autoComplete="address"
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                        />
+                        <TextField
+                            variant="standard"
+                            margin="normal"
+                            label="Código Postal"
+                            type="text"
+                            name="client_fields.demographics.address.postal_code"
+                            error={showPostalCodeError}
+                            helperText={
+                                showPostalCodeError
+                                    ? 'Código Postal Inválido'
+                                    : ' '
+                            }
+                            id="postalCode"
+                            autoComplete="postalCode"
+                            value={postlaCode}
+                            onChange={(e) => setPostalCode(e.target.value)}
+                        />
+                    </Stack>
                     {/* ----------- PHONE NUMBER ---------------- */}
                     {showPhoneAlert && (
                         <Alert

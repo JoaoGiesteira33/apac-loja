@@ -12,7 +12,7 @@ import ProfileInfo from './pages/Profile/ProfileInfo';
 import ProfileIndex from './pages/Profile/ProfileIndex';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { amber, blue, deepOrange, grey } from '@mui/material/colors';
-import { IconButton, PaletteMode } from '@mui/material';
+import { IconButton, PaletteMode, CircularProgress, Box } from '@mui/material';
 import { CssBaseline } from '@mui/material/';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -219,7 +219,19 @@ function App() {
                     ) : (
                         <></>
                     )}
-                    <Suspense fallback={<p>Loading...</p>}>
+                    <Suspense
+                        fallback={
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    my: 10,
+                                }}
+                                component="div">
+                                <CircularProgress />
+                            </Box>
+                        }>
                         <Routes>
                             {/* <Suspense fallback={<Loading />}> *criar este componente depois* */}
                             {routes.map((route, index) => (
@@ -245,7 +257,6 @@ function App() {
                     ) : (
                         <></>
                     )}
-                    {/*</ThemeProvider>*/}
                 </div>
             </ThemeProvider>
         </ColorModeContext.Provider>
