@@ -59,7 +59,7 @@ const CartDetails = () => {
                     justifyContent: 'space-between',
                     width: '100%',
                 }}>
-                <Grid item xs={12} sm={12} md={8}>
+                <Grid xs={12} sm={12} md={8}>
                     <Box component="div" className="flex justify-between my-4">
                         <Typography variant="h5" className="font-poppins">
                             Carrinho de compras
@@ -96,7 +96,7 @@ const CartDetails = () => {
                                         }}>
                                         <TableCell component="th" scope="row">
                                             <Grid container spacing={2}>
-                                                <Grid item xs={3}>
+                                                <Grid xs={3}>
                                                     <img
                                                         src={
                                                             product.thumbnailPhoto
@@ -105,7 +105,7 @@ const CartDetails = () => {
                                                         className="object-cover w-16 h-16 rounded-sm"
                                                     />
                                                 </Grid>
-                                                <Grid item xs={8}>
+                                                <Grid xs={8}>
                                                     {product.title}
                                                 </Grid>
                                             </Grid>
@@ -133,7 +133,6 @@ const CartDetails = () => {
                     </TableContainer>
                 </Grid>
                 <Grid
-                    item
                     xs={12}
                     sm={12}
                     md={4}
