@@ -14,11 +14,6 @@ module.exports.getOrderInfo = function (id) {
 
 //      - createOrder
 module.exports.createOrder = function (data) {
-    data._client = mongoose.Types.ObjectId(data._client);
-    for(let i=0; i<data.shipments.length; i++){
-        data.shipments[i]._seller = mongoose.Types.ObjectId(data.shipments[i]._seller);
-        data.shipments[i]._product = mongoose.Types.ObjectId(data.shipments[i]._product);
-    }
     return Order.create(data)
         .then((info) => {
             return info;
