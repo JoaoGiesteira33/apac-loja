@@ -48,7 +48,7 @@ function getDateTime() {
 }
 
 function isAdmin(req, res, next) {
-	var myToken = req.query.token || req.body.token || req.cookies.token
+	var myToken = req.query.token// || req.body.token || req.cookies.token
 	if (myToken) {
 		jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
 			if (e) {
@@ -72,7 +72,7 @@ function isAdmin(req, res, next) {
 }
 
 function hasAccess(req, res, next) {
-	var myToken = req.query.token || req.body.token || req.cookies.token
+	var myToken = req.query.token// || req.body.token || req.cookies.token
 	if (myToken) {
 		jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
 			if (e) {
@@ -92,7 +92,7 @@ function hasAccess(req, res, next) {
 }
 
 function isMe(req, res, next) {
-	var myToken = req.query.token || req.body.token || req.cookies.token
+	var myToken = req.query.token// || req.body.token || req.cookies.token
 	if (myToken) {
 			jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
 				me = req.params.username || req.body.username
@@ -116,7 +116,7 @@ function isMe(req, res, next) {
 }
 
 function isMeOrAdmin(req, res, next){
-	var myToken = req.query.token  || req.body.token || req.cookies.token
+	var myToken = req.query.token// || req.body.token || req.cookies.token
 
 	if (myToken) {
 		jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {

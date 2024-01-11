@@ -8,8 +8,8 @@ const middleware = require('./myMiddleware')
 // ---------------------------------------------
 
 // GET Order Info
-router.get('/:id', middleware.fieldSelector, function (req, res, next) {
-    controllerOrder.getOrderInfo(req.params.id)
+router.get('/:id', middleware.expandExtractor, middleware.fieldSelector, function (req, res, next) {
+    controllerOrder.getOrderInfo(req.params.id, req.expand || "")
         .then((info) => {
             res.jsonp(info);
         })
@@ -52,8 +52,8 @@ router.delete('/:id', function (req, res, next) {
 });
 
 // GET Orders
-router.get('/', middleware.extractFilters, middleware.fieldSelector, function (req, res, next) {
-    controllerOrder.getOrders(req.filters, req.fields, req.query.page || 0, req.query.limit || 28)
+router.get('/', middleware.expandExtractor, middleware.extractFilters, middleware.fieldSelector, function (req, res, next) {
+    controllerOrder.getOrders(req.filters, req.fields, req.query.page || 0, req.query.limit || 28, req.expand || "")
         .then((info) => {
             res.jsonp(info);
         })

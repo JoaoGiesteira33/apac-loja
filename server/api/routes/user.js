@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const controllerUser = require('../controllers/user');
-const { isAdmin, isMeOrAdmin } = require('../utils/utils');
+const { /*isAdmin,*/ isMeOrAdmin } = require('../utils/utils');
 
 const middleware = require('./myMiddleware')
 
@@ -11,8 +11,8 @@ const middleware = require('./myMiddleware')
 //Basic Methods
 
 // GET Client Info
-router.get('/client/:id', isMeOrAdmin, middleware.extractFilters, middleware.fieldSelector, function (req, res) {
-    controllerUser.getUserInfo(req.params.id)
+router.get('/client/:id', isMeOrAdmin, middleware.expandExtractor, middleware.extractFilters, middleware.fieldSelector, function (req, res) {
+    controllerUser.getUserInfo(req.params.id, req.expand || "")
         .then((info) => {
             res.status(200).jsonp(info); 
         })
@@ -25,10 +25,10 @@ router.get('/client/:id', isMeOrAdmin, middleware.extractFilters, middleware.fie
 router.post('/client', function (req, res) {
     controllerUser.createUser(req.body)
         .then((info) => {
-            res.jsonp(info);
+            res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(400).jsonp(error);
         });
 });
 
@@ -56,9 +56,9 @@ router.delete('/client/:id', isMeOrAdmin, function (req, res) {
 
 
 //GET Clients
-router.get('/clients', isAdmin, middleware.extractFilters, middleware.fieldSelector, function (req, res) {
+router.get('/clients', isAdmin, middleware.expandExtractor, middleware.extractFilters, middleware.fieldSelector, function (req, res) {
     req.filters.role = "client";
-    controllerUser.getUsers(req.filters, req.fields, req.query.page || 0)
+    controllerUser.getUsers(req.filters, req.fields, req.query.page || 0, req.query.limit || 28, req.expand || "")
         .then((info) => {
             res.jsonp(info);
         })
@@ -72,8 +72,8 @@ router.get('/clients', isAdmin, middleware.extractFilters, middleware.fieldSelec
 
 
 // GET Seller Info
-router.get('/seller/:id', isMeOrAdmin, middleware.fieldSelector, function (req, res) {
-    controllerUser.getUserInfo(req.params.id)
+router.get('/seller/:id', isMeOrAdmin, middleware.expandExtractor, middleware.fieldSelector, function (req, res) {
+    controllerUser.getUserInfo(req.params.id, req.expand || "")
         .then((info) => {
             res.jsonp(info);
         })
@@ -116,9 +116,9 @@ router.delete('/seller/:id', isMeOrAdmin, function (req, res) {
 });
 
 //GET Sellers
-router.get('/sellers', isAdmin, middleware.extractFilters, middleware.fieldSelector, function (req, res) {
+router.get('/sellers', isAdmin, middleware.expandExtractor, middleware.extractFilters, middleware.fieldSelector, function (req, res) {
     req.filters.role = "seller";
-    controllerUser.getUsers(req.filters, req.fields, req.query.page || 0, req.query.limit || 28)
+    controllerUser.getUsers(req.filters, req.fields, req.query.page || 0, req.query.limit || 28, req.expand || "")
         .then((info) => {
             res.jsonp(info);
         })
@@ -130,13 +130,13 @@ router.get('/sellers', isAdmin, middleware.extractFilters, middleware.fieldSelec
 // ----------------------ANY USER-----------------------
 
 // GET User Info
-router.get('/:id', isMeOrAdmin, middleware.fieldSelector, function (req, res) {
-    controllerUser.getUserInfo(req.params.id)
+router.get('/:id', isMeOrAdmin, middleware.expandExtractor, middleware.fieldSelector, function (req, res) {
+    controllerUser.getUserInfo(req.params.id, req.expand || "")
         .then((info) => {
-            res.jsonp(info);
+            res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(400).jsonp(error);
         });
 });
 
@@ -144,10 +144,10 @@ router.get('/:id', isMeOrAdmin, middleware.fieldSelector, function (req, res) {
 router.post('/', function (req, res) {
     controllerUser.createUser(req.body)
         .then((info) => {
-            res.jsonp(info);
+            res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(400).jsonp(error);
         });
 });
 
@@ -166,16 +166,16 @@ router.put('/:id', isMeOrAdmin, function (req, res) {
 router.delete('/:id', isMeOrAdmin, function (req, res) {
     controllerUser.deleteUser(req.params.id)
         .then((info) => {
-            res.jsonp(info);
+            res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(400).jsonp(error);
         });
 });
 
 
-router.get('/', isAdmin, middleware.extractFilters, middleware.fieldSelector, function (req, res) {
-    controllerUser.getUsers(req.filters, req.fields, req.query.page || 0, req.query.limit || 28)
+router.get('/', isAdmin, middleware.expandExtractor, middleware.extractFilters, middleware.fieldSelector, function (req, res) {
+    controllerUser.getUsers(req.filters, req.fields, req.query.page || 0, req.query.limit || 28, req.expand || "")
         .then((info) => {
             res.jsonp(info);
         })

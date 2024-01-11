@@ -59,7 +59,25 @@ router.post('/admin/registo', isAdmin, function (req, res) {
 
 				axios.post(API_URL_USER, data)
 					.then(response => {
-						res.status(201).jsonp({ message: "OK" })
+						if (response.status != 200) {
+							//apagar do login !!!
+							controllerLogin.deleteLogin(u.username)
+								.then(d => {
+									if (d && d.ok == 1 && d.deletedCount == 1) {
+										res.status(400).jsonp({ error: "Erro na criação do utilizador: " + response.body })
+									}
+									else {
+										console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + response.body)
+										res.status(400).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+									}
+								})
+								.catch(errorr => {
+									console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror1: " + errorr + "\nerror2: " + response.body)
+									res.status(401).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+								})
+						}
+						else
+							res.status(201).jsonp({ message: "OK" })
 					})
 					.catch(error => {
 						//apagar do login !!!
@@ -69,10 +87,12 @@ router.post('/admin/registo', isAdmin, function (req, res) {
 									res.status(400).jsonp({ error: "Erro na criação do utilizador: " + error })
 								}
 								else {
+									console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id)
 									res.status(400).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
 								}
 							})
 							.catch(errorr => {
+								console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + errorr)
 								res.status(401).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
 							})
 					})
@@ -110,7 +130,25 @@ router.post('/registo', function (req, res) { // usar um chapta para verificar s
 				// fazer o registo na outra DB
 				axios.post(API_URL_USER + '/client', data)
 					.then(response => {
-						res.status(200).jsonp({ message: "OK" })
+						if (response.status != 200) {
+							//apagar do login !!!
+							controllerLogin.deleteLogin(u.username)
+								.then(d => {
+									if (d && d.ok == 1 && d.deletedCount == 1) {
+										res.status(400).jsonp({ error: "Erro na criação do utilizador: " + response.body })
+									}
+									else {
+										console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + response.body)
+										res.status(400).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+									}
+								})
+								.catch(errorr => {
+									console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror1: " + errorr + "\nerror2: " + response.body)
+									res.status(401).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+								})
+						}
+						else
+							res.status(200).jsonp({ message: "OK" })
 					})
 					.catch(error => {
 						//apagar do login !!!
@@ -120,10 +158,12 @@ router.post('/registo', function (req, res) { // usar um chapta para verificar s
 									res.status(400).jsonp({ error: "Erro na criação do utilizador: " + error })
 								}
 								else {
+									console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id)
 									res.status(400).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
 								}
 							})
 							.catch(errorr => {
+								console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + errorr)
 								res.status(401).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
 							})
 					})
@@ -298,20 +338,64 @@ router.put('/admin/nivel', isAdmin, function (req, res) {
 
 // DELETE login Admin
 router.delete('/admin', isAdmin, function (req, res) {
-	if (req.body.userEmail) { // userEmail tem de ser passado no body
-		controllerLogin.deleteLogin(req.body.userEmail)
-			.then(u => {
-				if (u && u.ok == 1 && u.deletedCount == 1)
-					res.status(200).jsonp({ message: "OK" })
-				else
-					res.status(401).jsonp({ error: "Erro ao processar o pedido" })
+	if (req.body.userEmail && controllerLogin.existsEmail()) {// userEmail tem de ser passado no body
+		controllerLogin.getLogin(req.body.userEmail)
+			.then(l => {
+				axios.get(API_URL_USER + '/' + l._id + '?token=' + req.query.token)
+					.then(u => {
+						axios.delete(API_URL_USER + '/' + l._id + '?token=' + req.query.token)
+							.then(response => {
+								if (response.status == 200) {
+									if (response.body.ok == 1 && response.body.deletedCount == 1) {
+										controllerLogin.deleteLogin(req.body.userEmail)
+											.then(del => {
+												if (del && del.ok == 1 && del.deletedCount == 1)
+													res.status(200).jsonp({ message: "OK" })
+												else {
+													// adicionar o user de novo !!!!
+													axios.post(API_URL_USER, u.body)
+														.then(r => {
+															if (r.status != 200) {
+																console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + r.body)
+																res.status(400).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+															}
+															else
+																res.status(401).jsonp({ error: "Erro ao processar o pedido" })
+														})
+														.catch(error => {
+															console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + error)
+															res.status(401).jsonp({ error: "Erro ao processar o pedido" })
+														})
+
+													res.status(401).jsonp({ error: "Erro ao processar o pedido" })
+												}
+											})
+											.catch(erro => {
+												res.status(401).jsonp({ error: "Erro na remoção do utilizador: " + erro })
+											})
+									}
+									else {
+										res.status(401).jsonp({ error: "Erro ao processar o pedido, nao apagou" })
+									}
+								}
+								else {
+									res.status(401).jsonp({ error: "Erro ao processar o pedido. Erro: " + response.body })
+								}
+							})
+							.catch(err => {
+								res.status(401).jsonp({ error: "Erro na remoção do utilizador: " + err })
+							})
+					})
+					.catch(er => {
+						res.status(401).jsonp({ error: "Erro na obtenção do user: " + er })
+					})
 			})
-			.catch(erro => {
-				res.status(401).jsonp({ error: "Erro na remoção do utilizador: " + erro })
+			.catch(e => {
+				res.status(401).jsonp({ error: "Erro na obtenção do login: " + e })
 			})
 	}
 	else {
-		res.status(400).jsonp({ error: "Falta de parametros" })
+		res.status(400).jsonp({ error: "Falta de parametros ou email inexistente" })
 	}
 });
 // DELETE login, send email to confirm
@@ -341,23 +425,66 @@ router.post('/apagar-verificar', isMe, function (req, res) { // tem de ter o par
 	controllerLogin.verifyRecoveryCode(req.user, req.body.code) // code tem de ser passado no body
 		.then(b => {
 			if (b) {
-				controllerLogin.deleteLogin(req.user)
-					.then(u => {
-						if (u && u.ok == 1 && u.deletedCount == 1)
-							res.status(200).jsonp({ message: "OK" })
-						else
-							res.status(401).jsonp({ error: "Erro ao processar o pedido" })
+				controllerLogin.getLogin(req.body.userEmail)
+					.then(l => {
+						axios.get(API_URL_USER + '/' + l._id + '?token=' + req.query.token)
+							.then(u => {
+								axios.delete(API_URL_USER + '/' + l._id + '?token=' + req.query.token)
+									.then(response => {
+										if (response.status == 200) {
+											if (response.body.ok == 1 && response.body.deletedCount == 1) {
+												controllerLogin.deleteLogin(req.body.userEmail)
+													.then(del => {
+														if (del && del.ok == 1 && del.deletedCount == 1)
+															res.status(200).jsonp({ message: "OK" })
+														else {
+															// adicionar o user de novo !!!!
+															axios.post(API_URL_USER, u.body)
+																.then(r => {
+																	if (r.status != 200) {
+																		console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + r.body)
+																		res.status(400).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+																	}
+																	else
+																		res.status(401).jsonp({ error: "Erro ao processar o pedido" })
+																})
+																.catch(error => {
+																	console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + error)
+																	res.status(401).jsonp({ error: "Erro ao processar o pedido" })
+																})
+
+															res.status(401).jsonp({ error: "Erro ao processar o pedido" })
+														}
+													})
+													.catch(erro => {
+														res.status(401).jsonp({ error: "Erro na remoção do utilizador: " + erro })
+													})
+											}
+											else {
+												res.status(401).jsonp({ error: "Erro ao processar o pedido, nao apagou" })
+											}
+										}
+										else {
+											res.status(401).jsonp({ error: "Erro ao processar o pedido. Erro: " + response.body })
+										}
+									})
+									.catch(err => {
+										res.status(401).jsonp({ error: "Erro na remoção do utilizador: " + err })
+									})
+							})
+							.catch(er => {
+								res.status(401).jsonp({ error: "Erro na obtenção do user: " + er })
+							})
 					})
-					.catch(erro => {
-						res.status(401).jsonp({ error: "Erro na remoção do utilizador: " + erro })
+					.catch(e => {
+						res.status(401).jsonp({ error: "Erro na obtenção do login: " + e })
 					})
-			}
-			else {
+			} else {
 				res.status(401).jsonp({ error: "Invalid code!" })
 			}
 		})
-		.catch(erro => {
-			res.status(403).jsonp({ error: "Erro na verificação do código: " + erro })
+		.catch(eror => {
+			res.status(403).jsonp({ error: "Erro na verificação do código: " + eror })
 		})
 });
 

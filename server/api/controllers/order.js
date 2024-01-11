@@ -2,8 +2,8 @@ const Order = require('../models/order');
 
 // METHODS:
 //      - getOrderInfo
-module.exports.getOrderInfo = function (id) {
-    return Order.findOne({ _id: id })
+module.exports.getOrderInfo = function (id, expand) {
+    return Order.findOne({ _id: id }).populate(expand)
         .then((info) => {
             return info;
         })
@@ -14,11 +14,6 @@ module.exports.getOrderInfo = function (id) {
 
 //      - createOrder
 module.exports.createOrder = function (data) {
-    data._client = mongoose.Types.ObjectId(data._client);
-    for(let i=0; i<data.shipments.length; i++){
-        data.shipments[i]._seller = mongoose.Types.ObjectId(data.shipments[i]._seller);
-        data.shipments[i]._product = mongoose.Types.ObjectId(data.shipments[i]._product);
-    }
     return Order.create(data)
         .then((info) => {
             return info;
@@ -51,9 +46,9 @@ module.exports.deleteOrder = function (id) {
 };
 
 //      - getOrders
-module.exports.getOrders = function (filters, fields, page, limit) {
+module.exports.getOrders = function (filters, fields, page, limit, expand) {
     return Promise.all([
-        Order.find(filters, fields).sort({_id:'asc'}).skip(page * limit).limit(limit),
+        Order.find(filters, fields).sort({_id:'asc'}).skip(page * limit).limit(limit).populate(expand),
         Order.countDocuments(filters)
     ])
     .then(([orders, count]) => {
