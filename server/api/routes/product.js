@@ -9,8 +9,8 @@ const middleware = require('./myMiddleware')
 // ---------------------------------------------
 
 // GET Product Info
-router.get('/:id', middleware.fieldSelector, /*controllerAuth.hasAccess,*/ function (req, res, next) {
-    controllerProduct.getProductInfo(req.params.id)
+router.get('/:id', middleware.expandExtractor, middleware.fieldSelector, /*controllerAuth.hasAccess,*/ function (req, res, next) {
+    controllerProduct.getProductInfo(req.params.id, req.expand || "")
         .then((info) => {
             res.jsonp(info);
         })
@@ -53,8 +53,8 @@ router.delete('/:id', /*controllerAuth.isAdmin,*/ function (req, res, next) {
 });
 
 // GET Products
-router.get('/', middleware.extractFilters, middleware.fieldSelector, /*controllerAuth.hasAccess,*/ function (req, res, next) {
-    controllerProduct.getProducts(req.filters, req.fields, req.query.page || 0, req.query.limit || 28)
+router.get('/', middleware.expandExtractor, middleware.extractFilters, middleware.fieldSelector, /*controllerAuth.hasAccess,*/ function (req, res, next) {
+    controllerProduct.getProducts(req.filters, req.fields, req.query.page || 0, req.query.limit || 28, req.expand || "")
         .then((info) => {
             res.jsonp(info);
         })

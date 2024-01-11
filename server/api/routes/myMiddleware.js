@@ -49,5 +49,13 @@ function extractFilters(req, res, next) {
     next()
 }
 
+function expandExtractor(req, res, next) {
+    let expand = req.query.expand
+    if (expand) {
+        req.expand = expand.split(',')
+    }
+    next()
+}
 
-module.exports = {fieldSelector, extractFilters}
+
+module.exports = {fieldSelector, extractFilters, expandExtractor}
