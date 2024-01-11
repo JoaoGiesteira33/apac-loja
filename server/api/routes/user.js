@@ -25,10 +25,10 @@ router.get('/client/:id', isMeOrAdmin, middleware.extractFilters, middleware.fie
 router.post('/client', function (req, res) {
     controllerUser.createUser(req.body)
         .then((info) => {
-            res.jsonp(info);
+            res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(400).jsonp(error);
         });
 });
 
@@ -133,10 +133,10 @@ router.get('/sellers', isAdmin, middleware.extractFilters, middleware.fieldSelec
 router.get('/:id', isMeOrAdmin, middleware.fieldSelector, function (req, res) {
     controllerUser.getUserInfo(req.params.id)
         .then((info) => {
-            res.jsonp(info);
+            res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(400).jsonp(error);
         });
 });
 
@@ -144,10 +144,10 @@ router.get('/:id', isMeOrAdmin, middleware.fieldSelector, function (req, res) {
 router.post('/', function (req, res) {
     controllerUser.createUser(req.body)
         .then((info) => {
-            res.jsonp(info);
+            res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(400).jsonp(error);
         });
 });
 
@@ -166,10 +166,10 @@ router.put('/:id', isMeOrAdmin, function (req, res) {
 router.delete('/:id', isMeOrAdmin, function (req, res) {
     controllerUser.deleteUser(req.params.id)
         .then((info) => {
-            res.jsonp(info);
+            res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(400).jsonp(error);
         });
 });
 
