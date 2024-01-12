@@ -1,5 +1,7 @@
 const Order = require('../models/order');
 
+const utils = require('../utils/utils');
+
 // METHODS:
 //      - getOrderInfo
 module.exports.getOrderInfo = function (id, expand) {
@@ -17,9 +19,17 @@ module.exports.createOrder = function (data) {
     });
 };
 
-//      - updateOrderInfo
+//     - replaceOrderInfo
+module.exports.replaceOrderInfo = function (id, data) {
+    return Order.replaceOne({ _id: id }, data).then((info) => {
+        return info;
+    });
+};
+
+//      - updateOrderInfo || this is used for patch request
 module.exports.updateOrderInfo = function (id, data) {
-    return Order.updateOne({ _id: id }, data).then((info) => {
+    let dotData = utils.dotify(data);
+    return Order.updateOne({ _id: id }, { $set: dotData }).then((info) => {
         return info;
     });
 };

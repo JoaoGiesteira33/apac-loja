@@ -36,8 +36,20 @@ router.post('/', function (req, res, next) {
         });
 });
 
-// UPDATE Order Info
+// PUT Order Info
 router.put('/:id', function (req, res, next) {
+    controllerOrder
+        .replaceOrderInfo(req.params.id, req.body)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((error) => {
+            res.jsonp(error);
+        });
+});
+
+// PATCH Order Info
+router.patch('/:id', function (req, res, next) {
     controllerOrder
         .updateOrderInfo(req.params.id, req.body)
         .then((info) => {

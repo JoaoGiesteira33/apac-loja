@@ -13,7 +13,7 @@ router.get(
     '/:id',
     middleware.expandExtractor,
     middleware.fieldSelector,
-    /*controllerAuth.hasAccess,*/ function (req, res, next) {
+    function (req, res, next) {
         controllerProduct
             .getProductInfo(req.params.id, req.expand || '')
             .then((info) => {
@@ -26,49 +26,52 @@ router.get(
 );
 
 // POST Product Info
-router.post(
-    '/',
-    /*controllerAuth.isAdmin,*/ function (req, res, next) {
-        controllerProduct
-            .createProduct(req.body)
-            .then((info) => {
-                res.jsonp(info);
-            })
-            .catch((error) => {
-                res.jsonp(error);
-            });
-    }
-);
+router.post('/', function (req, res, next) {
+    controllerProduct
+        .createProduct(req.body)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((error) => {
+            res.jsonp(error);
+        });
+});
 
-// UPDATE Product Info
-router.put(
-    '/:id',
-    /*controllerAuth.isAdmin,*/ function (req, res, next) {
-        controllerProduct
-            .updateProductInfo(req.params.id, req.body)
-            .then((info) => {
-                res.jsonp(info);
-            })
-            .catch((error) => {
-                res.jsonp(error);
-            });
-    }
-);
+// PUT Product Info
+router.put('/:id', function (req, res, next) {
+    controllerProduct
+        .replaceProductInfo(req.params.id, req.body)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((error) => {
+            res.jsonp(error);
+        });
+});
+
+// PATCH Product Info
+router.patch('/:id', function (req, res, next) {
+    controllerProduct
+        .updateProductInfo(req.params.id, req.body)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((error) => {
+            res.jsonp(error);
+        });
+});
 
 // DELETE Product Info
-router.delete(
-    '/:id',
-    /*controllerAuth.isAdmin,*/ function (req, res, next) {
-        controllerProduct
-            .deleteProduct(req.params.id)
-            .then((info) => {
-                res.jsonp(info);
-            })
-            .catch((error) => {
-                res.jsonp(error);
-            });
-    }
-);
+router.delete('/:id', function (req, res, next) {
+    controllerProduct
+        .deleteProduct(req.params.id)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((error) => {
+            res.jsonp(error);
+        });
+});
 
 // GET Products
 router.get(
@@ -76,7 +79,7 @@ router.get(
     middleware.expandExtractor,
     middleware.extractFilters,
     middleware.fieldSelector,
-    /*controllerAuth.hasAccess,*/ function (req, res, next) {
+    function (req, res, next) {
         controllerProduct
             .getProducts(
                 req.filters,

@@ -48,7 +48,7 @@ function getDateTime() {
 }
 
 function isAdmin(req, res, next) {
-    var myToken = req.query.token; // || req.body.token || req.cookies.token
+    var myToken = req.query.token || req.cookies.token;
     if (myToken) {
         jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
             if (e) {
@@ -69,7 +69,7 @@ function isAdmin(req, res, next) {
 }
 
 function hasAccess(req, res, next) {
-    var myToken = req.query.token; // || req.body.token || req.cookies.token
+    var myToken = req.query.token || req.cookies.token;
     if (myToken) {
         jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
             if (e) {
@@ -87,7 +87,7 @@ function hasAccess(req, res, next) {
 }
 
 function isMe(req, res, next) {
-    var myToken = req.query.token; // || req.body.token || req.cookies.token
+    var myToken = req.query.token || req.cookies.token;
     if (myToken) {
         jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
             me = req.params.username || req.body.username;
@@ -108,7 +108,7 @@ function isMe(req, res, next) {
 }
 
 function isMeOrAdmin(req, res, next) {
-    var myToken = req.query.token; // || req.body.token || req.cookies.token
+    var myToken = req.query.token || req.cookies.token;
 
     if (myToken) {
         jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
@@ -130,6 +130,31 @@ function isMeOrAdmin(req, res, next) {
     }
 }
 
+/**
+ * Converts an object to a dotified object.
+ *
+ * @param obj         Object
+ * @returns           Dotified Object
+ */
+function dotify(obj) {
+    const res = {};
+
+    function recurse(obj, current) {
+        for (const key in obj) {
+            const value = obj[key];
+            const newKey = current ? current + '.' + key : key;
+            if (value && typeof value === 'object') {
+                recurse(value, newKey);
+            } else {
+                res[newKey] = value;
+            }
+        }
+    }
+
+    recurse(obj);
+    return res;
+}
+
 module.exports = {
     send_email,
     getDateTime,
@@ -137,4 +162,5 @@ module.exports = {
     hasAccess,
     isMe,
     isMeOrAdmin,
+    dotify,
 };
