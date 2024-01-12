@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 
 import Footer from './components/pintar_o_7/Footer';
 import ReactNavbar from './components/pintar_o_7/ReactNavbar';
@@ -19,6 +19,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { input } from '@material-tailwind/react';
 import { rootCertificates } from 'tls';
 import ProfileOrderHistory from './pages/Profile/ProfileOrderHistory';
+import { useJwt, isExpired } from 'react-jwt';
 
 // dynamically load components as they are needed
 const InitialPage = React.lazy(() => import('./pages/pintar_o_7/Initial'));
@@ -99,9 +100,7 @@ function App() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const [loggedIn, setLoggedIn] = React.useState<boolean | null>(
-        localStorage.getItem('loggedIn') ? true : false
-    );
+    const [loggedIn, setLoggedIn] = React.useState<boolean>(false);
 
     const colorMode = React.useMemo(
         () => ({
@@ -149,7 +148,7 @@ function App() {
         },
         {
             path: '/profile',
-            element: <ProfileIndex logout={setLoggedIn} />,
+            element: <ProfileIndex setLoggedIn={setLoggedIn} />,
             requireAuth: true,
         },
         {
@@ -188,6 +187,20 @@ function App() {
         () => createTheme(getDesignTokens(mode)),
         [mode]
     );
+
+    useEffect(() => {
+        let token = localStorage.getItem('token');
+        console.log(token);
+        if (token) {
+            if (isExpired(token)) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                localStorage.removeItem('loggedIn');
+            } else if (localStorage.getItem('loggedIn')) {
+                setLoggedIn(true);
+            }
+        }
+    }, []);
 
     return (
         <ColorModeContext.Provider value={colorMode}>

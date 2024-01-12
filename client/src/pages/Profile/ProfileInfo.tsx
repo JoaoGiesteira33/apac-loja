@@ -18,49 +18,81 @@ const TODAY_MINUS_18_YEARS: Dayjs = dayjs().subtract(18, 'year');
 export default function ProfileInfo() {
     const userInfo = JSON.parse(localStorage.getItem('user') as string);
 
-    const [name, setName] = useState(
-        userInfo.client_fields.demographics.name || ''
-    );
-    const [email, setEmail] = useState(userInfo.email || '');
-    const [country, setCountry] = useState(
-        userInfo.client_fields.demographics.address.country || ''
-    );
-    const [address, setAddress] = useState(
-        userInfo.client_fields.demographics.address.street || ''
-    );
-    const [postalCode, setPostalCode] = useState(
-        userInfo.client_fields.demographics.address.postal_code || ''
-    );
-    const [city, setCity] = useState(
-        userInfo.client_fields.demographics.address.city || ''
-    );
-    const [phone, setPhone] = useState(
-        userInfo.client_fields.demographics.phone || ''
-    );
-    const [birth_date, setBirthDate] = useState<Dayjs | null>(
-        dayjs(userInfo.client_fields.demographics.birth_date)
-    );
+    const [name, setName] = useState(() => {
+        if (userInfo) return userInfo.client_fields.demographics.name;
+        else return '';
+    });
+    const [email, setEmail] = useState(() => {
+        if (userInfo) return userInfo.email;
+        else return '';
+    });
+    const [country, setCountry] = useState(() => {
+        if (userInfo)
+            return userInfo.client_fields.demographics.address.country;
+        else return '';
+    });
+    const [address, setAddress] = useState(() => {
+        if (userInfo) return userInfo.client_fields.demographics.address.street;
+        else return '';
+    });
+    const [postalCode, setPostalCode] = useState(() => {
+        if (userInfo)
+            return userInfo.client_fields.demographics.address.postal_code;
+        else return '';
+    });
+    const [city, setCity] = useState(() => {
+        if (userInfo) return userInfo.client_fields.demographics.address.city;
+        else return '';
+    });
+    const [phone, setPhone] = useState(() => {
+        if (userInfo) return userInfo.client_fields.demographics.phone;
+        else return '';
+    });
+    const [birth_date, setBirthDate] = useState(() => {
+        if (userInfo) {
+            return dayjs(userInfo.client_fields.demographics.birth_date);
+        } else {
+            return dayjs();
+        }
+    });
 
-    const originalName = useRef(userInfo.client_fields.demographics.name || '');
-    const originalEmail = useRef(userInfo.email || '');
-    const originalCountry = useRef(
-        userInfo.client_fields.demographics.address.country || ''
-    );
-    const originalAddress = useRef(
-        userInfo.client_fields.demographics.address.street || ''
-    );
-    const originalPostalCode = useRef(
-        userInfo.client_fields.demographics.address.postal_code || ''
-    );
-    const originalCity = useRef(
-        userInfo.client_fields.demographics.address.city || ''
-    );
-    const originalPhone = useRef(
-        userInfo.client_fields.demographics.phone || ''
-    );
-    const originalBirthDate = useRef(
-        dayjs(userInfo.client_fields.demographics.birth_date) || dayjs()
-    );
+    const originalName = useRef(() => {
+        if (userInfo) return userInfo.client_fields.demographics.name;
+        else return '';
+    });
+    const originalEmail = useRef(() => {
+        if (userInfo) return userInfo.email;
+        else return '';
+    });
+    const originalCountry = useRef(() => {
+        if (userInfo)
+            return userInfo.client_fields.demographics.address.country;
+        else return '';
+    });
+    const originalAddress = useRef(() => {
+        if (userInfo) return userInfo.client_fields.demographics.address.street;
+        else return '';
+    });
+    const originalPostalCode = useRef(() => {
+        if (userInfo)
+            return userInfo.client_fields.demographics.address.postal_code;
+        else return '';
+    });
+    const originalCity = useRef(() => {
+        if (userInfo) return userInfo.client_fields.demographics.address.city;
+        else return '';
+    });
+    const originalPhone = useRef(() => {
+        if (userInfo) return userInfo.client_fields.demographics.phone;
+        else return '';
+    });
+    const originalBirthDate = useRef(() => {
+        if (userInfo) {
+            return dayjs(userInfo.client_fields.demographics.birth_date);
+        } else {
+            return dayjs();
+        }
+    });
 
     const [profileChanged, setProfileChanged] = useState(true);
 
@@ -143,11 +175,6 @@ export default function ProfileInfo() {
         }
         if (hasErrors) return;
     };
-
-    useEffect(() => {
-        console.log(userInfo.client_fields.demographics.address.country);
-        console.log('Country: ', country);
-    }, [country]);
 
     return (
         <Box

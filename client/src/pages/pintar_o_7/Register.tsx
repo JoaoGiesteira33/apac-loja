@@ -111,7 +111,7 @@ const Register = () => {
         } else if (address === '') {
             setShowAddressError(true);
             return;
-        } else if (checkPostalCode(postlaCode)) {
+        } else if (!checkPostalCode(postlaCode)) {
             setShowPostalCodeError(true);
             return;
         } else if (country === '') {
