@@ -26,9 +26,11 @@ module.exports.replaceUserInfo = function (id, data) {
 };
 
 //      - updateUserInfo
-module.exports.updateUserInfo = function (id, data) {
+module.exports.updateUserInfo = function (id, data, op = 'set') {
     let dotData = utils.dotify(data);
-    return User.updateOne({ _id: id }, { $set: dotData }).then((info) => {
+    let updateObj = {};
+    updateObj['$' + op] = dotData;
+    return User.updateOne({ _id: id }, updateObj).then((info) => {
         return info;
     });
 };

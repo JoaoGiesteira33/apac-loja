@@ -27,11 +27,11 @@ module.exports.replaceProductInfo = function (id, data) {
 };
 
 //      - updateProductInfo
-module.exports.updateProductInfo = function (id, data) {
-    console.log(data);
+module.exports.updateProductInfo = function (id, data, op = 'set') {
     let dotData = utils.dotify(data);
-    console.log(dotData);
-    return Product.updateOne({ _id: id }, { $set: dotData }).then((info) => {
+    let updateObj = {};
+    updateObj['$' + op] = dotData;
+    return Product.updateOne({ _id: id }, updateObj).then((info) => {
         return info;
     });
 };

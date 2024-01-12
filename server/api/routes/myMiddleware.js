@@ -34,7 +34,8 @@ function fieldSelector(req, res, next) {
 // Exemplo: /artist?nome=joao&idade=18
 // campo select é reservado para a seleção de campos
 function extractFilters(req, res, next) {
-    let { select, page, limit, expand, token, ...filters } = req.query || {};
+    let { select, page, limit, expand, token, op, ...filters } =
+        req.query || {};
     // Para cada filtro que é objeto, adicionar um $ ao início
     for (let i in filters) {
         if (typeof filters[i] === 'object') {

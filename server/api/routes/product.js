@@ -52,7 +52,7 @@ router.put('/:id', function (req, res, next) {
 // PATCH Product Info
 router.patch('/:id', function (req, res, next) {
     controllerProduct
-        .updateProductInfo(req.params.id, req.body)
+        .updateProductInfo(req.params.id, req.body, req.query.op || 'set')
         .then((info) => {
             res.jsonp(info);
         })

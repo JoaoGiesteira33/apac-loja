@@ -56,7 +56,7 @@ router.put('/client/:id', isMeOrAdmin, function (req, res) {
 // PATCH Client Info
 router.patch('/client/:id', isMeOrAdmin, function (req, res) {
     controllerUser
-        .updateUserInfo(req.params.id, req.body)
+        .updateUserInfo(req.params.id, req.body, req.query.op || 'set')
         .then((info) => {
             res.jsonp(info);
         })
@@ -150,7 +150,7 @@ router.put('/seller/:id', isMeOrAdmin, function (req, res) {
 // PATCH Seller Info
 router.patch('/seller/:id', isMeOrAdmin, function (req, res) {
     controllerUser
-        .updateUserInfo(req.params.id, req.body)
+        .updateUserInfo(req.params.id, req.body, req.query.op || 'set')
         .then((info) => {
             res.jsonp(info);
         })
@@ -244,7 +244,7 @@ router.put('/:id', isMeOrAdmin, function (req, res) {
 // PATCH User Info
 router.patch('/:id', isMeOrAdmin, function (req, res) {
     controllerUser
-        .updateUserInfo(req.params.id, req.body)
+        .updateUserInfo(req.params.id, req.body, req.query.op || 'set')
         .then((info) => {
             res.jsonp(info);
         })
