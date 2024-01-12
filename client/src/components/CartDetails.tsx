@@ -19,15 +19,17 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import { useState } from 'react';
 import { CartProductType } from '../types/cart';
 import useCart from '../hooks/useCart';
+import { useNavigate } from 'react-router-dom';
 
 const CartDetails = () => {
     const { dispatch, totalItems, subTotalPrice, cart, REDUCER_ACTIONS } =
         useCart();
     const products = cart;
+    const navigate = useNavigate();
 
     const [shipping, setShipping] = useState('Standard');
     const [subtotal, setSubtotal] = useState(100);
-    const [tax, setTax] = useState(15); // %
+    const [tax, setTax] = useState(15); // TODO get tax from backend
 
     const total =
         subtotal + (tax / 100) * subtotal + (shipping === 'STANDARD' ? 5 : 10);
@@ -38,8 +40,8 @@ const CartDetails = () => {
 
     const handleCheckout = () => {
         // TODO handle checkout
-
-        dispatch({ type: REDUCER_ACTIONS.SUBMIT });
+        navigate('/checkout');
+        //dispatch({ type: REDUCER_ACTIONS.SUBMIT });
     };
 
     const handleClearCart = () => {
@@ -59,7 +61,7 @@ const CartDetails = () => {
                     justifyContent: 'space-between',
                     width: '100%',
                 }}>
-                <Grid item xs={12} sm={12} md={8}>
+                <Grid xs={12} sm={12} md={8}>
                     <Box component="div" className="flex justify-between my-4">
                         <Typography variant="h5" className="font-poppins">
                             Carrinho de compras
@@ -76,13 +78,17 @@ const CartDetails = () => {
                             aria-label="product table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Produto</TableCell>
+                                    <TableCell>Obra</TableCell>
                                     <TableCell align="right">Preço</TableCell>
                                     <TableCell align="right">Total</TableCell>
                                     <TableCell align="right">
-                                        <button onClick={handleClearCart}>
-                                            Clear
-                                        </button>
+                                        <Button
+                                            title="Clear all"
+                                            variant="text"
+                                            color="error"
+                                            onClick={handleClearCart}>
+                                            X
+                                        </Button>
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
@@ -96,7 +102,7 @@ const CartDetails = () => {
                                         }}>
                                         <TableCell component="th" scope="row">
                                             <Grid container spacing={2}>
-                                                <Grid item xs={3}>
+                                                <Grid xs={3}>
                                                     <img
                                                         src={
                                                             product.thumbnailPhoto
@@ -105,7 +111,7 @@ const CartDetails = () => {
                                                         className="object-cover w-16 h-16 rounded-sm"
                                                     />
                                                 </Grid>
-                                                <Grid item xs={8}>
+                                                <Grid xs={8}>
                                                     {product.title}
                                                 </Grid>
                                             </Grid>
@@ -116,7 +122,7 @@ const CartDetails = () => {
                                         <TableCell align="right">
                                             {product.price * product.quantity}€
                                         </TableCell>
-                                        <TableCell align="right">
+                                        <TableCell align="center">
                                             <button
                                                 onClick={() =>
                                                     handleRemoveProduct(product)
@@ -133,26 +139,33 @@ const CartDetails = () => {
                     </TableContainer>
                 </Grid>
                 <Grid
-                    item
                     xs={12}
                     sm={12}
                     md={4}
                     className="dark:bg-gray-800 rounded-md ">
-                    <Typography
+                    {/*<Typography
                         variant="h6"
                         className="font-poppins"
                         sx={{ marginY: '1rem' }}>
                         Resumo da encomenda
-                    </Typography>
+                                            </Typography>*/}
                     <Box component="div" className="p-5">
                         <Divider sx={{ marginY: '1rem' }} />
 
-                        <Typography
-                            variant="body2"
-                            className="font-poppins"
-                            sx={{ marginBottom: '1rem' }}>
-                            Subtotal: {subTotalPrice}
-                        </Typography>
+                        <Box component="div" className="flex justify-between">
+                            <Typography
+                                variant="body2"
+                                className="font-poppins"
+                                sx={{ marginBottom: '1rem' }}>
+                                Subtotal:
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                className="font-poppins"
+                                sx={{ marginBottom: '1rem' }}>
+                                {subTotalPrice}
+                            </Typography>
+                        </Box>
                         <Typography
                             variant="body2"
                             className="font-poppins"
@@ -182,9 +195,25 @@ const CartDetails = () => {
                             </MenuItem>
                         </Select>
 
-                        <Typography variant="body2" className="font-poppins">
-                            Tax(15%): {tax}€
-                        </Typography>
+                        <Box component="div" className="flex justify-between">
+                            <Typography
+                                variant="body2"
+                                className="font-poppins"
+                                sx={{ marginBottom: '1rem' }}>
+                                IVA(23%): 
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                className="font-poppins"
+                                sx={{ marginBottom: '1rem' }}>
+                                
+                                {new Intl.NumberFormat('pt-PT', {
+                                style: 'currency',
+                                currency: 'EUR',
+                                }).format(tax)}
+                                
+                            </Typography>
+                        </Box>
 
                         <Divider sx={{ marginY: '1rem' }} />
 

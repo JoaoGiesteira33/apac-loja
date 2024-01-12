@@ -29,6 +29,7 @@ const LoginPage = React.lazy(() => import('./pages/pintar_o_7/Login'));
 const RegisterPage = React.lazy(() => import('./pages/pintar_o_7/Register'));
 const ArtistsPage = React.lazy(() => import('./pages/pintar_o_7/Artistas'));
 const CartPage = React.lazy(() => import('./pages/Cart'));
+const CheackoutPage = React.lazy(() => import('./pages/Checkout'));
 const PageNotFound = React.lazy(() => import('./pages/NotFound'));
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
@@ -169,6 +170,11 @@ function App() {
         {
             path: '/cart',
             element: <CartPage />,
+            requireAuth: true,
+        },
+        {
+            path: '/checkout',  // TODO -> ver melhor como funcionam as rotas 
+            element: <CheackoutPage />,
             requireAuth: true,
         },
         {
