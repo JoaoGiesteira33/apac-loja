@@ -3,24 +3,31 @@ const router = express.Router();
 
 const controllerOrder = require('../controllers/order');
 
-const middleware = require('./myMiddleware')
+const middleware = require('./myMiddleware');
 
 // ---------------------------------------------
 
 // GET Order Info
-router.get('/:id', middleware.expandExtractor, middleware.fieldSelector, function (req, res, next) {
-    controllerOrder.getOrderInfo(req.params.id, req.expand || "")
-        .then((info) => {
-            res.jsonp(info);
-        })
-        .catch((error) => {
-            res.jsonp(error);
-        });
-});
+router.get(
+    '/:id',
+    middleware.expandExtractor,
+    middleware.fieldSelector,
+    function (req, res, next) {
+        controllerOrder
+            .getOrderInfo(req.params.id, req.expand || '')
+            .then((info) => {
+                res.jsonp(info);
+            })
+            .catch((error) => {
+                res.jsonp(error);
+            });
+    }
+);
 
 // POST Order Info
 router.post('/', function (req, res, next) {
-    controllerOrder.createOrder(req.body)
+    controllerOrder
+        .createOrder(req.body)
         .then((info) => {
             res.jsonp(info);
         })
@@ -31,7 +38,8 @@ router.post('/', function (req, res, next) {
 
 // UPDATE Order Info
 router.put('/:id', function (req, res, next) {
-    controllerOrder.updateOrderInfo(req.params.id, req.body)
+    controllerOrder
+        .updateOrderInfo(req.params.id, req.body)
         .then((info) => {
             res.jsonp(info);
         })
@@ -42,7 +50,8 @@ router.put('/:id', function (req, res, next) {
 
 // DELETE Order Info
 router.delete('/:id', function (req, res, next) {
-    controllerOrder.deleteOrder(req.params.id)
+    controllerOrder
+        .deleteOrder(req.params.id)
         .then((info) => {
             res.jsonp(info);
         })
@@ -52,14 +61,27 @@ router.delete('/:id', function (req, res, next) {
 });
 
 // GET Orders
-router.get('/', middleware.expandExtractor, middleware.extractFilters, middleware.fieldSelector, function (req, res, next) {
-    controllerOrder.getOrders(req.filters, req.fields, req.query.page || 0, req.query.limit || 28, req.expand || "")
-        .then((info) => {
-            res.jsonp(info);
-        })
-        .catch((error) => {
-            res.jsonp(error);
-        });
-});
+router.get(
+    '/',
+    middleware.expandExtractor,
+    middleware.extractFilters,
+    middleware.fieldSelector,
+    function (req, res, next) {
+        controllerOrder
+            .getOrders(
+                req.filters,
+                req.fields,
+                req.query.page || 0,
+                req.query.limit || 28,
+                req.expand || ''
+            )
+            .then((info) => {
+                res.jsonp(info);
+            })
+            .catch((error) => {
+                res.jsonp(error);
+            });
+    }
+);
 
 module.exports = router;

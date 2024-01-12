@@ -2,7 +2,8 @@ const User = require('../models/user');
 // METHODS:
 //      - getUserInfo
 module.exports.getUserInfo = function (id, expand) {
-    return User.findOne({ _id: id }).populate(expand)
+    return User.findOne({ _id: id })
+        .populate(expand)
         .then((info) => {
             return info;
         })
@@ -44,13 +45,18 @@ module.exports.deleteUser = function (id) {
 //      - getAllUsers
 module.exports.getUsers = function (filters, fields, page, limit, expand) {
     return Promise.all([
-        User.find(filters, fields).sort({_id:'asc'}).skip(page * limit).limit(limit).populate(expand),
-        User.countDocuments(filters)
+        User.find(filters, fields)
+            .sort({ _id: 'asc' })
+            .skip(page * limit)
+            .limit(limit)
+            .populate(expand),
+        User.countDocuments(filters),
     ])
-    .then(([users,count]) => {
-        let hasMore = count > ((page + 1) * limit);
-        return {results: users, hasMore: hasMore};
-    }).catch((error) => {
-        return error;
-    });
+        .then(([users, count]) => {
+            let hasMore = count > (page + 1) * limit;
+            return { results: users, hasMore: hasMore };
+        })
+        .catch((error) => {
+            return error;
+        });
 };

@@ -3,7 +3,8 @@ const Order = require('../models/order');
 // METHODS:
 //      - getOrderInfo
 module.exports.getOrderInfo = function (id, expand) {
-    return Order.findOne({ _id: id }).populate(expand)
+    return Order.findOne({ _id: id })
+        .populate(expand)
         .then((info) => {
             return info;
         })
@@ -25,7 +26,7 @@ module.exports.createOrder = function (data) {
 
 //      - updateOrderInfo
 module.exports.updateOrderInfo = function (id, data) {
-    return Order.updateOne({_id: id}, data)
+    return Order.updateOne({ _id: id }, data)
         .then((info) => {
             return info;
         })
@@ -36,7 +37,7 @@ module.exports.updateOrderInfo = function (id, data) {
 
 //      - deleteOrder
 module.exports.deleteOrder = function (id) {
-    return Order.deleteOne({_id: id})
+    return Order.deleteOne({ _id: id })
         .then((info) => {
             return info;
         })
@@ -48,14 +49,18 @@ module.exports.deleteOrder = function (id) {
 //      - getOrders
 module.exports.getOrders = function (filters, fields, page, limit, expand) {
     return Promise.all([
-        Order.find(filters, fields).sort({_id:'asc'}).skip(page * limit).limit(limit).populate(expand),
-        Order.countDocuments(filters)
+        Order.find(filters, fields)
+            .sort({ _id: 'asc' })
+            .skip(page * limit)
+            .limit(limit)
+            .populate(expand),
+        Order.countDocuments(filters),
     ])
-    .then(([orders, count]) => {
-        let hasMore = count > ((page + 1) * limit);
-        return {results: orders, hasMore: hasMore};
-    })
-    .catch((error) => {
-        return error;
-    });
-}
+        .then(([orders, count]) => {
+            let hasMore = count > (page + 1) * limit;
+            return { results: orders, hasMore: hasMore };
+        })
+        .catch((error) => {
+            return error;
+        });
+};

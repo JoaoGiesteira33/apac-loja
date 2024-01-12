@@ -3,7 +3,8 @@ const Product = require('../models/product');
 // METHODS:
 //      - getProductInfo
 module.exports.getProductInfo = function (id, expand) {
-    return Product.findOne({ _id: id }).populate(expand)
+    return Product.findOne({ _id: id })
+        .populate(expand)
         .then((info) => {
             return info;
         })
@@ -45,14 +46,18 @@ module.exports.deleteProduct = function (id) {
 //      - getProducts
 module.exports.getProducts = function (filters, fields, page, limit, expand) {
     return Promise.all([
-        Product.find(filters, fields).sort({_id:'asc'}).skip(page * limit).limit(limit).populate(expand),
-        Product.countDocuments(filters)
+        Product.find(filters, fields)
+            .sort({ _id: 'asc' })
+            .skip(page * limit)
+            .limit(limit)
+            .populate(expand),
+        Product.countDocuments(filters),
     ])
-    .then(([products,count]) => {
-        let hasMore = count > ((page + 1) * limit);
-        return {results: products, hasMore: hasMore};
-    })
-    .catch((error) => {
-        return error;
-    });
+        .then(([products, count]) => {
+            let hasMore = count > (page + 1) * limit;
+            return { results: products, hasMore: hasMore };
+        })
+        .catch((error) => {
+            return error;
+        });
 };
