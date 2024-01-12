@@ -7,40 +7,25 @@ module.exports.getProductInfo = function (id, expand) {
         .populate(expand)
         .then((info) => {
             return info;
-        })
-        .catch((error) => {
-            return error;
         });
 };
 //      - createProduct
 module.exports.createProduct = function (data) {
-    return Product.create(data)
-        .then((info) => {
-            return info;
-        })
-        .catch((error) => {
-            return error;
-        });
+    return Product.create(data).then((info) => {
+        return info;
+    });
 };
 //      - updateProductInfo
 module.exports.updateProductInfo = function (id, data) {
-    return Product.updateOne({ _id: id }, data)
-        .then((info) => {
-            return info;
-        })
-        .catch((error) => {
-            return error;
-        });
+    return Product.updateOne({ _id: id }, data).then((info) => {
+        return info;
+    });
 };
 //      - deleteProduct
 module.exports.deleteProduct = function (id) {
-    return Product.deleteOne({ _id: id })
-        .then((info) => {
-            return info;
-        })
-        .catch((error) => {
-            return error;
-        });
+    return Product.deleteOne({ _id: id }).then((info) => {
+        return info;
+    });
 };
 
 //      - getProducts
@@ -52,12 +37,8 @@ module.exports.getProducts = function (filters, fields, page, limit, expand) {
             .limit(limit)
             .populate(expand),
         Product.countDocuments(filters),
-    ])
-        .then(([products, count]) => {
-            let hasMore = count > (page + 1) * limit;
-            return { results: products, hasMore: hasMore };
-        })
-        .catch((error) => {
-            return error;
-        });
+    ]).then(([products, count]) => {
+        let hasMore = count > (page + 1) * limit;
+        return { results: products, hasMore: hasMore };
+    });
 };

@@ -7,43 +7,28 @@ module.exports.getOrderInfo = function (id, expand) {
         .populate(expand)
         .then((info) => {
             return info;
-        })
-        .catch((error) => {
-            return error;
         });
 };
 
 //      - createOrder
 module.exports.createOrder = function (data) {
-    return Order.create(data)
-        .then((info) => {
-            return info;
-        })
-        .catch((error) => {
-            return error;
-        });
+    return Order.create(data).then((info) => {
+        return info;
+    });
 };
 
 //      - updateOrderInfo
 module.exports.updateOrderInfo = function (id, data) {
-    return Order.updateOne({ _id: id }, data)
-        .then((info) => {
-            return info;
-        })
-        .catch((error) => {
-            return error;
-        });
+    return Order.updateOne({ _id: id }, data).then((info) => {
+        return info;
+    });
 };
 
 //      - deleteOrder
 module.exports.deleteOrder = function (id) {
-    return Order.deleteOne({ _id: id })
-        .then((info) => {
-            return info;
-        })
-        .catch((error) => {
-            return error;
-        });
+    return Order.deleteOne({ _id: id }).then((info) => {
+        return info;
+    });
 };
 
 //      - getOrders
@@ -55,12 +40,8 @@ module.exports.getOrders = function (filters, fields, page, limit, expand) {
             .limit(limit)
             .populate(expand),
         Order.countDocuments(filters),
-    ])
-        .then(([orders, count]) => {
-            let hasMore = count > (page + 1) * limit;
-            return { results: orders, hasMore: hasMore };
-        })
-        .catch((error) => {
-            return error;
-        });
+    ]).then(([orders, count]) => {
+        let hasMore = count > (page + 1) * limit;
+        return { results: orders, hasMore: hasMore };
+    });
 };
