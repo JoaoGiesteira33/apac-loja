@@ -3,70 +3,110 @@ import axios from 'axios';
 
 export const API_URL_USER = 'http://localhost:11000/user';
 export const API_URL_PROD = 'http://localhost:11000/product';
-export const AUTH_URL     = 'http://localhost:11001';
+export const AUTH_URL = 'http://localhost:11001';
 //export const BASE_URL = 'http:/192.168.1.68:8000/api';
 
 export const loginUser = async (email: string, password: string) => {
-    console.log("Logging in user");
-    console.log("credentials: ", email, "|", password)
+    console.log('Logging in user');
+    console.log('credentials: ', email, '|', password);
     try {
-        const response = await axios.post(`${AUTH_URL}/login`, { username: email, password });
-        console.log("resposta: ", response.data)
+        const response = await axios.post(`${AUTH_URL}/login`, {
+            username: email,
+            password,
+        });
+        console.log('resposta: ', response.data);
         return response.data;
-    }
-    catch (err) {
-        console.log("Error during login: " + err.message);
+    } catch (err) {
+        console.log('Error during login: ' + err.message);
         return err.response;
     }
-}
+};
 
 export const fetchUser = async (id: string, level: string, token: string) => {
-    console.log("Fetching user " + email);
+    console.log('Fetching user ' + email);
 
-    if(level === "admin" || level === "client"){
-        try{
-            const response = await axios.get(`${API_URL_USER}/client/${id}?token=${token}`);
+    if (level === 'admin' || level === 'client') {
+        try {
+            const response = await axios.get(
+                `${API_URL_USER}/client/${id}?token=${token}`
+            );
             return response.data;
+        } catch (err) {
+            console.log('Error fetching client: ' + err.message);
+            throw err.message;
         }
-        catch(err){
-            console.log("Error fetching client: " + err.message);
+    } else {
+        // if(level == "artist")
+        try {
+            const response = axios.get(
+                `${API_URL_USER}/artist/${id}?token=${token}`
+            );
+            return response.data;
+        } catch (err) {
+            console.log('Error fetching artist: ' + err.message);
             throw err.message;
         }
     }
-    else {// if(level == "artist")
-        try{
-            const response = axios.get(`${API_URL_USER}/artist/${id}?token=${token}`);
-            return response.data;
-        }
-        catch(err){
-            console.log("Error fetching artist: " + err.message);
-            throw err.message;
-        }
-    }
-}
+};
 
 export const registerUser = async (body: FormData) => {
-    console.log("Registering user");
-    console.log("body: ", body)
+    console.log('Registering user');
+    console.log('body: ', body);
     var object = {};
-    body.forEach(function(value, key){
+    body.forEach(function (value, key) {
         object[key] = value;
     });
     var json = JSON.stringify(object);
-    console.log("json: ", object);
+    console.log('json: ', object);
 
     try {
         const response = await axios.post(`${AUTH_URL}/registo`, object);
-        console.log("resposta: ", response.data)
+        console.log('resposta: ', response.data);
         return response.data;
+    } catch (err) {
+        console.log('Error during register: ' + err.message);
+        throw err.response;
     }
-    catch (err) {
-        console.log("Error during register: " + err.message);
+};
+
+export async function createOrder(body: [{ id: string; amount: number }]) {
+    console.log('Creating Order');
+    console.log('body: ', body);
+
+    const json = JSON.stringify(body);
+    console.log('json: ', json);
+
+    try {
+        const response = await axios.post(`${AUTH_URL}/paypal/orders`, json);
+        console.log('resposta: ', response.data);
+        return response.data;
+    } catch (err) {
+        console.log('Error during register: ' + err.message);
         throw err.response;
     }
 }
 
+export async function onApprove(data) {
+    console.log('Capturing Order');
+    console.log('data: ', data);
 
+    const json = JSON.stringify({
+        payPalOrderId: data.orderID,
+    });
+    console.log('json: ', json);
+
+    try {
+        const response = await axios.post(
+            `${AUTH_URL}/paypal/orders/${data.orderID}/capture`,
+            json
+        );
+        console.log('resposta: ', response.data);
+        return response.data;
+    } catch (err) {
+        console.log('Error during register: ' + err.message);
+        throw err.response;
+    }
+}
 
 /*
 export const sendEmail = async (toEmail, subject, message) => {

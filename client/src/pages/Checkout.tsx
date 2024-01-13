@@ -23,6 +23,8 @@ import CreditCardRoundedIcon from '@mui/icons-material/CreditCardRounded';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import { useCountries } from 'use-react-countries';
 import LockIcon from '@mui/icons-material/Lock';
+import { PayPalButtons } from '@paypal/react-paypal-js';
+import { createOrder, onApprove } from '../fetchers';
 
 function formatCardNumber(value: string) {
     const val = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
@@ -377,6 +379,11 @@ const Checkout = () => {
                                             }}
                                         />
                                     </div>
+                                    <PayPalButtons
+                                        style={{ layout: 'horizontal' }}
+                                        createOrder={createOrder}
+                                        onApprove={onApprove}
+                                    />
                                     <Button size="lg">pay with paypal</Button>
                                     <Typography
                                         variant="small"
