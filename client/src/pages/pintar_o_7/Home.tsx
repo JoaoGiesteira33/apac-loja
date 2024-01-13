@@ -45,10 +45,24 @@ export default function Home() {
                 alignItems="center"
                 justifyContent="space-evenly"
                 sx={{ paddingY: '2rem', maxWidth: 'xl', width: '100%' }}>
-                <MultipleSelectTypes
-                    values={selectedTypes}
-                    setValues={setSelectedTypes}
-                />
+                <Box
+                    component="div"
+                    sx={{
+                        flexGrow: '1',
+                        paddingX: {
+                            xs: '2rem',
+                            sm: '4rem',
+                            md: '6rem',
+                            lg: '8rem',
+                        },
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}>
+                    <MultipleSelectTypes
+                        values={selectedTypes}
+                        setValues={setSelectedTypes}
+                    />
+                </Box>
                 <SelectPrice
                     maxPrice={9999}
                     value={selectedPrice}
