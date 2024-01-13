@@ -21,6 +21,8 @@ import { rootCertificates } from 'tls';
 import ProfileOrderHistory from './pages/Profile/ProfileOrderHistory';
 import { useJwt, isExpired } from 'react-jwt';
 import Requests from './pages/Administrator/Requests';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 // dynamically load components as they are needed
 const InitialPage = React.lazy(() => import('./pages/pintar_o_7/Initial'));
@@ -223,76 +225,79 @@ function App() {
     }, []);
 
     return (
-        <ColorModeContext.Provider value={colorMode}>
-            <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <div className={theme.palette.mode === 'dark' ? 'dark' : ''}>
-                    <IconButton
-                        sx={{
-                            ml: 1,
-                            position: 'absolute',
-                            right: 0,
-                            top: 0,
-                            zIndex: 1,
-                        }}
-                        onClick={colorMode.toggleColorMode}
-                        color="inherit">
-                        {theme.palette.mode === 'dark' ? (
-                            <Brightness7Icon />
-                        ) : (
-                            <Brightness4Icon />
-                        )}
-                    </IconButton>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <ColorModeContext.Provider value={colorMode}>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline />
+                    <div
+                        className={theme.palette.mode === 'dark' ? 'dark' : ''}>
+                        <IconButton
+                            sx={{
+                                ml: 1,
+                                position: 'absolute',
+                                right: 0,
+                                top: 0,
+                                zIndex: 1,
+                            }}
+                            onClick={colorMode.toggleColorMode}
+                            color="inherit">
+                            {theme.palette.mode === 'dark' ? (
+                                <Brightness7Icon />
+                            ) : (
+                                <Brightness4Icon />
+                            )}
+                        </IconButton>
 
-                    {location.pathname !== '/' ? (
-                        <ReactNavbar
-                            loggedIn={loggedIn}
-                            setHeight={setNavbarSize}
-                        />
-                    ) : (
-                        <></>
-                    )}
-                    <Suspense
-                        fallback={
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    my: 10,
-                                }}
-                                component="div">
-                                <CircularProgress />
-                            </Box>
-                        }>
-                        <Routes>
-                            {/* <Suspense fallback={<Loading />}> *criar este componente depois* */}
-                            {routes.map((route, index) => (
-                                <Route
-                                    key={index}
-                                    path={route.path}
-                                    element={
-                                        // TO DO -> DESCOMENTAR ISTO ESTÁ FUNCIONAL
-                                        //       route.requireAuth && !loggedIn ? (
-                                        //           <LoginPage
-                                        //               setLoggedIn={setLoggedIn}
-                                        //           />
-                                        //       ) : (
-                                        route.element
-                                        //       )
-                                    }></Route>
-                            ))}
-                        </Routes>
-                    </Suspense>
-                    {location.pathname !== '/' ? <Chat /> : <></>}
-                    {location.pathname !== '/' ? (
-                        <Footer setHeight={setFooterSize} />
-                    ) : (
-                        <></>
-                    )}
-                </div>
-            </ThemeProvider>
-        </ColorModeContext.Provider>
+                        {location.pathname !== '/' ? (
+                            <ReactNavbar
+                                loggedIn={loggedIn}
+                                setHeight={setNavbarSize}
+                            />
+                        ) : (
+                            <></>
+                        )}
+                        <Suspense
+                            fallback={
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        my: 10,
+                                    }}
+                                    component="div">
+                                    <CircularProgress />
+                                </Box>
+                            }>
+                            <Routes>
+                                {/* <Suspense fallback={<Loading />}> *criar este componente depois* */}
+                                {routes.map((route, index) => (
+                                    <Route
+                                        key={index}
+                                        path={route.path}
+                                        element={
+                                            // TO DO -> DESCOMENTAR ISTO ESTÁ FUNCIONAL
+                                            //       route.requireAuth && !loggedIn ? (
+                                            //           <LoginPage
+                                            //               setLoggedIn={setLoggedIn}
+                                            //           />
+                                            //       ) : (
+                                            route.element
+                                            //       )
+                                        }></Route>
+                                ))}
+                            </Routes>
+                        </Suspense>
+                        {location.pathname !== '/' ? <Chat /> : <></>}
+                        {location.pathname !== '/' ? (
+                            <Footer setHeight={setFooterSize} />
+                        ) : (
+                            <></>
+                        )}
+                    </div>
+                </ThemeProvider>
+            </ColorModeContext.Provider>
+        </LocalizationProvider>
     );
 }
 
