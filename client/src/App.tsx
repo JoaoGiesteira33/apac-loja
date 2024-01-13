@@ -20,6 +20,7 @@ import { input } from '@material-tailwind/react';
 import { rootCertificates } from 'tls';
 import ProfileOrderHistory from './pages/Profile/ProfileOrderHistory';
 import { useJwt, isExpired } from 'react-jwt';
+import Requests from './pages/Administrator/Requests';
 
 // dynamically load components as they are needed
 const InitialPage = React.lazy(() => import('./pages/pintar_o_7/Initial'));
@@ -188,6 +189,11 @@ function App() {
         {
             path: '/profile/order-history',
             element: <ProfileOrderHistory />,
+            requireAuth: true,
+        },
+        {
+            path: '/requests',
+            element: <Requests />,
             requireAuth: true,
         },
         {
