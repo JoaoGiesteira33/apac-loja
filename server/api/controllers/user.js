@@ -1,4 +1,6 @@
 const User = require('../models/user');
+
+const utils = require('../utils/utils');
 // METHODS:
 //      - getUserInfo
 module.exports.getUserInfo = function (id, expand) {
@@ -8,18 +10,29 @@ module.exports.getUserInfo = function (id, expand) {
             return info;
         });
 };
+
 //      - createUser
 module.exports.createUser = function (data) {
     return User.create(data).then((info) => {
         return info;
     });
 };
-//      - updateUserInfo
-module.exports.updateUserInfo = function (id, data) {
-    return User.updateOne({ _id: id }, data).then((info) => {
+
+//     - replaceUserInfo
+module.exports.replaceUserInfo = function (id, data) {
+    return User.replaceOne({ _id: id }, data).then((info) => {
         return info;
     });
 };
+
+//      - updateUserInfo
+module.exports.updateUserInfo = function (id, data) {
+    let dotData = utils.dotify(data);
+    return User.updateOne({ _id: id }, { $set: dotData }).then((info) => {
+        return info;
+    });
+};
+
 //      - deleteUser
 module.exports.deleteUser = function (id) {
     return User.deleteOne({ _id: id }).then((info) => {

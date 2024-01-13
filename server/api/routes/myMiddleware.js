@@ -1,61 +1,60 @@
-function flatten(fields) {
-    let result = []
-    for (let i in fields) {
-        let field = fields[i]
-        let splitted = field.match(/(.*?)(?:\((.*)\))/)
-        if (splitted != null) {
-            let children = flatten(splitted[2].match(/([^,()]+)(\(.*\))?/g))
-            for (let j in children){
-                let child = children[j]
-                result.push(splitted[1] + "." + child)
+//função que recebe uma string de campos e retorna um array com os campos parsed
+function flatten(fieldString) {
+    let fields = fieldString.matchAll(/([^,()]+)(?:\((.*)\))?/g);
+    let result = [];
+    for (let field of fields) {
+        let [_, parent, ...children] = field;
+        if (
+            children[0] == undefined ||
+            children[0] == '' ||
+            children.length == 0
+        ) {
+            result.push(parent);
+        } else {
+            for (let child of children) {
+                let childResult = flatten(child);
+                for (let childField of childResult) {
+                    result.push(parent + '.' + childField);
+                }
             }
         }
-        else {
-            result.push(field)
-        }
     }
-    return result
+    return result;
 }
 
 function fieldSelector(req, res, next) {
-    let fields = req.query.select
+    let fields = req.query.select;
     if (fields) {
-        flatFields = flatten(fields.match(/([^,()]+)(\(.*\))?/g))
-        let obj = {}
-        for (let i in flatFields) {
-            obj[flatFields[i]] = 1
-        }
-        req.fields = obj
+        req.fields = flatten(fields);
     }
-    next()
+    next();
 }
 
 // Serve para poder passar valores de filtros, para pesquisas
 // Exemplo: /artist?nome=joao&idade=18
 // campo select é reservado para a seleção de campos
 function extractFilters(req, res, next) {
-    let { select, page , limit, expand, token, ...filters } = req.query || {}
+    let { select, page, limit, expand, token, ...filters } = req.query || {};
     // Para cada filtro que é objeto, adicionar um $ ao início
     for (let i in filters) {
         if (typeof filters[i] === 'object') {
             for (let j in filters[i]) {
-                filters[i]["$" + j] = filters[i][j]
-                delete filters[i][j]
+                filters[i]['$' + j] = filters[i][j];
+                delete filters[i][j];
             }
         }
     }
-    
-    req.filters = filters
-    next()
+
+    req.filters = filters;
+    next();
 }
 
 function expandExtractor(req, res, next) {
-    let expand = req.query.expand
+    let expand = req.query.expand;
     if (expand) {
-        req.expand = expand.split(',')
+        req.expand = flatten(expand);
     }
-    next()
+    next();
 }
 
-
-module.exports = {fieldSelector, extractFilters, expandExtractor}
+module.exports = { fieldSelector, extractFilters, expandExtractor };

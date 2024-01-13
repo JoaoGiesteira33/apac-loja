@@ -41,8 +41,20 @@ router.post('/client', function (req, res) {
         });
 });
 
-// UPDATE Client Info
+// PUT Client Info
 router.put('/client/:id', isMeOrAdmin, function (req, res) {
+    controllerUser
+        .replaceUserInfo(req.params.id, req.body)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((error) => {
+            res.jsonp(error);
+        });
+});
+
+// PATCH Client Info
+router.patch('/client/:id', isMeOrAdmin, function (req, res) {
     controllerUser
         .updateUserInfo(req.params.id, req.body)
         .then((info) => {
@@ -123,8 +135,20 @@ router.post('/seller', function (req, res) {
         });
 });
 
-// UPDATE Seller Info
+// PUT Seller Info
 router.put('/seller/:id', isMeOrAdmin, function (req, res) {
+    controllerUser
+        .replaceUserInfo(req.params.id, req.body)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((error) => {
+            res.jsonp(error);
+        });
+});
+
+// PATCH Seller Info
+router.patch('/seller/:id', isMeOrAdmin, function (req, res) {
     controllerUser
         .updateUserInfo(req.params.id, req.body)
         .then((info) => {
@@ -204,8 +228,20 @@ router.post('/', function (req, res) {
         });
 });
 
-// UPDATE User Info
+// PUT User Info
 router.put('/:id', isMeOrAdmin, function (req, res) {
+    controllerUser
+        .replaceUserInfo(req.params.id, req.body)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((error) => {
+            res.jsonp(error);
+        });
+});
+
+// PATCH User Info
+router.patch('/:id', isMeOrAdmin, function (req, res) {
     controllerUser
         .updateUserInfo(req.params.id, req.body)
         .then((info) => {

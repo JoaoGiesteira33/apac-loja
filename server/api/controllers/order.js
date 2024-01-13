@@ -1,61 +1,75 @@
 const Order = require('../models/order');
 
+const utils = require('../utils/utils');
+
 // METHODS:
 //      - getOrderInfo
 module.exports.getOrderInfo = function (id, expand) {
-    return Order.findOne({ _id: id }).populate(expand)
+    return Order.findOne({ _id: id })
+        .populate(expand)
         .then((info) => {
             return info;
-        })
-        .catch((error) => {
-            return error;
         });
 };
 
 //      - createOrder
 module.exports.createOrder = function (data) {
-    return Order.create(data)
-        .then((info) => {
-            return info;
-        })
-        .catch((error) => {
-            return error;
-        });
+    return Order.create(data).then((info) => {
+        return info;
+    });
 };
 
-//      - updateOrderInfo
+//     - replaceOrderInfo
+module.exports.replaceOrderInfo = function (id, data) {
+    return Order.replaceOne({ _id: id }, data).then((info) => {
+        return info;
+    });
+};
+
+//      - updateOrderInfo || this is used for patch request
 module.exports.updateOrderInfo = function (id, data) {
-    return Order.updateOne({_id: id}, data)
-        .then((info) => {
-            return info;
-        })
-        .catch((error) => {
-            return error;
-        });
+    let dotData = utils.dotify(data);
+    return Order.updateOne({ _id: id }, { $set: dotData }).then((info) => {
+        return info;
+    });
 };
 
 //      - deleteOrder
 module.exports.deleteOrder = function (id) {
-    return Order.deleteOne({_id: id})
-        .then((info) => {
-            return info;
-        })
-        .catch((error) => {
-            return error;
-        });
+    return Order.deleteOne({ _id: id }).then((info) => {
+        return info;
+    });
 };
 
 //      - getOrders
 module.exports.getOrders = function (filters, fields, page, limit, expand) {
     return Promise.all([
-        Order.find(filters, fields).sort({_id:'asc'}).skip(page * limit).limit(limit).populate(expand),
-        Order.countDocuments(filters)
-    ])
-    .then(([orders, count]) => {
-        let hasMore = count > ((page + 1) * limit);
-        return {results: orders, hasMore: hasMore};
-    })
-    .catch((error) => {
-        return error;
+        Order.find(filters, fields)
+            .sort({ _id: 'asc' })
+            .skip(page * limit)
+            .limit(limit)
+            .populate(expand),
+        Order.countDocuments(filters),
+    ]).then(([orders, count]) => {
+        let hasMore = count > (page + 1) * limit;
+        return { results: orders, hasMore: hasMore };
     });
-}
+};
+
+// ADDITIONAL METHODS:
+
+// updateOrderShipmentStatus
+// Push a new state to the shipment with the given ids/all if products is undefined
+module.exports.updateShipmentStatus = function (id, products, value) {
+    let filter;
+    if (indexes !== undefined) {
+        filter = { _id: id, 'shipments._product': { $in: products } };
+    } else {
+        filter = { _id: id };
+    }
+    return Order.updateOne(filter, {
+        $push: { 'shipments.$[].states': { value: value, date: Date.now } },
+    }).then((info) => {
+        return info;
+    });
+};
