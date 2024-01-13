@@ -51,7 +51,7 @@ router.put('/:id', function (req, res, next) {
 // PATCH Order Info
 router.patch('/:id', function (req, res, next) {
     controllerOrder
-        .updateOrderInfo(req.params.id, req.body, req.query.op || 'set')
+        .updateOrderInfo(req.params.id, req.body)
         .then((info) => {
             res.jsonp(info);
         })
