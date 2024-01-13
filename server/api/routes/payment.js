@@ -6,19 +6,20 @@ const middleware = require('./myMiddleware');
 // POST Paypel Request
 router.post('/paypal/orders', function (req, res) {
     // TODO check server owned token
+    console.log("Creating Paypal order: ", req.body);
 
     // TODO send pay request to paypal
     // use the cart information passed from the front-end to calculate the order amount detals
-    controllerPayment.createOrder(req.body.cart)
+    controllerPayment.createOrder(req.body.cart, req.body.currency)
         .then((rep) => { res.status(rep.httpStatusCode).json(rep.jsonResponse); })
         .catch((error) => {
-            console.error("Failed to create order:", error);
-            res.status(500).json({ error: "Failed to create order." });
+            console.log("Failed to create order: ", error);
+            res.status(500).jsonp({ error: "Failed to create order: ", error });
         });
 });
 
 router.post("/paypal/orders/:paypalOrderId/capture", function (req, res) {
-    captureOrder(req.body.paypalOrderId)
+    captureOrder(req.params.paypalOrderId)
         .then((rep) => { res.status(rep.httpStatusCode).json(rep.jsonResponse); })
         .catch ((error) => {
             console.error("Failed to create order:", error);
