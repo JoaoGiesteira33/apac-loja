@@ -4,19 +4,15 @@ const Address = new mongoose.Schema(
     {
         street: {
             type: String,
-            required: true,
         },
         postal_code: {
             type: String,
-            required: true,
         },
         city: {
             type: String,
-            required: true,
         },
         country: {
             type: String,
-            required: true,
         },
     },
     { _id: false }
@@ -42,7 +38,6 @@ const Demographics = new mongoose.Schema(
         },
         address: {
             type: Address,
-            required: true,
         },
         phone: String,
     },

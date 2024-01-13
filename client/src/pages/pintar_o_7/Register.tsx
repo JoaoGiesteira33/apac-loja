@@ -29,7 +29,7 @@ const Register = () => {
 
     const [country, setCountry] = useState('');
     const [address, setAddress] = useState('');
-    const [postlaCode, setPostalCode] = useState('');
+    const [postalCode, setPostalCode] = useState('');
     const [city, setCity] = useState('');
 
     const [showEmailAlert, setShowEmailAlert] = useState(false);
@@ -99,23 +99,14 @@ const Register = () => {
         } else if (password.length < 6) {
             setShowPassAlert(true);
             return;
-        } else if (phone.length !== 9) {
+        } else if (phone.length !== 9 && phone.length !== 0) {
             setShowPhoneAlert(true);
             return;
         } else if (checkOver18(birth_date) < 18) {
             setShowOver18Alert(true);
             return;
-        } else if (city === '') {
-            setShowCityError(true);
-            return;
-        } else if (address === '') {
-            setShowAddressError(true);
-            return;
-        } else if (!checkPostalCode(postlaCode)) {
+        } else if (postalCode !== '' && !checkPostalCode(postalCode)) {
             setShowPostalCodeError(true);
-            return;
-        } else if (country === '') {
-            setShowCountryAlert(true);
             return;
         } else {
             disableAlerts();
@@ -335,7 +326,7 @@ const Register = () => {
                             }
                             id="postalCode"
                             autoComplete="postalCode"
-                            value={postlaCode}
+                            value={postalCode}
                             onChange={(e) => setPostalCode(e.target.value)}
                         />
                     </Stack>

@@ -27,7 +27,10 @@ const HomePagePintarO7 = React.lazy(() => import('./pages/pintar_o_7/Home'));
 const ProductPage = React.lazy(() => import('./pages/Product'));
 const LoginPage = React.lazy(() => import('./pages/pintar_o_7/Login'));
 const RegisterPage = React.lazy(() => import('./pages/pintar_o_7/Register'));
-const ArtistsPage = React.lazy(() => import('./pages/pintar_o_7/Artistas'));
+const ArtistsIndexPage = React.lazy(
+    () => import('./pages/pintar_o_7/ArtistsIndex')
+);
+const ArtistPage = React.lazy(() => import('./pages/pintar_o_7/Artist'));
 const CartPage = React.lazy(() => import('./pages/Cart'));
 const CheackoutPage = React.lazy(() => import('./pages/Checkout'));
 const PageNotFound = React.lazy(() => import('./pages/NotFound'));
@@ -129,7 +132,12 @@ function App() {
         },
         {
             path: '/artists',
-            element: <ArtistsPage />,
+            element: <ArtistsIndexPage />,
+            requireAuth: false,
+        },
+        {
+            path: '/artists/:id',
+            element: <ArtistPage />,
             requireAuth: false,
         },
         {
@@ -173,7 +181,7 @@ function App() {
             requireAuth: true,
         },
         {
-            path: '/checkout',  // TODO -> ver melhor como funcionam as rotas 
+            path: '/checkout', // TODO -> ver melhor como funcionam as rotas
             element: <CheackoutPage />,
             requireAuth: true,
         },

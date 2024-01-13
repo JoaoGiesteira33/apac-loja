@@ -150,7 +150,6 @@ router.delete('/seller/:id', isMeOrAdmin, function (req, res) {
 //GET Sellers
 router.get(
     '/sellers',
-    isAdmin,
     middleware.expandExtractor,
     middleware.extractFilters,
     middleware.fieldSelector,
