@@ -11,6 +11,8 @@ services:
       - MONGO_USER
       - MONGO_PASSWORD
       - AUTH_KEY
+      - PAYPAL_CLIENT_ID
+      - PAYPAL_CLIENT_SECRET
     ports:
       - 11000:80
     networks:
@@ -59,6 +61,10 @@ secrets:
     file: ./env/MONGO_PASSWORD.txt
   AUTH_KEY:
     file: ./env/AUTH_KEY.txt
+  PAYPAL_CLIENT_ID:
+    file: ./env/PAYPAL_CLIENT_ID.txt
+  PAYPAL_CLIENT_SECRET:
+    file: ./env/PAYPAL_CLIENT_SECRET.txt
 #  EMAIL:
 #    file: ./env/EMAIL.txt
 #  SERVICE:
