@@ -15,14 +15,17 @@ import {
     Select,
     Option,
     Input,
+    Checkbox,
 } from '@material-tailwind/react';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import PaymentOutlinedIcon from '@mui/icons-material/PaymentOutlined';
 import CreditCardRoundedIcon from '@mui/icons-material/CreditCardRounded';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
-import { useCountries } from 'use-react-countries';
 import LockIcon from '@mui/icons-material/Lock';
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import { useCountries } from 'use-react-countries';
+import useCart from '../hooks/useCart';
 
 function formatCardNumber(value: string) {
     const val = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
@@ -51,6 +54,8 @@ function formatExpires(value: string) {
 }
 
 const Checkout = () => {
+    const { subTotalPrice, cart } = useCart();
+
     const [activeStep, setActiveStep] = React.useState(0);
     const [isLastStep, setIsLastStep] = React.useState(false);
     const [isFirstStep, setIsFirstStep] = React.useState(false);
@@ -74,10 +79,119 @@ const Checkout = () => {
                     shadow={false}
                     className="m-0 grid place-items-center px-4 py-8 text-center">
                     <Typography variant="h4" className="font-poppins">
-                        Informações de Utilizador
+                        Dados de faturação
                     </Typography>
                 </CardHeader>
-                <CardBody>contet</CardBody>
+                <CardBody className="p-8 flex flex-col gap-4">
+                    <div>
+                        <Typography
+                            variant="h6"
+                            color="black"
+                            className="font-poppins">
+                            Nome
+                        </Typography>
+                        <Input
+                            crossOrigin={'anonymous'}
+                            variant="outlined"
+                            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                            labelProps={{
+                                className:
+                                    'before:content-none after:content-none',
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <Typography
+                            variant="h6"
+                            color="black"
+                            className="font-poppins">
+                            Nº de contribuinte
+                        </Typography>
+                        <Input
+                            crossOrigin={'anonymous'}
+                            variant="outlined"
+                            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                            labelProps={{
+                                className:
+                                    'before:content-none after:content-none',
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <Typography
+                            variant="h6"
+                            color="black"
+                            className="font-poppins">
+                            Telefone
+                        </Typography>
+                        <Input
+                            crossOrigin={'anonymous'}
+                            variant="outlined"
+                            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                            labelProps={{
+                                className:
+                                    'before:content-none after:content-none',
+                            }}
+                        />
+                        <Typography
+                            variant="small"
+                            color="gray"
+                            className="font-poppins">
+                            Pode ser usado para auxiliar a entrega
+                        </Typography>
+                    </div>
+                    <div>
+                        <Typography
+                            variant="h6"
+                            color="black"
+                            className="font-poppins">
+                            Morada
+                        </Typography>
+                        <Input
+                            crossOrigin={'anonymous'}
+                            variant="outlined"
+                            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                            labelProps={{
+                                className:
+                                    'before:content-none after:content-none',
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <Typography
+                            variant="h6"
+                            color="black"
+                            className="font-poppins">
+                            Código postal
+                        </Typography>
+                        <Input
+                            crossOrigin={'anonymous'}
+                            variant="outlined"
+                            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                            labelProps={{
+                                className:
+                                    'before:content-none after:content-none',
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <Typography
+                            variant="h6"
+                            color="black"
+                            className="font-poppins">
+                            Cidade
+                        </Typography>
+                        <Input
+                            crossOrigin={'anonymous'}
+                            variant="outlined"
+                            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                            labelProps={{
+                                className:
+                                    'before:content-none after:content-none',
+                            }}
+                        />
+                    </div>
+                </CardBody>
             </Card>
         </div>
     );
@@ -92,12 +206,147 @@ const Checkout = () => {
                     shadow={false}
                     className="m-0 grid place-items-center px-4 py-8 text-center">
                     <Typography variant="h4" className="font-poppins">
-                        Endereço de entrega
+                        Dados de entrega
                     </Typography>
                 </CardHeader>
-                <CardBody>contet</CardBody>
+                <CardBody className="p-8 flex flex-col gap-4">
+                    <div>
+                        <Typography
+                            variant="h6"
+                            color="black"
+                            className="font-poppins">
+                            País/Região
+                        </Typography>
+                        <Select
+                            placeholder="PT"
+                            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                            labelProps={{
+                                className:
+                                    'before:content-none after:content-none',
+                            }}
+                            menuProps={{ className: 'h-48' }}>
+                            {countries.map(({ name, flags }: any) => (
+                                <Option key={name} value={name}>
+                                    <div className="flex items-center gap-x-2">
+                                        <img
+                                            src={flags.svg}
+                                            alt={name}
+                                            className="h-4 w-4 rounded-full object-cover"
+                                        />
+                                        {name}
+                                    </div>
+                                </Option>
+                            ))}
+                        </Select>
+                    </div>
+                    <div>
+                        <Typography
+                            variant="h6"
+                            color="black"
+                            className="font-poppins">
+                            Morada
+                        </Typography>
+                        <Input
+                            crossOrigin={'anonymous'}
+                            variant="outlined"
+                            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                            labelProps={{
+                                className:
+                                    'before:content-none after:content-none',
+                            }}
+                        />
+                        <Input
+                            crossOrigin={'anonymous'}
+                            variant="outlined"
+                            placeholder="Apartamento, bloco, lote, prédio, andar, etc."
+                            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                            labelProps={{
+                                className:
+                                    'before:content-none after:content-none',
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <Typography
+                            variant="h6"
+                            color="black"
+                            className="font-poppins">
+                            Localidade
+                        </Typography>
+                        <Input
+                            crossOrigin={'anonymous'}
+                            variant="outlined"
+                            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                            labelProps={{
+                                className:
+                                    'before:content-none after:content-none',
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <Typography
+                            variant="h6"
+                            color="black"
+                            className="font-poppins">
+                            Cidade
+                        </Typography>
+                        <Input
+                            crossOrigin={'anonymous'}
+                            variant="outlined"
+                            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                            labelProps={{
+                                className:
+                                    'before:content-none after:content-none',
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <Typography
+                            variant="h6"
+                            color="black"
+                            className="font-poppins">
+                            Código postal
+                        </Typography>
+                        <Input
+                            crossOrigin={'anonymous'}
+                            variant="outlined"
+                            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                            labelProps={{
+                                className:
+                                    'before:content-none after:content-none',
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <Typography
+                            variant="h6"
+                            color="black"
+                            className="font-poppins">
+                            Selecione o método de entrega:
+                        </Typography>
+                        <Select>
+                            <Option>Standard - 5€</Option>
+                            <Option>Expresso - 10€</Option>
+                            <Option>
+                                Depende da localização do utilizador
+                            </Option>
+                        </Select>
+                        <Typography
+                            variant="small"
+                            color="gray"
+                            className="font-poppins">
+                            <InfoRoundedIcon className="h-4 w-4" /> Todas as
+                            obras são transportadas com seguro de envio.
+                        </Typography>
+                    </div>
+                </CardBody>
             </Card>
+        </div>
+    );
 
+    // content of the Review order step
+    const reviewStep = (
+        <div className="container relative -bottom-[+4.5rem]">
             <Card className="w-full">
                 <CardHeader
                     color="gray"
@@ -105,10 +354,124 @@ const Checkout = () => {
                     shadow={false}
                     className="m-0 grid place-items-center px-4 py-8 text-center">
                     <Typography variant="h4" className="font-poppins">
-                        Metodo de entrega
+                        Confirmar encomenda
                     </Typography>
                 </CardHeader>
-                <CardBody>contet</CardBody>
+                <CardBody className="p-8 flex flex-col gap-8">
+                    <div className="flex flex-col gap-2">
+                        <div className="flex justify-between">
+                            <Typography
+                                variant="h6"
+                                color="black"
+                                className="font-poppins">
+                                Item
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                color="black"
+                                className="font-poppins">
+                                Valor
+                            </Typography>
+                        </div>
+                        <hr />
+                        {cart.map((item) => (
+                            <div className="flex justify-between">
+                                <Typography
+                                    variant="paragraph"
+                                    color="black"
+                                    className="font-poppins">
+                                    {item.title}
+                                </Typography>
+                                <Typography
+                                    variant="small"
+                                    color="black"
+                                    className="font-poppins">
+                                    {new Intl.NumberFormat('pt-PT', {
+                                        style: 'currency',
+                                        currency: 'EUR',
+                                    }).format(item.price)}
+                                </Typography>
+                            </div>
+                        ))}
+                        <hr />
+                        <div className="flex justify-between">
+                            <Typography
+                                variant="h6"
+                                color="black"
+                                className="font-poppins">
+                                Subtotal
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                color="black"
+                                className="font-poppins">
+                                {subTotalPrice}
+                            </Typography>
+                        </div>
+                        <hr />
+                        <div className="flex justify-between">
+                            <Typography
+                                variant="h6"
+                                color="black"
+                                className="font-poppins">
+                                Envio
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                color="black"
+                                className="font-poppins">
+                                {new Intl.NumberFormat('pt-PT', {
+                                    style: 'currency',
+                                    currency: 'EUR',
+                                }).format(5)}
+                            </Typography>
+                        </div>
+                        <hr />
+                        <div className="flex justify-between">
+                            <Typography
+                                variant="h6"
+                                color="black"
+                                className="font-poppins">
+                                Cupão
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                color="black"
+                                className="font-poppins">
+                                {new Intl.NumberFormat('pt-PT', {
+                                    style: 'currency',
+                                    currency: 'EUR',
+                                }).format(-50)}
+                            </Typography>
+                        </div>
+                        <hr />
+                    </div>
+                    <div className="flex justify-between">
+                        <Typography
+                            variant="h5"
+                            color="black"
+                            className="font-poppins">
+                            Total
+                        </Typography>
+                        <Typography
+                            variant="h6"
+                            color="black"
+                            className="font-poppins">
+                            {new Intl.NumberFormat('pt-PT', {
+                                style: 'currency',
+                                currency: 'EUR',
+                            }).format(3000)}
+                        </Typography>
+                    </div>
+                    <Typography
+                        variant="small"
+                        color="gray"
+                        className="font-poppins">
+                        *IVA incluíodo
+                    </Typography>
+                    <hr />
+                    Secção de incerir o cupão
+                </CardBody>
             </Card>
         </div>
     );
@@ -121,11 +484,11 @@ const Checkout = () => {
                     color="gray"
                     floated={false}
                     shadow={false}
-                    className="m-0 grid place-items-center px-4 py-8 text-center">
+                    className="m-0 grid place-items-center px-4 py-4 text-center">
                     <Typography variant="h4" className="font-poppins">
-                        Metodo de pagamento
+                        Método de pagamento
                     </Typography>
-                    <div className="mb-4 h-20 p-6 text-white">
+                    <div className="mb-4 h-20 p-4 text-white">
                         {type === 'card' ? (
                             <CreditCardRoundedIcon
                                 fontSize="large"
@@ -141,15 +504,29 @@ const Checkout = () => {
                     </div>
                 </CardHeader>
                 <CardBody>
+                    <Typography
+                        variant="h6"
+                        color="black"
+                        className="font-poppins">
+                        Selecione o método de pagamento:
+                    </Typography>
                     <Tabs value={type} className="overflow-visible">
                         <TabsHeader className="relative z-0 ">
                             <Tab value="card" onClick={() => setType('card')}>
-                                Pay with Card
+                                <Typography
+                                    variant="paragraph"
+                                    className="font-poppins">
+                                    EuPago
+                                </Typography>
                             </Tab>
                             <Tab
                                 value="paypal"
                                 onClick={() => setType('paypal')}>
-                                Pay with PayPal
+                                <Typography
+                                    variant="paragraph"
+                                    className="font-poppins">
+                                    PayPal
+                                </Typography>
                             </Tab>
                         </TabsHeader>
                         <TabsBody
@@ -385,29 +762,23 @@ const Checkout = () => {
                                         <LockIcon className="-mt-0.5 h-4 w-4" />{' '}
                                         Payments are secure and encrypted
                                     </Typography>
+                                    <div className="flex items-center">
+                                        <Checkbox
+                                            crossOrigin={'anonymous'}
+                                            defaultChecked
+                                        />
+                                        <Typography
+                                            variant="small"
+                                            color="gray"
+                                            className="font-poppins">
+                                            Aceito os termos e condições link
+                                        </Typography>
+                                    </div>
                                 </form>
                             </TabPanel>
                         </TabsBody>
                     </Tabs>
                 </CardBody>
-            </Card>
-        </div>
-    );
-
-    // content of the Review order step
-    const reviewStep = (
-        <div className="container relative -bottom-[+4.5rem]">
-            <Card className="w-full">
-                <CardHeader
-                    color="gray"
-                    floated={false}
-                    shadow={false}
-                    className="m-0 grid place-items-center px-4 py-8 text-center">
-                    <Typography variant="h4" className="font-poppins">
-                        Confirmar encomenda
-                    </Typography>
-                </CardHeader>
-                <CardBody>contet</CardBody>
             </Card>
         </div>
     );
@@ -425,7 +796,7 @@ const Checkout = () => {
                             variant="h6"
                             color={activeStep === 0 ? 'blue-gray' : 'gray'}
                             className="font-poppins">
-                            Information
+                            Faturação
                         </Typography>
                     </div>
                 </Step>
@@ -436,18 +807,7 @@ const Checkout = () => {
                             variant="h6"
                             color={activeStep === 1 ? 'blue-gray' : 'gray'}
                             className="font-poppins">
-                            Shipping
-                        </Typography>
-                    </div>
-                </Step>
-                <Step>
-                    <PaymentOutlinedIcon className="h-5 w-5" />
-                    <div className="absolute -bottom-[2.5rem] w-max text-center">
-                        <Typography
-                            variant="h6"
-                            color={activeStep === 2 ? 'blue-gray' : 'gray'}
-                            className="font-poppins">
-                            Payment
+                            Entregra
                         </Typography>
                     </div>
                 </Step>
@@ -456,9 +816,20 @@ const Checkout = () => {
                     <div className="absolute -bottom-[2.5rem] w-max text-center">
                         <Typography
                             variant="h6"
+                            color={activeStep === 2 ? 'blue-gray' : 'gray'}
+                            className="font-poppins">
+                            Resumo
+                        </Typography>
+                    </div>
+                </Step>
+                <Step>
+                    <PaymentOutlinedIcon className="h-5 w-5" />
+                    <div className="absolute -bottom-[2.5rem] w-max text-center">
+                        <Typography
+                            variant="h6"
                             color={activeStep === 3 ? 'blue-gray' : 'gray'}
                             className="font-poppins">
-                            Review
+                            Pagamento
                         </Typography>
                     </div>
                 </Step>
@@ -467,17 +838,20 @@ const Checkout = () => {
             {/* Steps content */}
             {activeStep === 0 && informationStep}
             {activeStep === 1 && shippingStep}
-            {activeStep === 2 && paymentStep}
-            {activeStep === 3 && reviewStep}
+            {activeStep === 2 && reviewStep}
+            {activeStep === 3 && paymentStep}
 
             {/* Next and Prev buttons */}
 
             <div className="mt-32 flex justify-between">
-                <Button onClick={handlePrev} disabled={isFirstStep}>
-                    Prev
+                <Button
+                    variant="outlined"
+                    onClick={handlePrev}
+                    disabled={isFirstStep}>
+                    Anterior
                 </Button>
                 <Button onClick={handleNext} disabled={isLastStep}>
-                    Next
+                    Próximo
                 </Button>
             </div>
         </div>
