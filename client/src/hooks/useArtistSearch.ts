@@ -23,11 +23,15 @@ import { API_URL_USER } from '../fetchers';
 //     });
 // }
 
-export default function useArtistSearch(pageNumber: number) {
+export default function useArtistSearch(query: object, pageNumber: number) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [artists, setArtists] = useState([]);
     const [hasMore, setHasMore] = useState(false);
+
+    useEffect(() => {
+        setArtists([]);
+    }, [query]);
 
     useEffect(() => {
         let cancel: Canceler;
@@ -40,7 +44,7 @@ export default function useArtistSearch(pageNumber: number) {
             url: API_URL_USER + '/sellers',
             params: {
                 page: pageNumber - 1,
-                select: 'seller_fields(demographics,profile_picture,about)',
+                ...query,
             },
             cancelToken: new axios.CancelToken((c) => (cancel = c)),
         })
@@ -55,7 +59,7 @@ export default function useArtistSearch(pageNumber: number) {
                 if (axios.isCancel(e)) return;
                 //else setError(true);
             });
-    }, [pageNumber]);
+    }, [query, pageNumber]);
 
     return { loading, error, hasMore, artists };
 }
