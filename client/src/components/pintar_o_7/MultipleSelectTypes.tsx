@@ -59,53 +59,42 @@ export default function MultipleSelectTypes({
     };
 
     return (
-        <Box
-            component="div"
-            sx={{
-                flexGrow: '1',
-                paddingX: { xs: '2rem', sm: '4rem', md: '6rem', lg: '8rem' },
-                display: 'flex',
-                alignItems: 'center',
-            }}>
-            <FormControl
-                variant="standard"
-                sx={{ m: 1, width: 70, margin: '0' }}>
-                <InputLabel shrink={false} id="multiple-checkbox-label">
-                    {values.length < 1 && 'tipos'}
-                </InputLabel>
-                <Select
-                    labelId="multiple-checkbox-label"
-                    id="multiple-checkbox"
-                    multiple
-                    disableUnderline
-                    value={values}
-                    onChange={handleSelectedTypesChange}
-                    IconComponent={KeyboardArrowDownOutlinedIcon}
-                    renderValue={() => ['tipos']}
-                    MenuProps={MenuProps}>
-                    <MenuItem divider value="all">
-                        <ListItemIcon>
-                            <Checkbox
-                                checked={
-                                    availableTypes.length > 0 &&
-                                    values.length === availableTypes.length
-                                }
-                                indeterminate={
-                                    values.length > 0 &&
-                                    values.length < availableTypes.length
-                                }
-                            />
-                        </ListItemIcon>
-                        <ListItemText primary="Todos" />
+        <FormControl variant="standard" sx={{ m: 1, width: 70, margin: '0' }}>
+            <InputLabel shrink={false} id="multiple-checkbox-label">
+                {values.length < 1 && 'Tipos'}
+            </InputLabel>
+            <Select
+                labelId="multiple-checkbox-label"
+                id="multiple-checkbox"
+                multiple
+                disableUnderline
+                value={values}
+                onChange={handleSelectedTypesChange}
+                IconComponent={KeyboardArrowDownOutlinedIcon}
+                renderValue={() => ['Tipos']}
+                MenuProps={MenuProps}>
+                <MenuItem divider value="all">
+                    <ListItemIcon>
+                        <Checkbox
+                            checked={
+                                availableTypes.length > 0 &&
+                                values.length === availableTypes.length
+                            }
+                            indeterminate={
+                                values.length > 0 &&
+                                values.length < availableTypes.length
+                            }
+                        />
+                    </ListItemIcon>
+                    <ListItemText primary="Todos" />
+                </MenuItem>
+                {availableTypes.map((type) => (
+                    <MenuItem divider key={type} value={type}>
+                        <Checkbox checked={values.indexOf(type) > -1} />
+                        <ListItemText primary={type} />
                     </MenuItem>
-                    {availableTypes.map((type) => (
-                        <MenuItem divider key={type} value={type}>
-                            <Checkbox checked={values.indexOf(type) > -1} />
-                            <ListItemText primary={type} />
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-        </Box>
+                ))}
+            </Select>
+        </FormControl>
     );
 }

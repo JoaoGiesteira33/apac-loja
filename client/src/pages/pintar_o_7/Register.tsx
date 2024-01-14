@@ -13,8 +13,6 @@ import {
 import { registerUser } from '../../fetchers';
 import { useNavigate } from 'react-router-dom';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import CountrySelect from '../../components/pintar_o_7/CountrySelect';
 
 const Register = () => {
@@ -246,26 +244,24 @@ const Register = () => {
                             Deve ter mais de 18 anos!
                         </Alert>
                     )}
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                            disableFuture
-                            openTo="day"
-                            views={['year', 'month', 'day']}
-                            format="DD/MM/YYYY"
-                            label="Data de Nascimento"
-                            value={birth_date}
-                            slotProps={{
-                                textField: {
-                                    variant: 'standard',
-                                    fullWidth: true,
-                                    required: true,
-                                    name: 'client_fields.demographics.birth_date',
-                                    margin: 'normal',
-                                },
-                            }}
-                            onChange={(value) => setBirthDate(value)}
-                        />
-                    </LocalizationProvider>
+                    <DatePicker
+                        disableFuture
+                        openTo="day"
+                        views={['year', 'month', 'day']}
+                        format="DD/MM/YYYY"
+                        label="Data de Nascimento"
+                        value={birth_date}
+                        slotProps={{
+                            textField: {
+                                variant: 'standard',
+                                fullWidth: true,
+                                required: true,
+                                name: 'client_fields.demographics.birth_date',
+                                margin: 'normal',
+                            },
+                        }}
+                        onChange={(value) => setBirthDate(value)}
+                    />
                     {/* ----------- ADDRESS ---------------- */}
                     <Stack
                         direction={{ xs: 'column', sm: 'row' }}

@@ -7,9 +7,7 @@ import TextField from '@mui/material/TextField';
 import { Button, Stack, Typography } from '@mui/material';
 
 import CountrySelect from '../../components/pintar_o_7/CountrySelect';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import SaveSharpIcon from '@mui/icons-material/SaveSharp';
 import dayjs, { Dayjs } from 'dayjs';
 
@@ -239,27 +237,25 @@ export default function ProfileInfo() {
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                     />
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                            disableFuture
-                            openTo="day"
-                            views={['year', 'month', 'day']}
-                            format="DD/MM/YYYY"
-                            maxDate={TODAY_MINUS_18_YEARS}
-                            label="Data de Nascimento"
-                            value={birth_date}
-                            slotProps={{
-                                textField: {
-                                    variant: 'standard',
-                                    fullWidth: true,
-                                    required: true,
-                                    name: 'client_fields.client_fields.demographics.birth_date',
-                                    margin: 'normal',
-                                },
-                            }}
-                            onChange={(value) => setBirthDate(value)}
-                        />
-                    </LocalizationProvider>
+                    <DatePicker
+                        disableFuture
+                        openTo="day"
+                        views={['year', 'month', 'day']}
+                        format="DD/MM/YYYY"
+                        maxDate={TODAY_MINUS_18_YEARS}
+                        label="Data de Nascimento"
+                        value={birth_date}
+                        slotProps={{
+                            textField: {
+                                variant: 'standard',
+                                fullWidth: true,
+                                required: true,
+                                name: 'client_fields.client_fields.demographics.birth_date',
+                                margin: 'normal',
+                            },
+                        }}
+                        onChange={(value) => setBirthDate(value)}
+                    />
                 </Paper>
                 <Paper
                     sx={{

@@ -1,5 +1,8 @@
-export type ProductType = {
+import { User } from './user';
+
+export interface ProductType {
     _id: string;
+    _seller: string | User;
     title: string;
     author: string;
     photos: string[];
@@ -8,9 +11,10 @@ export type ProductType = {
     product_type: string;
     piece_info: PieceInfo | null;
     book_info: BookInfo | null;
+    published_date: Date;
     //rating: number,     // [0-5]
     //reviews: Review[],
-};
+}
 
 /*type Review = {
     id: number,

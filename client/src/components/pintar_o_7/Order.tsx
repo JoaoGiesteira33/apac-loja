@@ -9,6 +9,7 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import { Box, Divider, Paper, Step, StepLabel, Stepper } from '@mui/material';
 import { OrderType } from '../../types/order';
+import dayjs from 'dayjs';
 
 const Accordion = styled((props: AccordionProps) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -79,9 +80,13 @@ export default function Order(props: { order: OrderType }) {
                                     {shipment.states.map((state, index) => {
                                         return (
                                             <Step key={index}>
-                                                <StepLabel
-                                                    optional={state.date.toDateString()}>
-                                                    {state.value}
+                                                <StepLabel>
+                                                    <Typography>
+                                                        {state.value} -{' '}
+                                                        {dayjs(
+                                                            state.date
+                                                        ).format('DD/MM/YYYY')}
+                                                    </Typography>
                                                 </StepLabel>
                                             </Step>
                                         );
