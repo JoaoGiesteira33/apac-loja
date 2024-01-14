@@ -1,24 +1,84 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {
     Box,
-    FormControlLabel,
+    Button,
+    CircularProgress,
     Stack,
     TextField,
     Typography,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import AddCircleOutlineSharpIcon from '@mui/icons-material/AddCircleOutlineSharp';
 import MultipleSelectTypes from '../../components/pintar_o_7/MultipleSelectTypes';
 import NewProductRequest from '../../components/pintar_o_7/NewProductRequest';
-import MultipleSelectStates from '../../components/pintar_o_7/MultipleSelectStates';
+import useProductSearch from '../../hooks/useProductSearch';
+import dayjs from 'dayjs';
 
 export default function Requests() {
+    const [productQuery, setProductQuery] = React.useState({
+        'piece_info.state': 'submitted',
+        'author[regex]': '',
+        'author[options]': 'i',
+        'published_date[lte]': dayjs(new Date()).format('YYYY-MM-DD'),
+        expand: '_seller',
+    });
+    const [productPage, setProductPage] = React.useState(1);
+    const { MockData, hasMore, loading, error, products } = useProductSearch(
+        productQuery,
+        productPage
+    );
+
     // Filters
     const [selectedTypes, setSelectedTypes] = React.useState<string[]>([]);
-    const [selectedStates, setSelectedStates] = React.useState<string[]>([]); // ['Pendente', 'Rejeitado', 'Aprovado'
     const [artist, setArtist] = React.useState<string>('');
     const [dateFilter, setDateFilter] = React.useState<Date | null>(null);
-    const [showRejected, setShowRejected] = React.useState<boolean>(false);
+
+    const artistFilterUpdate = (value: string) => {
+        setArtist(value);
+
+        if (value === '') {
+            setProductQuery({
+                ...productQuery,
+                'author[regex]': '',
+            });
+        } else {
+            setProductQuery({
+                ...productQuery,
+                'author[regex]': value,
+            });
+        }
+    };
+
+    const dateFilterUpdate = (value: Date | null) => {
+        setDateFilter(value);
+
+        if (value === null) {
+            setProductQuery({
+                ...productQuery,
+                'published_date[lte]': dayjs(new Date()).format('YYYY-MM-DD'),
+            });
+        } else {
+            setProductQuery({
+                ...productQuery,
+                'published_date[lte]': dayjs(value).format('YYYY-MM-DD'),
+            });
+        }
+    };
+
+    useEffect(() => {
+        if (selectedTypes.length === 0) {
+            setProductQuery({
+                ...productQuery,
+                //'piece_info.type': '',
+            });
+        } else {
+            setProductQuery({
+                ...productQuery,
+                //'piece_info.type': selectedTypes.join(','),
+            });
+        }
+    }, [productQuery, selectedTypes]);
 
     return (
         <Box
@@ -48,21 +108,15 @@ export default function Requests() {
                             paddingY: '2rem',
                             width: '100%',
                         }}>
-                        <Stack
-                            direction="row"
-                            justifyContent={'space-between'}
-                            alignItems={'center'}
-                            gap={4}
-                            sx={{ width: { xs: '100%', sm: '200px' } }}>
+                        <Box
+                            component={'div'}
+                            display={'flex'}
+                            alignItems={'center'}>
                             <MultipleSelectTypes
                                 values={selectedTypes}
                                 setValues={setSelectedTypes}
                             />
-                            <MultipleSelectStates
-                                values={selectedTypes}
-                                setValues={setSelectedTypes}
-                            />
-                        </Stack>
+                        </Box>
                         <TextField
                             variant="standard"
                             margin="normal"
@@ -70,7 +124,7 @@ export default function Requests() {
                             type="text"
                             fullWidth
                             value={artist}
-                            onChange={(e) => setArtist(e.target.value)}
+                            onChange={(e) => artistFilterUpdate(e.target.value)}
                         />
                         <DatePicker
                             disableFuture
@@ -87,12 +141,45 @@ export default function Requests() {
                                     margin: 'normal',
                                 },
                             }}
-                            onChange={(value: Date) => setDateFilter(value)}
+                            onChange={(value: Date) => dateFilterUpdate(value)}
                         />
                     </Stack>
                 </Box>
-                <NewProductRequest></NewProductRequest>
-                <NewProductRequest></NewProductRequest>
+                {MockData &&
+                    MockData.map(
+                        (product, index) =>
+                            product._seller instanceof Object && (
+                                <NewProductRequest
+                                    key={index}
+                                    product={product}
+                                />
+                            )
+                    )}
+                {error && <div>Error</div>}
+                {loading && (
+                    <Box
+                        component="div"
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginY: '2rem',
+                        }}>
+                        <CircularProgress />
+                    </Box>
+                )}
+                {hasMore && (
+                    <Button
+                        startIcon={<AddCircleOutlineSharpIcon />}
+                        variant="outlined"
+                        onClick={() => {
+                            setProductPage(
+                                (prevPageNumber) => prevPageNumber + 1
+                            );
+                        }}>
+                        Load More
+                    </Button>
+                )}
             </Stack>
         </Box>
     );
