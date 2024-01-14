@@ -11,7 +11,7 @@ export default function ProductThumbnail(props) {
                 <Box component="div" className="w-full aspect-square">
                     <img
                         className="w-full h-full aspect-square object-cover"
-                        src={props.product.image}></img>
+                        src={props.product.photos[0]}></img>
                 </Box>
             </Link>
             <Grid
@@ -23,7 +23,7 @@ export default function ProductThumbnail(props) {
                     width: '100%',
                 }}>
                 <Grid item xs={8}>
-                    {props.product.name}{' '}
+                    {props.product.title}{' '}
                 </Grid>
                 <Grid item xs={4} sx={{ textAlign: 'right' }}>
                     {props.product.price}€
