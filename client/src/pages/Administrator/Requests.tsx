@@ -50,6 +50,7 @@ export default function Requests() {
                             margin="normal"
                             label="Artista"
                             type="text"
+                            fullWidth
                             value={artist}
                             onChange={(e) => setArtist(e.target.value)}
                         />
@@ -60,6 +61,7 @@ export default function Requests() {
                             format="DD/MM/YYYY"
                             label="Antes de"
                             value={dateFilter}
+                            sx={{ width: '100%' }}
                             slotProps={{
                                 textField: {
                                     variant: 'standard',
