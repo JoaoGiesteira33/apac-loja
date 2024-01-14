@@ -81,6 +81,7 @@ export default function NewProductRequest() {
                         justifyContent={'space-between'}
                         direction={'row'}
                         alignItems={'flex-start'}
+                        overflow={'hidden'}
                         spacing={1}>
                         <Box
                             component={'div'}
@@ -89,14 +90,7 @@ export default function NewProductRequest() {
                             <Typography variant="h5">
                                 {product.title}
                             </Typography>
-                            <Typography
-                                sx={{
-                                    textOverflow: 'ellipsis',
-                                    wordWrap: 'break-word',
-                                    overflow: 'hidden',
-                                }}>
-                                {product.description}
-                            </Typography>
+                            <Typography>{product.description}</Typography>
                         </Box>
                         <Typography>
                             {dayjs(publishedDate).format('DD/MM/YYYY')}

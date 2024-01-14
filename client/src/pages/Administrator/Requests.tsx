@@ -1,15 +1,24 @@
 import React from 'react';
 
-import { Box, Divider, Stack, TextField, Typography } from '@mui/material';
+import {
+    Box,
+    FormControlLabel,
+    Stack,
+    TextField,
+    Typography,
+} from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import MultipleSelectTypes from '../../components/pintar_o_7/MultipleSelectTypes';
 import NewProductRequest from '../../components/pintar_o_7/NewProductRequest';
+import MultipleSelectStates from '../../components/pintar_o_7/MultipleSelectStates';
 
 export default function Requests() {
     // Filters
     const [selectedTypes, setSelectedTypes] = React.useState<string[]>([]);
+    const [selectedStates, setSelectedStates] = React.useState<string[]>([]); // ['Pendente', 'Rejeitado', 'Aprovado'
     const [artist, setArtist] = React.useState<string>('');
     const [dateFilter, setDateFilter] = React.useState<Date | null>(null);
+    const [showRejected, setShowRejected] = React.useState<boolean>(false);
 
     return (
         <Box
@@ -39,12 +48,21 @@ export default function Requests() {
                             paddingY: '2rem',
                             width: '100%',
                         }}>
-                        <Box className="flex-shrink-0" component={'div'}>
+                        <Stack
+                            direction="row"
+                            justifyContent={'space-between'}
+                            alignItems={'center'}
+                            gap={4}
+                            sx={{ width: { xs: '100%', sm: '200px' } }}>
                             <MultipleSelectTypes
                                 values={selectedTypes}
                                 setValues={setSelectedTypes}
                             />
-                        </Box>
+                            <MultipleSelectStates
+                                values={selectedTypes}
+                                setValues={setSelectedTypes}
+                            />
+                        </Stack>
                         <TextField
                             variant="standard"
                             margin="normal"
