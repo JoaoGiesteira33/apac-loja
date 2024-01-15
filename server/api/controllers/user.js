@@ -50,7 +50,7 @@ module.exports.getUsers = function (filters, fields, page, limit, expand) {
             .populate(expand),
         User.countDocuments(filters),
     ]).then(([users, count]) => {
-        let hasMore = count > (page + 1) * limit;
+        let hasMore = count > (page + 1) * limit && limit != 0;
         return { results: users, hasMore: hasMore };
     });
 };
