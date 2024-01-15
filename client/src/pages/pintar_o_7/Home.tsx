@@ -91,8 +91,8 @@ export default function Home() {
                         maxWidth: 'xl',
                     }}
                     spacing={{ xs: 2, md: 4, lg: 8 }}>
-                    {MockData &&
-                        MockData.map((product, index) => (
+                    {products &&
+                        products.map((product, index) => (
                             <Grid
                                 key={index}
                                 display={'flex'}

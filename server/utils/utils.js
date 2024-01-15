@@ -109,7 +109,6 @@ function isMe(req, res, next) {
 
 function isMeOrAdmin(req, res, next) {
     var myToken = req.query.token || req.cookies.token;
-
     if (myToken) {
         jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
             var me = req.params.id;

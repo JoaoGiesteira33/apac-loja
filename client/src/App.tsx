@@ -144,7 +144,7 @@ function App() {
             requireAuth: false,
         },
         {
-            path: '/collections/pintura',
+            path: '/product/:product_id',
             element: <ProductPage />,
             requireAuth: false,
         },

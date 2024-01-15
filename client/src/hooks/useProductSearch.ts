@@ -7,7 +7,7 @@ const MockData: {
     name: string;
     price: number;
     description: string;
-    image: string;
+    photos: [string];
 }[] = [];
 
 for (let i = 1; i < 30; i++) {
@@ -19,11 +19,15 @@ for (let i = 1; i < 30; i++) {
         name: `Product ${i}`,
         price: Math.floor(Math.random() * 1000) + 100,
         description: `This is product ${i}`,
-        image: `https://picsum.photos/${width}/${height}`,
+        photos: [`https://picsum.photos/${width}/${height}`],
     });
 }
 
-export default function useProductSearch(query: object, pageNumber: number) {
+export default function useProductSearch(
+    query: object,
+    pageNumber: number,
+    substitute?: string
+) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [products, setProducts] = useState([]);
@@ -42,13 +46,16 @@ export default function useProductSearch(query: object, pageNumber: number) {
         axios({
             method: 'GET',
             url: API_URL_PROD,
-            params: { page: pageNumber - 1, ...query}, //Limit é opcional, default=28
+            params: { page: pageNumber - 1, ...query }, //Limit é opcional, default=28
             cancelToken: new axios.CancelToken((c) => (cancel = c)),
         })
             .then((res) => {
-                setProducts(products.concat(res.data));
-                setHasMore(res.data.length > 0);
+                if (substitute) setProducts(res.data.results);
+                else setProducts(products.concat(res.data.results));
+
+                setHasMore(res.data.hasMore);
                 setLoading(false);
+                console.log('Products:', products.concat(res.data.results));
             })
             .catch((e) => {
                 // Ignore the error if it's a request cancellation.
@@ -57,5 +64,5 @@ export default function useProductSearch(query: object, pageNumber: number) {
             });
     }, [query, pageNumber]);
 
-    return { loading, error, MockData, hasMore, products};
+    return { loading, error, MockData, hasMore, products };
 }

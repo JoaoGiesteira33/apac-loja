@@ -12,8 +12,12 @@ import ArtistThumbnail from '../../components/pintar_o_7/ArtistThumbnail';
 
 export default function ArtistsIndexPage() {
     const [artistPage, setArtistPage] = useState(1);
+    const [artistQuery, setArtistQuery] = useState({});
 
-    const { hasMore, loading, error, artists } = useArtistSearch(artistPage);
+    const { hasMore, loading, error, artists } = useArtistSearch(
+        artistQuery,
+        artistPage
+    );
 
     return (
         <Box component="div">

@@ -20,7 +20,7 @@ export default function ArtistPage() {
     });
     const [productPage, setProductPage] = useState(1);
 
-    const { MockData, hasMore, loading, error, products } = useProductSearch(
+    const { hasMore, loading, error, products } = useProductSearch(
         productQuery,
         productPage
     );
@@ -98,39 +98,37 @@ export default function ArtistPage() {
                         <Typography
                             variant="h4"
                             fontWeight="bold"
-                            // align center vertically
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}>
+                            align="center">
                             {artist.seller_fields.demographics.name.toUpperCase()}
                         </Typography>
                         <Typography
                             variant="subtitle1"
                             fontWeight="bold"
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}>
+                            align="center">
                             {artist.seller_fields.about}
                         </Typography>
                     </Grid>
                 </Grid>
                 <Divider />
+
                 <Typography variant="h5" fontWeight="bold" my={2}>
                     obras do artista
                 </Typography>
                 <Grid
                     container
                     sx={{
-                        justifyContent: { xs: 'center', sm: 'space-between' },
-                        martinTop: '1rem',
+                        justifyContent: {
+                            xs: 'center',
+                            sm:
+                                products && products.length === 0
+                                    ? 'center'
+                                    : 'space-between',
+                        },
+                        my: '1rem',
                     }}
                     spacing={{ xs: 2, md: 4, lg: 8 }}>
-                    {MockData &&
-                        MockData.map((product, index) => (
+                    {products &&
+                        products.map((product, index) => (
                             <Grid
                                 key={index}
                                 display={'flex'}
@@ -142,6 +140,11 @@ export default function ArtistPage() {
                                 <ProductThumbnail product={product} />
                             </Grid>
                         ))}
+                    {products && products.length === 0 && !loading && (
+                        <Typography variant="subtitle1" align="center">
+                            Este artista ainda não tem obras disponíveis.
+                        </Typography>
+                    )}
                 </Grid>
             </Box>
 
