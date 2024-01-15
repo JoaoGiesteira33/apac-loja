@@ -66,6 +66,7 @@ const SellerFields = new mongoose.Schema(
         about: String,
         seller_type: {
             type: String,
+            required: true,
             enum: ['artist', 'bookseller'],
         },
     },
