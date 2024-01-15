@@ -1,21 +1,20 @@
 const express = require('express');
 const router = express.Router();
 
-const controllerOrder = require('../controllers/order');
 const controllerShipment = require('../controllers/shipment');
 
 const middleware = require('./myMiddleware');
 
 // ---------------------------------------------
 
-// GET Order Info
+// GET Shipment Info
 router.get(
     '/:id',
     middleware.expandExtractor,
     middleware.fieldSelector,
     function (req, res, next) {
-        controllerOrder
-            .getOrderInfo(req.params.id, req.expand || '')
+        controllerShipment
+            .getShipmentInfo(req.params.id, req.expand || '')
             .then((info) => {
                 res.jsonp(info);
             })
@@ -25,29 +24,22 @@ router.get(
     }
 );
 
-// POST Order Info
+// POST Shipment Info
 router.post('/', function (req, res, next) {
-    //Create the shipments and then the order with their ids
     controllerShipment
-        .createManyShipments(req.body.shipments)
-        .then((shipments) => {
-            let order = req.body;
-            order.shipments = shipments.map((shipment) => shipment._id);
-            controllerOrder
-                .createOrder(order)
-                .then((info) => {
-                    res.jsonp(info);
-                })
-                .catch((error) => {
-                    res.jsonp(error);
-                });
+        .createShipment(req.body)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((error) => {
+            res.jsonp(error);
         });
 });
 
-// PUT Order Info
+// PUT Shipment Info
 router.put('/:id', function (req, res, next) {
-    controllerOrder
-        .replaceOrderInfo(req.params.id, req.body)
+    controllerShipment
+        .replaceShipmentInfo(req.params.id, req.body)
         .then((info) => {
             res.jsonp(info);
         })
@@ -56,10 +48,10 @@ router.put('/:id', function (req, res, next) {
         });
 });
 
-// PATCH Order Info
+// PATCH Shipment Info
 router.patch('/:id', function (req, res, next) {
-    controllerOrder
-        .updateOrderInfo(req.params.id, req.body)
+    controllerShipment
+        .updateShipmentInfo(req.params.id, req.body)
         .then((info) => {
             res.jsonp(info);
         })
@@ -68,10 +60,10 @@ router.patch('/:id', function (req, res, next) {
         });
 });
 
-// DELETE Order Info
+// DELETE Shipment Info
 router.delete('/:id', function (req, res, next) {
-    controllerOrder
-        .deleteOrder(req.params.id)
+    controllerShipment
+        .deleteShipment(req.params.id)
         .then((info) => {
             res.jsonp(info);
         })
@@ -80,19 +72,19 @@ router.delete('/:id', function (req, res, next) {
         });
 });
 
-// GET Orders
+// GET Shipments
 router.get(
     '/',
     middleware.expandExtractor,
-    middleware.extractFilters,
     middleware.fieldSelector,
+    middleware.extractFilters,
     function (req, res, next) {
-        controllerOrder
-            .getOrders(
+        controllerShipment
+            .getShipments(
                 req.filters,
                 req.fields,
-                req.query.page || 0,
-                req.query.limit || 28,
+                req.page,
+                req.limit,
                 req.expand || ''
             )
             .then((info) => {

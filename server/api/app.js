@@ -11,6 +11,7 @@ var cookieParser = require('cookie-parser');
 var userRouter = require('./routes/user');
 var productRouter = require('./routes/product');
 var orderRouter = require('./routes/order');
+var shipmentRouter = require('./routes/shipment');
 
 var db_url =
     'mongodb+srv://' +
@@ -52,6 +53,7 @@ app.use(cookieParser());
 app.use('/product', productRouter);
 app.use('/user', userRouter);
 app.use('/order', orderRouter);
+app.use('/shipment', shipmentRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
