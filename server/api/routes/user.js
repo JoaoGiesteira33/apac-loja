@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const controllerUser = require('../controllers/user');
-const { isAdmin, isMeOrAdmin } = require('../utils/utils');
+const { isAdmin, isMeOrAdmin, isAdminOrAUTH } = require('../utils/utils');
 
 const middleware = require('./myMiddleware');
 
@@ -30,7 +30,7 @@ router.get(
 );
 
 // POST Client Info
-router.post('/client', function (req, res) {
+router.post('/client', isAdminOrAUTH, function (req, res) {
     controllerUser
         .createUser(req.body)
         .then((info) => {
@@ -66,14 +66,14 @@ router.patch('/client/:id', isMeOrAdmin, function (req, res) {
 });
 
 // DELETE Client Info
-router.delete('/client/:id', isMeOrAdmin, function (req, res) {
+router.delete('/client/:id', isAdminOrAUTH, function (req, res) {
     controllerUser
         .deleteUser(req.params.id)
         .then((info) => {
-            res.jsonp(info);
+            res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(400).jsonp(error);
         });
 });
 
@@ -124,7 +124,7 @@ router.get(
 );
 
 // POST Seller Info
-router.post('/seller', function (req, res) {
+router.post('/seller', isAdminOrAUTH, function (req, res) {
     controllerUser
         .createUser(req.body)
         .then((info) => {
@@ -160,14 +160,14 @@ router.patch('/seller/:id', isMeOrAdmin, function (req, res) {
 });
 
 // DELETE Seller Info
-router.delete('/seller/:id', isMeOrAdmin, function (req, res) {
+router.delete('/seller/:id', isAdminOrAUTH, function (req, res) {
     controllerUser
         .deleteUser(req.params.id)
         .then((info) => {
-            res.jsonp(info);
+            res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(400).jsonp(error);
         });
 });
 
@@ -217,7 +217,7 @@ router.get(
 );
 
 // POST User Info
-router.post('/', function (req, res) {
+router.post('/', isAdmin, function (req, res) {
     controllerUser
         .createUser(req.body)
         .then((info) => {
@@ -253,7 +253,7 @@ router.patch('/:id', isMeOrAdmin, function (req, res) {
 });
 
 // DELETE User Info
-router.delete('/:id', isMeOrAdmin, function (req, res) {
+router.delete('/:id', isAdmin, function (req, res) {
     controllerUser
         .deleteUser(req.params.id)
         .then((info) => {

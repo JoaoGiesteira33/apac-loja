@@ -1,0 +1,94 @@
+// http://.....auth..../admin/registo
+// !!! meter tokn nas cookies !!!
+
+// admin token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluQGdtYWlsLmNvbSIsImxldmVsIjoiYWRtaW4iLCJfaWQiOiI2NWExOTUwZTVhYzYyYzRlNDI4ZGQyOTMiLCJpYXQiOjE3MDUxNTM0MzksImV4cCI6MTcwNTIzOTgzOX0.baBdLd-T55Nt6qJNOoDRQwsANr1yMJcfC9Z603FzTOE
+
+{
+    "email" : "vendedor1@gmail.com",
+    "password" : "seller12345",
+    "nivel" : "seller",
+    "seller_fields.demographics.name" : "Vendedor1 da Silva",
+    "seller_fields.demographics.birth_date" : "1991-01-01",
+    "seller_fields.demographics.address.street" : "Rua do Vendedor 1",
+    "seller_fields.demographics.address.postal_code" : "1111-111",
+    "seller_fields.demographics.address.city" : "Lisboa",
+    "seller_fields.demographics.address.country" : "Portugal",
+    "seller_fields.demographics.phone" : "911111111",
+    "seller_fields.profile_picture" : "https://i.imgur.com/MqVtSFX.png",
+    "seller_fields.about" : "Sou um vendedor muito bom",
+    "seller_fields.seller_type" : "artist"
+}
+
+{
+    "email" : "vendedor2@gmail.com",
+    "password" : "seller12345",
+    "nivel" : "seller",
+    "seller_fields.demographics.name" : "Vendedor2 da Costa",
+    "seller_fields.demographics.birth_date" : "1992-02-02",
+    "seller_fields.demographics.address.street" : "Rua do Vendedor 2",
+    "seller_fields.demographics.address.postal_code" : "2222-222",
+    "seller_fields.demographics.address.city" : "Berlim",
+    "seller_fields.demographics.address.country" : "Alemanha",
+    "seller_fields.demographics.phone" : "922222222",
+    "seller_fields.profile_picture" : "https://i.imgur.com/p4m1ETP.jpeg",
+    "seller_fields.about" : "Sou um vendedor já não tão bom",
+    "seller_fields.seller_type" : "artist"
+}
+
+{
+    "email" : "vendedor3@gmail.com",
+    "password" : "seller12345",
+    "nivel" : "seller",
+    "seller_fields.demographics.name" : "Vendedor3 dos Santos",
+    "seller_fields.demographics.birth_date" : "1993-03-03",
+    "seller_fields.seller_type" : "artist"
+}
+
+// erro porque nao tem seller_fields.demographics.birth_date
+{
+    "email" : "vendedor4@gmail.com",
+    "password" : "seller12345",
+    "nivel" : "seller",
+    "seller_fields.demographics.name" : "Vendedor Fonseca 4",
+    "seller_fields.seller_type" : "artist" // deveria ser obrigatório !!!
+}
+
+
+// http://.....api..../product/
+
+{
+    "title": "Peça Vazio",
+    "author": "Vendedor3 dos Santos",
+    "price": 11,
+    "product_type": "piece",
+    "_seller": "65a522f66db87428b203c175"
+}
+
+{
+    "title": "Quadro da Selva",
+    "author": "Vendedor1 da Silva",
+    "photos": ["https://i.imgur.com/A1tNfY6.jpeg"],
+    "description": "Quadro sobre um menino que nasceu na selva",
+    "price": 25,
+    "product_type": "piece",
+    "_seller": "65a522e96db87428b203c16f"
+}
+
+{
+    "title": "Quadro da Familia",
+    "author": "Vendedor2 da Costa",
+    "photos": 
+        ["https://i.imgur.com/Y3UW1To.png", "https://i.imgur.com/0nOWid1.jpeg"]
+    ,
+    "description": "Quadro sobre a ultima ceia do menino jesus mais conhecido como menino de deus aka nagaDeus",
+    "price": 69,
+    "product_type": "piece",
+    "_seller": "65a522f06db87428b203c172",
+    "piece_info.technique": "Realismo",
+    "piece_info.material": "Cetim",
+    "piece_info.dimensions.width": 8,
+    "piece_info.dimensions.height": 9,
+    "piece_info.dimensions.depth": 89,
+    "piece_info.year": 2001,
+    "piece_info.state": "available"
+}

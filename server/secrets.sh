@@ -8,12 +8,12 @@ secrets_folder=env/
 action="$1" # Get the action parameter: create or remove
 
 if [ "$action" == "create" ]; then
-    mkdir -p -m=700 $secrets_folder # Create the secrets folder if it doesn't exist
+    #mkdir -p -m=700 $secrets_folder # Create the secrets folder if it doesn't exist
     while IFS='=' read -r key value
     do
         if [[ " ${keys[@]} " =~ " $key " ]]; then
             touch $secrets_folder$key.txt
-            chmod 600 $secrets_folder$key.txt
+            #chmod 600 $secrets_folder$key.txt
             printf $value >> $secrets_folder$key.txt
         else
             echo "Ignoring unrecognized key: $key"

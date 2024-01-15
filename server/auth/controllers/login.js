@@ -13,8 +13,7 @@ module.exports.registar = async info => {
 		new Login({
 			username: info.email,
 			nivel: info.nivel,
-			dataRegisto: info.dataRegisto,
-			dataUltimoAcesso: info.dataUltimoAcesso
+			dataRegisto: info.dataRegisto
 		}),
 		info.password)
 }

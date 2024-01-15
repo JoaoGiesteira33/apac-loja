@@ -130,6 +130,30 @@ function isMeOrAdmin(req, res, next) {
     }
 }
 
+function isAdminOrAUTH(req, res, next) {
+    var myToken = req.query.token || req.cookies.token;
+    if (myToken) {
+        jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
+            if (e) {
+                res.status(403).jsonp({ error: 'Invalid Token!' });
+            } else if (payload.level == 'admin'){
+                req.user = payload.username;
+                req._id = payload._id;
+                req.level = payload.level;
+                req.token = myToken;
+                next();
+            }
+            if(payload.level == 'auth') {
+                next();
+            } else {
+                res.status(401).jsonp({ error: 'Access denied!' });
+            }
+        });
+    } else {
+        res.status(400).jsonp({ error: 'Token not found!' });
+    }
+}
+
 /**
  * Converts an object to a dotified object.
  *
@@ -162,5 +186,6 @@ module.exports = {
     hasAccess,
     isMe,
     isMeOrAdmin,
+    isAdminOrAUTH,
     dotify,
 };

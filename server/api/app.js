@@ -67,6 +67,8 @@ app.use(function (err, req, res, next) {
     // render the error page
     res.status(err.status || 500);
     res.jsonp(err);
+
+    console.log('Aconteceu um erro: ' + err);
 });
 
 module.exports = app;

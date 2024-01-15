@@ -12,13 +12,16 @@ var Login = new mongoose.Schema({
 	{ // admin, client, seller
 		type: String,
 		required: true,
-		enum: ['client', 'artist', 'admin']
+		enum: ['client', 'seller', 'admin']
 	},
 	dataRegisto: {
 		type: String,
 		required: true
 	},
-	dataUltimoAcesso: String
+	dataUltimoAcesso: {
+		type: String,
+		default: ''
+	}
 })
 
 Login.plugin(passportLocalMongoose )
