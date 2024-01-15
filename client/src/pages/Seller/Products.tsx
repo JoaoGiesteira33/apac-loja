@@ -5,7 +5,6 @@ import {
     Button,
     CircularProgress,
     Stack,
-    TextField,
     Typography,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -14,17 +13,13 @@ import MultipleSelectTypes from '../../components/pintar_o_7/MultipleSelectTypes
 import NewProductRequest from '../../components/pintar_o_7/NewProductRequest';
 import useProductSearch from '../../hooks/useProductSearch';
 import dayjs from 'dayjs';
-import { useTranslation } from 'react-i18next';
+import ProductPaper from '../../components/Seller/ProductPaper';
 
-export default function Requests() {
-    const { t } = useTranslation();
-
+export default function Products() {
     const [productQuery, setProductQuery] = React.useState({
-        'piece_info.state': 'submitted',
-        'author[regex]': '',
-        'author[options]': 'i',
-        'published_date[lte]': dayjs(new Date()).format('YYYY-MM-DD'),
         expand: '_seller',
+        _seller: '123',
+        'published_date[lte]': dayjs(new Date()).format('YYYY-MM-DD'),
     });
     const [productPage, setProductPage] = React.useState(1);
     const { MockData, hasMore, loading, error, products } = useProductSearch(
@@ -32,26 +27,19 @@ export default function Requests() {
         productPage
     );
 
+    const [ordersQuery, setOrdersQuery] = React.useState({});
+    const [ordersPage, setOrdersPage] = React.useState(1);
+    const {
+        MockData: MockOrders,
+        hasMore: hasMoreOrders,
+        loading: loadingOrders,
+        error: errorOrders,
+        products: orders,
+    } = useProductSearch(ordersQuery, ordersPage);
+
     // Filters
     const [selectedTypes, setSelectedTypes] = React.useState<string[]>([]);
-    const [artist, setArtist] = React.useState<string>('');
     const [dateFilter, setDateFilter] = React.useState<Date | null>(null);
-
-    const artistFilterUpdate = (value: string) => {
-        setArtist(value);
-
-        if (value === '') {
-            setProductQuery({
-                ...productQuery,
-                'author[regex]': '',
-            });
-        } else {
-            setProductQuery({
-                ...productQuery,
-                'author[regex]': value,
-            });
-        }
-    };
 
     const dateFilterUpdate = (value: Date | null) => {
         setDateFilter(value);
@@ -100,9 +88,7 @@ export default function Requests() {
                 spacing={4}
                 alignItems={'center'}
                 justifyContent={'flex-start'}>
-                <Typography variant="h3">
-                    {t('profile.requests.title')}
-                </Typography>
+                <Typography variant="h3">New Requests</Typography>
                 <Box component={'div'} className="w-full">
                     <Stack
                         direction={{ xs: 'column', sm: 'row' }}
@@ -122,15 +108,6 @@ export default function Requests() {
                                 setValues={setSelectedTypes}
                             />
                         </Box>
-                        <TextField
-                            variant="standard"
-                            margin="normal"
-                            label="Artista"
-                            type="text"
-                            fullWidth
-                            value={artist}
-                            onChange={(e) => artistFilterUpdate(e.target.value)}
-                        />
                         <DatePicker
                             disableFuture
                             openTo="day"
@@ -154,10 +131,7 @@ export default function Requests() {
                     MockData.map(
                         (product, index) =>
                             product._seller instanceof Object && (
-                                <NewProductRequest
-                                    key={index}
-                                    product={product}
-                                />
+                                <ProductPaper key={index} product={product} />
                             )
                     )}
                 {error && <div>Error</div>}
@@ -182,7 +156,7 @@ export default function Requests() {
                                 (prevPageNumber) => prevPageNumber + 1
                             );
                         }}>
-                        {t('global.load-more')}
+                        Load More
                     </Button>
                 )}
             </Stack>

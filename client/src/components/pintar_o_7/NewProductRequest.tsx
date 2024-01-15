@@ -1,6 +1,5 @@
-import React from 'react';
-
 import { ProductType } from '../../types/product';
+import { User } from '../../types/user';
 
 import {
     Avatar,
@@ -18,41 +17,10 @@ import {
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import dayjs from 'dayjs';
-import Clear from '@mui/icons-material/Clear';
 
-export default function NewProductRequest() {
+export default function NewProductRequest(props: { product: ProductType }) {
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
-
-    const [product, setProduct] = React.useState<ProductType>({
-        _id: '123',
-        title: 'O Sol',
-        description:
-            'Retrato do pintor. Mais texto do trexto yes sir. Descricao gigante para testar espaco e cenas do genero les go omg.',
-        price: 33,
-        author: 'Joao',
-        product_type: 'Pintura',
-        piece_info: {
-            state: 'Pendente',
-            material: 'Couro',
-            year: 2023,
-            technique: 'Oleo',
-            dimensions: {
-                height: 123,
-                width: 123,
-                depth: 123,
-                measure: 'cm',
-            },
-        },
-        photos: ['https://picsum.photos/1600/1200'],
-        book_info: null,
-    });
-    const [artist, setArtist] = React.useState({
-        photo: 'https://picsum.photos/200',
-        name: 'Zeze da Broa',
-    });
-    const [publishedDate, setPublishedDate] = React.useState<Date>(new Date());
-    const [state, setState] = React.useState('Pendente');
 
     return (
         <Paper className="w-full">
@@ -62,10 +30,10 @@ export default function NewProductRequest() {
                 maxHeight={{ xs: 'auto', sm: '200px' }}
                 alignItems={'stretch'}>
                 <Box component={'div'} sx={{ maxWidth: { sm: '30%' } }}>
-                    {product ? (
+                    {props.product ? (
                         <img
                             className="w-full h-full aspect-square object-cover"
-                            src={product.photos[0]}></img>
+                            src={props.product.photos[0]}></img>
                     ) : (
                         <Skeleton variant="rectangular">
                             <img className="object-cover"></img>
@@ -81,25 +49,21 @@ export default function NewProductRequest() {
                         justifyContent={'space-between'}
                         direction={'row'}
                         alignItems={'flex-start'}
+                        overflow={'hidden'}
                         spacing={1}>
                         <Box
                             component={'div'}
                             flexDirection={'column'}
                             className="flex justify-between">
                             <Typography variant="h5">
-                                {product.title}
+                                {props.product.title}
                             </Typography>
-                            <Typography
-                                sx={{
-                                    textOverflow: 'ellipsis',
-                                    wordWrap: 'break-word',
-                                    overflow: 'hidden',
-                                }}>
-                                {product.description}
-                            </Typography>
+                            <Typography>{props.product.description}</Typography>
                         </Box>
                         <Typography>
-                            {dayjs(publishedDate).format('DD/MM/YYYY')}
+                            {dayjs(props.product.published_date).format(
+                                'DD/MM/YYYY'
+                            )}
                         </Typography>
                     </Stack>
                     <Stack
@@ -112,8 +76,22 @@ export default function NewProductRequest() {
                             direction={'row'}
                             alignItems={'center'}
                             spacing={1}>
-                            <Typography>{artist.name}</Typography>
-                            <Avatar src={artist.photo} />
+                            <Typography>
+                                {
+                                    (props.product._seller as User)
+                                        .seller_fields?.demographics.name
+                                }
+                            </Typography>
+                            <Avatar
+                                src={
+                                    (props.product._seller as User)
+                                        .seller_fields?.profile_picture
+                                }
+                                alt={
+                                    (props.product._seller as User)
+                                        .seller_fields?.demographics.name
+                                }
+                            />
                         </Stack>
                         {isSm ? (
                             <ButtonGroup

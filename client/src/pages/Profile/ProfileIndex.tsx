@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom';
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
-
+import HistoryIcon from '@mui/icons-material/History';
+import PhotoAlbumIcon from '@mui/icons-material/PhotoAlbum';
 import ProfileThumbnail from '../../components/Profile/ProfileThumbnail';
 
 export default function ProfileIndex(props) {
@@ -20,28 +21,14 @@ export default function ProfileIndex(props) {
                     <ProfileThumbnail
                         title="Order History"
                         description="Check your order history"
-                        icon={<AccountCircleIcon />}
+                        icon={<HistoryIcon />}
                     />
                 </Link>
-                <Link className="inline-block" to="/profile/info">
+                <Link className="inline-block" to="/profile/products">
                     <ProfileThumbnail
-                        title="Info"
-                        description="Check profile info."
-                        icon={<AccountCircleIcon />}
-                    />
-                </Link>
-                <Link className="inline-block" to="/profile/order-history">
-                    <ProfileThumbnail
-                        title="Order History"
-                        description="Check your order history"
-                        icon={<AccountCircleIcon />}
-                    />
-                </Link>
-                <Link className="inline-block" to="/profile/info">
-                    <ProfileThumbnail
-                        title="Info"
-                        description="Check profile info."
-                        icon={<AccountCircleIcon />}
+                        title="My Products"
+                        description="Manage your products"
+                        icon={<PhotoAlbumIcon />}
                     />
                 </Link>
                 <Link

@@ -1,25 +1,60 @@
 import { useEffect, useState } from 'react';
 import axios, { Canceler } from 'axios';
 import { API_URL_PROD } from '../fetchers';
+import { ProductType } from '../types/product';
 
-const MockData: {
-    id: number;
-    name: string;
-    price: number;
-    description: string;
-    photos: [string];
-}[] = [];
+const MockData: ProductType[] = [];
 
 for (let i = 1; i < 30; i++) {
     const width = Math.floor(Math.random() * 1000) + 200;
     const height = Math.floor(Math.random() * 1000) + 200;
 
     MockData.push({
-        id: i,
-        name: `Product ${i}`,
-        price: Math.floor(Math.random() * 1000) + 100,
-        description: `This is product ${i}`,
-        photos: [`https://picsum.photos/${width}/${height}`],
+        _id: i.toString(),
+        _seller: {
+            email: 'joao@gmail.com',
+            role: 'Boss',
+            client_fields: null,
+            seller_fields: {
+                demographics: {
+                    name: 'João',
+                    birth_date: new Date(),
+                    address: {
+                        street: 'Rua do João',
+                        postal_code: '1234-123',
+                        city: 'Porto',
+                        country: 'Portugal',
+                    },
+                    phone: '912345678',
+                },
+                statistics: {},
+                profile_picture: 'https://picsum.photos/200/300',
+                about: 'Fixe',
+                seller_type: 'Pintador',
+            },
+            active_chat_id: [],
+            tags: [],
+        },
+        title: 'O Sol',
+        author: 'Zé',
+        photos: ['https://picsum.photos/' + width + '/' + height],
+        description: 'Retrato do pintor Zé',
+        price: 33,
+        product_type: 'Quadro',
+        piece_info: {
+            technique: 'Aguarela',
+            material: 'Papel',
+            dimensions: {
+                height: height,
+                width: width,
+                depth: 0,
+                measure: 'mm',
+            },
+            year: 2020,
+            state: 'Novo',
+        },
+        book_info: null,
+        published_date: new Date(),
     });
 }
 

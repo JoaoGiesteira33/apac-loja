@@ -1,7 +1,53 @@
 {
     "translation": {
-        "navbar": {
-            "search": "Pesquisar a nossa loja"
+        "errors": {
+            "login": {
+                "email": "Email Inválido",
+                "password": "Palavra-passe deve ter pelo menos 6 caracteres!",
+                "credentials": "Credenciais inválidas!",
+                "server-error": "Erro de servidor, contacte o suporte."
+            },
+            "register": {
+                "email": "Email Inválido",
+                "password": "Palavra-passe deve ter pelo menos 6 caracteres!",
+                "password-no-match": "Palavras-passe não coincidem!",
+                "age": "Deve ter pelo menos 18 anos!",
+                "city": "Cidade inválida",
+                "address": "Morada inválida",
+                "phone-number": "Número de telefone inválido",
+                "postal-code": "Código postal inválido",
+                "submit": "Erro ao registar. Contacte o suporte!"
+            }
+        },
+        "artist": {
+            "pieces": "obras do artista"
+        },
+        "cart": {},
+        "checkout": {},
+        "global": {
+            "mandatory": "* Campos obrigatórios",
+            "load-more": "Carregar mais",
+            "login": "Entrar",
+            "enter": "Entrar",
+            "register": "Registar",
+            "postal-code": "Código postal"
+        },
+        "home": {},
+        "forms": {
+            "first-last-name": "Primeiro e último nome",
+            "email": "Email",
+            "birth-date": "Data de nascimento",
+            "password": "Palavra-passe",
+            "city": "Cidade",
+            "address": "Morada",
+            "phone-number": "Número de telefone",
+            "no-account": "Não tem conta? Registe-se!"
+        },
+        "product": {},
+        "profile": {
+            "requests": {
+                "title": "Novos pedidos"
+            }
         }
-    }    
+    }
 }
