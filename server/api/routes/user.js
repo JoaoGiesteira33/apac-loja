@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const controllerUser = require('../controllers/user');
+const controllerProduct = require('../controllers/product');
+const controllerShipment = require('../controllers/shipment');
+
 const { isAdmin, isMeOrAdmin, isAdminOrAUTH } = require('../utils/utils');
 
 const middleware = require('./myMiddleware');
@@ -288,6 +291,60 @@ router.get(
     }
 );
 
-// ----------------------TEST-----------------------
+// ----------------------NON-CRUD-----------------------
+
+// GET Products of Seller(Including the state of shipment if applicable)
+router.get('/seller/:id/products', function (req, res) {
+    controllerProduct
+        .getProducts({ _seller: req.params.id }, {}, 0, 0, '')
+        .then((info) => {
+            let unavailable = info.results
+                .filter((product) => {
+                    return product.piece_info.state == 'unavailable';
+                })
+                .map((product) => {
+                    return product._id;
+                });
+
+            console.log(unavailable);
+
+            if (unavailable.length > 0) {
+                controllerShipment
+                    .getShipments(
+                        { _product: { $in: unavailable } },
+                        {},
+                        0,
+                        0,
+                        ''
+                    )
+                    .then((shipments) => {
+                        console.log(shipments);
+                        let products = info.results.map((product) => {
+                            let shipment = shipments.results.find(
+                                (shipment) => {
+                                    return shipment._product.equals(
+                                        product._id
+                                    );
+                                }
+                            );
+                            if (shipment) {
+                                product.piece_info.state =
+                                    shipment.states.slice(-1)[0].value;
+                            }
+                            return product;
+                        });
+                        res.jsonp({ results: products, hasMore: info.hasMore });
+                    })
+                    .catch((error) => {
+                        res.jsonp(error);
+                    });
+            } else {
+                res.jsonp(info);
+            }
+        })
+        .catch((error) => {
+            res.jsonp(error);
+        });
+});
 
 module.exports = router;

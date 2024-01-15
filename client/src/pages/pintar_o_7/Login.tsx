@@ -11,8 +11,10 @@ import {
 import { loginUser, fetchUser } from '../../fetchers';
 import { Link, useNavigate } from 'react-router-dom';
 import { useJwt, decodeToken } from 'react-jwt';
+import { useTranslation } from 'react-i18next';
 
 const Login = (props) => {
+    const [t] = useTranslation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -99,7 +101,7 @@ const Login = (props) => {
                     component="h1"
                     variant="h5"
                     style={{ margin: '20px 0', color: 'black' }}>
-                    Login
+                    {t('global.login')}
                 </Typography>
                 <form onSubmit={handleLogin} style={{ width: '100%' }}>
                     {showEmailAlert && (
@@ -109,7 +111,7 @@ const Login = (props) => {
                             }}
                             variant="filled"
                             severity="error">
-                            Email Inválido!
+                            {t('errors.login.email')}
                         </Alert>
                     )}
                     <TextField
@@ -118,7 +120,7 @@ const Login = (props) => {
                         required
                         fullWidth
                         id="email"
-                        label="Email"
+                        label={t('forms.email')}
                         name="email"
                         autoComplete="email"
                         autoFocus
@@ -133,7 +135,7 @@ const Login = (props) => {
                             }}
                             variant="filled"
                             severity="error">
-                            Palavra-passe deve ter pelo menos 6 caracteres!
+                            {t('errors.login.password')}
                         </Alert>
                     )}
                     <TextField
@@ -142,7 +144,7 @@ const Login = (props) => {
                         required
                         fullWidth
                         name="password"
-                        label="Palavra-passe"
+                        label={t('forms.password')}
                         type="password"
                         id="password"
                         autoComplete="current-password"
@@ -156,7 +158,7 @@ const Login = (props) => {
                             }}
                             variant="filled"
                             severity="error">
-                            Credenciais inválidas!
+                            {t('errors.login.credentials')}
                         </Alert>
                     )}
                     {showErrorAlert && (
@@ -166,7 +168,7 @@ const Login = (props) => {
                             }}
                             variant="filled"
                             severity="error">
-                            Erro de Servidor, contacte o suporte! {errorMessage}
+                            {t('errors.login.server-error')} {errorMessage}
                         </Alert>
                     )}
                     <Button
@@ -178,14 +180,14 @@ const Login = (props) => {
                             backgroundColor: 'black',
                             color: 'white',
                         }}>
-                        Entrar
+                        {t('global.enter')}
                     </Button>
                     <Typography
                         fontStyle="italic"
                         sx={{ textDecoration: 'underline' }}
                         display="inline"
                         style={{ margin: '20px 0', color: 'black' }}>
-                        <Link to={'/register'}>Não tem conta? Registe-se!</Link>
+                        <Link to={'/register'}>{t('forms.no-account')}</Link>
                     </Typography>
                 </form>
             </Paper>

@@ -51,25 +51,7 @@ module.exports.getOrders = function (filters, fields, page, limit, expand) {
             .populate(expand),
         Order.countDocuments(filters),
     ]).then(([orders, count]) => {
-        let hasMore = count > (page + 1) * limit;
+        let hasMore = count > (page + 1) * limit && limit != 0;
         return { results: orders, hasMore: hasMore };
-    });
-};
-
-// ADDITIONAL METHODS:
-
-// updateOrderShipmentStatus
-// Push a new state to the shipment with the given ids/all if products is undefined
-module.exports.updateShipmentStatus = function (id, products, value) {
-    let filter;
-    if (indexes !== undefined) {
-        filter = { _id: id, 'shipments._product': { $in: products } };
-    } else {
-        filter = { _id: id };
-    }
-    return Order.updateOne(filter, {
-        $push: { 'shipments.$[].states': { value: value, date: Date.now } },
-    }).then((info) => {
-        return info;
     });
 };

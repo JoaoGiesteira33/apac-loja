@@ -14,8 +14,10 @@ import AddCircleOutlineSharpIcon from '@mui/icons-material/AddCircleOutlineSharp
 
 import useProductSearch from '../../hooks/useProductSearch';
 import ProductThumbnail from '../../components/pintar_o_7/ProductThumbnail';
+import { useTranslation } from 'react-i18next';
 
 export default function Home() {
+    const [t] = useTranslation();
     const [productQuery, setProductQuery] = useState({
         'piece_info.state': 'available',
     });
@@ -91,8 +93,8 @@ export default function Home() {
                         maxWidth: 'xl',
                     }}
                     spacing={{ xs: 2, md: 4, lg: 8 }}>
-                    {MockData &&
-                        MockData.map((product, index) => (
+                    {products &&
+                        products.map((product, index) => (
                             <Grid
                                 key={index}
                                 display={'flex'}
@@ -128,7 +130,7 @@ export default function Home() {
                     onClick={() => {
                         setProductPage((prevPageNumber) => prevPageNumber + 1);
                     }}>
-                    Load More
+                    {t('global.load-more')}
                 </Button>
             )}
             <Divider variant="middle" />

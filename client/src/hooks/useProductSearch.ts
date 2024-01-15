@@ -58,7 +58,11 @@ for (let i = 1; i < 30; i++) {
     });
 }
 
-export default function useProductSearch(query: object, pageNumber: number) {
+export default function useProductSearch(
+    query: object,
+    pageNumber: number,
+    substitute?: string
+) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [products, setProducts] = useState([]);
@@ -81,9 +85,12 @@ export default function useProductSearch(query: object, pageNumber: number) {
             cancelToken: new axios.CancelToken((c) => (cancel = c)),
         })
             .then((res) => {
-                setProducts(products.concat(res.data));
-                setHasMore(res.data.length > 0);
+                if (substitute) setProducts(res.data.results);
+                else setProducts(products.concat(res.data.results));
+
+                setHasMore(res.data.hasMore);
                 setLoading(false);
+                console.log('Products:', products.concat(res.data.results));
             })
             .catch((e) => {
                 // Ignore the error if it's a request cancellation.

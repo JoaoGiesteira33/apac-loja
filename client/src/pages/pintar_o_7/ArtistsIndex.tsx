@@ -9,11 +9,17 @@ import AddCircleOutlineSharpIcon from '@mui/icons-material/AddCircleOutlineSharp
 
 import useArtistSearch from '../../hooks/useArtistSearch';
 import ArtistThumbnail from '../../components/pintar_o_7/ArtistThumbnail';
+import { useTranslation } from 'react-i18next';
 
 export default function ArtistsIndexPage() {
+    const [t] = useTranslation();
     const [artistPage, setArtistPage] = useState(1);
+    const [artistQuery, setArtistQuery] = useState({});
 
-    const { hasMore, loading, error, artists } = useArtistSearch(artistPage);
+    const { hasMore, loading, error, artists } = useArtistSearch(
+        artistQuery,
+        artistPage
+    );
 
     return (
         <Box component="div">
@@ -63,7 +69,7 @@ export default function ArtistsIndexPage() {
                     onClick={() => {
                         setArtistPage((prevPageNumber) => prevPageNumber + 1);
                     }}>
-                    Load More
+                    {t('global.load-more')}
                 </Button>
             )}
         </Box>

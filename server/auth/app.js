@@ -3,7 +3,7 @@ var express = require('express');
 var logger = require('morgan');
 var cors = require('cors');
 var cookieParser = require('cookie-parser');
-
+var axios = require('axios');
 var mongoose = require('mongoose');
 
 var secrets = require('docker-secret').secrets;

@@ -8,13 +8,19 @@ import { Divider, Typography } from '@mui/material';
 // TO DO - TROCAR DE PRODUCT PARA ARTIST
 
 export default function ArtistThumbnail(props) {
+    var name = props.artist.seller_fields.demographics.name;
+    var length = name.split(' ').length;
+
+    var lastName = name.split(' ')[length - 1];
+    var otherNames = name
+        .split(' ')
+        .slice(0, length - 1)
+        .join(' ');
     return (
         <Box component="div">
-            <Typography variant="subtitle1">
-                {props.artist.seller_fields.demographics.name.split(' ')[0]}
-            </Typography>
+            <Typography variant="subtitle1">{otherNames}</Typography>
             <Typography variant="h2" fontWeight="bold">
-                {props.artist.seller_fields.demographics.name.split(' ')[1]}
+                {lastName}
             </Typography>
             <Link to={`/artists/${props.artist._id}`} state={props.artist}>
                 <Box component="div" className="w-full aspect-square">

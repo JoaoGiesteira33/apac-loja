@@ -14,8 +14,10 @@ import { registerUser } from '../../fetchers';
 import { useNavigate } from 'react-router-dom';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import CountrySelect from '../../components/pintar_o_7/CountrySelect';
+import { useTranslation } from 'react-i18next';
 
 const Register = () => {
+    const [t] = useTranslation();
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
@@ -142,7 +144,7 @@ const Register = () => {
                     component="h1"
                     variant="h5"
                     style={{ margin: '20px 0', color: 'black' }}>
-                    Registar
+                    {t('global.register')}
                 </Typography>
                 <form onSubmit={handleRegisto} style={{ width: '100%' }}>
                     {/* ----------- EMAIL ---------------- */}
@@ -153,7 +155,7 @@ const Register = () => {
                             }}
                             variant="filled"
                             severity="error">
-                            Email Inválido!
+                            {t('errors.register.email')}
                         </Alert>
                     )}
                     <TextField
@@ -162,7 +164,7 @@ const Register = () => {
                         required
                         fullWidth
                         id="email"
-                        label="Email"
+                        label={t('forms.email')}
                         name="email"
                         autoComplete="email"
                         autoFocus
@@ -184,7 +186,7 @@ const Register = () => {
                             }}
                             variant="filled"
                             severity="error">
-                            Palavra-passe deve ter pelo menos 6 caracteres!
+                            {t('errors.register.password')}
                         </Alert>
                     )}
                     <TextField
@@ -193,7 +195,7 @@ const Register = () => {
                         required
                         fullWidth
                         name="password"
-                        label="Palavra-passe"
+                        label={t('forms.password')}
                         type="password"
                         id="password"
                         autoComplete="current-password"
@@ -203,7 +205,7 @@ const Register = () => {
                     {/* ----------- PASSWORD2 ---------------- */}
                     {showPass2Alert && (
                         <Alert variant="filled" severity="warning">
-                            Palavras-passe não coincidem!
+                            {t('errors.register.password-no-match')}
                         </Alert>
                     )}
                     <TextField
@@ -212,7 +214,7 @@ const Register = () => {
                         required
                         fullWidth
                         name="password2"
-                        label="Palavra-passe"
+                        label={t('forms.password')}
                         type="password"
                         id="password2"
                         autoComplete="current-password"
@@ -226,7 +228,7 @@ const Register = () => {
                         required
                         fullWidth
                         name="client_fields.demographics.name"
-                        label="Primeiro e último nome"
+                        label={t('forms.first-last-name')}
                         type="text"
                         id="name"
                         autoComplete="name"
@@ -241,7 +243,7 @@ const Register = () => {
                             }}
                             variant="filled"
                             severity="error">
-                            Deve ter mais de 18 anos!
+                            {t('errors.register.age')}
                         </Alert>
                     )}
                     <DatePicker
@@ -249,7 +251,7 @@ const Register = () => {
                         openTo="day"
                         views={['year', 'month', 'day']}
                         format="DD/MM/YYYY"
-                        label="Data de Nascimento"
+                        label={t('forms.birth-date')}
                         value={birth_date}
                         slotProps={{
                             textField: {
@@ -276,12 +278,14 @@ const Register = () => {
                         <TextField
                             variant="standard"
                             margin="normal"
-                            label="Cidade"
+                            label={t('forms.city')}
                             type="text"
                             id="city"
                             name="client_fields.demographics.address.city"
                             error={showCityError}
-                            helperText={showCityError ? 'Cidade Inválida' : ' '}
+                            helperText={
+                                showCityError ? t('errors.register.city') : ' '
+                            }
                             autoComplete="city"
                             value={city}
                             sx={{ maxWidth: { sx: '100%', sm: '40%' } }}
@@ -295,13 +299,15 @@ const Register = () => {
                         <TextField
                             variant="standard"
                             margin="normal"
-                            label="Morada"
+                            label={t('forms.address')}
                             type="text"
                             name="client_fields.demographics.address.street"
                             fullWidth
                             error={showAddressError}
                             helperText={
-                                showAddressError ? 'Morada Inválida' : ' '
+                                showAddressError
+                                    ? t('errors.register.address')
+                                    : ' '
                             }
                             id="address"
                             autoComplete="address"
@@ -311,13 +317,13 @@ const Register = () => {
                         <TextField
                             variant="standard"
                             margin="normal"
-                            label="Código Postal"
+                            label={t('forms.postal-code')}
                             type="text"
                             name="client_fields.demographics.address.postal_code"
                             error={showPostalCodeError}
                             helperText={
                                 showPostalCodeError
-                                    ? 'Código Postal Inválido'
+                                    ? t('errors.register.postal-code')
                                     : ' '
                             }
                             id="postalCode"
@@ -334,7 +340,7 @@ const Register = () => {
                             }}
                             variant="filled"
                             severity="error">
-                            Número de telefone inválido!
+                            {t('errors.register.phone-number')}
                         </Alert>
                     )}
                     <TextField
@@ -342,7 +348,7 @@ const Register = () => {
                         margin="normal"
                         fullWidth
                         name="client_fields.demographics.phone"
-                        label="Número de Telefone"
+                        label={t('forms.phone-number')}
                         type="text"
                         id="phone"
                         autoComplete="phoneNumber"
@@ -357,7 +363,7 @@ const Register = () => {
                             }}
                             variant="filled"
                             severity="error">
-                            Erro ao registar, contacte o suporte!
+                            {t('errors.register.submit')}
                         </Alert>
                     )}
                     <Button
@@ -369,9 +375,9 @@ const Register = () => {
                             backgroundColor: 'black',
                             color: 'white',
                         }}>
-                        Registar
+                        {t('global.register')}
                     </Button>
-                    * Campos obrigatórios
+                    {t('global.mandatory')}
                 </form>
             </Paper>
         </Box>

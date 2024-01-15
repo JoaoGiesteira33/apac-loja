@@ -9,8 +9,10 @@ import AddCircleOutlineSharpIcon from '@mui/icons-material/AddCircleOutlineSharp
 
 import ProductThumbnail from '../../components/pintar_o_7/ProductThumbnail';
 import useProductSearch from '../../hooks/useProductSearch';
+import { useTranslation } from 'react-i18next';
 
 export default function ArtistPage() {
+    const { t } = useTranslation();
     const location = useLocation();
     const artist = location.state;
 
@@ -20,7 +22,7 @@ export default function ArtistPage() {
     });
     const [productPage, setProductPage] = useState(1);
 
-    const { MockData, hasMore, loading, error, products } = useProductSearch(
+    const { hasMore, loading, error, products } = useProductSearch(
         productQuery,
         productPage
     );
@@ -98,39 +100,37 @@ export default function ArtistPage() {
                         <Typography
                             variant="h4"
                             fontWeight="bold"
-                            // align center vertically
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}>
+                            align="center">
                             {artist.seller_fields.demographics.name.toUpperCase()}
                         </Typography>
                         <Typography
                             variant="subtitle1"
                             fontWeight="bold"
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}>
+                            align="center">
                             {artist.seller_fields.about}
                         </Typography>
                     </Grid>
                 </Grid>
                 <Divider />
+
                 <Typography variant="h5" fontWeight="bold" my={2}>
-                    obras do artista
+                    {t('artist.pieces')}
                 </Typography>
                 <Grid
                     container
                     sx={{
-                        justifyContent: { xs: 'center', sm: 'space-between' },
-                        martinTop: '1rem',
+                        justifyContent: {
+                            xs: 'center',
+                            sm:
+                                products && products.length === 0
+                                    ? 'center'
+                                    : 'space-between',
+                        },
+                        my: '1rem',
                     }}
                     spacing={{ xs: 2, md: 4, lg: 8 }}>
-                    {MockData &&
-                        MockData.map((product, index) => (
+                    {products &&
+                        products.map((product, index) => (
                             <Grid
                                 key={index}
                                 display={'flex'}
@@ -142,6 +142,11 @@ export default function ArtistPage() {
                                 <ProductThumbnail product={product} />
                             </Grid>
                         ))}
+                    {products && products.length === 0 && !loading && (
+                        <Typography variant="subtitle1" align="center">
+                            Este artista ainda não tem obras disponíveis.
+                        </Typography>
+                    )}
                 </Grid>
             </Box>
 
@@ -165,7 +170,7 @@ export default function ArtistPage() {
                     onClick={() => {
                         setProductPage((prevPageNumber) => prevPageNumber + 1);
                     }}>
-                    Load More
+                    {t('global.load-more')}
                 </Button>
             )}
         </Box>

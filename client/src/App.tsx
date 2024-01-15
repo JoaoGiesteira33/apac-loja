@@ -23,6 +23,7 @@ import { useJwt, isExpired } from 'react-jwt';
 import Requests from './pages/Administrator/Requests';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Products from './pages/Seller/Products';
 
 // dynamically load components as they are needed
 const InitialPage = React.lazy(() => import('./pages/pintar_o_7/Initial'));
@@ -144,7 +145,7 @@ function App() {
             requireAuth: false,
         },
         {
-            path: '/collections/pintura',
+            path: '/product/:product_id',
             element: <ProductPage />,
             requireAuth: false,
         },
@@ -166,6 +167,11 @@ function App() {
         {
             path: '/profile/info',
             element: <ProfileInfo />,
+            requireAuth: true,
+        },
+        {
+            path: '/profile/products',
+            element: <Products />,
             requireAuth: true,
         },
         {
