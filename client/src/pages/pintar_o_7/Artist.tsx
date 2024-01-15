@@ -9,8 +9,10 @@ import AddCircleOutlineSharpIcon from '@mui/icons-material/AddCircleOutlineSharp
 
 import ProductThumbnail from '../../components/pintar_o_7/ProductThumbnail';
 import useProductSearch from '../../hooks/useProductSearch';
+import { useTranslation } from 'react-i18next';
 
 export default function ArtistPage() {
+    const { t } = useTranslation();
     const location = useLocation();
     const artist = location.state;
 
@@ -120,7 +122,7 @@ export default function ArtistPage() {
                 </Grid>
                 <Divider />
                 <Typography variant="h5" fontWeight="bold" my={2}>
-                    obras do artista
+                    {t('artist.pieces')}
                 </Typography>
                 <Grid
                     container
@@ -165,7 +167,7 @@ export default function ArtistPage() {
                     onClick={() => {
                         setProductPage((prevPageNumber) => prevPageNumber + 1);
                     }}>
-                    Load More
+                    {t('global.load-more')}
                 </Button>
             )}
         </Box>

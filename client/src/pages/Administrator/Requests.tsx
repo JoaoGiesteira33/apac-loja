@@ -14,8 +14,11 @@ import MultipleSelectTypes from '../../components/pintar_o_7/MultipleSelectTypes
 import NewProductRequest from '../../components/pintar_o_7/NewProductRequest';
 import useProductSearch from '../../hooks/useProductSearch';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 
 export default function Requests() {
+    const { t } = useTranslation();
+
     const [productQuery, setProductQuery] = React.useState({
         'piece_info.state': 'submitted',
         'author[regex]': '',
@@ -97,7 +100,9 @@ export default function Requests() {
                 spacing={4}
                 alignItems={'center'}
                 justifyContent={'flex-start'}>
-                <Typography variant="h3">New Requests</Typography>
+                <Typography variant="h3">
+                    {t('profile.requests.title')}
+                </Typography>
                 <Box component={'div'} className="w-full">
                     <Stack
                         direction={{ xs: 'column', sm: 'row' }}
@@ -177,7 +182,7 @@ export default function Requests() {
                                 (prevPageNumber) => prevPageNumber + 1
                             );
                         }}>
-                        Load More
+                        {t('global.load-more')}
                     </Button>
                 )}
             </Stack>
