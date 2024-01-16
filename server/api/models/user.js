@@ -69,6 +69,11 @@ const SellerFields = new mongoose.Schema(
             required: true,
             enum: ['artist', 'bookseller'],
         },
+        status: {
+            type: String,
+            enum: ['active', 'inactive'],
+            default: 'active',
+        },
     },
     { _id: false }
 );

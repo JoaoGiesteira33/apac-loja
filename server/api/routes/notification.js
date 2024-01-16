@@ -1,21 +1,20 @@
 const express = require('express');
 const router = express.Router();
 
-const controllerOrder = require('../controllers/order');
-const controllerShipment = require('../controllers/shipment');
+const controllerNotification = require('../controllers/notification');
 
 const middleware = require('./myMiddleware');
 
 // ---------------------------------------------
 
-// GET Order Info
+// GET Notification Info
 router.get(
     '/:id',
     middleware.expandExtractor,
     middleware.fieldSelector,
     function (req, res, next) {
-        controllerOrder
-            .getOrderInfo(req.params.id, req.expand || '')
+        controllerNotification
+            .getNotificationInfo(req.params.id, req.expand || '')
             .then((info) => {
                 res.jsonp(info);
             })
@@ -25,33 +24,22 @@ router.get(
     }
 );
 
-// POST Order Info
+// POST Notification Info
 router.post('/', function (req, res, next) {
-    //add _client to shipments
-    req.body.shipments.forEach((shipment) => {
-        shipment._client = req.body._client;
-    });
-    //Create the shipments and then the order with their ids
-    controllerShipment
-        .createManyShipments(req.body.shipments)
-        .then((shipments) => {
-            let order = req.body;
-            order.shipments = shipments.map((shipment) => shipment._id);
-            controllerOrder
-                .createOrder(order)
-                .then((info) => {
-                    res.jsonp(info);
-                })
-                .catch((error) => {
-                    res.jsonp(error);
-                });
+    controllerNotification
+        .createNotification(req.body)
+        .then((info) => {
+            res.jsonp(info);
+        })
+        .catch((error) => {
+            res.jsonp(error);
         });
 });
 
-// PUT Order Info
+// PUT Notification Info
 router.put('/:id', function (req, res, next) {
-    controllerOrder
-        .replaceOrderInfo(req.params.id, req.body)
+    controllerNotification
+        .replaceNotificationInfo(req.params.id, req.body)
         .then((info) => {
             res.jsonp(info);
         })
@@ -60,10 +48,10 @@ router.put('/:id', function (req, res, next) {
         });
 });
 
-// PATCH Order Info
+// PATCH Notification Info
 router.patch('/:id', function (req, res, next) {
-    controllerOrder
-        .updateOrderInfo(req.params.id, req.body)
+    controllerNotification
+        .updateNotificationInfo(req.params.id, req.body)
         .then((info) => {
             res.jsonp(info);
         })
@@ -72,10 +60,10 @@ router.patch('/:id', function (req, res, next) {
         });
 });
 
-// DELETE Order Info
+// DELETE Notification Info
 router.delete('/:id', function (req, res, next) {
-    controllerOrder
-        .deleteOrder(req.params.id)
+    controllerNotification
+        .deleteNotification(req.params.id)
         .then((info) => {
             res.jsonp(info);
         })
@@ -84,19 +72,19 @@ router.delete('/:id', function (req, res, next) {
         });
 });
 
-// GET Orders
+// GET Notifications
 router.get(
     '/',
     middleware.expandExtractor,
-    middleware.extractFilters,
     middleware.fieldSelector,
+    middleware.paginationExtractor,
     function (req, res, next) {
-        controllerOrder
-            .getOrders(
+        controllerNotification
+            .getNotifications(
                 req.filters,
                 req.fields,
-                req.query.page || 0,
-                req.query.limit || 28,
+                req.page,
+                req.limit,
                 req.expand || ''
             )
             .then((info) => {
