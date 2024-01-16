@@ -24,6 +24,7 @@ import Requests from './pages/Administrator/Requests';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Products from './pages/Seller/Products';
+import NewProduct from './pages/Seller/NewProduct';
 
 // dynamically load components as they are needed
 const InitialPage = React.lazy(() => import('./pages/pintar_o_7/Initial'));
@@ -179,6 +180,11 @@ function App() {
         {
             path: '/profile/products',
             element: <Products />,
+            requireAuth: true,
+        },
+        {
+            path: '/profile/new-product',
+            element: <NewProduct />,
             requireAuth: true,
         },
         {

@@ -20,7 +20,12 @@
             }
         },
         "artist": {
-            "pieces": "obras do artista"
+            "pieces": "obras do artista",
+            "your-pieces": "As suas obras",
+            "new-piece": "Nova obra",
+            "new-piece-page": {
+                "paper-basic-info": "Informação da obra"
+            }
         },
         "cart": {},
         "checkout": {},
@@ -30,7 +35,10 @@
             "login": "Entrar",
             "enter": "Entrar",
             "register": "Registar",
-            "postal-code": "Código postal"
+            "postal-code": "Código postal",
+            "description": "Descrição",
+            "title": "Título",
+            "price": "Preço"
         },
         "home": {},
         "forms": {
