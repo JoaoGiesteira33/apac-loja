@@ -15,13 +15,6 @@ export default function Hero() {
                 <p className="text-center font-light md:text-left mt-2">
                     Uma iniciativa Associação Portuguesa das Artes e da Cultura
                 </p>
-                <div className="flex flex-col font-light md:flex-row md:items-center mt-6">
-                    <a
-                        href="#"
-                        className="px-8 py-2 border-[1px] border-inherit">
-                        saber mais
-                    </a>
-                </div>
             </div>
         </div>
     );

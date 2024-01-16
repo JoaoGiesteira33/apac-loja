@@ -89,10 +89,11 @@ const Login = (props) => {
             <CssBaseline />
             <Paper
                 elevation={0}
+                sx={{
+                    px: { md: '30%', xs: '10%' },
+                    py: '3%',
+                }}
                 style={{
-                    paddingLeft: '10%',
-                    paddingRight: '10%',
-                    paddingBottom: 10,
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'left',
@@ -171,24 +172,34 @@ const Login = (props) => {
                             {t('errors.login.server-error')} {errorMessage}
                         </Alert>
                     )}
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        style={{
-                            margin: '20px 0',
-                            backgroundColor: 'black',
-                            color: 'white',
-                        }}>
-                        {t('global.enter')}
-                    </Button>
-                    <Typography
-                        fontStyle="italic"
-                        sx={{ textDecoration: 'underline' }}
-                        display="inline"
-                        style={{ margin: '20px 0', color: 'black' }}>
-                        <Link to={'/register'}>{t('forms.no-account')}</Link>
-                    </Typography>
+                    <Box
+                        component="div"
+                        sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            size="large"
+                            style={{
+                                margin: '20px 0',
+                                width: '50%',
+                                backgroundColor: 'black',
+                                color: 'white',
+                                alignSelf: 'center',
+                            }}>
+                            {t('global.enter')}
+                        </Button>
+                        <Typography
+                            fontStyle="italic"
+                            sx={{
+                                textDecoration: 'underline',
+                                color: 'black',
+                            }}
+                            display="inline">
+                            <Link to={'/register'}>
+                                {t('forms.no-account')}
+                            </Link>
+                        </Typography>
+                    </Box>
                 </form>
             </Paper>
         </Box>

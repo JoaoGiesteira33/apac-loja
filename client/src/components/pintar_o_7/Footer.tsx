@@ -56,7 +56,7 @@ const Footer = (props) => {
                             />
                         </ListItem>
                         <ListItem sx={{ paddingX: 0 }}>
-                            <a
+                            {/*<a
                                 target="_blank"
                                 href={
                                     'https://www.facebook.com/associacaoportuguesartecultura'
@@ -64,19 +64,19 @@ const Footer = (props) => {
                                 <FacebookIcon
                                     sx={{ color: COLOR, margin: ICON_MARGIN }}
                                 />
-                            </a>
+                            </a>*/}
 
                             <a
                                 target="_blank"
                                 href={
-                                    'https://www.instagram.com/associacaoportuguesartecultura/'
+                                    'https://www.instagram.com/galeriapintaro7/'
                                 }>
                                 <InstagramIcon
                                     sx={{ color: COLOR, margin: ICON_MARGIN }}
                                 />
                             </a>
 
-                            <a
+                            {/*<a
                                 target="_blank"
                                 href={
                                     'https://associacaoportuguesaartesecultura.pt/projetos/'
@@ -94,7 +94,7 @@ const Footer = (props) => {
                                 <LinkedInIcon
                                     sx={{ color: COLOR, margin: ICON_MARGIN }}
                                 />
-                            </a>
+                            </a>*/}
                         </ListItem>
                     </List>
                 </Grid>
@@ -143,7 +143,7 @@ const Footer = (props) => {
                     display="flex"
                     alignItems="center"
                     justifyContent="center">
-                    <MY_LNK link="support" text="suporte" />
+                    <MY_LNK link="#" text="livro de reclamações" />
                 </Grid>
                 <Grid
                     item
@@ -166,10 +166,16 @@ const Footer = (props) => {
                     display="flex"
                     alignItems="center"
                     justifyContent="center">
-                    <Typography color="gray" className="font-poppins">
-                        uma iniciativa associação portuguesa das artes e da
-                        cultura &copy; {year}
-                    </Typography>
+                    <a
+                        target="_blank"
+                        href={'https://associacaoportuguesaartesecultura.pt/'}>
+                        <Typography
+                            color="gray"
+                            sx={{ textDecoration: 'underline' }}>
+                            uma iniciativa associação portuguesa das artes e da
+                            cultura &copy; {year}
+                        </Typography>
+                    </a>
                 </Grid>
             </Grid>
         </Box>

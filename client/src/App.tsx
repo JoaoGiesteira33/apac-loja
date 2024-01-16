@@ -38,6 +38,8 @@ const ArtistPage = React.lazy(() => import('./pages/pintar_o_7/Artist'));
 const CartPage = React.lazy(() => import('./pages/Cart'));
 const CheackoutPage = React.lazy(() => import('./pages/Checkout'));
 const PageNotFound = React.lazy(() => import('./pages/NotFound'));
+const Terms_Conditions = React.lazy(() => import('./pages/Terms_Conditions'));
+const Privacy_Policy = React.lazy(() => import('./pages/Privacy_Policy'));
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 const getDesignTokens = (mode: PaletteMode) => ({
@@ -107,6 +109,11 @@ function App() {
     const [footerSize, setFooterSize] = React.useState<number>(0);
     const location = useLocation();
     const navigate = useNavigate();
+
+    const checkChatRoute = (route: string) => {
+        var re = /\/product\/[^\/?]+/;
+        return re.test(route);
+    };
 
     const [loggedIn, setLoggedIn] = React.useState<boolean>(false);
 
@@ -205,6 +212,16 @@ function App() {
             requireAuth: true,
         },
         {
+            path: '/terms&conditions',
+            element: <Terms_Conditions />,
+            requireAuth: false,
+        },
+        {
+            path: '/privacy_policy',
+            element: <Privacy_Policy />,
+            requireAuth: false,
+        },
+        {
             path: '*',
             element: <PageNotFound />,
             requireAuth: false,
@@ -294,7 +311,7 @@ function App() {
                                 ))}
                             </Routes>
                         </Suspense>
-                        {location.pathname !== '/' ? <Chat /> : <></>}
+                        {checkChatRoute(location.pathname) ? <Chat /> : <></>}
                         {location.pathname !== '/' ? (
                             <Footer setHeight={setFooterSize} />
                         ) : (

@@ -10,11 +10,7 @@ const { sendEmail, getDateTime, isAdmin, hasAccess, isMe } = require('../utils/u
 
 var axios = require('axios');
 
-// GET -> nao tem body o get
-// POST -> adicionar algo
-// PUT -> alterar algo
-// DELETE -> remover algo
-
+// URL do container user
 const API_URL_USER = 'http://api/user';
 
 // ---------------------------------------------
@@ -37,7 +33,10 @@ router.get('/verificar', hasAccess, function (req, res) {
 	res.status(200).jsonp({ message: "OK" })
 });
 
-// POST admin fazer um registo
+
+// ----------------------------------------------------
+
+// POST -> [admin] fazer registo de um utilizador
 router.post('/admin/registo', isAdmin, function (req, res) {
 	if (req.body.email && req.body.password && req.body.nivel) {
 		var info = {
@@ -106,8 +105,8 @@ router.post('/admin/registo', isAdmin, function (req, res) {
 		res.status(400).jsonp({ error: "Falta de parametros" })
 	}
 });
-// POST fazer um registo
-router.post('/registo', function (req, res) { // usar um chapta para verificar se é humano e não encher a base de dados com muitos registos de utilizadores !!!!!!
+// POST -> fazer o registo de um utilizador
+router.post('/registo', function (req, res) {
 	if (req.body.email && req.body.password) {
 		var info = {
 			...req.body,
@@ -176,7 +175,7 @@ router.post('/registo', function (req, res) { // usar um chapta para verificar s
 	}
 });
 
-// POST fazer login
+// POST -> fazer login e obter token de acesso
 router.post('/login', passport.authenticate('local'), function (req, res) {
 	controllerLogin.login(req.body.username, getDateTime())
 		.then(m => {
@@ -211,7 +210,7 @@ router.post('/login', passport.authenticate('local'), function (req, res) {
 		})
 });
 
-// GET login information from email admin
+// GET -> [admin] obter informação de um utilizador através do email
 router.get('/admin', isAdmin, function (req, res) {
 	if (req.body.userEmail) {
 		controllerLogin.getLogin(req.body.userEmail)
@@ -230,28 +229,8 @@ router.get('/admin', isAdmin, function (req, res) {
 		res.status(400).jsonp({ error: "Falta de parametros" })
 	}
 });
-// GET login from email
-// router.get('/', isMe, function (req, res) { // tem de ter o parametro "username", por causa do isMe
-// 	controllerLogin.getLogin(req.user)
-// 		.then(u => {
-// 			if (u) {
-// 				info = {
-// 					username: u.username,
-// 					nivel: u.nivel,
-// 					dataRegisto: u.dataRegisto,
-// 					dataUltimoAcesso: u.dataUltimoAcesso
-// 				}
-// 				res.status(200).jsonp(info)
-// 			}
-// 			else
-// 				res.status(401).jsonp({ error: "Utilizador não encontrado" })
-// 		})
-// 		.catch(erro => {
-// 			res.status(401).jsonp({ error: "Erro na obtenção do utilizador: " + erro })
-// 		})
-// });
 
-// UPDATE password Admin
+// UPDATE -> [admin] atualizar password de um utilizador através do email
 router.put('/admin/password', isAdmin, function (req, res) {
 	if (req.body.userEmail && req.body.userPassword) {
 		controllerLogin.updateLoginPassword(req.body.userEmail, req.body.userPassword) // userEmail e userPassword tem de ser passados no body
@@ -269,7 +248,7 @@ router.put('/admin/password', isAdmin, function (req, res) {
 		res.status(400).jsonp({ error: "Falta de parametros" })
 	}
 });
-// UPDATE password
+// UPDATE -> atualizar email de um utilizador através do email
 router.put('/password', isMe, passport.authenticate('local'), function (req, res) { // tem de ter o parametro "username", por causa do isMe, e o parametro password por causa do authenticate
 	if (req.body.newPassword) {
 		//inserir aqui a verificação da password antiga !!!!
@@ -289,7 +268,7 @@ router.put('/password', isMe, passport.authenticate('local'), function (req, res
 	}
 });
 
-// UPDATE login nivel Admin, apenas faz sentido os admins poderem alterar o nivel de acesso
+// UPDATE -> [Admin] atualizar nivel de um utilizador através do email
 router.put('/admin/nivel', isAdmin, function (req, res) {
 	if (req.body.userEmail && req.body.userNivel) { // userEmail e userNivel tem de ser passados no body
 		controllerLogin.updateLoginNivel(req.body.userEmail, req.body.userNivel)
@@ -311,7 +290,7 @@ router.put('/admin/nivel', isAdmin, function (req, res) {
 	}
 });
 
-// DELETE login Admin
+// DELETE -> [Admin] apagar um utilizador através do email
 router.delete('/admin', isAdmin, function (req, res) {
 	if (req.body.email && controllerLogin.existsEmail()) {// email tem de ser passado no body
 		controllerLogin.getLogin(req.body.email)
@@ -394,7 +373,7 @@ router.delete('/admin', isAdmin, function (req, res) {
 		res.status(400).jsonp({ error: "Falta de parametros" })
 	}
 });
-// DELETE login, send email to confirm
+// DELETE -> enviar email com código de verificação para apagar a conta de um utilizador
 router.delete('/apagar', isMe, async function (req, res) { // tem de ter o parametro "username", por causa do isMe
 	if (controllerLogin.existsEmail(req.user)) {
 		const code = controllerLogin.generateRecoveryCode(req.user);
@@ -416,7 +395,7 @@ router.delete('/apagar', isMe, async function (req, res) { // tem de ter o param
 		res.status(401).jsonp({ error: "Utilizador não encontrado" })
 	}
 });
-// DELETE login, verify code and delete
+// DELETE -> apagar a conta de um utilizador após verificar o código fornecido	
 router.post('/apagar-verificar', isMe, function (req, res) { // tem de ter o parametro "username", por causa do isMe
 	controllerLogin.verifyRecoveryCode(req.user, req.body.code) // code tem de ser passado no body
 		.then(b => {
@@ -524,7 +503,7 @@ router.post('/apagar-verificar', isMe, function (req, res) { // tem de ter o par
 		})
 });
 
-// POST esqueci-me da password, send email to confirm
+// POST -> enviar email com código de verificação para alterar a password
 router.post('/esqueci', async function (req, res) {
 	if (controllerLogin.existsEmail(req.body.email)) { // email tem de ser passado no body
 		const code = controllerLogin.generateRecoveryCode(req.body.email);
@@ -547,8 +526,8 @@ router.post('/esqueci', async function (req, res) {
 	}
 
 });
-// POST esqueci-me da password, verify code and change password
-router.post('/esqueci-verificar', function (req, res) {
+// POST -> alterar a password de um utilizador após verificar o código fornecido
+router.post('/esqueci-verificar', passport.authenticate('local'), function (req, res) {
 	controllerLogin.verifyRecoveryCode(req.body.email, req.body.code)// email e code tem de ser passados no body
 		.then(b => {
 			if (b) {
