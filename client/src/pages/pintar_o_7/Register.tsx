@@ -130,10 +130,11 @@ const Register = () => {
             <CssBaseline />
             <Paper
                 elevation={0}
+                sx={{
+                    px: { md: '30%', xs: '10%' },
+                    py: '3%',
+                }}
                 style={{
-                    paddingLeft: '10%',
-                    paddingRight: '10%',
-                    paddingBottom: 10,
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'left',
@@ -366,17 +367,24 @@ const Register = () => {
                             {t('errors.register.submit')}
                         </Alert>
                     )}
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        style={{
-                            margin: '20px 0',
-                            backgroundColor: 'black',
-                            color: 'white',
+                    <Box
+                        component="div"
+                        sx={{
+                            justifyContent: 'center',
+                            display: 'flex',
                         }}>
-                        {t('global.register')}
-                    </Button>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            style={{
+                                margin: '20px 0',
+                                backgroundColor: 'black',
+                                color: 'white',
+                                width: '50%',
+                            }}>
+                            {t('global.register')}
+                        </Button>
+                    </Box>
                     {t('global.mandatory')}
                 </form>
             </Paper>

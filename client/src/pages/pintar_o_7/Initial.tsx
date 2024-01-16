@@ -31,7 +31,8 @@ export default function Initial(props) {
                 className="font-poppins"
                 href={link}
                 underline="none"
-                color={'black'}>
+                color={'black'}
+                style={{ textShadow: '0px 0px 2px white' }}>
                 {text}
             </Link>
         );
@@ -60,9 +61,10 @@ export default function Initial(props) {
                     bottom: 0,
                     paddingBottom: 10,
                     display: displayConfig[0],
+                    backgroundColor: 'rgba(128,128,128,0.5)',
                 }}>
                 <Grid item xs={12}>
-                    <Divider variant="middle" />
+                    <Divider />
                 </Grid>
                 <Grid item xs={4} />
                 <Grid item xs={2}>
