@@ -65,6 +65,18 @@ secrets:
     file: ./env/PAYPAL_CLIENT_ID.txt
   PAYPAL_CLIENT_SECRET:
     file: ./env/PAYPAL_CLIENT_SECRET.txt
+  PAYPAL_ENVIRONMENT:
+    file: ./env/PAYPAL_ENVIRONMENT.txt
+  PAYPAL_SANDBOX_URL:
+    file: ./env/PAYPAL_SANDBOX_URL.txt
+  PAYPAL_LIVE_URL:
+    file: ./env/PAYPAL_LIVE_URL.txt
+  EUPAGO_ENVIRONMENT:
+    file: ./env/EUPAGO_ENVIRONMENT.txt
+  EUPAGO_SANDBOX_URL:
+    file: ./env/EUPAGO_SANDBOX_URL.txt
+  EUPAGO_LIVE_URL:
+    file: ./env/EUPAGO_LIVE_URL.txt
 #  EMAIL:
 #    file: ./env/EMAIL.txt
 #  SERVICE:
