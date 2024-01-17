@@ -14,12 +14,12 @@ export default function Hero(props) {
             <Box component="div" sx={{ display: 'flex' }}>
                 <img
                     src={props.img}
-                    alt="Hero"
                     style={{
                         maxHeight: '35rem',
                         width: '100%',
                         height: 'auto',
                         objectFit: 'cover',
+                        backgroundColor: props.color,
                     }}
                 />
             </Box>

@@ -38,7 +38,8 @@
             "load-more": "Carregar mais",
             "login": "Entrar",
             "enter": "Entrar",
-            "register": "Registar"
+            "register": "Registar",
+            "contact": "Fala connosco"
         },
         "home": {},
         "forms": {
@@ -58,9 +59,9 @@
             "requests": {
                 "title": "Novos pedidos"
             },
-            "profile": {
-                "title": "Perfil",
-                "description": "Verificar informação de perfil"
+            "account": {
+                "title": "Dados de conta",
+                "description": "Verificar informação da conta"
             },
             "profile_text": "Verificar informação de perfil",
             "order_history": "Histórico de compras",

@@ -14,8 +14,8 @@ export default function ProfileIndex(props) {
             <div className="grid max-w-max max-h-max gap-2 md:gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 justify-center content-center items-center">
                 <Link className="inline-block" to="/profile/info">
                     <ProfileThumbnail
-                        title={t('profile.profile')}
-                        description={t('profile.profile_text')}
+                        title={t('profile.account.title')}
+                        description={t('profile.account.description')}
                         icon={<AccountCircleIcon />}
                     />
                 </Link>

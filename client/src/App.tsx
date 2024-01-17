@@ -39,6 +39,7 @@ const CartPage = React.lazy(() => import('./pages/Cart'));
 const CheackoutPage = React.lazy(() => import('./pages/Checkout'));
 const PageNotFound = React.lazy(() => import('./pages/NotFound'));
 const InfoPage = React.lazy(() => import('./pages/InfoPage'));
+const ContactPage = React.lazy(() => import('./pages/Contact'));
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 const getDesignTokens = (mode: PaletteMode) => ({
@@ -213,6 +214,11 @@ function App() {
         {
             path: '/info',
             element: <InfoPage />,
+            requireAuth: false,
+        },
+        {
+            path: '/contact',
+            element: <ContactPage />,
             requireAuth: false,
         },
         {

@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Box from '@mui/system/Box';
 
 import logoApac from '../../assets/LOGO_negrito.png';
-import { Divider, Grid, Link } from '@mui/material';
+import { Divider, Grid, Link, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { useTranslation } from 'react-i18next';
+
+import useProductSearch from '../../hooks/useProductSearch';
 
 export default function Initial(props) {
     const [t] = useTranslation();
@@ -39,6 +41,27 @@ export default function Initial(props) {
         );
     }
 
+    const [productQuery, setProductQuery] = useState({
+        featured: true,
+        limit: 100,
+    });
+    const [productPage, setProductPage] = useState(1);
+
+    const { products, loading, error } = useProductSearch(
+        productQuery,
+        productPage
+    );
+
+    // get one random product
+    const [randomProduct, setRandomProduct] = useState(null);
+
+    useEffect(() => {
+        if (products && products.length > 0)
+            setRandomProduct(
+                products[Math.floor(Math.random() * products.length)]
+            );
+    }, [products]);
+
     return (
         <Box component="div">
             <img
@@ -47,12 +70,32 @@ export default function Initial(props) {
                 alt="Logo"
                 style={{ position: 'absolute', top: 60, left: 60 }}
             />
-            <img
-                src="https://picsum.photos/2000/1000"
-                alt="Hero"
-                className="max-h-screen w-full h-full object-cover"
-                style={{ position: 'absolute', top: 0, left: 0, zIndex: -1 }}
-            />
+            {randomProduct && (
+                <img
+                    src={randomProduct.photos[0]}
+                    alt="Hero"
+                    className="max-h-screen w-full h-full object-cover"
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        zIndex: -1,
+                    }}
+                />
+            )}
+            {error && <Box>{error}</Box>}
+            {loading && (
+                <Box
+                    component="div"
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginY: '2rem',
+                    }}>
+                    <CircularProgress />
+                </Box>
+            )}
 
             {/* FULL WIDTH */}
             <Grid
