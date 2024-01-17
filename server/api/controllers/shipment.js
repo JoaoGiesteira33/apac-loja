@@ -72,7 +72,7 @@ module.exports.getShipments = function (filters, fields, page, limit, expand) {
 module.exports.updateShipmentStatus = function (id, value) {
     return Shipment.updateOne(
         { _id: id },
-        { states: { $push: { value: value, date: Date.now() } } }
+        { $push: { states: { value: value, date: Date.now() } } }
     ).then((info) => {
         return info;
     });
