@@ -10,10 +10,12 @@ import CountrySelect from '../../components/pintar_o_7/CountrySelect';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import SaveSharpIcon from '@mui/icons-material/SaveSharp';
 import dayjs, { Dayjs } from 'dayjs';
+import { useTranslation } from 'react-i18next';
 
 const TODAY_MINUS_18_YEARS: Dayjs = dayjs().subtract(18, 'year');
 
 export default function ProfileInfo() {
+    const [t] = useTranslation();
     const userInfo = JSON.parse(localStorage.getItem('user') as string);
 
     const [name, setName] = useState(() => {
@@ -203,8 +205,10 @@ export default function ProfileInfo() {
                         margin="normal"
                         fullWidth
                         error={showNameAlert}
-                        helperText={showNameAlert ? 'Nome inválido' : ' '}
-                        label="Nome"
+                        helperText={
+                            showNameAlert ? t('errors.profile.name') : ' '
+                        }
+                        label={t('forms.first-last-name')}
                         type="text"
                         id="name"
                         autoComplete="name"
@@ -216,8 +220,10 @@ export default function ProfileInfo() {
                         margin="normal"
                         fullWidth
                         error={showEmailAlert}
-                        helperText={showEmailAlert ? 'Email Inválido' : ' '}
-                        label="Email"
+                        helperText={
+                            showEmailAlert ? t('errors.profile.email') : ' '
+                        }
+                        label={t('forms.email')}
                         type="email"
                         id="email"
                         autoComplete="email"
@@ -228,9 +234,13 @@ export default function ProfileInfo() {
                         variant="standard"
                         margin="normal"
                         fullWidth
-                        label="Phone"
+                        label={t('forms.phone-number')}
                         error={showPhoneAlert}
-                        helperText={showPhoneAlert ? 'Telemóvel Inválido' : ' '}
+                        helperText={
+                            showPhoneAlert
+                                ? t('errors.profile.phone-number')
+                                : ' '
+                        }
                         type="tel"
                         id="phone"
                         autoComplete="tel"
@@ -243,7 +253,7 @@ export default function ProfileInfo() {
                         views={['year', 'month', 'day']}
                         format="DD/MM/YYYY"
                         maxDate={TODAY_MINUS_18_YEARS}
-                        label="Data de Nascimento"
+                        label={t('forms.birth-date')}
                         value={birth_date}
                         slotProps={{
                             textField: {
@@ -276,11 +286,13 @@ export default function ProfileInfo() {
                         <TextField
                             variant="standard"
                             margin="normal"
-                            label="City"
+                            label={t('forms.city')}
                             type="text"
                             id="city"
                             error={showCityError}
-                            helperText={showCityError ? 'Cidade Inválida' : ' '}
+                            helperText={
+                                showCityError ? t('errors.profile.city') : ' '
+                            }
                             autoComplete="city"
                             value={city}
                             sx={{ maxWidth: { sx: '100%', sm: '40%' } }}
@@ -294,12 +306,14 @@ export default function ProfileInfo() {
                         <TextField
                             variant="standard"
                             margin="normal"
-                            label="Address"
+                            label={t('forms.address')}
                             type="text"
                             fullWidth
                             error={showAddressError}
                             helperText={
-                                showAddressError ? 'Morada Inválida' : ' '
+                                showAddressError
+                                    ? t('errors.profile.address')
+                                    : ' '
                             }
                             id="address"
                             autoComplete="address"
@@ -309,12 +323,12 @@ export default function ProfileInfo() {
                         <TextField
                             variant="standard"
                             margin="normal"
-                            label="Postal Code"
+                            label={t('forms.postal-code')}
                             type="text"
                             error={showPostalCodeError}
                             helperText={
                                 showPostalCodeError
-                                    ? 'Código Postal Inválido'
+                                    ? t('errors.profile.postal-code')
                                     : ' '
                             }
                             id="postalCode"
@@ -330,7 +344,7 @@ export default function ProfileInfo() {
                         type="submit"
                         startIcon={<SaveSharpIcon />}
                         variant="contained">
-                        Guardar Alterações
+                        {t('forms.save')}
                     </Button>
                 )}
             </Stack>
