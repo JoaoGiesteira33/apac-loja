@@ -144,7 +144,7 @@ export default function ArtistPage() {
                         ))}
                     {products && products.length === 0 && !loading && (
                         <Typography variant="subtitle1" align="center">
-                            Este artista ainda não tem obras disponíveis.
+                            {t('artist.no-pieces')}
                         </Typography>
                     )}
                 </Grid>

@@ -110,33 +110,75 @@ function generateNotification(state, _product, _seller, _client) {
 Shipment.post('insertMany', function (docs, next) {
     docs.forEach((doc) => {
         let state = doc.states.slice(-1)[0].value;
-        console.log(state);
         let notification = generateNotification(
             state,
             doc._product,
             doc._seller,
             doc._client
         );
-        console.log(notification);
-        notification.save();
+        notification.save().then(() => {
+            if (
+                ['reserved', 'paid', 'sent', 'delivered', 'canceled'].includes(
+                    state
+                )
+            ) {
+                console.log('entrou');
+                //Change product state
+                const Product = require('../models/product');
+                Product.updateOne(
+                    { _id: doc._product },
+                    { $set: { 'piece_info.state': 'unavailable' } }
+                ).then(() => {
+                    next();
+                });
+            }
+            next();
+        });
     });
     next();
 });
 
 //Middleware to create notification when shipments are updated
 Shipment.post('updateOne', function (doc, next) {
-    console.dir(doc._doc);
-    let state = doc.states.slice(-1)[0].value;
-    console.log(state);
-    let notification = generateNotification(
-        state,
-        doc._product,
-        doc._seller,
-        doc._client
-    );
-    console.log(notification);
-    notification.save();
-    next();
+    if (this._update.$push && this._update.$push.states) {
+        this.model
+            .find(this._conditions)
+            .then((docs) => {
+                let state = docs[0].states.slice(-1)[0].value;
+                let notification = generateNotification(
+                    state,
+                    docs[0]._product,
+                    docs[0]._seller,
+                    docs[0]._client
+                );
+                notification.save().then(() => {
+                    if (
+                        [
+                            'reserved',
+                            'paid',
+                            'sent',
+                            'delivered',
+                            'canceled',
+                        ].includes(state)
+                    ) {
+                        console.log('entrou');
+                        //Change product state
+                        const Product = require('../models/product');
+                        Product.updateOne(
+                            { _id: docs[0]._product },
+                            { $set: { 'piece_info.state': 'unavailable' } }
+                        ).then(() => {
+                            next();
+                        });
+                    }
+                    next();
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+                next();
+            });
+    }
 });
 
 module.exports = mongoose.model('shipmentModel', Shipment, 'shipments');

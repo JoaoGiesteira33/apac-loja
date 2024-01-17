@@ -1,21 +1,53 @@
-export default function Hero() {
+import React from 'react';
+import { Box, Typography } from '@mui/material';
+
+export default function Hero(props) {
     return (
-        <div className="flex flex-col md:flex-row md:items-stretch justify-center md:justify-between w-full">
-            <div className="flex justify-center">
+        <Box
+            component="div"
+            sx={{
+                display: 'flex',
+                flexDirection: { md: 'row', xs: 'column' },
+                justifyContent: 'center',
+                width: '100%',
+            }}>
+            <Box component="div" sx={{ display: 'flex' }}>
                 <img
-                    src="https://picsum.photos/2000/1000"
-                    alt="Hero"
-                    className="md:max-h-[35rem] w-full h-auto object-cover"
+                    src={props.img}
+                    style={{
+                        maxHeight: '35rem',
+                        width: '100%',
+                        height: 'auto',
+                        objectFit: 'cover',
+                        backgroundColor: props.color,
+                    }}
                 />
-            </div>
-            <div className="flex font-poppins p-5 md:p-10 text-[#FFF6DE] bg-[#FF3D00] grow flex-col items-center md:items-start justify-center md:justify-end">
-                <h1 className="text-3xl text-center md:text-left md:text-5xl font-bold">
-                    Pintar o 7
-                </h1>
-                <p className="text-center font-light md:text-left mt-2">
-                    Uma iniciativa Associação Portuguesa das Artes e da Cultura
-                </p>
-            </div>
-        </div>
+            </Box>
+            <Box
+                component="div"
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    p: { md: 10, xs: 5 },
+                    flexGrow: 1,
+                    color: props.fontColor || '#FFF6DE',
+                    backgroundColor: props.color,
+                    alignItems: { xs: 'center', md: 'start' },
+                    justifyContent: { xs: 'center', md: 'end' },
+                }}>
+                <Typography
+                    variant="h2"
+                    fontWeight="bold"
+                    textAlign={{ md: 'left', xs: 'center' }}
+                    className="text-3xl md:text-5xl">
+                    {props.title}
+                </Typography>
+                <Typography
+                    textAlign={{ md: 'left', sm: 'center' }}
+                    marginTop={2}>
+                    {props.subtitle}
+                </Typography>
+            </Box>
+        </Box>
     );
 }

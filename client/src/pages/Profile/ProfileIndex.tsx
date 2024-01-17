@@ -5,29 +5,31 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import HistoryIcon from '@mui/icons-material/History';
 import PhotoAlbumIcon from '@mui/icons-material/PhotoAlbum';
 import ProfileThumbnail from '../../components/Profile/ProfileThumbnail';
+import { useTranslation } from 'react-i18next';
 
 export default function ProfileIndex(props) {
+    const [t] = useTranslation();
     return (
         <div className="p-8 flex items-center justify-center">
             <div className="grid max-w-max max-h-max gap-2 md:gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 justify-center content-center items-center">
                 <Link className="inline-block" to="/profile/info">
                     <ProfileThumbnail
-                        title="Info"
-                        description="Check profile info."
+                        title={t('profile.account.title')}
+                        description={t('profile.account.description')}
                         icon={<AccountCircleIcon />}
                     />
                 </Link>
                 <Link className="inline-block" to="/profile/order-history">
                     <ProfileThumbnail
-                        title="Order History"
-                        description="Check your order history"
+                        title={t('profile.order_history')}
+                        description={t('profile.order_history_text')}
                         icon={<HistoryIcon />}
                     />
                 </Link>
                 <Link className="inline-block" to="/profile/products">
                     <ProfileThumbnail
-                        title="My Products"
-                        description="Manage your products"
+                        title={t('profile.products')}
+                        description={t('profile.products_text')}
                         icon={<PhotoAlbumIcon />}
                     />
                 </Link>
@@ -40,8 +42,8 @@ export default function ProfileIndex(props) {
                         props.setLoggedIn(null);
                     }}>
                     <ProfileThumbnail
-                        title="Sair"
-                        description="Sair da conta"
+                        title={t('profile.logout')}
+                        description={t('profile.logout_text')}
                         icon={<LogoutIcon />}
                     />
                 </Link>

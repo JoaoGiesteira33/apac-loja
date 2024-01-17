@@ -12,6 +12,7 @@ var userRouter = require('./routes/user');
 var productRouter = require('./routes/product');
 var orderRouter = require('./routes/order');
 var shipmentRouter = require('./routes/shipment');
+var emailRouter = require('./routes/email');
 
 var db_url =
     'mongodb+srv://' +
@@ -54,6 +55,7 @@ app.use('/product', productRouter);
 app.use('/user', userRouter);
 app.use('/order', orderRouter);
 app.use('/shipment', shipmentRouter);
+app.use('/email', emailRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
