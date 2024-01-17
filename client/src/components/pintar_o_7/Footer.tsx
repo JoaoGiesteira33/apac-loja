@@ -133,7 +133,7 @@ const Footer = (props) => {
                     display="flex"
                     alignItems="center"
                     justifyContent="center">
-                    <MY_LNK link="terms&conditions" text="termos e condições" />
+                    <MY_LNK link="info" text="termos e condições" />
                 </Grid>
                 <Grid
                     item
@@ -153,10 +153,7 @@ const Footer = (props) => {
                     display="flex"
                     alignItems="center"
                     justifyContent="center">
-                    <MY_LNK
-                        link="privacy_policy"
-                        text="política de privacidade"
-                    />
+                    <MY_LNK link="info" text="política de privacidade" />
                 </Grid>
                 <Grid
                     item

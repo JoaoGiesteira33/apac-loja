@@ -38,8 +38,7 @@ const ArtistPage = React.lazy(() => import('./pages/pintar_o_7/Artist'));
 const CartPage = React.lazy(() => import('./pages/Cart'));
 const CheackoutPage = React.lazy(() => import('./pages/Checkout'));
 const PageNotFound = React.lazy(() => import('./pages/NotFound'));
-const Terms_Conditions = React.lazy(() => import('./pages/Terms_Conditions'));
-const Privacy_Policy = React.lazy(() => import('./pages/Privacy_Policy'));
+const InfoPage = React.lazy(() => import('./pages/InfoPage'));
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 const getDesignTokens = (mode: PaletteMode) => ({
@@ -212,13 +211,8 @@ function App() {
             requireAuth: true,
         },
         {
-            path: '/terms&conditions',
-            element: <Terms_Conditions />,
-            requireAuth: false,
-        },
-        {
-            path: '/privacy_policy',
-            element: <Privacy_Policy />,
+            path: '/info',
+            element: <InfoPage />,
             requireAuth: false,
         },
         {

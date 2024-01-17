@@ -41,7 +41,14 @@ export default function Home() {
                 alignItems: 'center',
                 flexDirection: 'column',
             }}>
-            <Hero />
+            <Hero
+                title={'Pintar o 7'}
+                subtitle={
+                    'Uma iniciativa Associação Portuguesa das Artes e da Cultura'
+                }
+                img={'https://picsum.photos/2000/1000'}
+                color={'#FF3D00'}
+            />
             <Stack
                 direction="row"
                 alignItems="center"

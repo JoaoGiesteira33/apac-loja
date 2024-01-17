@@ -6,14 +6,16 @@ import logoApac from '../../assets/LOGO_negrito.png';
 import { Divider, Grid, Link } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
+import { useTranslation } from 'react-i18next';
 
 export default function Initial(props) {
+    const [t] = useTranslation();
     const displayConfig = [
         { xs: 'none', md: 'flex', sm: 'none' },
         { xs: 'none', md: 'none', sm: 'flex' },
         { xs: 'flex', md: 'none', sm: 'none' },
     ];
-    const protectedPages = ['login', 'perfil'];
+    const protectedPages = [t('initial.login'), t('initial.profile')];
     const protectedPagesLinks = ['/login', '/profile'];
 
     const Item = styled(Paper)(({ theme }) => ({
@@ -31,8 +33,7 @@ export default function Initial(props) {
                 className="font-poppins"
                 href={link}
                 underline="none"
-                color={'black'}
-                style={{ textShadow: '0px 0px 2px white' }}>
+                color={'black'}>
                 {text}
             </Link>
         );
@@ -61,7 +62,7 @@ export default function Initial(props) {
                     bottom: 0,
                     paddingBottom: 10,
                     display: displayConfig[0],
-                    backgroundColor: 'rgba(128,128,128,0.5)',
+                    backgroundColor: 'white',
                 }}>
                 <Grid item xs={12}>
                     <Divider />
@@ -69,17 +70,17 @@ export default function Initial(props) {
                 <Grid item xs={4} />
                 <Grid item xs={2}>
                     <Item>
-                        <MY_LNK link="gallery" text="a galeria" />
+                        <MY_LNK link="gallery" text={t('initial.gallery')} />
                     </Item>
                 </Grid>
                 <Grid item xs={2}>
                     <Item>
-                        <MY_LNK link="artists" text="artistas" />
+                        <MY_LNK link="artists" text={t('initial.artists')} />
                     </Item>
                 </Grid>
                 <Grid item xs={2}>
                     <Item>
-                        <MY_LNK link="contact" text="contacto" />
+                        <MY_LNK link="contact" text={t('initial.contact')} />
                     </Item>
                 </Grid>
                 <Grid item xs={2}>
@@ -100,23 +101,24 @@ export default function Initial(props) {
                     bottom: 0,
                     paddingBottom: 10,
                     display: displayConfig[1],
+                    backgroundColor: 'white',
                 }}>
                 <Grid item xs={12}>
                     <Divider variant="middle" />
                 </Grid>
                 <Grid item xs={3}>
                     <Item>
-                        <MY_LNK link="gallery" text="a galeria" />
+                        <MY_LNK link="gallery" text={t('initial.gallery')} />
                     </Item>
                 </Grid>
                 <Grid item xs={3}>
                     <Item>
-                        <MY_LNK link="artists" text="artistas" />
+                        <MY_LNK link="artists" text={t('initial.artists')} />
                     </Item>
                 </Grid>
                 <Grid item xs={3}>
                     <Item>
-                        <MY_LNK link="contact" text="contacto" />
+                        <MY_LNK link="contact" text={t('initial.contact')} />
                     </Item>
                 </Grid>
                 <Grid item xs={3}>
@@ -135,23 +137,24 @@ export default function Initial(props) {
                     position: 'absolute',
                     bottom: 0,
                     display: displayConfig[2],
+                    backgroundColor: 'white',
                 }}>
                 <Grid item xs={12}>
                     <Divider variant="middle" />
                 </Grid>
                 <Grid item xs={12}>
                     <Item>
-                        <MY_LNK link="gallery" text="a galeria" />
+                        <MY_LNK link="gallery" text={t('initial.gallery')} />
                     </Item>
                 </Grid>
                 <Grid item xs={12}>
                     <Item>
-                        <MY_LNK link="artists" text="artistas" />
+                        <MY_LNK link="artists" text={t('initial.artists')} />
                     </Item>
                 </Grid>
                 <Grid item xs={12}>
                     <Item>
-                        <MY_LNK link="contact" text="contacto" />
+                        <MY_LNK link="contact" text={t('initial.contact')} />
                     </Item>
                 </Grid>
                 <Grid item xs={12}>
