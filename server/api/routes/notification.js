@@ -77,7 +77,7 @@ router.get(
     '/',
     middleware.expandExtractor,
     middleware.fieldSelector,
-    middleware.paginationExtractor,
+    middleware.extractFilters,
     function (req, res, next) {
         controllerNotification
             .getNotifications(

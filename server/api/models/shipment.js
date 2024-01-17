@@ -108,7 +108,7 @@ function generateNotification(state, _product, _seller, _client) {
 
 //Middleware to create notification when shipments are created
 Shipment.post('insertMany', function (docs, next) {
-    docs.forEach((doc) => {
+    let notificationPromises = docs.map((doc) => {
         let state = doc.states.slice(-1)[0].value;
         let notification = generateNotification(
             state,
@@ -116,26 +116,30 @@ Shipment.post('insertMany', function (docs, next) {
             doc._seller,
             doc._client
         );
-        notification.save().then(() => {
+
+        return notification.save().then(() => {
             if (
                 ['reserved', 'paid', 'sent', 'delivered', 'canceled'].includes(
                     state
                 )
             ) {
-                console.log('entrou');
-                //Change product state
                 const Product = require('../models/product');
-                Product.updateOne(
+                return Product.updateOne(
                     { _id: doc._product },
                     { $set: { 'piece_info.state': 'unavailable' } }
-                ).then(() => {
-                    next();
-                });
+                );
             }
-            next();
         });
     });
-    next();
+
+    Promise.all(notificationPromises)
+        .then(() => {
+            next();
+        })
+        .catch((err) => {
+            console.log(err);
+            next();
+        });
 });
 
 //Middleware to create notification when shipments are updated
