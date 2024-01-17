@@ -68,17 +68,12 @@ module.exports.getShipments = function (filters, fields, page, limit, expand) {
 // ADDITIONAL METHODS:
 
 // updateOrderShipmentStatus
-// Push a new state to the shipment with the given ids/all if products is undefined
-module.exports.updateShipmentStatus = function (id, products, value) {
-    let filter;
-    if (indexes !== undefined) {
-        filter = { _id: id, 'shipments._product': { $in: products } };
-    } else {
-        filter = { _id: id };
-    }
-    return Order.updateOne(filter, {
-        $push: { 'shipments.$[].states': { value: value, date: Date.now } },
-    }).then((info) => {
+// Push a new state to the status array
+module.exports.updateShipmentStatus = function (id, value) {
+    return Shipment.updateOne(
+        { _id: id },
+        { states: { $push: { value: value, date: Date.now() } } }
+    ).then((info) => {
         return info;
     });
 };

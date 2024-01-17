@@ -15,7 +15,7 @@ const PieceInfo = new mongoose.Schema(
         material: String,
         dimensions: {
             type: Dimensions,
-            required: true
+            required: true,
         },
         year: Number,
         state: {
@@ -73,6 +73,10 @@ const Product = new mongoose.Schema({
     },
     piece_info: PieceInfo,
     book_info: BookInfo,
+    featured: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 module.exports = mongoose.model('productModel', Product, 'products');
