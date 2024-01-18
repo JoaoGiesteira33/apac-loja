@@ -39,7 +39,7 @@ export default function CountrySelect(props: {
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label="Choose a country"
+                    label="País"
                     variant="standard"
                     error={props.showCountryAlert}
                     helperText={

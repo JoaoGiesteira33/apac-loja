@@ -2,6 +2,8 @@ const Order = require('../models/order');
 
 const utils = require('../utils/utils');
 
+const controllerShipment = require('./shipment');
+
 // METHODS:
 //      - getOrderInfo
 module.exports.getOrderInfo = function (id, expand) {
@@ -17,6 +19,37 @@ module.exports.createOrder = function (data) {
     return Order.create(data).then((info) => {
         return info;
     });
+};
+
+module.exports.createOrderWithShipments = async function (data) {
+    let session = await Order.startSession();
+    try {
+        session.startTransaction();
+        //add _client to shipments
+        data.shipments.forEach((shipment) => {
+            shipment._client = data._client;
+        });
+
+        let shipments = await controllerShipment.createManyShipments(
+            data.shipments,
+            session
+        );
+
+        let order = data;
+        order.shipments = shipments.map((shipment) => shipment._id);
+
+        let orderInfo = await Order.create([order], { session: session });
+        console.log(orderInfo);
+
+        await session.commitTransaction();
+        return orderInfo;
+    } catch (err) {
+        console.log(err);
+        await session.abortTransaction();
+        throw err;
+    } finally {
+        session.endSession();
+    }
 };
 
 //     - replaceOrderInfo
@@ -51,7 +84,7 @@ module.exports.getOrders = function (filters, fields, page, limit, expand) {
             .populate(expand),
         Order.countDocuments(filters),
     ]).then(([orders, count]) => {
-        let hasMore = count > (page + 1) * limit;
+        let hasMore = count > (page + 1) * limit && limit != 0;
         return { results: orders, hasMore: hasMore };
     });
 };

@@ -13,11 +13,11 @@ import {
 import { registerUser } from '../../fetchers';
 import { useNavigate } from 'react-router-dom';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import CountrySelect from '../../components/pintar_o_7/CountrySelect';
+import { useTranslation } from 'react-i18next';
 
 const Register = () => {
+    const [t] = useTranslation();
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
@@ -29,7 +29,7 @@ const Register = () => {
 
     const [country, setCountry] = useState('');
     const [address, setAddress] = useState('');
-    const [postlaCode, setPostalCode] = useState('');
+    const [postalCode, setPostalCode] = useState('');
     const [city, setCity] = useState('');
 
     const [showEmailAlert, setShowEmailAlert] = useState(false);
@@ -99,23 +99,14 @@ const Register = () => {
         } else if (password.length < 6) {
             setShowPassAlert(true);
             return;
-        } else if (phone.length !== 9) {
+        } else if (phone.length !== 9 && phone.length !== 0) {
             setShowPhoneAlert(true);
             return;
         } else if (checkOver18(birth_date) < 18) {
             setShowOver18Alert(true);
             return;
-        } else if (city === '') {
-            setShowCityError(true);
-            return;
-        } else if (address === '') {
-            setShowAddressError(true);
-            return;
-        } else if (!checkPostalCode(postlaCode)) {
+        } else if (postalCode !== '' && !checkPostalCode(postalCode)) {
             setShowPostalCodeError(true);
-            return;
-        } else if (country === '') {
-            setShowCountryAlert(true);
             return;
         } else {
             disableAlerts();
@@ -139,10 +130,11 @@ const Register = () => {
             <CssBaseline />
             <Paper
                 elevation={0}
+                sx={{
+                    px: { md: '30%', xs: '10%' },
+                    py: '3%',
+                }}
                 style={{
-                    paddingLeft: '10%',
-                    paddingRight: '10%',
-                    paddingBottom: 10,
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'left',
@@ -153,7 +145,7 @@ const Register = () => {
                     component="h1"
                     variant="h5"
                     style={{ margin: '20px 0', color: 'black' }}>
-                    Registar
+                    {t('global.register')}
                 </Typography>
                 <form onSubmit={handleRegisto} style={{ width: '100%' }}>
                     {/* ----------- EMAIL ---------------- */}
@@ -164,7 +156,7 @@ const Register = () => {
                             }}
                             variant="filled"
                             severity="error">
-                            Email Inválido!
+                            {t('errors.register.email')}
                         </Alert>
                     )}
                     <TextField
@@ -173,7 +165,7 @@ const Register = () => {
                         required
                         fullWidth
                         id="email"
-                        label="Email"
+                        label={t('forms.email')}
                         name="email"
                         autoComplete="email"
                         autoFocus
@@ -195,7 +187,7 @@ const Register = () => {
                             }}
                             variant="filled"
                             severity="error">
-                            Palavra-passe deve ter pelo menos 6 caracteres!
+                            {t('errors.register.password')}
                         </Alert>
                     )}
                     <TextField
@@ -204,7 +196,7 @@ const Register = () => {
                         required
                         fullWidth
                         name="password"
-                        label="Palavra-passe"
+                        label={t('forms.password')}
                         type="password"
                         id="password"
                         autoComplete="current-password"
@@ -214,7 +206,7 @@ const Register = () => {
                     {/* ----------- PASSWORD2 ---------------- */}
                     {showPass2Alert && (
                         <Alert variant="filled" severity="warning">
-                            Palavras-passe não coincidem!
+                            {t('errors.register.password-no-match')}
                         </Alert>
                     )}
                     <TextField
@@ -223,7 +215,7 @@ const Register = () => {
                         required
                         fullWidth
                         name="password2"
-                        label="Palavra-passe"
+                        label={t('forms.password')}
                         type="password"
                         id="password2"
                         autoComplete="current-password"
@@ -237,7 +229,7 @@ const Register = () => {
                         required
                         fullWidth
                         name="client_fields.demographics.name"
-                        label="Primeiro e último nome"
+                        label={t('forms.first-last-name')}
                         type="text"
                         id="name"
                         autoComplete="name"
@@ -252,29 +244,27 @@ const Register = () => {
                             }}
                             variant="filled"
                             severity="error">
-                            Deve ter mais de 18 anos!
+                            {t('errors.register.age')}
                         </Alert>
                     )}
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                            disableFuture
-                            openTo="day"
-                            views={['year', 'month', 'day']}
-                            format="DD/MM/YYYY"
-                            label="Data de Nascimento"
-                            value={birth_date}
-                            slotProps={{
-                                textField: {
-                                    variant: 'standard',
-                                    fullWidth: true,
-                                    required: true,
-                                    name: 'client_fields.demographics.birth_date',
-                                    margin: 'normal',
-                                },
-                            }}
-                            onChange={(value) => setBirthDate(value)}
-                        />
-                    </LocalizationProvider>
+                    <DatePicker
+                        disableFuture
+                        openTo="day"
+                        views={['year', 'month', 'day']}
+                        format="DD/MM/YYYY"
+                        label={t('forms.birth-date')}
+                        value={birth_date}
+                        slotProps={{
+                            textField: {
+                                variant: 'standard',
+                                fullWidth: true,
+                                required: true,
+                                name: 'client_fields.demographics.birth_date',
+                                margin: 'normal',
+                            },
+                        }}
+                        onChange={(value) => setBirthDate(value)}
+                    />
                     {/* ----------- ADDRESS ---------------- */}
                     <Stack
                         direction={{ xs: 'column', sm: 'row' }}
@@ -289,12 +279,14 @@ const Register = () => {
                         <TextField
                             variant="standard"
                             margin="normal"
-                            label="Cidade"
+                            label={t('forms.city')}
                             type="text"
                             id="city"
                             name="client_fields.demographics.address.city"
                             error={showCityError}
-                            helperText={showCityError ? 'Cidade Inválida' : ' '}
+                            helperText={
+                                showCityError ? t('errors.register.city') : ' '
+                            }
                             autoComplete="city"
                             value={city}
                             sx={{ maxWidth: { sx: '100%', sm: '40%' } }}
@@ -308,13 +300,15 @@ const Register = () => {
                         <TextField
                             variant="standard"
                             margin="normal"
-                            label="Morada"
+                            label={t('forms.address')}
                             type="text"
                             name="client_fields.demographics.address.street"
                             fullWidth
                             error={showAddressError}
                             helperText={
-                                showAddressError ? 'Morada Inválida' : ' '
+                                showAddressError
+                                    ? t('errors.register.address')
+                                    : ' '
                             }
                             id="address"
                             autoComplete="address"
@@ -324,18 +318,18 @@ const Register = () => {
                         <TextField
                             variant="standard"
                             margin="normal"
-                            label="Código Postal"
+                            label={t('forms.postal-code')}
                             type="text"
                             name="client_fields.demographics.address.postal_code"
                             error={showPostalCodeError}
                             helperText={
                                 showPostalCodeError
-                                    ? 'Código Postal Inválido'
+                                    ? t('errors.register.postal-code')
                                     : ' '
                             }
                             id="postalCode"
                             autoComplete="postalCode"
-                            value={postlaCode}
+                            value={postalCode}
                             onChange={(e) => setPostalCode(e.target.value)}
                         />
                     </Stack>
@@ -347,7 +341,7 @@ const Register = () => {
                             }}
                             variant="filled"
                             severity="error">
-                            Número de telefone inválido!
+                            {t('errors.register.phone-number')}
                         </Alert>
                     )}
                     <TextField
@@ -355,7 +349,7 @@ const Register = () => {
                         margin="normal"
                         fullWidth
                         name="client_fields.demographics.phone"
-                        label="Número de Telefone"
+                        label={t('forms.phone-number')}
                         type="text"
                         id="phone"
                         autoComplete="phoneNumber"
@@ -370,21 +364,28 @@ const Register = () => {
                             }}
                             variant="filled"
                             severity="error">
-                            Erro ao registar, contacte o suporte!
+                            {t('errors.register.submit')}
                         </Alert>
                     )}
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        style={{
-                            margin: '20px 0',
-                            backgroundColor: 'black',
-                            color: 'white',
+                    <Box
+                        component="div"
+                        sx={{
+                            justifyContent: 'center',
+                            display: 'flex',
                         }}>
-                        Registar
-                    </Button>
-                    * Campos obrigatórios
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            style={{
+                                margin: '20px 0',
+                                backgroundColor: 'black',
+                                color: 'white',
+                                width: '50%',
+                            }}>
+                            {t('global.register')}
+                        </Button>
+                    </Box>
+                    {t('global.mandatory')}
                 </form>
             </Paper>
         </Box>

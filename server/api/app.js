@@ -5,13 +5,17 @@ var logger = require('morgan');
 var mongoose = require('mongoose');
 var secrets = require('docker-secret').secrets;
 var cors = require('cors');
-var cookieparser = require('cookie-parser');
+var cookieParser = require('cookie-parser');
 
 // ROUTES:
 var userRouter = require('./routes/user');
 var productRouter = require('./routes/product');
 var orderRouter = require('./routes/order');
 var paymentRouter = require('./routes/payment');
+var shipmentRouter = require('./routes/shipment');
+var notificationRouter = require('./routes/notification');
+
+var emailRouter = require('./routes/email');
 
 var db_url =
     'mongodb+srv://' +
@@ -47,13 +51,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
-app.use(cookieparser());
+app.use(cookieParser());
 
 // TODO - ALTERAR PARA OS NOMES DEFINIDOS ACIMA
 app.use('/product', productRouter);
 app.use('/user', userRouter);
 app.use('/order', orderRouter);
 app.use('/payment', paymentRouter);
+app.use('/shipment', shipmentRouter);
+app.use('/notification', notificationRouter);
+
+app.use('/email', emailRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -69,6 +77,8 @@ app.use(function (err, req, res, next) {
     // render the error page
     res.status(err.status || 500);
     res.jsonp(err);
+
+    console.log('Aconteceu um erro: ' + err);
 });
 
 module.exports = app;

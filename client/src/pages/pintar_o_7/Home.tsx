@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import Hero from '../../components/pintar_o_7/Hero';
-import MultipleSelectTypes from '../../components/pintar_o_7/MultipleSelectTypes';
+import SelectTypes from '../../components/pintar_o_7/SelectType';
 import SelectPrice from '../../components/pintar_o_7/SelectPrice';
 
 import Divider from '@mui/material/Divider';
@@ -14,23 +14,40 @@ import AddCircleOutlineSharpIcon from '@mui/icons-material/AddCircleOutlineSharp
 
 import useProductSearch from '../../hooks/useProductSearch';
 import ProductThumbnail from '../../components/pintar_o_7/ProductThumbnail';
+import { useTranslation } from 'react-i18next';
 
 export default function Home() {
+    const [t] = useTranslation();
+
     const [productQuery, setProductQuery] = useState({
         'piece_info.state': 'available',
     });
     const [productPage, setProductPage] = useState(1);
+
+    const [featuredProducts, setFeaturedProducts] = useState({
+        featured: true,
+    });
 
     const [selectedTypes, setSelectedTypes] = React.useState<string[]>([]);
     const [selectedPrice, setSelectedPrice] = React.useState<number[]>([
         0, 9999,
     ]);
 
-    const { MockData, hasMore, loading, error, products } = useProductSearch(
-        productQuery,
-        productPage
-    );
+    const all = useProductSearch(productQuery, productPage);
 
+    const featured = useProductSearch(featuredProducts, productPage);
+
+    // get featured products
+    const [randomFeaturedProduct, setRandomFeaturedProduct] = useState(null);
+
+    useEffect(() => {
+        if (featured.products && featured.products.length > 0)
+            setRandomFeaturedProduct(
+                featured.products[
+                    Math.floor(Math.random() * featured.products.length)
+                ]
+            );
+    }, [featured.products]);
     return (
         <Box
             component="div"
@@ -39,16 +56,38 @@ export default function Home() {
                 alignItems: 'center',
                 flexDirection: 'column',
             }}>
-            <Hero />
+            <Hero
+                title={'Pintar o 7'}
+                subtitle={
+                    'Uma iniciativa Associação Portuguesa das Artes e da Cultura'
+                }
+                img={randomFeaturedProduct && randomFeaturedProduct.photos[0]}
+                color={'#FF3D00'}
+            />
             <Stack
                 direction="row"
                 alignItems="center"
                 justifyContent="space-evenly"
                 sx={{ paddingY: '2rem', maxWidth: 'xl', width: '100%' }}>
-                <MultipleSelectTypes
-                    values={selectedTypes}
-                    setValues={setSelectedTypes}
-                />
+                <Box
+                    component="div"
+                    sx={{
+                        flexGrow: '1',
+                        paddingX: {
+                            xs: '2rem',
+                            sm: '4rem',
+                            md: '6rem',
+                            lg: '8rem',
+                        },
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}>
+                    <SelectTypes
+                        values={selectedTypes}
+                        setValues={setSelectedTypes}
+                        isMultiple={true}
+                    />
+                </Box>
                 <SelectPrice
                     maxPrice={9999}
                     value={selectedPrice}
@@ -77,8 +116,9 @@ export default function Home() {
                         maxWidth: 'xl',
                     }}
                     spacing={{ xs: 2, md: 4, lg: 8 }}>
-                    {MockData &&
-                        MockData.map((product, index) => (
+                    {all &&
+                        all.products &&
+                        all.products.map((product, index) => (
                             <Grid
                                 key={index}
                                 display={'flex'}
@@ -94,8 +134,8 @@ export default function Home() {
                 </Grid>
             </Box>
 
-            {error && <div>Error</div>}
-            {loading && (
+            {all && all.error && <div>Error</div>}
+            {all && all.loading && (
                 <Box
                     component="div"
                     sx={{
@@ -107,14 +147,14 @@ export default function Home() {
                     <CircularProgress />
                 </Box>
             )}
-            {hasMore && (
+            {all && all.hasMore && (
                 <Button
                     startIcon={<AddCircleOutlineSharpIcon />}
                     variant="outlined"
                     onClick={() => {
                         setProductPage((prevPageNumber) => prevPageNumber + 1);
                     }}>
-                    Load More
+                    {t('global.load-more')}
                 </Button>
             )}
             <Divider variant="middle" />

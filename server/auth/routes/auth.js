@@ -10,11 +10,7 @@ const { sendEmail, getDateTime, isAdmin, hasAccess, isMe } = require('../utils/u
 
 var axios = require('axios');
 
-// GET -> nao tem body o get
-// POST -> adicionar algo
-// PUT -> alterar algo
-// DELETE -> remover algo
-
+// URL do container user
 const API_URL_USER = 'http://api/user';
 
 // ---------------------------------------------
@@ -23,9 +19,9 @@ const API_URL_USER = 'http://api/user';
 router.get('/admin/verificar', isAdmin, function (req, res) {
 	res.status(200).jsonp({ message: "OK" })
 });
-// GET verifica se é artist
-router.get('/artist/verificar', hasAccess, function (req, res) {
-	if (req.level == "artist") {
+// GET verifica se é seller
+router.get('/seller/verificar', hasAccess, function (req, res) {
+	if (req.level == "seller") {
 		res.status(200).jsonp({ message: "OK" })
 	}
 	else {
@@ -37,140 +33,141 @@ router.get('/verificar', hasAccess, function (req, res) {
 	res.status(200).jsonp({ message: "OK" })
 });
 
-// POST admin fazer um registo
+
+// ----------------------------------------------------
+
+// POST -> [admin] fazer registo de um utilizador
 router.post('/admin/registo', isAdmin, function (req, res) {
-	if (req.body.userEmail && req.body.userPassword && req.body.userNivel) {
+	if (req.body.email && req.body.password && req.body.nivel) {
 		var info = {
-			email: req.body.userEmail,
-			password: req.body.userPassword,
-			nivel: req.body.userNivel,
-			dataRegisto: getDateTime(),
-			dataUltimoAcesso: ""
+			...req.body,
+			dataRegisto: getDateTime()
 		}
 
 		controllerLogin.registar(info)
 			.then(u => {
 				data = {
-					// meter aqui os dados necessários !!!!!
-					...req.body,
+					...info,
 					_id: u._id,
 					role: u.nivel
 				}
 
-				axios.post(API_URL_USER, data)
-					.then(response => {
-						if (response.status != 200) {
+				var configCookies = { headers: { Cookie: 'token=' + req.cookies.token } }
+				axios.post(API_URL_USER, data, configCookies)
+					.then(resp1 => {
+						if (resp1 && resp1.status == 200 && resp1.data) {
+							res.status(201).jsonp({ message: "OK" })
+						}
+						else {
 							//apagar do login !!!
 							controllerLogin.deleteLogin(u.username)
-								.then(d => {
-									if (d && d.ok == 1 && d.deletedCount == 1) {
-										res.status(400).jsonp({ error: "Erro na criação do utilizador: " + response.body })
+								.then(del => {
+									if (del && del.acknowledged == true && del.deletedCount == 1) {
+										res.status(400).jsonp({ error: "1. Erro na criação do utilizador: " + resp1.data })
 									}
 									else {
-										console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + response.body)
-										res.status(400).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+										console.log("Erro na criação do user: " + u._id + " error: " + resp1.data + " , BD corrompida, insucesso ao apagar login com _id: " + u._id)
+										res.status(477).jsonp({ error: "1. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
 									}
 								})
-								.catch(errorr => {
-									console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror1: " + errorr + "\nerror2: " + response.body)
-									res.status(401).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+								.catch(error1 => {
+									var errorString1 = error1
+									console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror1: " + errorString1 + "\nerror2: " + resp1.data)
+									res.status(477).jsonp({ error: "2. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
 								})
 						}
-						else
-							res.status(201).jsonp({ message: "OK" })
 					})
-					.catch(error => {
+					.catch(error2 => {
 						//apagar do login !!!
+						var errorString2 = (error2 && error2.response && error2.response.data && error2.response.data.message) ? error2.response.data.message : "Erro desconhecido"
 						controllerLogin.deleteLogin(u.username)
 							.then(d => {
-								if (d && d.ok == 1 && d.deletedCount == 1) {
-									res.status(400).jsonp({ error: "Erro na criação do utilizador: " + error })
+								if (d && d.acknowledged == true && d.deletedCount == 1) {
+									res.status(400).jsonp({ error: "2. Erro na criação do utilizador: " + errorString2 })
 								}
 								else {
-									console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id)
-									res.status(400).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+									console.log("Erro(" + errorString2 + ") na criação do user _id: " + u._id + ", BD corrompida, login _id: " + u._id + " não apagado")
+									res.status(477).jsonp({ error: "3. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
 								}
 							})
-							.catch(errorr => {
-								console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + errorr)
-								res.status(401).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+							.catch(error3 => {
+								console.log("Erro(" + errorString2 + ") na criação do user _id: " + u._id + ", BD corrompida, login _id: " + u._id + " deu erro ao apagar: " + error3)
+								res.status(477).jsonp({ error: "4. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
 							})
 					})
 
 			})
 			.catch(erro => {
-				res.status(400).jsonp({ error: "Erro na criação do utilizador: " + erro })
+				res.status(400).jsonp({ error: "3. Erro na criação do utilizador: " + erro })
 			})
 	}
 	else {
 		res.status(400).jsonp({ error: "Falta de parametros" })
 	}
 });
-// POST fazer um registo
-router.post('/registo', function (req, res) { // usar um chapta para verificar se é humano e não encher a base de dados com muitos registos de utilizadores !!!!!!
-	console.log("req.body:", req.body)
+// POST -> fazer o registo de um utilizador
+router.post('/registo', function (req, res) {
 	if (req.body.email && req.body.password) {
 		var info = {
-			email: req.body.email,
-			password: req.body.password,
+			...req.body,
 			nivel: "client",
-			dataRegisto: getDateTime(),
-			dataUltimoAcesso: ""
+			dataRegisto: getDateTime()
 		}
 
 		controllerLogin.registar(info)
 			.then(u => {
-				console.log("U:", u)
 				data = {
-					...req.body,
+					...info,
 					_id: u._id,
 					role: u.nivel
 				}
 
-				// fazer o registo na outra DB
 				axios.post(API_URL_USER + '/client', data)
-					.then(response => {
-						if (response.status != 200) {
+					.then(resp1 => {
+						if (resp1 && resp1.status && resp1.status == 200){
+							res.status(200).jsonp({ message: "OK" })
+						}
+						else {
 							//apagar do login !!!
 							controllerLogin.deleteLogin(u.username)
-								.then(d => {
-									if (d && d.ok == 1 && d.deletedCount == 1) {
-										res.status(400).jsonp({ error: "Erro na criação do utilizador: " + response.body })
+								.then(del => {
+									if (del && del.acknowledged == true && del.deletedCount == 1) {
+										res.status(400).jsonp({ error: "1. Erro na criação do utilizador: " + resp1.data })
 									}
 									else {
-										console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + response.body)
-										res.status(400).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+										console.log("Erro na criação do user: " + u._id + " error: " + resp1.data + " , BD corrompida, insucesso ap apagar login com _id: " + u._id)
+										res.status(477).jsonp({ error: "1. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
 									}
 								})
-								.catch(errorr => {
-									console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror1: " + errorr + "\nerror2: " + response.body)
-									res.status(401).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+								.catch(error1 => {
+									var errorString1 = error1
+									console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror1: " + errorString1 + "\nerror2: " + resp1.data)
+									res.status(477).jsonp({ error: "2. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
 								})
 						}
-						else
-							res.status(200).jsonp({ message: "OK" })
 					})
-					.catch(error => {
+					.catch(error2 => {
+						var errorString2 = (error2 && error2.response && error2.response.data && error2.response.data.message) ? error2.response.data.message : "Erro desconhecido"
 						//apagar do login !!!
 						controllerLogin.deleteLogin(u.username)
 							.then(d => {
-								if (d && d.ok == 1 && d.deletedCount == 1) {
-									res.status(400).jsonp({ error: "Erro na criação do utilizador: " + error })
+								if (d && d.acknowledged == true && d.deletedCount == 1) {
+									res.status(400).jsonp({ error: "2. Erro na criação do utilizador: " + errorString2 })
 								}
 								else {
-									console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id)
-									res.status(400).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+									console.log("Erro(" + errorString2 + ") na criação do user _id: " + u._id + ", BD corrompida, login _id: " + u._id + " não apagado")
+									res.status(477).jsonp({ error: "3. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
 								}
 							})
-							.catch(errorr => {
-								console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + errorr)
-								res.status(401).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+							.catch(error3 => {
+								console.log("Erro(" + errorString2 + ") na criação do user _id: " + u._id + ", BD corrompida, login _id: " + u._id + " deu erro ao apagar: " + error3)
+								res.status(477).jsonp({ error: "4. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
 							})
 					})
 
 			})
 			.catch(erro => {
-				res.status(400).jsonp({ error: "Erro na criação do utilizador: " + erro })
+				res.status(400).jsonp({ error: "3. Erro na criação do utilizador: " + erro })
 			})
 	}
 	else {
@@ -178,14 +175,13 @@ router.post('/registo', function (req, res) { // usar um chapta para verificar s
 	}
 });
 
-// POST fazer login
+// POST -> fazer login e obter token de acesso
 router.post('/login', passport.authenticate('local'), function (req, res) {
 	controllerLogin.login(req.body.username, getDateTime())
 		.then(m => {
 			if (m && m.modifiedCount == 1) {
 				controllerLogin.getLogin(req.body.username)
 					.then(l => {
-						console.log("L:", l);
 						jwt.sign({
 							username: l.username,
 							level: l.nivel,
@@ -214,19 +210,13 @@ router.post('/login', passport.authenticate('local'), function (req, res) {
 		})
 });
 
-// GET login information from email admin
+// GET -> [admin] obter informação de um utilizador através do email
 router.get('/admin', isAdmin, function (req, res) {
 	if (req.body.userEmail) {
 		controllerLogin.getLogin(req.body.userEmail)
 			.then(u => {
 				if (u) {
-					info = {
-						username: u.username,
-						nivel: u.nivel,
-						dataRegisto: u.dataRegisto,
-						dataUltimoAcesso: u.dataUltimoAcesso
-					}
-					res.status(200).jsonp(info)
+					res.status(200).jsonp(u)
 				}
 				else
 					res.status(401).jsonp({ error: "Utilizador não encontrado" })
@@ -239,47 +229,8 @@ router.get('/admin', isAdmin, function (req, res) {
 		res.status(400).jsonp({ error: "Falta de parametros" })
 	}
 });
-// GET login from email
-router.get('/', isMe, function (req, res) { // tem de ter o parametro "username", por causa do isMe
-	controllerLogin.getLogin(req.user)
-		.then(u => {
-			if (u) {
-				info = {
-					username: u.username,
-					nivel: u.nivel,
-					dataRegisto: u.dataRegisto,
-					dataUltimoAcesso: u.dataUltimoAcesso
-				}
-				res.status(200).jsonp(info)
-			}
-			else
-				res.status(401).jsonp({ error: "Utilizador não encontrado" })
-		})
-		.catch(erro => {
-			res.status(401).jsonp({ error: "Erro na obtenção do utilizador: " + erro })
-		})
-});
 
-// UPDATE login email Admin
-router.put('/admin/email', isAdmin, function (req, res) {
-	if (req.body.oldEmail && req.body.newEmail) {
-		controllerLogin.updateLoginEmail(req.body.oldEmail, req.body.newEmail)
-			.then(u => {
-				if (u && u.modifiedCount == 1)
-					res.status(200).jsonp({ message: "OK" })
-				else
-					res.status(401).jsonp({ error: "Erro ao processar o pedido" })
-			})
-			.catch(erro => {
-				res.status(401).jsonp({ error: "Erro na alteração do utilizador: " + erro })
-			})
-	}
-	else {
-		res.status(400).jsonp({ error: "Falta de parametros" })
-	}
-});
-
-// UPDATE password Admin
+// UPDATE -> [admin] atualizar password de um utilizador através do email
 router.put('/admin/password', isAdmin, function (req, res) {
 	if (req.body.userEmail && req.body.userPassword) {
 		controllerLogin.updateLoginPassword(req.body.userEmail, req.body.userPassword) // userEmail e userPassword tem de ser passados no body
@@ -297,7 +248,7 @@ router.put('/admin/password', isAdmin, function (req, res) {
 		res.status(400).jsonp({ error: "Falta de parametros" })
 	}
 });
-// UPDATE password
+// UPDATE -> atualizar email de um utilizador através do email
 router.put('/password', isMe, passport.authenticate('local'), function (req, res) { // tem de ter o parametro "username", por causa do isMe, e o parametro password por causa do authenticate
 	if (req.body.newPassword) {
 		//inserir aqui a verificação da password antiga !!!!
@@ -317,13 +268,16 @@ router.put('/password', isMe, passport.authenticate('local'), function (req, res
 	}
 });
 
-// UPDATE login nivel Admin, apenas faz sentido os admins poderem alterar o nivel de acesso
+// UPDATE -> [Admin] atualizar nivel de um utilizador através do email
 router.put('/admin/nivel', isAdmin, function (req, res) {
 	if (req.body.userEmail && req.body.userNivel) { // userEmail e userNivel tem de ser passados no body
 		controllerLogin.updateLoginNivel(req.body.userEmail, req.body.userNivel)
 			.then(u => {
-				if (u && u.modifiedCount == 1)
+				if (u && u.modifiedCount == 1) {
+					// atualizar o nivel no user !?!?!?!? rever
 					res.status(200).jsonp({ message: "OK" })
+				}
+
 				else
 					res.status(401).jsonp({ error: "Erro ao processar o pedido" })
 			})
@@ -336,69 +290,90 @@ router.put('/admin/nivel', isAdmin, function (req, res) {
 	}
 });
 
-// DELETE login Admin
+// DELETE -> [Admin] apagar um utilizador através do email
 router.delete('/admin', isAdmin, function (req, res) {
-	if (req.body.userEmail && controllerLogin.existsEmail()) {// userEmail tem de ser passado no body
-		controllerLogin.getLogin(req.body.userEmail)
+	if (req.body.email && controllerLogin.existsEmail()) {// email tem de ser passado no body
+		controllerLogin.getLogin(req.body.email)
 			.then(l => {
-				axios.get(API_URL_USER + '/' + l._id + '?token=' + req.query.token)
-					.then(u => {
-						axios.delete(API_URL_USER + '/' + l._id + '?token=' + req.query.token)
-							.then(response => {
-								if (response.status == 200) {
-									if (response.body.ok == 1 && response.body.deletedCount == 1) {
-										controllerLogin.deleteLogin(req.body.userEmail)
-											.then(del => {
-												if (del && del.ok == 1 && del.deletedCount == 1)
-													res.status(200).jsonp({ message: "OK" })
-												else {
-													// adicionar o user de novo !!!!
-													axios.post(API_URL_USER, u.body)
-														.then(r => {
-															if (r.status != 200) {
-																console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + r.body)
-																res.status(400).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+				if (l) {
+					var configCookies = { headers: { Cookie: 'token=' + req.cookies.token } }
+					axios.get(API_URL_USER + '/' + l._id, configCookies)
+						.then(resp1 => {
+							if (resp1 && resp1.status == 200 && resp1.data) {
+								var u = resp1.data
+								axios.delete(API_URL_USER + '/' + l._id, configCookies)
+									.then(resp2 => {
+										if (resp2 && resp2.status == 200) {
+											if (resp2.data && resp2.data.acknowledged == true && resp2.data.deletedCount == 1) {
+												controllerLogin.deleteLogin(req.body.email)
+													.then(del => {
+														if (del) {
+															if (del && del.acknowledged == true && del.deletedCount == 1) {
+																res.status(200).jsonp({ message: "OK" })
 															}
-															else
-																res.status(401).jsonp({ error: "Erro ao processar o pedido" })
-														})
-														.catch(error => {
-															console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + error)
-															res.status(401).jsonp({ error: "Erro ao processar o pedido" })
-														})
+															else {
+																// adicionar o user de novo !!!!
+																axios.post(API_URL_USER, u, configCookies)
+																	.then(resp3 => {
+																		if (resp3 && resp3.status == 200) {
+																			res.status(401).jsonp({ error: "1. Erro ao processar o pedido" })
+																		}
+																		else {
+																			console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + resp3.data)
+																			res.status(477).jsonp({ error: "1. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
 
-													res.status(401).jsonp({ error: "Erro ao processar o pedido" })
-												}
-											})
-											.catch(erro => {
-												res.status(401).jsonp({ error: "Erro na remoção do utilizador: " + erro })
-											})
-									}
-									else {
-										res.status(401).jsonp({ error: "Erro ao processar o pedido, nao apagou" })
-									}
-								}
-								else {
-									res.status(401).jsonp({ error: "Erro ao processar o pedido. Erro: " + response.body })
-								}
-							})
-							.catch(err => {
-								res.status(401).jsonp({ error: "Erro na remoção do utilizador: " + err })
-							})
-					})
-					.catch(er => {
-						res.status(401).jsonp({ error: "Erro na obtenção do user: " + er })
-					})
+																		}
+																	})
+																	.catch(error1 => {
+																		var errorString1 = (error1 && error1.response && error1.response.data && error1.response.data.message) ? error1.response.data.message : "Erro desconhecido"
+																		console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + " , error: " + errorString1)
+																		res.status(477).jsonp({ error: "2. Erro ao processar o pedido" })
+																	})
+															}
+														}
+														else {
+															res.status(500).jsonp({ error: "Erro na comunicação dos containers" })
+														}
+													})
+													.catch(error2 => {
+														res.status(401).jsonp({ error: "1. Erro na remoção do utilizador: " + error2 })
+													})
+											}
+											else {
+												res.status(401).jsonp({ error: "Erro ao processar o pedido, nao apagou" })
+											}
+										}
+										else {
+											res.status(401).jsonp({ error: "Erro ao processar o pedido. Erro: " + resp2.data })
+										}
+									})
+									.catch(error3 => {
+										var errorString2 = (error3 && error3.response && error3.response.data && error3.response.data.message) ? error3.response.data.message : "Erro desconhecido"
+										res.status(401).jsonp({ error: "2. Erro na remoção do utilizador: " + errorString2 })
+									})
+							}
+							else {
+								res.status(500).jsonp({ error: "Erro na comunicação de containers" })
+							}
+						})
+						.catch(error4 => {
+							var errorString3 = (error4 &&error4.response && error4.response.data && error4.response.data.message) ? error4.response.data.message : "Erro desconhecido"
+							res.status(401).jsonp({ error: "Erro na obtenção do user: " + errorString3 })
+						})
+				}
+				else {
+					res.status(401).jsonp({ error: "Utilizador não encontrado" })
+				}
 			})
-			.catch(e => {
-				res.status(401).jsonp({ error: "Erro na obtenção do login: " + e })
+			.catch(error5 => {
+				res.status(401).jsonp({ error: "Erro na obtenção do login: " + error5 })
 			})
 	}
 	else {
-		res.status(400).jsonp({ error: "Falta de parametros ou email inexistente" })
+		res.status(400).jsonp({ error: "Falta de parametros" })
 	}
 });
-// DELETE login, send email to confirm
+// DELETE -> enviar email com código de verificação para apagar a conta de um utilizador
 router.delete('/apagar', isMe, async function (req, res) { // tem de ter o parametro "username", por causa do isMe
 	if (controllerLogin.existsEmail(req.user)) {
 		const code = controllerLogin.generateRecoveryCode(req.user);
@@ -420,75 +395,115 @@ router.delete('/apagar', isMe, async function (req, res) { // tem de ter o param
 		res.status(401).jsonp({ error: "Utilizador não encontrado" })
 	}
 });
-// DELETE login, verify code and delete
+// DELETE -> apagar a conta de um utilizador após verificar o código fornecido	
 router.post('/apagar-verificar', isMe, function (req, res) { // tem de ter o parametro "username", por causa do isMe
 	controllerLogin.verifyRecoveryCode(req.user, req.body.code) // code tem de ser passado no body
 		.then(b => {
 			if (b) {
-				controllerLogin.getLogin(req.body.userEmail)
+				controllerLogin.getLogin(req.user)
 					.then(l => {
-						axios.get(API_URL_USER + '/' + l._id + '?token=' + req.query.token)
-							.then(u => {
-								axios.delete(API_URL_USER + '/' + l._id + '?token=' + req.query.token)
-									.then(response => {
-										if (response.status == 200) {
-											if (response.body.ok == 1 && response.body.deletedCount == 1) {
-												controllerLogin.deleteLogin(req.body.userEmail)
-													.then(del => {
-														if (del && del.ok == 1 && del.deletedCount == 1)
-															res.status(200).jsonp({ message: "OK" })
-														else {
-															// adicionar o user de novo !!!!
-															axios.post(API_URL_USER, u.body)
-																.then(r => {
-																	if (r.status != 200) {
-																		console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + r.body)
-																		res.status(400).jsonp({ error: "Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
-																	}
-																	else
-																		res.status(401).jsonp({ error: "Erro ao processar o pedido" })
-																})
-																.catch(error => {
-																	console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + error)
-																	res.status(401).jsonp({ error: "Erro ao processar o pedido" })
-																})
+						if (l) {
+							if (l.nivel == "client") {
+								var configCookies = { headers: { Cookie: 'token=' + req.cookies.token } }
+								axios.get(API_URL_USER + '/client/' + l._id, configCookies)
+									.then(resp1 => {
+										if (resp1 && resp1.status == 200 && resp1.data) {
+											var u = resp1.data
 
-															res.status(401).jsonp({ error: "Erro ao processar o pedido" })
-														}
-													})
-													.catch(erro => {
-														res.status(401).jsonp({ error: "Erro na remoção do utilizador: " + erro })
-													})
-											}
-											else {
-												res.status(401).jsonp({ error: "Erro ao processar o pedido, nao apagou" })
-											}
+											jwt.sign({
+												level: 'auth'
+											},
+												secrets.AUTH_KEY,
+												{ expiresIn: "5min" }, //1 minuto
+												function (e, tokenAUTH) {
+													if (e) {
+														res.status(500).jsonp({ error: "Erro na geração do tokenAUTH: " + e })
+													}
+													else {
+														var AUTHcookies = { headers: { Cookie: 'token=' + tokenAUTH } }
+														axios.delete(API_URL_USER + '/client/' + l._id, AUTHcookies)
+															.then(resp2 => {
+																if (resp2 && resp2.status == 200) {
+																	if (resp2.data && resp2.data.acknowledged == true && resp2.data.deletedCount == 1) {
+																		controllerLogin.deleteLogin(req.body.email)
+																			.then(del => {
+																				if (del) {
+																					if (del && del.acknowledged == true && del.deletedCount == 1) {
+																						res.status(200).jsonp({ message: "OK" })
+																					}
+																					else {
+																						// adicionar o user de novo !!!!
+																						axios.post(API_URL_USER + '/client', u, AUTHcookies)
+																							.then(resp3 => {
+																								if (resp3 && resp3.status == 200) {
+																									res.status(401).jsonp({ error: "1. Erro ao processar o pedido" })
+																								}
+																								else {
+																									console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror: " + resp3.data)
+																									res.status(477).jsonp({ error: "1. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+
+																								}
+																							})
+																							.catch(error1 => {
+																								var errorString1 = (error1 && error1.data && error1.data.message) ? error1.data.message : "Erro desconhecido"
+																								console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + " , error: " + errorString1)
+																								res.status(477).jsonp({ error: "2. Erro ao processar o pedido" })
+																							})
+																					}
+																				}
+																				else {
+																					res.status(500).jsonp({ error: "Erro na comunicação dos containers" })
+																				}
+																			})
+																			.catch(error2 => {
+																				res.status(401).jsonp({ error: "1. Erro na remoção do utilizador: " + error2 })
+																			})
+																	}
+																	else {
+																		res.status(401).jsonp({ error: "Erro ao processar o pedido, nao apagou" })
+																	}
+																}
+																else {
+																	res.status(401).jsonp({ error: "Erro ao processar o pedido. Erro: " + resp2.data })
+																}
+															})
+															.catch(error3 => {
+																var errorString2 = (error3 && error3.data && error3.data.message) ? error3.data.message : "Erro desconhecido"
+																res.status(401).jsonp({ error: "2. Erro na remoção do utilizador: " + errorString2 })
+															})
+													}
+												});
 										}
 										else {
-											res.status(401).jsonp({ error: "Erro ao processar o pedido. Erro: " + response.body })
+											res.status(500).jsonp({ error: "Erro na comunicação de containers" })
 										}
 									})
-									.catch(err => {
-										res.status(401).jsonp({ error: "Erro na remoção do utilizador: " + err })
+									.catch(error4 => {
+										var errorString3 = (error4 && error4.data && error4.data.message) ? error4.data.message : "Erro desconhecido"
+										res.status(401).jsonp({ error: "Erro na obtenção do user: " + errorString3 })
 									})
-							})
-							.catch(er => {
-								res.status(401).jsonp({ error: "Erro na obtenção do user: " + er })
-							})
+							}
+							else {
+								res.status(401).jsonp({ error: "O sua role não é legível para apagar a conta, contacte admins" })
+							}
+						}
+						else {
+							res.status(401).jsonp({ error: "Utilizador não encontrado" })
+						}
 					})
-					.catch(e => {
-						res.status(401).jsonp({ error: "Erro na obtenção do login: " + e })
+					.catch(error5 => {
+						res.status(401).jsonp({ error: "Erro na obtenção do login: " + error5 })
 					})
 			} else {
 				res.status(401).jsonp({ error: "Invalid code!" })
 			}
 		})
-		.catch(eror => {
-			res.status(403).jsonp({ error: "Erro na verificação do código: " + eror })
+		.catch(error6 => {
+			res.status(403).jsonp({ error: "Erro na verificação do código: " + error6 })
 		})
 });
 
-// POST esqueci-me da password, send email to confirm
+// POST -> enviar email com código de verificação para alterar a password
 router.post('/esqueci', async function (req, res) {
 	if (controllerLogin.existsEmail(req.body.email)) { // email tem de ser passado no body
 		const code = controllerLogin.generateRecoveryCode(req.body.email);
@@ -511,8 +526,8 @@ router.post('/esqueci', async function (req, res) {
 	}
 
 });
-// POST esqueci-me da password, verify code and change password
-router.post('/esqueci-verificar', function (req, res) {
+// POST -> alterar a password de um utilizador após verificar o código fornecido
+router.post('/esqueci-verificar', passport.authenticate('local'), function (req, res) {
 	controllerLogin.verifyRecoveryCode(req.body.email, req.body.code)// email e code tem de ser passados no body
 		.then(b => {
 			if (b) {
@@ -524,7 +539,7 @@ router.post('/esqueci-verificar', function (req, res) {
 							res.status(401).jsonp({ error: "Erro ao processar o pedido" })
 					})
 					.catch(erro => {
-						res.status(507).jsonp({ error: erro, message: "Erro na alteração do utilizador: " + erro })
+						res.status(507).jsonp({ error: "Erro na alteração do utilizador: " + erro })
 					})
 			}
 			else {

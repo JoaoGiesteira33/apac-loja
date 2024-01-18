@@ -1,5 +1,10 @@
-import React from 'react';
+import Box from '@mui/material/Box';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import Button from '@mui/material/Button';
+import { useState } from 'react';
 import {
+<<<<<<< HEAD
     Stepper,
     Step,
     Button,
@@ -25,47 +30,28 @@ import { useCountries } from 'use-react-countries';
 import LockIcon from '@mui/icons-material/Lock';
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import { createOrder, onApprove } from '../fetchers';
+=======
+    StepLabel,
+} from '@mui/material';
+import CheckoutStep1 from '../components/CheckoutStep1';
+import CheckoutStep2 from '../components/CheckoutStep2';
+import { CheckoutStep3 } from '../components/CheckoutStep3';
+import CheckoutStep4 from '../components/CheckoutStep4';
+>>>>>>> 974bda8c65b000ad65b00e65ccf7614b8720b7d3
 
-function formatCardNumber(value: string) {
-    const val = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-    const matches = val.match(/\d{4,16}/g);
-    const match = (matches && matches[0]) || '';
-    const parts = [];
-
-    for (let i = 0, len = match.length; i < len; i += 4) {
-        parts.push(match.substring(i, i + 4));
-    }
-
-    if (parts.length) {
-        return parts.join(' ');
-    } else {
-        return value;
-    }
-}
-
-function formatExpires(value: string) {
-    return value
-        .replace(/[^0-9]/g, '')
-        .replace(/^([2-9])$/g, '0$1')
-        .replace(/^(1{1})([3-9]{1})$/g, '0$1/$2')
-        .replace(/^0{1,}/g, '0')
-        .replace(/^([0-1]{1}[0-9]{1})([0-9]{1,2}).*/g, '$1/$2');
-}
 
 const Checkout = () => {
-    const [activeStep, setActiveStep] = React.useState(0);
-    const [isLastStep, setIsLastStep] = React.useState(false);
-    const [isFirstStep, setIsFirstStep] = React.useState(false);
 
-    // Payment
-    const { countries } = useCountries();
-    const [type, setType] = React.useState('card');
-    const [cardNumber, setCardNumber] = React.useState('');
-    const [cardExpires, setCardExpires] = React.useState('');
+    const [activeStep, setActiveStep] = useState(0);
 
-    const handleNext = () => !isLastStep && setActiveStep((cur) => cur + 1);
-    const handlePrev = () => !isFirstStep && setActiveStep((cur) => cur - 1);
+    const handleNext = () => {
+        if (activeStep < 3) setActiveStep((cur) => cur + 1);
+    };
+    const handlePrev = () => {
+        if (activeStep > 0) setActiveStep((cur) => cur - 1);
+    };
 
+<<<<<<< HEAD
     // content of the User Information step
     const informationStep = (
         <div className="container relative -bottom-[+4.5rem]">
@@ -418,76 +404,72 @@ const Checkout = () => {
             </Card>
         </div>
     );
+=======
+>>>>>>> 974bda8c65b000ad65b00e65ccf7614b8720b7d3
 
     return (
-        <div className="w-full px-16 py-4">
-            <Stepper
-                activeStep={activeStep}
-                isLastStep={(value) => setIsLastStep(value)}
-                isFirstStep={(value) => setIsFirstStep(value)}>
-                <Step>
-                    <PermIdentityIcon className="h-5 w-5" />
-                    <div className="absolute -bottom-[2.5rem] w-max text-center">
-                        <Typography
-                            variant="h6"
-                            color={activeStep === 0 ? 'blue-gray' : 'gray'}
-                            className="font-poppins">
-                            Information
-                        </Typography>
-                    </div>
+        <Box
+            component="div"
+            sx={{
+                width: '100%',
+                paddingY: '2rem',
+                paddingX: {
+                    xs: '2rem',
+                    sm: '4rem',
+                    md: '6rem',
+                    lg: '20%',
+                },
+            }}>
+            <Stepper activeStep={activeStep} alternativeLabel>
+                <Step key={0}>
+                    <StepLabel>Faturação</StepLabel>
+                    {/* <StepContent>content</StepContent> */}
                 </Step>
-                <Step>
-                    <LocalShippingOutlinedIcon className="h-5 w-5" />
-                    <div className="absolute -bottom-[2.5rem] w-max text-center">
-                        <Typography
-                            variant="h6"
-                            color={activeStep === 1 ? 'blue-gray' : 'gray'}
-                            className="font-poppins">
-                            Shipping
-                        </Typography>
-                    </div>
+                <Step key={1}>
+                    <StepLabel>Entregra</StepLabel>
                 </Step>
-                <Step>
-                    <PaymentOutlinedIcon className="h-5 w-5" />
-                    <div className="absolute -bottom-[2.5rem] w-max text-center">
-                        <Typography
-                            variant="h6"
-                            color={activeStep === 2 ? 'blue-gray' : 'gray'}
-                            className="font-poppins">
-                            Payment
-                        </Typography>
-                    </div>
+                <Step key={2}>
+                    <StepLabel>Resumo</StepLabel>
                 </Step>
-                <Step>
-                    <ThumbUpAltOutlinedIcon className="h-5 w-5" />
-                    <div className="absolute -bottom-[2.5rem] w-max text-center">
-                        <Typography
-                            variant="h6"
-                            color={activeStep === 3 ? 'blue-gray' : 'gray'}
-                            className="font-poppins">
-                            Review
-                        </Typography>
-                    </div>
+                <Step key={3}>
+                    <StepLabel>Pagamento</StepLabel>
                 </Step>
             </Stepper>
 
-            {/* Steps content */}
-            {activeStep === 0 && informationStep}
-            {activeStep === 1 && shippingStep}
-            {activeStep === 2 && paymentStep}
-            {activeStep === 3 && reviewStep}
+            <Box component="div">
 
-            {/* Next and Prev buttons */}
+                {/* Steps content */}
+                {activeStep === 0 && <CheckoutStep1 />}
+                {activeStep === 1 && <CheckoutStep2 />}
+                {activeStep === 2 && <CheckoutStep3 />}
+                {activeStep === 3 && < CheckoutStep4 />}
 
-            <div className="mt-32 flex justify-between">
-                <Button onClick={handlePrev} disabled={isFirstStep}>
-                    Prev
-                </Button>
-                <Button onClick={handleNext} disabled={isLastStep}>
-                    Next
-                </Button>
-            </div>
-        </div>
+                {/* Next and Prev buttons */}
+                <Box
+                    component="div"
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        paddingTop: 2,
+                    }}>
+                    <Button
+                        variant="outlined"
+                        disabled={activeStep === 0}
+                        onClick={handlePrev}
+                        sx={{ mr: 1 }}>
+                        Anterior
+                    </Button>
+                    <Box component="div" style={{ flex: '1 1 auto' }} />
+                    <Button
+                        onClick={handleNext}
+                        variant="contained"
+                        sx={{ mr: 1 }}
+                        disabled={activeStep === 3}>
+                        Próximo
+                    </Button>
+                </Box>
+            </Box>
+        </Box>
     );
 };
 

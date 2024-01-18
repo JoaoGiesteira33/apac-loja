@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 const controllerUser = require('../controllers/user');
-const { isAdmin, isMeOrAdmin } = require('../utils/utils');
+const controllerProduct = require('../controllers/product');
+const controllerShipment = require('../controllers/shipment');
+
+const { isAdmin, isMeOrAdmin, isAdminOrAUTH } = require('../utils/utils');
 
 const middleware = require('./myMiddleware');
 
@@ -30,7 +33,7 @@ router.get(
 );
 
 // POST Client Info
-router.post('/client', function (req, res) {
+router.post('/client', isAdminOrAUTH, function (req, res) {
     controllerUser
         .createUser(req.body)
         .then((info) => {
@@ -66,14 +69,14 @@ router.patch('/client/:id', isMeOrAdmin, function (req, res) {
 });
 
 // DELETE Client Info
-router.delete('/client/:id', isMeOrAdmin, function (req, res) {
+router.delete('/client/:id', isAdminOrAUTH, function (req, res) {
     controllerUser
         .deleteUser(req.params.id)
         .then((info) => {
-            res.jsonp(info);
+            res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(400).jsonp(error);
         });
 });
 
@@ -124,7 +127,7 @@ router.get(
 );
 
 // POST Seller Info
-router.post('/seller', function (req, res) {
+router.post('/seller', isAdminOrAUTH, function (req, res) {
     controllerUser
         .createUser(req.body)
         .then((info) => {
@@ -160,21 +163,20 @@ router.patch('/seller/:id', isMeOrAdmin, function (req, res) {
 });
 
 // DELETE Seller Info
-router.delete('/seller/:id', isMeOrAdmin, function (req, res) {
+router.delete('/seller/:id', isAdminOrAUTH, function (req, res) {
     controllerUser
         .deleteUser(req.params.id)
         .then((info) => {
-            res.jsonp(info);
+            res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(400).jsonp(error);
         });
 });
 
 //GET Sellers
 router.get(
     '/sellers',
-    isAdmin,
     middleware.expandExtractor,
     middleware.extractFilters,
     middleware.fieldSelector,
@@ -218,7 +220,7 @@ router.get(
 );
 
 // POST User Info
-router.post('/', function (req, res) {
+router.post('/', isAdmin, function (req, res) {
     controllerUser
         .createUser(req.body)
         .then((info) => {
@@ -254,7 +256,7 @@ router.patch('/:id', isMeOrAdmin, function (req, res) {
 });
 
 // DELETE User Info
-router.delete('/:id', isMeOrAdmin, function (req, res) {
+router.delete('/:id', isAdmin, function (req, res) {
     controllerUser
         .deleteUser(req.params.id)
         .then((info) => {
@@ -289,6 +291,58 @@ router.get(
     }
 );
 
-// ----------------------TEST-----------------------
+// ----------------------NON-CRUD-----------------------
+
+// GET Products of Seller(Including the state of shipment if applicable)
+router.get('/seller/:id/products', function (req, res) {
+    controllerProduct
+        .getProducts({ _seller: req.params.id }, {}, 0, 0, '')
+        .then((info) => {
+            let unavailable = info.results
+                .filter((product) => {
+                    return product.piece_info.state == 'unavailable';
+                })
+                .map((product) => {
+                    return product._id;
+                });
+
+            if (unavailable.length > 0) {
+                controllerShipment
+                    .getShipments(
+                        { _product: { $in: unavailable } },
+                        {},
+                        0,
+                        0,
+                        ''
+                    )
+                    .then((shipments) => {
+                        console.log(shipments);
+                        let products = info.results.map((product) => {
+                            let shipment = shipments.results.find(
+                                (shipment) => {
+                                    return shipment._product.equals(
+                                        product._id
+                                    );
+                                }
+                            );
+                            if (shipment) {
+                                product.piece_info.state =
+                                    shipment.states.slice(-1)[0].value;
+                            }
+                            return product;
+                        });
+                        res.jsonp({ results: products, hasMore: info.hasMore });
+                    })
+                    .catch((error) => {
+                        res.jsonp(error);
+                    });
+            } else {
+                res.jsonp(info);
+            }
+        })
+        .catch((error) => {
+            res.jsonp(error);
+        });
+});
 
 module.exports = router;

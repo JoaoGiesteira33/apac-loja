@@ -13,11 +13,15 @@ const PieceInfo = new mongoose.Schema(
     {
         technique: String,
         material: String,
-        dimensions: Dimensions,
+        dimensions: {
+            type: Dimensions,
+            required: true,
+        },
         year: Number,
         state: {
             type: String,
             enum: ['submitted', 'rejected', 'available', 'unavailable'],
+            default: 'submitted',
         },
     },
     { _id: false }
@@ -59,6 +63,7 @@ const Product = new mongoose.Schema({
     },
     product_type: {
         type: String,
+        required: true,
         enum: ['book', 'piece'],
     },
     _seller: {
@@ -68,6 +73,10 @@ const Product = new mongoose.Schema({
     },
     piece_info: PieceInfo,
     book_info: BookInfo,
+    featured: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 module.exports = mongoose.model('productModel', Product, 'products');

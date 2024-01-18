@@ -35,6 +35,11 @@ function ReactNavbar(props) {
     const [open, setOpen] = React.useState(false);
     const [idx, setIdx] = React.useState(0);
 
+    const checkRoute = (route: string, page: string) => {
+        const re = RegExp(route);
+        return re.test(page);
+    };
+
     return (
         <AppBar
             position="static"
@@ -67,7 +72,10 @@ function ReactNavbar(props) {
                                 item
                                 xs={3}
                                 sx={
-                                    location.pathname == pagesLinks[index]
+                                    checkRoute(
+                                        pagesLinks[index],
+                                        location.pathname
+                                    )
                                         ? { fontWeight: 'bold', color: 'black' }
                                         : {}
                                 }

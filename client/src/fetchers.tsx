@@ -84,7 +84,7 @@ export async function createOrder(body: [{ id: string; amount: number }]) {
         console.log('Error during register: ' + err.message);
         throw err.response;
     }
-}
+};
 
 export async function onApprove(data) {
     console.log('Capturing Order');
@@ -107,6 +107,18 @@ export async function onApprove(data) {
         throw err.response;
     }
 }
+export const getProduct = async (id: string) => {
+    console.log('Fetching product with id ' + id);
+
+    try {
+        const response = await axios.get(`${API_URL_PROD}/${id}`);
+        console.log('response: ', response.data);
+        return response.data;
+    } catch (err) {
+        console.log('Error fetching product: ' + err.message);
+        throw err.response;
+    }
+};
 
 /*
 export const sendEmail = async (toEmail, subject, message) => {

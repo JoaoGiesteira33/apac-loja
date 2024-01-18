@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Box from '@mui/system/Box';
 
 import logoApac from '../../assets/LOGO_negrito.png';
-import { Divider, Grid, Link } from '@mui/material';
+import { Divider, Grid, Link, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
+import { useTranslation } from 'react-i18next';
+
+import useProductSearch from '../../hooks/useProductSearch';
 
 export default function Initial(props) {
+    const [t] = useTranslation();
     const displayConfig = [
         { xs: 'none', md: 'flex', sm: 'none' },
         { xs: 'none', md: 'none', sm: 'flex' },
         { xs: 'flex', md: 'none', sm: 'none' },
     ];
-    const protectedPages = ['login', 'perfil'];
+    const protectedPages = [t('initial.login'), t('initial.profile')];
     const protectedPagesLinks = ['/login', '/profile'];
 
     const Item = styled(Paper)(({ theme }) => ({
@@ -37,6 +41,27 @@ export default function Initial(props) {
         );
     }
 
+    const [productQuery, setProductQuery] = useState({
+        featured: true,
+        limit: 100,
+    });
+    const [productPage, setProductPage] = useState(1);
+
+    const { products, loading, error } = useProductSearch(
+        productQuery,
+        productPage
+    );
+
+    // get one random product
+    const [randomProduct, setRandomProduct] = useState(null);
+
+    useEffect(() => {
+        if (products && products.length > 0)
+            setRandomProduct(
+                products[Math.floor(Math.random() * products.length)]
+            );
+    }, [products]);
+
     return (
         <Box component="div">
             <img
@@ -45,12 +70,32 @@ export default function Initial(props) {
                 alt="Logo"
                 style={{ position: 'absolute', top: 60, left: 60 }}
             />
-            <img
-                src="https://picsum.photos/2000/1000"
-                alt="Hero"
-                className="max-h-screen w-full h-full object-cover"
-                style={{ position: 'absolute', top: 0, left: 0, zIndex: -1 }}
-            />
+            {randomProduct && (
+                <img
+                    src={randomProduct.photos[0]}
+                    alt="Hero"
+                    className="max-h-screen w-full h-full object-cover"
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        zIndex: -1,
+                    }}
+                />
+            )}
+            {error && <Box>{error}</Box>}
+            {loading && (
+                <Box
+                    component="div"
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginY: '2rem',
+                    }}>
+                    <CircularProgress />
+                </Box>
+            )}
 
             {/* FULL WIDTH */}
             <Grid
@@ -60,24 +105,25 @@ export default function Initial(props) {
                     bottom: 0,
                     paddingBottom: 10,
                     display: displayConfig[0],
+                    backgroundColor: 'white',
                 }}>
                 <Grid item xs={12}>
-                    <Divider variant="middle" />
+                    <Divider />
                 </Grid>
                 <Grid item xs={4} />
                 <Grid item xs={2}>
                     <Item>
-                        <MY_LNK link="gallery" text="a galeria" />
+                        <MY_LNK link="gallery" text={t('initial.gallery')} />
                     </Item>
                 </Grid>
                 <Grid item xs={2}>
                     <Item>
-                        <MY_LNK link="artists" text="artistas" />
+                        <MY_LNK link="artists" text={t('initial.artists')} />
                     </Item>
                 </Grid>
                 <Grid item xs={2}>
                     <Item>
-                        <MY_LNK link="contact" text="contacto" />
+                        <MY_LNK link="contact" text={t('initial.contact')} />
                     </Item>
                 </Grid>
                 <Grid item xs={2}>
@@ -98,23 +144,24 @@ export default function Initial(props) {
                     bottom: 0,
                     paddingBottom: 10,
                     display: displayConfig[1],
+                    backgroundColor: 'white',
                 }}>
                 <Grid item xs={12}>
                     <Divider variant="middle" />
                 </Grid>
                 <Grid item xs={3}>
                     <Item>
-                        <MY_LNK link="gallery" text="a galeria" />
+                        <MY_LNK link="gallery" text={t('initial.gallery')} />
                     </Item>
                 </Grid>
                 <Grid item xs={3}>
                     <Item>
-                        <MY_LNK link="artists" text="artistas" />
+                        <MY_LNK link="artists" text={t('initial.artists')} />
                     </Item>
                 </Grid>
                 <Grid item xs={3}>
                     <Item>
-                        <MY_LNK link="contact" text="contacto" />
+                        <MY_LNK link="contact" text={t('initial.contact')} />
                     </Item>
                 </Grid>
                 <Grid item xs={3}>
@@ -133,23 +180,24 @@ export default function Initial(props) {
                     position: 'absolute',
                     bottom: 0,
                     display: displayConfig[2],
+                    backgroundColor: 'white',
                 }}>
                 <Grid item xs={12}>
                     <Divider variant="middle" />
                 </Grid>
                 <Grid item xs={12}>
                     <Item>
-                        <MY_LNK link="gallery" text="a galeria" />
+                        <MY_LNK link="gallery" text={t('initial.gallery')} />
                     </Item>
                 </Grid>
                 <Grid item xs={12}>
                     <Item>
-                        <MY_LNK link="artists" text="artistas" />
+                        <MY_LNK link="artists" text={t('initial.artists')} />
                     </Item>
                 </Grid>
                 <Grid item xs={12}>
                     <Item>
-                        <MY_LNK link="contact" text="contacto" />
+                        <MY_LNK link="contact" text={t('initial.contact')} />
                     </Item>
                 </Grid>
                 <Grid item xs={12}>

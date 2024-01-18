@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const controllerOrder = require('../controllers/order');
+const controllerShipment = require('../controllers/shipment');
 
 const middleware = require('./myMiddleware');
 
@@ -26,13 +27,14 @@ router.get(
 
 // POST Order Info
 router.post('/', function (req, res, next) {
+    //Create the shipments and then the order with their ids
     controllerOrder
-        .createOrder(req.body)
+        .createOrderWithShipments(req.body)
         .then((info) => {
-            res.jsonp(info);
+            res.status(201).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 

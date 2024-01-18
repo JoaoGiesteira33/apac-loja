@@ -53,7 +53,7 @@ module.exports.getProducts = function (filters, fields, page, limit, expand) {
             .populate(expand),
         Product.countDocuments(filters),
     ]).then(([products, count]) => {
-        let hasMore = count > (page + 1) * limit;
+        let hasMore = count > (page + 1) * limit && limit != 0;
         return { results: products, hasMore: hasMore };
     });
 };
