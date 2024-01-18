@@ -21,9 +21,12 @@ module.exports.createShipment = function (data) {
 
 //      - createManyShipments
 module.exports.createManyShipments = async function (data, session) {
-    let session = await Shipment.startSession();
+    let sessionIsPassed = session != undefined;
+    if (!sessionIsPassed) {
+        session = await Shipment.startSession();
+    }
     try {
-        session.startTransaction();
+        if (!sessionIsPassed) session.startTransaction();
         let shipments = await Shipment.insertMany(data, { session: session });
         //Create notifications
         let notificationPromises = shipments.map((shipment) => {
@@ -50,14 +53,14 @@ module.exports.createManyShipments = async function (data, session) {
 
         await Promise.all(notificationPromises);
 
-        await session.commitTransaction();
+        if (!sessionIsPassed) await session.commitTransaction();
         return shipments;
     } catch (err) {
         console.log(err);
-        await session.abortTransaction();
+        if (!sessionIsPassed) await session.abortTransaction();
         throw err;
     } finally {
-        session.endSession();
+        if (!sessionIsPassed) session.endSession();
     }
 };
 
@@ -192,4 +195,13 @@ module.exports.updateShipmentState = async function (id, value) {
     } finally {
         session.endSession();
     }
+};
+
+// Add payment info to shipment
+module.exports.addPaymentInfo = function (id, data) {
+    return Shipment.updateOne({ _id: id }, { $push: { payments: data } }).then(
+        (info) => {
+            return info;
+        }
+    );
 };
