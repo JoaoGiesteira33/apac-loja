@@ -8,6 +8,7 @@ import Box from '@mui/system/Box';
 import { ListItemIcon, styled } from '@mui/material';
 
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
+import { useTranslation } from 'react-i18next';
 
 const MyKeyboardArrowDownOutlinedIcon = styled('KeyboardArrowDownOutlinedIcon')(
     ({ primary }) => ({
@@ -38,13 +39,18 @@ const availableTypes: string[] = [
     'Arte Têxtil',
 ];
 
-export default function MultipleSelectTypes({
+export default function SelectTypes({
     values,
     setValues,
+    isMultiple,
+    disableUnderline = true,
 }: {
     values: string[];
     setValues: React.Dispatch<React.SetStateAction<string[]>>;
+    isMultiple: boolean;
+    disableUnderline?: boolean;
 }) {
+    const { t } = useTranslation();
     const handleSelectedTypesChange = (
         event: SelectChangeEvent<typeof values>
     ) => {
@@ -60,34 +66,40 @@ export default function MultipleSelectTypes({
 
     return (
         <FormControl variant="standard" sx={{ m: 1, width: 70, margin: '0' }}>
-            <InputLabel shrink={false} id="multiple-checkbox-label">
-                {values.length < 1 && 'Tipos'}
+            <InputLabel shrink={!isMultiple} id="checkbox-label">
+                {isMultiple
+                    ? values.length < 1 && t('global.types')
+                    : t('global.type-of-piece')}
             </InputLabel>
             <Select
-                labelId="multiple-checkbox-label"
-                id="multiple-checkbox"
-                multiple
-                disableUnderline
+                labelId="checkbox-label"
+                id="checkbox"
+                multiple={isMultiple}
+                disableUnderline={disableUnderline}
                 value={values}
                 onChange={handleSelectedTypesChange}
                 IconComponent={KeyboardArrowDownOutlinedIcon}
-                renderValue={() => ['Tipos']}
+                renderValue={
+                    isMultiple ? () => [t('global.types')] : () => values
+                }
                 MenuProps={MenuProps}>
-                <MenuItem divider value="all">
-                    <ListItemIcon>
-                        <Checkbox
-                            checked={
-                                availableTypes.length > 0 &&
-                                values.length === availableTypes.length
-                            }
-                            indeterminate={
-                                values.length > 0 &&
-                                values.length < availableTypes.length
-                            }
-                        />
-                    </ListItemIcon>
-                    <ListItemText primary="Todos" />
-                </MenuItem>
+                {isMultiple && (
+                    <MenuItem divider value="all">
+                        <ListItemIcon>
+                            <Checkbox
+                                checked={
+                                    availableTypes.length > 0 &&
+                                    values.length === availableTypes.length
+                                }
+                                indeterminate={
+                                    values.length > 0 &&
+                                    values.length < availableTypes.length
+                                }
+                            />
+                        </ListItemIcon>
+                        <ListItemText primary="Todos" />
+                    </MenuItem>
+                )}
                 {availableTypes.map((type) => (
                     <MenuItem divider key={type} value={type}>
                         <Checkbox checked={values.indexOf(type) > -1} />

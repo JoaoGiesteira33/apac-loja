@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import AddCircleOutlineSharpIcon from '@mui/icons-material/AddCircleOutlineSharp';
-import MultipleSelectTypes from '../../components/pintar_o_7/MultipleSelectTypes';
+import SelectTypes from '../../components/pintar_o_7/SelectType';
 import NewProductRequest from '../../components/pintar_o_7/NewProductRequest';
 import useProductSearch from '../../hooks/useProductSearch';
 import dayjs from 'dayjs';
@@ -117,9 +117,10 @@ export default function Requests() {
                             component={'div'}
                             display={'flex'}
                             alignItems={'center'}>
-                            <MultipleSelectTypes
+                            <SelectTypes
                                 values={selectedTypes}
                                 setValues={setSelectedTypes}
+                                isMultiple={true}
                             />
                         </Box>
                         <TextField
