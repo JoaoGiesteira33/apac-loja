@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import Hero from '../../components/pintar_o_7/Hero';
-import MultipleSelectTypes from '../../components/pintar_o_7/MultipleSelectTypes';
+import SelectTypes from '../../components/pintar_o_7/SelectType';
 import SelectPrice from '../../components/pintar_o_7/SelectPrice';
 
 import Divider from '@mui/material/Divider';
@@ -82,9 +82,10 @@ export default function Home() {
                         display: 'flex',
                         alignItems: 'center',
                     }}>
-                    <MultipleSelectTypes
+                    <SelectTypes
                         values={selectedTypes}
                         setValues={setSelectedTypes}
+                        isMultiple={true}
                     />
                 </Box>
                 <SelectPrice
