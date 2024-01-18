@@ -32,7 +32,8 @@
             "your-pieces": "As suas obras",
             "new-piece": "Nova obra",
             "new-piece-page": {
-                "paper-basic-info": "Informação da obra"
+                "paper-basic-info": "Informação da Obra",
+                "paper-details": "Detalhes"
             },
             "no-pieces": "Este artista ainda não tem obras disponíveis"
         },
@@ -48,7 +49,9 @@
             "description": "Descrição",
             "title": "Título",
             "price": "Preço",
-            "contact": "Fala connosco"
+            "contact": "Fala connosco",
+            "type-of-piece": "Tipo de Obra",
+            "types": "Tipos"
         },
         "home": {},
         "forms": {
@@ -63,7 +66,16 @@
             "postal-code": "Código postal",
             "save": "Guardar alterações"
         },
-        "product": {},
+        "product": {
+            "technique": "Técnica",
+            "dimensions": "Dimensões",
+            "year": "Ano",
+            "width": "Largura",
+            "height": "Altura",
+            "depth": "Profundidade",
+            "materials": "Materiais",
+            "materials-placeholder": "Adicione lista materiais utilizados"
+        },
         "profile": {
             "requests": {
                 "title": "Novos pedidos"
