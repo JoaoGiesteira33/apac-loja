@@ -306,8 +306,6 @@ router.get('/seller/:id/products', function (req, res) {
                     return product._id;
                 });
 
-            console.log(unavailable);
-
             if (unavailable.length > 0) {
                 controllerShipment
                     .getShipments(

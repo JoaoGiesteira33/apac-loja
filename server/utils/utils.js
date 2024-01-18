@@ -135,14 +135,14 @@ function isAdminOrAUTH(req, res, next) {
         jwt.verify(myToken, secrets.AUTH_KEY, function (e, payload) {
             if (e) {
                 res.status(403).jsonp({ error: 'Invalid Token!' });
-            } else if (payload.level == 'admin'){
+            } else if (payload.level == 'admin') {
                 req.user = payload.username;
                 req._id = payload._id;
                 req.level = payload.level;
                 req.token = myToken;
                 next();
             }
-            if(payload.level == 'auth') {
+            if (payload.level == 'auth') {
                 next();
             } else {
                 res.status(401).jsonp({ error: 'Access denied!' });

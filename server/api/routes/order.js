@@ -27,24 +27,14 @@ router.get(
 
 // POST Order Info
 router.post('/', function (req, res, next) {
-    //add _client to shipments
-    req.body.shipments.forEach((shipment) => {
-        shipment._client = req.body._client;
-    });
     //Create the shipments and then the order with their ids
-    controllerShipment
-        .createManyShipments(req.body.shipments)
-        .then((shipments) => {
-            let order = req.body;
-            order.shipments = shipments.map((shipment) => shipment._id);
-            controllerOrder
-                .createOrder(order)
-                .then((info) => {
-                    res.jsonp(info);
-                })
-                .catch((error) => {
-                    res.jsonp(error);
-                });
+    controllerOrder
+        .createOrderWithShipments(req.body)
+        .then((info) => {
+            res.status(201).jsonp(info);
+        })
+        .catch((error) => {
+            res.status(500).jsonp(error);
         });
 });
 

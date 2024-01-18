@@ -98,7 +98,7 @@ router.get(
 
 router.post('/:id/states', function (req, res, next) {
     controllerShipment
-        .updateShipmentStatus(req.params.id, req.body.value)
+        .updateShipmentState(req.params.id, req.body.value)
         .then((info) => {
             res.jsonp(info);
         })
