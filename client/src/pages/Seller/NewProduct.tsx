@@ -3,6 +3,9 @@ import {
     Box,
     Chip,
     FormControl,
+    IconButton,
+    ImageList,
+    ImageListItem,
     Input,
     InputAdornment,
     InputLabel,
@@ -11,11 +14,14 @@ import {
     Select,
     Stack,
     TextField,
+    Tooltip,
     Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import Grid from '@mui/material/Unstable_Grid2';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import SelectTypes from '../../components/pintar_o_7/SelectType';
 
 const availableTypes: string[] = [
     'Pintura',
@@ -32,6 +38,7 @@ const availableTypes: string[] = [
 
 export default function NewProduct() {
     const { t } = useTranslation();
+    const inputRef = useRef(null);
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -43,6 +50,34 @@ export default function NewProduct() {
     const [height, setHeight] = useState<string>('');
     const [depth, setDepth] = useState<string>('');
     const [measureUnit, setMeasureUnit] = useState<string>('');
+    const [show, setShow] = useState<boolean[]>([]);
+
+    const [images, setImages] = useState<File[]>([]);
+    const imageUrls = images.map((file) => URL.createObjectURL(file));
+
+    function onImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const fileList = e.target.files;
+        if (fileList) {
+            const files = [...fileList, ...images];
+            setImages(files);
+            setShow(new Array(files.length).fill(false));
+        }
+    }
+
+    const addNewImage = () => {
+        inputRef.current.click();
+    };
+
+    const onMouseOver = (index: number) => {
+        const newShow = [...show];
+        newShow[index] = true;
+        setShow(newShow);
+    };
+    const onMouseOut = (index: number) => {
+        const newShow = [...show];
+        newShow[index] = false;
+        setShow(newShow);
+    };
 
     return (
         <Box
@@ -219,6 +254,78 @@ export default function NewProduct() {
                             onChange={(e) => setHeight(e.target.value)}
                         />
                     </Stack>
+                </Paper>
+                <Paper
+                    sx={{
+                        width: '100%',
+                        padding: '2rem',
+                    }}>
+                    <Typography variant="h4">
+                        {t('artist.new-piece-page.paper-photos')}
+                    </Typography>
+                    <input
+                        style={{ display: 'none' }}
+                        ref={inputRef}
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={onImageChange}
+                    />
+                    <Grid container spacing={4}>
+                        {imageUrls.map((url, index) => (
+                            <Grid xs={6} sm={4} md={3} key={index}>
+                                <Box
+                                    onMouseOver={() => onMouseOver(index)}
+                                    onMouseOut={() => onMouseOut(index)}
+                                    component={'div'}
+                                    position={'relative'}
+                                    sx={{
+                                        aspectRatio: '1/1',
+                                        overflow: 'hidden',
+                                    }}>
+                                    <img
+                                        className="w-full h-full object-cover"
+                                        src={url}
+                                        alt={''}
+                                    />
+                                    {show[index] && (
+                                        <IconButton
+                                            onClick={() => {
+                                                const newImages = [...images];
+                                                newImages.splice(index, 1);
+                                                setImages(newImages);
+                                            }}
+                                            sx={{
+                                                position: 'absolute',
+                                                right: '1rem',
+                                                top: '1rem',
+                                            }}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    )}
+                                </Box>
+                            </Grid>
+                        ))}
+                        <Grid xs={6} sm={4} md={3}>
+                            <Box
+                                component={'div'}
+                                display={'flex'}
+                                alignItems={'center'}
+                                justifyContent={'center'}
+                                sx={{
+                                    aspectRatio: '1/1',
+                                }}>
+                                <Tooltip
+                                    title={t(
+                                        'artist.new-piece-page.add-photos'
+                                    )}>
+                                    <IconButton onClick={addNewImage}>
+                                        <AddIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </Box>
+                        </Grid>
+                    </Grid>
                 </Paper>
             </Stack>
         </Box>
