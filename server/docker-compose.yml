@@ -11,6 +11,19 @@ services:
       - MONGO_USER
       - MONGO_PASSWORD
       - AUTH_KEY
+      - PAYPAL_CLIENT_ID
+      - PAYPAL_CLIENT_SECRET
+      - PAYPAL_ENVIRONMENT
+      - PAYPAL_SANDBOX_URL
+      - PAYPAL_LIVE_URL
+      - EUPAGO_CLIENT_ID
+      - EUPAGO_CLIENT_SECRET
+      - EUPAGO_API_KEY
+      - EUPAGO_USERNAME
+      - EUPAGO_PASSWORD
+      - EUPAGO_ENVIRONMENT
+      - EUPAGO_SANDBOX_URL
+      - EUPAGO_LIVE_URL
     ports:
       - 11000:80
     networks:
@@ -59,6 +72,32 @@ secrets:
     file: ./env/MONGO_PASSWORD.txt
   AUTH_KEY:
     file: ./env/AUTH_KEY.txt
+  PAYPAL_CLIENT_ID:
+    file: ./env/PAYPAL_CLIENT_ID.txt
+  PAYPAL_CLIENT_SECRET:
+    file: ./env/PAYPAL_CLIENT_SECRET.txt
+  PAYPAL_ENVIRONMENT:
+    file: ./env/PAYPAL_ENVIRONMENT.txt
+  PAYPAL_SANDBOX_URL:
+    file: ./env/PAYPAL_SANDBOX_URL.txt
+  PAYPAL_LIVE_URL:
+    file: ./env/PAYPAL_LIVE_URL.txt
+  EUPAGO_CLIENT_ID:
+    file: ./env/EUPAGO_CLIENT_ID.txt
+  EUPAGO_CLIENT_SECRET:
+    file: ./env/EUPAGO_CLIENT_SECRET.txt
+  EUPAGO_API_KEY:
+    file: ./env/EUPAGO_API_KEY.txt
+  EUPAGO_USERNAME:
+    file: ./env/EUPAGO_USERNAME.txt
+  EUPAGO_PASSWORD:
+    file: ./env/EUPAGO_PASSWORD.txt
+  EUPAGO_ENVIRONMENT:
+    file: ./env/EUPAGO_ENVIRONMENT.txt
+  EUPAGO_SANDBOX_URL:
+    file: ./env/EUPAGO_SANDBOX_URL.txt
+  EUPAGO_LIVE_URL:
+    file: ./env/EUPAGO_LIVE_URL.txt
 #  EMAIL:
 #    file: ./env/EMAIL.txt
 #  SERVICE:

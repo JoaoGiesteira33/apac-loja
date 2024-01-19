@@ -11,6 +11,7 @@ var cookieParser = require('cookie-parser');
 var userRouter = require('./routes/user');
 var productRouter = require('./routes/product');
 var orderRouter = require('./routes/order');
+var paymentRouter = require('./routes/payment');
 var shipmentRouter = require('./routes/shipment');
 var notificationRouter = require('./routes/notification');
 
@@ -56,6 +57,7 @@ app.use(cookieParser());
 app.use('/product', productRouter);
 app.use('/user', userRouter);
 app.use('/order', orderRouter);
+app.use('/payment', paymentRouter);
 app.use('/shipment', shipmentRouter);
 app.use('/notification', notificationRouter);
 

@@ -69,6 +69,44 @@ export const registerUser = async (body: FormData) => {
     }
 };
 
+export async function createOrder(body: [{ id: string; amount: number }]) {
+    console.log('Creating Order');
+    console.log('body: ', body);
+
+    const json = JSON.stringify(body);
+    console.log('json: ', json);
+
+    try {
+        const response = await axios.post(`${AUTH_URL}/paypal/orders`, json);
+        console.log('resposta: ', response.data);
+        return response.data;
+    } catch (err) {
+        console.log('Error during register: ' + err.message);
+        throw err.response;
+    }
+};
+
+export async function onApprove(data) {
+    console.log('Capturing Order');
+    console.log('data: ', data);
+
+    const json = JSON.stringify({
+        payPalOrderId: data.orderID,
+    });
+    console.log('json: ', json);
+
+    try {
+        const response = await axios.post(
+            `${AUTH_URL}/paypal/orders/${data.orderID}/capture`,
+            json
+        );
+        console.log('resposta: ', response.data);
+        return response.data;
+    } catch (err) {
+        console.log('Error during register: ' + err.message);
+        throw err.response;
+    }
+}
 export const getProduct = async (id: string) => {
     console.log('Fetching product with id ' + id);
 

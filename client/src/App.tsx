@@ -26,6 +26,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Products from './pages/Seller/Products';
 import NewProduct from './pages/Seller/NewProduct';
 
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+
 // dynamically load components as they are needed
 const InitialPage = React.lazy(() => import('./pages/pintar_o_7/Initial'));
 const HomePagePintarO7 = React.lazy(() => import('./pages/pintar_o_7/Home'));
@@ -253,79 +255,84 @@ function App() {
         }
     }, []);
 
+    const payPalOptions = {
+        clientId: 'test',
+        currency: 'EUR',
+        intent: 'capture',
+    };
+
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <ColorModeContext.Provider value={colorMode}>
-                <ThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <div
-                        className={theme.palette.mode === 'dark' ? 'dark' : ''}>
-                        <IconButton
-                            sx={{
-                                ml: 1,
-                                position: 'absolute',
-                                right: 0,
-                                top: 0,
-                                zIndex: 1,
-                            }}
-                            onClick={colorMode.toggleColorMode}
-                            color="inherit">
-                            {theme.palette.mode === 'dark' ? (
-                                <Brightness7Icon />
-                            ) : (
-                                <Brightness4Icon />
-                            )}
-                        </IconButton>
+            <PayPalScriptProvider options={payPalOptions}>
+                <ColorModeContext.Provider value={colorMode}>
+                    <ThemeProvider theme={theme}>
+                        <CssBaseline />
+                        <div className={theme.palette.mode === 'dark' ? 'dark' : ''}>
+                            <IconButton
+                                sx={{
+                                    ml: 1,
+                                    position: 'absolute',
+                                    right: 0,
+                                    top: 0,
+                                    zIndex: 1,
+                                }}
+                                onClick={colorMode.toggleColorMode}
+                                color="inherit">
+                                {theme.palette.mode === 'dark' ? (
+                                    <Brightness7Icon />
+                                ) : (
+                                    <Brightness4Icon />
+                                )}
+                            </IconButton>
 
-                        {location.pathname !== '/' ? (
-                            <ReactNavbar
-                                loggedIn={loggedIn}
-                                setHeight={setNavbarSize}
-                            />
-                        ) : (
-                            <></>
-                        )}
-                        <Suspense
-                            fallback={
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        my: 10,
-                                    }}
-                                    component="div">
-                                    <CircularProgress />
-                                </Box>
-                            }>
-                            <Routes>
-                                {/* <Suspense fallback={<Loading />}> *criar este componente depois* */}
-                                {routes.map((route, index) => (
-                                    <Route
-                                        key={index}
-                                        path={route.path}
-                                        element={
-                                            // TO DO -> DESCOMENTAR ISTO ESTÁ FUNCIONAL
-                                            //       route.requireAuth && !loggedIn ? (
-                                            //           <LoginPage
-                                            //               setLoggedIn={setLoggedIn}
-                                            //           />
-                                            //       ) : (
-                                            route.element
-                                            //       )
-                                        }></Route>
-                                ))}
-                            </Routes>
-                        </Suspense>
-                        {checkChatRoute(location.pathname) ? <Chat /> : <></>}
-                        {location.pathname !== '/' ? (
-                            <Footer setHeight={setFooterSize} />
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-                </ThemeProvider>
-            </ColorModeContext.Provider>
+                            {location.pathname !== '/' ? (
+                                <ReactNavbar
+                                    loggedIn={loggedIn}
+                                    setHeight={setNavbarSize}
+                                />
+                            ) : (
+                                <></>
+                            )}
+                            <Suspense
+                                fallback={
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            my: 10,
+                                        }}
+                                        component="div">
+                                        <CircularProgress />
+                                    </Box>
+                                }>
+                                <Routes>
+                                    {/* <Suspense fallback={<Loading />}> *criar este componente depois* */}
+                                    {routes.map((route, index) => (
+                                        <Route
+                                            key={index}
+                                            path={route.path}
+                                            element={
+                                                // TO DO -> DESCOMENTAR ISTO ESTÁ FUNCIONAL
+                                                //       route.requireAuth && !loggedIn ? (
+                                                //           <LoginPage
+                                                //               setLoggedIn={setLoggedIn}
+                                                //           />
+                                                //       ) : (
+                                                route.element
+                                                //       )
+                                            }></Route>
+                                    ))}
+                                </Routes>
+                            </Suspense>
+                            {checkChatRoute(location.pathname) ? <Chat /> : <></>}
+                            {location.pathname !== '/' 
+                                ? ( <Footer setHeight={setFooterSize} /> ) 
+                                : ( <></> )}
+                        </div>
+                    </ThemeProvider>
+                </ColorModeContext.Provider>
+            </PayPalScriptProvider>
         </LocalizationProvider>
     );
 }
