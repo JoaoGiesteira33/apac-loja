@@ -4,7 +4,7 @@ const router = express.Router();
 const controllerOrder = require('../controllers/order');
 const controllerShipment = require('../controllers/shipment');
 
-const { hasAccess, isAdminOrAUTH } = require('../controllers/auth');
+const { hasAccess, isAdminOrAUTH } = require('../utils/utils');
 
 const middleware = require('./myMiddleware');
 
