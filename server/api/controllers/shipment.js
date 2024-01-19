@@ -44,7 +44,7 @@ module.exports.createManyShipments = async function (data, session) {
                 return notification.save({ session: session }).then(() => {
                     const Product = require('../models/product');
                     return Product.updateOne(
-                        { _id: doc._product },
+                        { _id: shipment._product },
                         { $set: { 'piece_info.state': 'unavailable' } }
                     );
                 });

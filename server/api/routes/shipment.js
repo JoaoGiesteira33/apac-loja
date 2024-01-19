@@ -3,6 +3,8 @@ const router = express.Router();
 
 const controllerShipment = require('../controllers/shipment');
 
+const { hasAccess, isAdminOrAUTH } = require('../utils/utils');
+
 const middleware = require('./myMiddleware');
 
 // ---------------------------------------------
@@ -12,63 +14,73 @@ router.get(
     '/:id',
     middleware.expandExtractor,
     middleware.fieldSelector,
+    hasAccess,
     function (req, res, next) {
         controllerShipment
             .getShipmentInfo(req.params.id, req.expand || '')
             .then((info) => {
-                res.jsonp(info);
+                if (
+                    (info._client._id != req._id &&
+                        info._seller._id != req._id) ||
+                    req.level != 'admin'
+                ) {
+                    res.status(403).jsonp({
+                        error: 'You are not allowed to see this shipment.',
+                    });
+                }
+                res.status(200).jsonp(info);
             })
             .catch((error) => {
-                res.jsonp(error);
+                res.status(500).jsonp(error);
             });
     }
 );
 
 // POST Shipment Info
-router.post('/', function (req, res, next) {
+router.post('/', isAdminOrAUTH, function (req, res, next) {
     controllerShipment
         .createShipment(req.body)
         .then((info) => {
-            res.jsonp(info);
+            res.status(201).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
 // PUT Shipment Info
-router.put('/:id', function (req, res, next) {
+router.put('/:id', isAdminOrAUTH, function (req, res, next) {
     controllerShipment
         .replaceShipmentInfo(req.params.id, req.body)
         .then((info) => {
-            res.jsonp(info);
+            res.status(204);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
 // PATCH Shipment Info
-router.patch('/:id', function (req, res, next) {
+router.patch('/:id', isAdminOrAUTH, function (req, res, next) {
     controllerShipment
         .updateShipmentInfo(req.params.id, req.body)
         .then((info) => {
-            res.jsonp(info);
+            res.status(204);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
 // DELETE Shipment Info
-router.delete('/:id', function (req, res, next) {
+router.delete('/:id', isAdminOrAUTH, function (req, res, next) {
     controllerShipment
         .deleteShipment(req.params.id)
         .then((info) => {
-            res.jsonp(info);
+            res.status(204);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
@@ -78,7 +90,11 @@ router.get(
     middleware.expandExtractor,
     middleware.fieldSelector,
     middleware.extractFilters,
+    hasAccess,
     function (req, res, next) {
+        if (req._id && req.level != 'admin') {
+            req.filters._client = req._id;
+        }
         controllerShipment
             .getShipments(
                 req.filters,
@@ -88,19 +104,35 @@ router.get(
                 req.expand || ''
             )
             .then((info) => {
-                res.jsonp(info);
+                res.status(200).jsonp(info);
             })
             .catch((error) => {
-                res.jsonp(error);
+                res.status(500).jsonp(error);
             });
     }
 );
 
-router.post('/:id/states', function (req, res, next) {
+router.post('/:id/states', hasAccess, function (req, res, next) {
     controllerShipment
-        .updateShipmentState(req.params.id, req.body.value)
+        .getShipmentInfo(req.params.id)
         .then((info) => {
-            res.jsonp(info);
+            if (
+                info._client._id != req._id &&
+                info._seller._id != req._id &&
+                req.level != 'admin'
+            ) {
+                res.status(403).jsonp({
+                    error: 'You are not allowed to change this shipment.',
+                });
+            }
+            controllerShipment
+                .updateShipmentState(req.params.id, req.body.value)
+                .then((info) => {
+                    res.status(204);
+                })
+                .catch((error) => {
+                    res.status(500).jsonp(error);
+                });
         })
         .catch((error) => {
             res.jsonp(error);

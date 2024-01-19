@@ -19,6 +19,7 @@ const State = new mongoose.Schema(
         value: {
             type: String,
             enum: [
+                'unpaid',
                 'pending',
                 'reserved',
                 'paid',
@@ -26,11 +27,22 @@ const State = new mongoose.Schema(
                 'delivered',
                 'canceled',
             ],
-            default: 'pending',
+            default: 'unpaid',
         },
         date: {
             type: Date,
             default: Date.now,
+        },
+    },
+    { _id: false }
+);
+
+const Payment = new mongoose.Schema(
+    {
+        transactionId: String,
+        method: {
+            type: String,
+            enum: ['paypal', 'eupago'],
         },
     },
     { _id: false }
@@ -57,53 +69,12 @@ const Shipment = new mongoose.Schema({
         type: [State],
         default: [],
     },
+    payments: {
+        type: [Payment],
+        default: [],
+    },
     shipping_proof: String, // Path to the file submitted by the seller
     evaluation: Evaluation,
 });
-
-//Lógica
-
-function generateNotification(state, _product, _seller, _client) {
-    const Notification = require('../models/notification');
-    switch (state) {
-        case 'pending':
-            return new Notification({
-                _user: _seller,
-                title: 'Pedido de pré-reserva',
-                message:
-                    'Um cliente realizou um pedido de pré-reserva do seu produto.',
-                link: `/product/${_product}`,
-            });
-        case 'reserved':
-            return new Notification({
-                _user: _client,
-                title: 'Pedido de pré-reserva aceite',
-                message:
-                    'O vendedor aceitou o seu pedido de pré-reserva do produto.',
-                link: `/product/${_product}`,
-            });
-        case 'paid':
-            return new Notification({
-                _user: _seller,
-                title: 'Compra do seu produto',
-                message: 'Um cliente comprou o seu produto.',
-                link: `/product/${_product}`,
-            });
-        case 'sent':
-            return new Notification({
-                _user: _client,
-                title: 'O produto que comprou foi enviado',
-                message: 'O vendedor enviou o produto.',
-                link: `/product/${_product}`,
-            });
-        case 'delivered':
-            return new Notification({
-                _user: _seller,
-                title: 'O produto que vendeu foi entregue',
-                message: 'O cliente recebeu o produto.',
-                link: `/product/${_product}`,
-            });
-    }
-}
 
 module.exports = mongoose.model('shipmentModel', Shipment, 'shipments');

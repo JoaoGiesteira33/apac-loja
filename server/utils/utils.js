@@ -77,6 +77,7 @@ function hasAccess(req, res, next) {
             } else {
                 req.user = payload.username;
                 req.level = payload.level;
+                req._id = payload._id;
                 req.token = myToken;
                 next();
             }
@@ -96,6 +97,7 @@ function isMe(req, res, next) {
             } else if (me && payload.username == me) {
                 req.user = payload.username;
                 req.level = payload.level;
+                req._id = payload._id;
                 req.token = myToken;
                 next();
             } else {
