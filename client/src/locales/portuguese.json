@@ -53,7 +53,8 @@
             "price": "Preço",
             "contact": "Fala connosco",
             "type-of-piece": "Tipo de Obra",
-            "types": "Tipos"
+            "types": "Tipos",
+            "send": "Enviar"
         },
         "home": {},
         "forms": {
@@ -66,7 +67,10 @@
             "phone-number": "Número de telemóvel",
             "no-account": "Não tem conta? Registe-se!",
             "postal-code": "Código postal",
-            "save": "Guardar alterações"
+            "save": "Guardar alterações",
+            "subject": "Assunto",
+            "message": "Mensagem",
+            "messageSuccess": "Mensagem enviada com sucesso!"
         },
         "product": {
             "technique": "Técnica",

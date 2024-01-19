@@ -1,9 +1,11 @@
 import axios from 'axios';
 //import mime from 'mime';
 
-export const API_URL_USER = 'http://localhost:11000/user';
-export const API_URL_PROD = 'http://localhost:11000/product';
-export const AUTH_URL = 'http://localhost:11001';
+const BASE_URL = 'http://localhost';
+export const API_URL_USER = BASE_URL + ':11000/user';
+export const API_URL_PROD = BASE_URL + ':11000/product';
+export const API_URL_MAIL = BASE_URL + ':11000/email';
+export const AUTH_URL = BASE_URL + ':11001';
 //export const BASE_URL = 'http:/192.168.1.68:8000/api';
 
 export const loginUser = async (email: string, password: string) => {
@@ -84,7 +86,7 @@ export async function createOrder(body: [{ id: string; amount: number }]) {
         console.log('Error during register: ' + err.message);
         throw err.response;
     }
-};
+}
 
 export async function onApprove(data) {
     console.log('Capturing Order');
@@ -120,21 +122,20 @@ export const getProduct = async (id: string) => {
     }
 };
 
-/*
 export const sendEmail = async (toEmail, subject, message) => {
     try {
-        const response = await axios.post(`${BASE_URL}/users/send-email`, {
+        const response = await axios.post(`${API_URL_MAIL}/send`, {
             email: toEmail,
-            subject,
-            text: message
+            subject: '[Contacto Site] ' + subject,
+            text: message + '\n\n Enviado por: ' + toEmail,
         });
         return response.data;
     } catch (error) {
-        console.error("Error sending email:", error);
+        console.error('Error sending email:', error);
         throw error;
     }
 };
-
+/*
 export const generateRecoveryCode = async (email) => {
     console.log("Generating recovery code for user with email " + email);
     try {
