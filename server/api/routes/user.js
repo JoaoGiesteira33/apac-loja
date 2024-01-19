@@ -294,7 +294,7 @@ router.get(
 // ----------------------NON-CRUD-----------------------
 
 // GET Products of Seller(Including the state of shipment if applicable)
-router.get('/seller/:id/products', function (req, res) {
+router.get('/seller/:id/products', isMeOrAdmin, function (req, res) {
     controllerProduct
         .getProducts({ _seller: req.params.id }, {}, 0, 0, '')
         .then((info) => {
