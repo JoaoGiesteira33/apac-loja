@@ -49,7 +49,11 @@ router.put('/client/:id', isMeOrAdmin, function (req, res) {
     controllerUser
         .replaceUserInfo(req.params.id, req.body)
         .then((info) => {
-            res.jsonp(info);
+            if (info.matchedCount == 0) {
+                res.status(201);
+            } else {
+                res.status(204);
+            }
         })
         .catch((error) => {
             res.jsonp(error);

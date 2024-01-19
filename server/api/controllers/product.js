@@ -21,7 +21,9 @@ module.exports.createProduct = function (data) {
 
 //     - replaceProductInfo
 module.exports.replaceProductInfo = function (id, data) {
-    return Product.replaceOne({ _id: id }, data).then((info) => {
+    return Product.replaceOne({ _id: id }, data, {
+        upsert: true,
+    }).then((info) => {
         return info;
     });
 };
