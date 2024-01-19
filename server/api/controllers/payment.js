@@ -3,6 +3,7 @@ var secrets = require('docker-secret').secrets;
 const utils = require('../utils/utils');
 const Orders = require('../controllers/order');
 const Products = require('../controllers/product');
+const shipment = require('../models/shipment');
 const paypalBaseUrl = secrets.PAYPAL_ENVIRONMENT == "sandbox" 
     ? secrets.PAYPAL_SANDBOX_URL
     : secrets.PAYPAL_LIVE_URL;
@@ -44,20 +45,20 @@ const generatePaypalAccessToken = async function() {
 * Create an order to start the transaction.
 * @see https://developer.paypal.com/docs/api/orders/v2/#orders_create
 */
-module.exports.createPaypalOrder = async function(cart, currency, reservation) {
+module.exports.createPaypalOrder = async function(data) {
     // use the cart information passed from the front-end to calculate the purchase unit details
-    if (cart && Array.isArray(cart)) {
+    if (data.cart && Array.isArray(data.cart)) {
         let tmpValue = 0;
-        for (const item of cart) {
+        for (const item of data.cart) {
             try {
-                const product = await Products.getProductInfo(item.id);
+                const product = await Products.getProductInfo(item._product);
                 const value = await product.price;
                 tmpValue += value * item.amount;
             } catch (error) {
                 throw new Error("Error getting product prices: " + error);
             }
         }
-        let percentage = reservation == true ? 0.25 : 0.75;
+        let percentage = data.reservation == true ? 0.25 : 0.75;
         let cartValue = (Math.round(tmpValue * percentage * 100) / 100).toFixed(2);
         console.log("Total cart value: " + cartValue);
 
@@ -69,7 +70,7 @@ module.exports.createPaypalOrder = async function(cart, currency, reservation) {
                 purchase_units: [
                     {
                         amount: {
-                            currency_code: currency, // 'EUR'
+                            currency_code: data.currency, // 'EUR'
                             value: cartValue,
                         },
                     },
@@ -91,7 +92,7 @@ module.exports.createPaypalOrder = async function(cart, currency, reservation) {
                     body: JSON.stringify(payload),
                 });
 
-            return handlePaypalResponse(response);
+            return handlePaypalResponse(response, data);
         } catch (err) {
             throw new Error("Error on request to Paypal: ", err);
         }
@@ -138,7 +139,7 @@ module.exports.createEuPagoMBWayOrder = async function(data) {
         let tmpValue = 0;
         for (const item of data.cart) {
             try {
-                const product = await Products.getProductInfo(item.id);
+                const product = await Products.getProductInfo(item._product);
                 const value = await product.price;
                 tmpValue += value * item.amount;
             } catch (error) {
@@ -170,7 +171,7 @@ module.exports.createEuPagoMBWayOrder = async function(data) {
                 })
             };
             const response = await fetch(`${eupagoBaseUrl}/api/v1.02/mbway/create`, options);
-            return handleEuPagoResponse(response);      
+            return handleEuPagoResponse(response, data);      
         } catch (err) {
             throw err;
         }
@@ -184,7 +185,7 @@ module.exports.createEuPagoCreditCardOrder = async function(data) {
         let tmpValue = 0;
         for (const item of data.cart) {
             try {
-                const product = await Products.getProductInfo(item.id);
+                const product = await Products.getProductInfo(item._product);
                 const value = await product.price;
                 tmpValue += value * item.amount;
             } catch (error) {
@@ -223,7 +224,7 @@ module.exports.createEuPagoCreditCardOrder = async function(data) {
             };
 
             const response = await fetch(`${eupagoBaseUrl}/api/v1.02/creditcard/create`, options);
-            return handleEuPagoResponse(response);    
+            return handleEuPagoResponse(response, data);
         } catch (err) {
             throw err;
         }
@@ -234,12 +235,31 @@ module.exports.createEuPagoCreditCardOrder = async function(data) {
 
 // Utils
 
-async function handlePaypalResponse(response) {
+async function handlePaypalResponse(response, data) {
     try {
-        const jsonResponse = await response.json();
+        var jsonResponse = await response.json();
+        var status = response.status;
+        if (200 <= status <= 299) {
+            try {
+                await Orders.createOrderWithShipments({
+                    shipments: data.shipments.map(shipment => ({
+                        ...shipment,
+                        "states": [{}],
+                    })),
+                    payment: {
+                        transactionId: jsonResponse.id,
+                        method: 'paypal'
+                    },
+                    "_client": data._client
+                })
+            } catch (error) {
+                status = 500;
+                jsonResponse = { "error": "Could not create Paypal order" };
+            }
+        }
         return {
             jsonResponse,
-            httpStatusCode: response.status,
+            httpStatusCode: status,
         };
     } catch (err) {
         const errorMessage = await response.text();
@@ -247,12 +267,30 @@ async function handlePaypalResponse(response) {
     }
 }
 
-async function handleEuPagoResponse(response) {
+async function handleEuPagoResponse(response, data) {
     try {
-        const jsonResponse = await response.json();
-        const status = jsonResponse.transactionStatus == "Success"
+        var jsonResponse = await response.json();
+        var status = jsonResponse.transactionStatus == "Success"
             ? 200
             : 401
+        if (status == 200) {
+            try {
+                await Orders.createOrderWithShipments({
+                    shipments: data.shipments.map(shipment => ({
+                        ...shipment,
+                        "states": [{}],
+                    })),
+                    payment: {
+                        transactionId: jsonResponse.transactionId,
+                        method: 'eupago'
+                    },
+                    "_client": data._client
+                })
+            } catch (error) {
+                status = 500;
+                jsonResponse = { "error": "Could not create EuPago order" };
+            }
+        }
         return {
             jsonResponse,
             httpStatusCode: status,
