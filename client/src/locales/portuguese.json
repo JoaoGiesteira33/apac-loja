@@ -33,7 +33,9 @@
             "new-piece": "Nova obra",
             "new-piece-page": {
                 "paper-basic-info": "Informação da Obra",
-                "paper-details": "Detalhes"
+                "paper-details": "Detalhes",
+                "paper-photos": "Fotos",
+                "add-photos": "Adicionar fotos"
             },
             "no-pieces": "Este artista ainda não tem obras disponíveis"
         },
@@ -69,12 +71,13 @@
         "product": {
             "technique": "Técnica",
             "dimensions": "Dimensões",
+            "photos": "Fotos",
             "year": "Ano",
             "width": "Largura",
             "height": "Altura",
             "depth": "Profundidade",
             "materials": "Materiais",
-            "materials-placeholder": "Adicione lista materiais utilizados"
+            "materials-placeholder": "Adicione lista materiais utilizados (\u2936)"
         },
         "profile": {
             "requests": {
