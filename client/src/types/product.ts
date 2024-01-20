@@ -25,11 +25,10 @@ export interface ProductType {
 
 type PieceInfo = {
     technique: string;
-    material: string;
+    materials: string[];
     dimensions: Dimensions;
     year: number;
     state: string;
-    weight: number;
 };
 
 type BookInfo = {

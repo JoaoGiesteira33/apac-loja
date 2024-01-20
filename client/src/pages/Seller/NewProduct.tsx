@@ -22,7 +22,10 @@ import { NumericFormat, NumericFormatProps } from 'react-number-format';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import React from 'react';
-import { BorderColor } from '@mui/icons-material';
+import { ProductType } from '../../types/product';
+import { NestedPartial } from '../../types/nestedPartial';
+import { addProduct } from '../../fetchers';
+import { Result } from '../../types/result';
 
 const availableTypes: string[] = [
     'Pintura',
@@ -105,7 +108,7 @@ export default function NewProduct() {
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [selectedTypes, setSelectedTypes] = useState<string>('');
+    const [technique, setTechnique] = useState<string>('');
     const [materials, setMaterials] = useState<string[]>([]);
     const [materialsInput, setMaterialsInput] = useState<string>('');
     const [maskedValues, setMaskedValues] = React.useState({
@@ -140,16 +143,36 @@ export default function NewProduct() {
         });
     };
 
-    const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        console.log(title);
-        console.log(description);
-        console.log(selectedTypes);
-        console.log(materials);
-        console.log(maskedValues);
-
         setMaterialsInput('');
+
+        const product: NestedPartial<ProductType> = {
+            title: title,
+            description: description,
+            price: parseFloat(maskedValues.price),
+            product_type: 'piece',
+            piece_info: {
+                technique: technique,
+                materials: materials,
+                dimensions: {
+                    width: parseFloat(maskedValues.width),
+                    height: parseFloat(maskedValues.height),
+                    depth: parseFloat(maskedValues.depth),
+                    weight: parseFloat(maskedValues.weight),
+                },
+            },
+        };
+
+        const addProductResponse: Result<string, Error> = await addProduct(
+            product
+        );
+
+        if (addProductResponse.isOk()) {
+            console.log(addProductResponse.value);
+        } else {
+            console.log(addProductResponse.error);
+        }
     };
 
     return (
@@ -241,10 +264,8 @@ export default function NewProduct() {
                             <Select
                                 labelId="select-type-label"
                                 id="demo-simple-select-standard"
-                                value={selectedTypes}
-                                onChange={(e) =>
-                                    setSelectedTypes(e.target.value)
-                                }
+                                value={technique}
+                                onChange={(e) => setTechnique(e.target.value)}
                                 label={t('global.types')}>
                                 {availableTypes.map((tp, index) => (
                                     <MenuItem key={index} value={tp}>
@@ -404,7 +425,7 @@ export default function NewProduct() {
                                             BorderColor:
                                                 theme.palette.primary.dark,
                                             backgroundColor:
-                                                theme.palette.primary.main,
+                                                theme.palette.primary.light,
                                             '&:hover': {
                                                 backgroundColor:
                                                     theme.palette.primary.dark,
