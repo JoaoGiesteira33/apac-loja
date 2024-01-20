@@ -28,7 +28,7 @@ const PieceInfo = new mongoose.Schema(
             ],
             required: true,
         },
-        materiais: {
+        materials: {
             type: [String],
             default: [],
         },
