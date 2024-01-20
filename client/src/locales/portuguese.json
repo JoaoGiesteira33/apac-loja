@@ -25,12 +25,15 @@
                 "city": "Cidade inválida",
                 "address": "Morada inválida",
                 "postal-code": "Código postal inválido"
+            },
+            "cart": {
+                "login": "Para adicionar itens ao carrinho, tem de ter a sessão iniciada."
             }
         },
         "artist": {
             "pieces": "obras do artista",
             "your-pieces": "As suas obras",
-            "new-piece": "Nova obra",
+            "new-piece": "Nova Obra",
             "new-piece-page": {
                 "paper-basic-info": "Informação da Obra",
                 "paper-details": "Detalhes",
@@ -39,8 +42,27 @@
             },
             "no-pieces": "Este artista ainda não tem obras disponíveis"
         },
-        "cart": {},
-        "checkout": {},
+        "cart": {
+            "cart": "Carrinho de compras",
+            "product": "Produto",
+            "price": "Preço",
+            "total": "Total",
+            "items": "Itens",
+            "subtotal": "Subtotal",
+            "shipping": "Envio",
+            "tax": "Taxa",
+            "checkout": "Checkout",
+            "empty": "O seu carrinho está vazio",
+            "reservation": "Reservar produto(s)"
+        },
+        "checkout": {
+            "payment": {
+                "paypal": "Paypal",
+                "mbway": "MBWay",
+                "credit-card": "Cartão de Crédito",
+                "multibanco": "Multibanco"
+            }
+        },
         "global": {
             "mandatory": "* Campos obrigatórios",
             "load-more": "Carregar mais",
@@ -53,9 +75,15 @@
             "price": "Preço",
             "contact": "Fala connosco",
             "type-of-piece": "Tipo de Obra",
-            "types": "Tipos"
+            "types": "Tipos",
+            "send": "Enviar",
+            "yes": "Sim",
+            "no": "Não",
+            "submit": "Submeter"
         },
-        "home": {},
+        "home": {
+            "iniciative": "Uma iniciativa"
+        },
         "forms": {
             "first-last-name": "Primeiro e último nome",
             "email": "Email",
@@ -66,18 +94,31 @@
             "phone-number": "Número de telemóvel",
             "no-account": "Não tem conta? Registe-se!",
             "postal-code": "Código postal",
-            "save": "Guardar alterações"
+            "save": "Guardar alterações",
+            "subject": "Assunto",
+            "message": "Mensagem",
+            "messageSuccess": "Mensagem enviada com sucesso!"
         },
         "product": {
             "technique": "Técnica",
             "dimensions": "Dimensões",
+            "measure": "Medida",
             "photos": "Fotos",
             "year": "Ano",
-            "width": "Largura",
-            "height": "Altura",
-            "depth": "Profundidade",
+            "width": "Largura (m)",
+            "height": "Altura (m)",
+            "depth": "Profundidade (m)",
+            "weight": "Peso (kg)",
             "materials": "Materiais",
-            "materials-placeholder": "Adicione lista materiais utilizados (\u2936)"
+            "materials-placeholder": "Adicione lista materiais utilizados (\u2936)",
+            "magnifier": "Passe o rato sobre a imagem para ver o trabalho artístico em pormenor.",
+            "add-to-cart": "Adicionar ao carrinho",
+            "checkout": "Proceder ao checkout?",
+            "checkout-text": "Produto adicionado ao carrinho.",
+            "product-details": "Detalhes do produto",
+            "more": "Outras obras de arte do artista",
+            "no-more": "Não existem mais obras de arte do artista",
+            "already-in-cart": "Este produto está no seu carrinho."
         },
         "profile": {
             "requests": {
@@ -97,10 +138,155 @@
         },
         "info": {
             "title": "políticas, termos & condições",
-            "terms": "Termos & Condições",
-            "privacy": "Política de Privacidade",
-            "terms_text": "Texto de termos e condições",
-            "privacy_text": "Texto de política de privacidade",
+            "terms": {
+                "title": "Termos e Condições",
+                "text": [
+                    {
+                        "title": "Introdução",
+                        "text": "A Associação Portuguesa das Artes e da Cultura, abaixo denominada 'APARCULT' (NIF 517210649), introduziu uma plataforma online no seu website, disponível em: <a href='https://associacaoportuguesaartesecultura.pt/'>link</a>. A plataforma, conhecida como 'Galeria Pintar o 7', oferece uma plataforma única, permitindo aos entusiastas de arte (doravante designados 'Compradores') e criativos (doravante designados 'Artistas') conectarem-se para comprar e vender produtos a preços previamente estabelecidos, agora referidos como 'Serviço'.<br>As transações realizadas entre Compradores e Artistas através deste Serviço seguem as diretrizes delineadas nos Termos e Condições da Galeria Pintar o 7, uma aceitação que é imperativa para o Comprador a cada compra e para o Artista ao listar os seus produtos na Galeria Pintar o 7.<br>Estes Termos são dinâmicos e sujeitos a alterações. Todas as partes envolvidas serão devidamente informadas sobre quaisquer revisões substanciais, portanto, é aconselhável rever periodicamente os Termos para se manter atualizado."
+                    },
+                    {
+                        "title": "I - Parte Geral",
+                        "text": [
+                            {
+                                "title": "Artigo 1 - Âmbito e Objeto",
+                                "text": "Estes termos têm como finalidade a definição, entre as partes envolvidas, dos termos e responsabilidades subjacentes à prestação do Serviço. Além disso, visam disponibilizar e clarificar todas as informações essenciais tanto para Compradores como para Artistas em relação aos procedimentos de encomenda, venda, pagamento e entrega das compras realizadas na Galeria Pintar o 7."
+                            },
+                            {
+                                "title": "Artigo 2 - Definições",
+                                "text": "Para efeitos dos presentes termos e condições, os seguintes termos terão as seguintes definições:<br><b>Associação: </b>Refere-se à APARCULT, uma associação sem fins lucrativos cuja sede está localizada no Largo de Valverde, 50, Porto, freguesia de Campanhã, concelho do Porto.<br><b>Site: </b>Denomina o site da Internet: <a href='https://associacaoportuguesaartesecultura.pt/home/projetos/pintar-o-7/'>link</a>, que atua como ponto centralizado de acesso à informação disponível na Internet.<br><b>Artista: </b>Representa o proprietário do bem móvel, dotado de capacidade e legitimidade para promover a sua venda.<br><b>Comprador: </b>Designa uma pessoa singular ou coletiva com capacidade jurídica que deseja adquirir um bem móvel cuja venda está promovida através da plataforma Galeria Pintar o 7.<br><b>Registo: </b>Corresponde ao processo pelo qual qualquer pessoa, singular ou coletiva, pode inscrever-se no website. Este processo é obrigatório para a participação, seja para comprar ou vender, estando sujeito aos termos e condições aplicáveis.<br><b>Galeria Pintar o 7: </b>Refere-se à plataforma na qual compradores e artistas podem registar-se com o propósito de realizar transações de compra e venda de produtos.<br><b>Serviço: </b>Consiste num conjunto de ferramentas que possibilitam às Partes registarem-se na Galeria Pintar o 7, entrar em contato, efetuar encomendas, realizar o pagamento do preço dos Produtos e confirmar a receção dos mesmos."
+                            },
+                            {
+                                "title": "Artigo 3 - Funcionamento do Marketplace",
+                                "text": "A Galeria Pintar o 7 proporciona aos Compradores a possibilidade de visualizar e adquirir Produtos disponibilizados pelos Artistas no site da Galeria Pintar o 7.Todas as transações realizadas através da Galeria Pintar o 7 são diretamente celebradas entre o Comprador e o Artista, garantindo-se a conformidade com os preceitos legais vigentes.A APARCULT não assume o papel de agente, distribuidor ou representante dos Artistas, tampouco age como revendedor dos Produtos apresentados pelos Artistas na Galeria Pintar o 7.<br>Os artistas retêm os direitos autorais sobre as suas obras originais. A Galeria Pintar o 7 não reivindica propriedade intelectual sobre as obras dos artistas.A responsabilidade integral pelos produtos anunciados e vendidos na Galeria Pintar o 7 recai sobre os Artistas. Isso inclui, mas não se limita a, aspectos relacionados à propriedade, qualidade, segurança, origem, garantia e conformidade com a legislação em vigor."
+                            }
+                        ]
+                    },
+                    {
+                        "title": "II - Condições relativas aos Artistas",
+                        "text": [
+                            {
+                                "title": "Artigo 4 - Obrigações gerais",
+                                "text": "1. O Artista compromete-se a cumprir todas as suas responsabilidades com o objetivo de prestar um serviço de qualidade aos Compradores.<br>2. O Artista compromete-se a responder às mensagens de e-mail do serviço no prazo máximo de 2 dias úteis a contar a partir da data da respetiva receção.<br>3. A partir do momento em que o Artista efetue contacto com o Comprador fora da plataforma da Galeria, dissolve-se qualquer tipo de responsabilidade por parte da mesma."
+                            },
+                            {
+                                "title": "Artigo 5 - Obrigações oferta de Produtos",
+                                "text": "1. O Artista compromete-se a vender Produtos dos quais é proprietário ou sobre os quais dispõe direitos que lhe permitam a sua comercialização.<br>2. O Artista garante que os Produtos não violam a legislação em vigor, nem as normas aplicáveis e não prejudicam direitos de terceiros. O Artista compromete-se a não vender qualquer Produto contrafeito, e que não configure nos termos do Código dos Direitos de Autor e Direitos Conexos ou qualquer Produto cuja comercialização esteja regulada por disposições legislativas, regulamentares ou contratuais.<br>3. O Artista é o único responsável na totalidade pelos Produtos que coloca à venda na plataforma da Galeria.<br>4. O Artista compromete-se a atuar de boa-fé.<br>5. O Artista é o único responsável pela precisão e veracidade das características constantes do descritivo e compromete-se a que estas não criem o risco de induzir em erro potenciais Compradores, tanto no que diz respeito às características do Produto, como o seu estado e preço.<br>6. O Artista deve comunicar ao Comprador todas as informações e características detalhadas que lhe permitam tomar conhecimento das características essenciais do Produto."
+                            },
+                            {
+                                "title": "Artigo 6 - Obrigações relativas aos preços dos Produtos",
+                                "text": "1. O preço dos Produtos é sempre definido pelo Artista, tendo em consideração a legislação em vigor.<br>2. Em situação de venda com redução de preço o Artista deve comunicar a existência do tipo de venda com redução de preço, nos termos definidos no Decreto-Lei n.º 109/2019, de 14 de agosto, deve informar o cliente diretamente e garantir o cumprimento de todas as obrigações constantes do referido diploma. A Galeria Pintar o 7 reserva-se o direito de retirar da plataforma toda a informação que não cumpra as referidas condições.<br>3. O preço deve ser indicado na plataforma em euros já com todos os impostos e taxas incluídos. As despesas de envio, serão adicionadas ao valor da encomenda durante o processo de compra (checkout).<br>4. A galeria reserva o direito de ajustar as comissões e taxas, mediante aviso prévio aos artistas."
+                            },
+                            {
+                                "title": "Artigo 7 - Obrigações venda dos Produtos",
+                                "text": "1. Os contratos de compra e venda dos Produtos propostos pelo Artista na plataforma são exclusivamente celebrados entre o Artista e o Comprador.<br>2. O Artista é informado pela Galeria Pintar o 7, por email e na área de Artista, que tem encomendas pendentes para os Produtos que tem à venda.<br>3. O Artista compromete-se a confirmar os dados necessários para o envio do(s) produto(s) encomendados.<br>4. Será cobrado 25% do valor do Produto na pré-reserva (período de 48h no qual o Artista deve indicar se a obra ainda se encontra disponível para venda, caso não esteja, esse valor será reembolsado na totalidade). <br>5. Se a encomenda for aceite pelo Artista, o Comprador deverá proceder ao pagamento da quantia total dentro do prazo de 48h. <br>6. Assim que o pagamento seja confirmado a obra será enviada no prazo máximo de 3 (três) dias úteis sem contar com o tempo de expedição. <br>7. Após a confirmação da receção do pagamento, o pagamento ao artista é feito após os 14 dias previstos por lei caso exista uma devolução do produto. <br>8. Em caso de existir a impossibilidade de cumprimento de prazos, o Artista deverá fazer um pedido via e-mail para a Galeria na altura da pré-reserva. A venda prossegue se o Comprador estiver de acordo com os novos prazos sugeridos, caso contrário o pedido será cancelado. <br>9. O Artista deverá aceitar e confirmar a encomenda. Caso a encomenda seja rejeitada, a Galeria Pintar o 7 poderá resolver o contrato entre as partes."
+                            },
+                            {
+                                "title": "Artigo 8 - Obrigações relativas à entrega dos Produtos",
+                                "text": "1. Assim que a encomenda seja aceite, o Artista compromete-se a proceder ao embalamento do Produto para que seja feito o envio no prazo de 3 (três) dias úteis a contar a partir da data de aceitação da encomenda. <br>2. O Artista está obrigado a cumprir toda legislação aplicável, nomeadamente fiscal, relativa à transação comercial de compra e venda do Produto, assumindo total responsabilidade pelo seu cumprimento.<br>3. O Artista compromete-se a embalar e proteger os Produtos destinados a envio, seguindo o manual da associação, de forma a evitar que os Produtos sejam danificados durante o transporte. Não cumprir as regras implícitas nos termos e condições, isentam a Galeria Pintar o 7 de qualquer tipo de responsabilidade, o artista assume então na totalidade o prejuízo decorrente.<br>4. O envio dos Produtos tem que ser efetuado obrigatoriamente por <b>correio registado</b>, de forma a proteger ambas as partes no processo. <br>5. No caso de o prazo de envio ser ultrapassado, a encomenda será cancelada e o Comprador será informado por e-mail."
+                            },
+                            {
+                                "title": "Artigo 9 - Disposições financeiras",
+                                "text": "1. A Galeria pagará ao Artista o montante definido pelo mesmo na página de venda do Produto, após confirmação pelo Comprador da receção dos Produtos.<br>2. Será feita uma pré-reserva (período de 48h no qual o Artista confirma a disponibilidade da obra em questão para venda) e o valor de 25% será cobrado, caso a venda não se realize, o valor será reembolsado na totalidade. <br>3. Por cada encomenda de Produtos recebida por um Comprador, a APARCULT cobrará ao comprador uma comissão de 20% com IVA incluído à taxa em vigor. Essa comissão cobrada ao comprador acresce automaticamente ao preço definido pelo Artista, salvo campanha em vigor. <br>4. O pagamento será feito por transferência bancária para a conta bancária do Artista.<br>5. No caso do Comprador não confirmar a receção do Produto e na ausência de qualquer tipo de reclamação que seja do conhecimento do Artista, assume-se que o produto tenha sido recebido e a transferência será efetuada ao Artista após o prazode 14 dias a contar a partir da data da confirmação da receção do Produto pelo Comprador.<br>6. Em caso de reclamação pelo Comprador, uma vez decorrido o prazo de 14 dias, como referido no ponto anterior, tendo sido feita a transferência para o Artista, a Galeria, após avaliar a reclamação do Comprador e caso esta o justifique, poderá vir a reembolsar o Comprador na totalidade do valor do Produto encomendado. O valor do montante reembolsado pela Galeria ao Comprador será debitado ao Artista, que deverá proceder ao pagamento do mesmo na conta corrente existente entre o Artista e a Galeria ou através de qualquer outro meio acordado entre a Galeria e o Artista num prazo máximo de 14 dias."
+                            },
+                            {
+                                "title": "Artigo 10 - Política de descontos",
+                                "text": "1. A Galeria está no direito de aplicar descontos em alturas específicas do ano com o intuito de promover vendas. Os descontos atribuídos implicam uma redução de margem da Galeria em 5% ou mais. Durante qualquer campanha de desconto, o Artista não é obrigado a fazer qualquer redução no valor de venda, mas é aconselhado a fazê-lo."
+                            },
+                            {
+                                "title": "Artigo 11 - Exclusão de responsabilidade",
+                                "text": "1. Nem a APARCULT, nem os seus representantes, trabalhadores ou colaboradores poderão ser responsabilizados por erros relacionados com a descrição, genuinidade ou autenticidade de qualquer Produto, salvo o caso de erros grosseiros que não pudessem desconhecer.<br>2. Caso a APARCULT seja demandada por culpa que não lhe seja imputável, o Artista obriga-se a assumir a mesma e, bem assim, a reembolsar a APARCULT todas as quantias que tenham sido despendidas por esta neste âmbito."
+                            }
+                        ]
+                    },
+                    {
+                        "title": "III - Condições gerais do Marketplace",
+                        "text": [
+                            {
+                                "title": "Artigo 12 - Garantia",
+                                "text": "1. A responsabilidade pela garantia dos produtos disponibilizados na Galeria Pintar o 7 é exclusiva dos artistas que integram o marketplace.<br>2. Em caso de devolução de um produto pelo comprador, este será responsável pelos custos de envio, a menos que exista uma campanha em vigor. Na ocorrência de não conformidade do produto, as despesas de envio serão reembolsadas pelo artista. No caso de utilização indevida do produto, os custos de envio serão exclusivamente suportados pelo comprador."
+                            },
+                            {
+                                "title": "Artigo 13 - Responsabilidade",
+                                "text": "1. A Galeria Pintar o 7 não assume qualquer responsabilidade por uso inadequado por parte do comprador ou por erros no processo de compra, nem por situações originadas por terceiros.<br>2. Não é assumida qualquer responsabilidade por prejuízos resultantes de falhas na plataforma, manutenção do sistema ou eventos imprevisíveis que possam impedir o cumprimento das obrigações contratuais. Esta ausência de responsabilidade inclui circunstâncias fora do controlo da plataforma. Da mesma forma, não nos responsabilizamos pelo conteúdo fornecido pelos artistas.<br>3. As transações efetuadas no marketplace não são da responsabilidade da Galeria Pintar o 7;<br>4. Cabe ao Comprador zelar pela utilização adequada da Galeria Pintar o 7, pela correção das informações fornecidas durante a compra."
+                            },
+                            {
+                                "title": "Artigo 14 - Dados pessoais",
+                                "text": "1. Os dados dos compradores e artistas são tratados pela Galeria Pintar o 7 para gestão de contas, cumprimento de obrigações legais e melhoria dos serviços oferecidos.<br>2. O Artista e o Comprador comprometem-se a assegurar a veracidade e atualização dos dados pessoais. Informações incorretas podem levar à suspensão dos serviços.<br>3. A Galeria Pintar o 7 cumpre o Regulamento (UE) 2016/679 e a Lei n.º 58/2019 sobre proteção de dados pessoais, garantimos o exercício dos direitos previstos. Consulte a nossa Política de Privacidade para mais detalhes."
+                            },
+                            {
+                                "title": "Artigo 15 - Propriedade Intelectual",
+                                "text": "1. Todos os conteúdos presentes na Galeria Pintar o 7 (textos, logótipos, ilustrações e imagens) estão protegidos por direitos de autor e propriedade intelectual.<br>2. A utilização é permitida apenas para fins privados, respeitando disposições restritivas do Código dos Direitos de Autor e Direitos Conexos.<br>3. Qualquer reprodução total ou parcial da Galeria Pintar o 7 é estritamente proibida."
+                            },
+                            {
+                                "title": "Artigo 16 - Mensagens Privadas",
+                                "text": "1. Os Compradores e Artistas têm a possibilidade de enviar mensagens privadas para trocar informações sobre um Produto.<br>2. Não é permitido enviar mensagens privadas por motivos diversos, especialmente para:<ul>Anunciar produtos ou serviços;<li>Distribuir malware;</li><li>Enviar mensagens não solicitadas ou em massa a 5 ou mais Compradores ou Artistas;</li><li>Transmitir mensagens que possam ser consideradas ilegais, obscenas, prejudiciais, antiéticas, ameaçadoras para a segurança pública, impróprias ou de qualquer forma incompatíveis com os melhores interesses da plataforma e dos Compradores ou Artistas;</li></ul><br>3. Acesso da APARCULT: A APARCULT reserva-se o direito de ter acesso a todas as mensagens trocadas entre Compradores e Artistas com o objetivo exclusivo de facilitar a resolução de problemas relacionados com as transações. Este acesso é efetuado para garantir uma mediação eficaz em situações que exijam intervenção para resolver questões pendentes."
+                            },
+                            {
+                                "title": "Artigo 17 - Nulidade parcial",
+                                "text": "No caso de uma ou mais disposições destes termos serem consideradas inválidas, as restantes permanecerão válidas e eficazes."
+                            },
+                            {
+                                "title": "Artigo 18 - Resolução de litígios",
+                                "text": "1. A Galeria Pintar o 7 não é parte do contrato de compra e venda celebrado entre artista e comprador.<br>2. Litígios devem ser resolvidos diretamente entre as partes.<br>3. A Galeria Pintar o 7 declina qualquer responsabilidade perante comprador e artista."
+                            },
+                            {
+                                "title": "Artigo 19 - Lei aplicável e foro competente",
+                                "text": "1. Estes termos regem-se pela legislação portuguesa e europeia.<br>2. Qualquer litígio será dirimido pelos Tribunais da Comarca do Porto, com renúncia expressa a qualquer outro."
+                            },
+                            {
+                                "title": "Artigo 20 - Reclamação Eletrónica",
+                                "text": "Caso deseje apresentar uma reclamação eletrónica, utilize o Livro de Reclamações Eletrónicas. Pode também entrar em contacto com a Galeria Pintar o 7 para solucionar o problema de forma amigável, embora tal não seja obrigatório.<br>Ao utilizar a plataforma da Galeria Pintar o 7, os artistas concordam integralmente com os termos e condições apresentados. Estes termos estão sujeitos a alterações e os artistas serão notificados sobre quaisquer revisões ou alterações significativas. Recomendamos que os artistas revejam regularmente os termos para garantir o seu cumprimento contínuo."
+                            }
+                        ]
+                    }
+                ]
+            },
+            "privacy": {
+                "title": "Políticas de Privacidade",
+                "text": [
+                    {
+                        "title": "Secção 1 - O que fazemos com as suas informações?",
+                        "text": "Ao efetuar compras na nossa Galeria, recolhemos as informações pessoais fornecidas, como nome, endereço e e-mail, para facilitar o processo de compra e venda. Durante a navegação, recebemos automaticamente o endereço IP do seu computador para obter informações sobre seu navegador e sistema operacional. Com a sua permissão, enviamos e-mails sobre a Galeria, novos produtos e atualizações."
+                    },
+                    {
+                        "title": "Secção 2 - Consentimento",
+                        "text": "Ao fornecer informações pessoais para transações, verificações de cartão de crédito, pedidos, entregas e devoluções, concorda com a recolha e uso de informações pessoais apenas para fins específicos. Se solicitarmos informações para fins secundários, solicitamos o seu consentimento.<br>Como posso retirar o meu consentimento?<br>Pode retirar o seu consentimento a qualquer momento, entrando em contato connosco através de <a href='mailto:geral@associacaoportuguesaartesecultura.pt'>link</a>"
+                    },
+                    {
+                        "title": "Secção 3 - Divulgação",
+                        "text": "Podemos divulgar informações pessoais se exigido por lei ou violação dos nossos Termos de Serviço."
+                    },
+                    {
+                        "title": "Secção 4 - Serviços de terceiros",
+                        "text": "Fornecedores terceirizados usam suas informações apenas para fornecer serviços necessários. Recomendamos a leitura das políticas de privacidade desses fornecedores. Lembre-se de que podem estar sujeitos a leis diferentes."
+                    },
+                    {
+                        "title": "Secção 5 - Segurança",
+                        "text": "Implementamos medidas para proteger as suas informações. Se fornecer dados de cartão de crédito, são criptografados e armazenados com segurança."
+                    },
+                    {
+                        "title": "Cookies",
+                        "text": "Utilizamos cookies para melhorar a experiência do utilizador. Pode optar por não aceitar cookies, alterando as configurações do seu navegador."
+                    },
+                    {
+                        "title": "Secção 6 - Idade de consentimento",
+                        "text": "Ao usar o site, confirma ser maior de idade e autoriza menores dependentes a utilizarem o site."
+                    },
+                    {
+                        "title": "Secção 7 - Alterações na política de privacidade",
+                        "text": "Reservamos o direito de modificar a política a qualquer momento. Alterações entram em vigor imediatamente após serem publicadas. Notificaremos sobre alterações."
+                    },
+                    {
+                        "title": "Perguntas e informações de contacto",
+                        "text": "Para aceder, corrigir, alterar ou excluir informações pessoais, ou para obter mais informações, contacte o Diretor de Privacidade através de <a href='mailto:geral@associacaoportuguesaartesecultura.pt'>link</a>"
+                    },
+                    {
+                        "title": "Conformidade RGPD",
+                        "text": "<b>Regulamento geral de proteção de dados - <a href='https://www.eugdpr.org'>https://www.eugdpr.org</a></b><br><b>Outros terceiros podem intervir na plataforma da seguinte forma:</b><ul><li>Botões de partilha nas redes sociais - na maioria das páginas, que, quando está conectado a essas plataformas e navegando na Galeria Pintar o 7, recolhem as informações de acordo com as suas regras.</li><li>À semelhança da maioria das comunidades online, os nossos moderadores possuem acesso limitado aos dados dos membros. Este acesso inclui o endereço de e-mail associado à conta, a data e hora das últimas conexões ao site com respectivo endereço IP, o histórico de conteúdo moderado ou excluído e o registo de ações de moderação. Importante notar que os moderadores têm acesso às mensagens privadas dos utilizadores com o objetivo de facilitar a resolução de eventuais disputas existentes nas transações realizadas.</li></ul>"
+                    }
+                ]
+            },
             "faq_text": "Texto de FAQ"
         },
         "initial": {

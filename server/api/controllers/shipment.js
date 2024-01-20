@@ -66,7 +66,9 @@ module.exports.createManyShipments = async function (data, session) {
 
 //     - replaceShipmentInfo
 module.exports.replaceShipmentInfo = function (id, data) {
-    return Shipment.replaceOne({ _id: id }, data).then((info) => {
+    return Shipment.replaceOne({ _id: id }, data, {
+        upsert: true,
+    }).then((info) => {
         return info;
     });
 };

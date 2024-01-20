@@ -7,7 +7,17 @@ const Cart = () => {
     const navigate = useNavigate();
 
     return (
-        <Box component="div" sx={{ paddingX: '1rem' }}>
+        <Box
+            component="div"
+            sx={{
+                paddingX: {
+                    xs: '2rem',
+                    sm: '4rem',
+                    md: '6rem',
+                    lg: '8rem',
+                },
+                paddingY: '3rem',
+            }}>
             <CartDetails />
 
             <Link
@@ -16,7 +26,7 @@ const Cart = () => {
                 onClick={() => {
                     navigate(-1);
                 }}
-                sx={{marginY: '1rem'}}>
+                sx={{ marginY: '1rem' }}>
                 <KeyboardBackspaceIcon sx={{ fontSize: 20 }} />
                 Continue shopping
             </Link>

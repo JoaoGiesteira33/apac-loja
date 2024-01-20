@@ -58,18 +58,16 @@ for (let i = 1; i < 30; i++) {
     });
 }
 
-export default function useProductSearch(
-    query: object,
-    pageNumber: number,
-    substitute?: string
-) {
+export default function useProductSearch(query: object, pageNumber: number) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [products, setProducts] = useState([]);
     const [hasMore, setHasMore] = useState(false);
+    let empty = false;
 
     useEffect(() => {
         setProducts([]);
+        empty = true;
     }, [query]);
 
     useEffect(() => {
@@ -77,7 +75,6 @@ export default function useProductSearch(
 
         setLoading(true);
         setError(false);
-
         axios({
             method: 'GET',
             url: API_URL_PROD,
@@ -85,9 +82,9 @@ export default function useProductSearch(
             cancelToken: new axios.CancelToken((c) => (cancel = c)),
         })
             .then((res) => {
-                if (substitute) setProducts(res.data.results);
-                else setProducts(products.concat(res.data.results));
-
+                if (empty) {
+                    setProducts(res.data.results);
+                } else setProducts(products.concat(res.data.results));
                 setHasMore(res.data.hasMore);
                 setLoading(false);
                 console.log('Products:', products.concat(res.data.results));
@@ -97,6 +94,8 @@ export default function useProductSearch(
                 if (axios.isCancel(e)) return;
                 //else setError(true);
             });
+
+        return () => cancel();
     }, [query, pageNumber]);
 
     return { loading, error, MockData, hasMore, products };

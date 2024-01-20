@@ -54,7 +54,9 @@ module.exports.createOrderWithShipments = async function (data) {
 
 //     - replaceOrderInfo
 module.exports.replaceOrderInfo = function (id, data) {
-    return Order.replaceOne({ _id: id }, data).then((info) => {
+    return Order.replaceOne({ _id: id }, data, {
+        upsert: true,
+    }).then((info) => {
         return info;
     });
 };

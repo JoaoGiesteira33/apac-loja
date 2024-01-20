@@ -25,7 +25,7 @@ export interface ProductType {
 
 type PieceInfo = {
     technique: string;
-    material: string;
+    materials: string[];
     dimensions: Dimensions;
     year: number;
     state: string;
@@ -42,5 +42,5 @@ type Dimensions = {
     height: number;
     width: number;
     depth: number;
-    measure: string; //{cm, mm, in, ft ...}
+    weight: number;
 };

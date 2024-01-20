@@ -1,13 +1,10 @@
 import {
     Autocomplete,
     Box,
+    Button,
     Chip,
     FormControl,
     IconButton,
-    ImageList,
-    ImageListItem,
-    Input,
-    InputAdornment,
     InputLabel,
     MenuItem,
     Paper,
@@ -16,12 +13,19 @@ import {
     TextField,
     Tooltip,
     Typography,
+    useTheme,
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import DeleteIcon from '@mui/icons-material/Delete';
+import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
+import { NumericFormat, NumericFormatProps } from 'react-number-format';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import React from 'react';
+import { ProductType } from '../../types/product';
+import { NestedPartial } from '../../types/nestedPartial';
+import { addProduct } from '../../fetchers';
+import { Result } from '../../types/result';
 
 const availableTypes: string[] = [
     'Pintura',
@@ -32,25 +36,88 @@ const availableTypes: string[] = [
     'Impressões e Gravuras',
     'Arte Digital',
     'Instalação',
-    'Desing',
+    'Design',
     'Arte Têxtil',
 ];
 
+interface CustomProps {
+    onChange: (event: { target: { name: string; value: string } }) => void;
+    name: string;
+}
+
+const PriceInput = React.forwardRef<NumericFormatProps, CustomProps>(
+    function NumericFormatCustom(props, ref) {
+        const { onChange, ...other } = props;
+
+        return (
+            <NumericFormat
+                {...other}
+                getInputRef={ref}
+                onValueChange={(values) => {
+                    onChange({
+                        target: {
+                            name: props.name,
+                            value: values.value,
+                        },
+                    });
+                }}
+                allowNegative={false}
+                allowedDecimalSeparators={[',']}
+                decimalScale={2}
+                decimalSeparator=","
+                fixedDecimalScale={true}
+                thousandsGroupStyle="thousand"
+                thousandSeparator="."
+                valueIsNumericString
+                suffix="€"
+            />
+        );
+    }
+);
+
+const DimensionInput = React.forwardRef<NumericFormatProps, CustomProps>(
+    function NumericFormatCustom(props, ref) {
+        const { onChange, ...other } = props;
+
+        return (
+            <NumericFormat
+                {...other}
+                getInputRef={ref}
+                onValueChange={(values) => {
+                    onChange({
+                        target: {
+                            name: props.name,
+                            value: values.value,
+                        },
+                    });
+                }}
+                allowNegative={false}
+                allowedDecimalSeparators={[',']}
+                decimalScale={2}
+                decimalSeparator=","
+                valueIsNumericString
+            />
+        );
+    }
+);
+
 export default function NewProduct() {
     const { t } = useTranslation();
+    const theme = useTheme();
     const inputRef = useRef(null);
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [price, setPrice] = useState(9.99);
-    const [selectedTypes, setSelectedTypes] = useState<string>('');
-    const [technique, setTechnique] = useState('');
-    const [materials, setMaterials] = useState<string>('');
-    const [width, setWidth] = useState<string>('');
-    const [height, setHeight] = useState<string>('');
-    const [depth, setDepth] = useState<string>('');
-    const [measureUnit, setMeasureUnit] = useState<string>('');
-    const [show, setShow] = useState<boolean[]>([]);
+    const [technique, setTechnique] = useState<string>('');
+    const [materials, setMaterials] = useState<string[]>([]);
+    const [materialsInput, setMaterialsInput] = useState<string>('');
+    const [maskedValues, setMaskedValues] = React.useState({
+        price: '',
+        width: '',
+        height: '',
+        depth: '',
+        weight: '',
+    });
 
     const [images, setImages] = useState<File[]>([]);
     const imageUrls = images.map((file) => URL.createObjectURL(file));
@@ -60,7 +127,6 @@ export default function NewProduct() {
         if (fileList) {
             const files = [...fileList, ...images];
             setImages(files);
-            setShow(new Array(files.length).fill(false));
         }
     }
 
@@ -68,20 +134,53 @@ export default function NewProduct() {
         inputRef.current.click();
     };
 
-    const onMouseOver = (index: number) => {
-        const newShow = [...show];
-        newShow[index] = true;
-        setShow(newShow);
+    const handleMaskedValuesChange = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        setMaskedValues({
+            ...maskedValues,
+            [event.target.name]: event.target.value,
+        });
     };
-    const onMouseOut = (index: number) => {
-        const newShow = [...show];
-        newShow[index] = false;
-        setShow(newShow);
+
+    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setMaterialsInput('');
+
+        const product: NestedPartial<ProductType> = {
+            title: title,
+            description: description,
+            price: parseFloat(maskedValues.price),
+            product_type: 'piece',
+            piece_info: {
+                technique: technique,
+                materials: materials,
+                dimensions: {
+                    width: parseFloat(maskedValues.width),
+                    height: parseFloat(maskedValues.height),
+                    depth: parseFloat(maskedValues.depth),
+                    weight: parseFloat(maskedValues.weight),
+                },
+            },
+        };
+
+        const addProductResponse: Result<string, Error> = await addProduct(
+            product
+        );
+
+        if (addProductResponse.isOk()) {
+            console.log(addProductResponse.value);
+        } else {
+            console.log(addProductResponse.error);
+        }
     };
 
     return (
         <Box
-            component="div"
+            component="form"
+            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                handleFormSubmit(e);
+            }}
             sx={{
                 paddingY: '2rem',
                 paddingX: {
@@ -139,19 +238,18 @@ export default function NewProduct() {
                         spacing={{ xs: 2, sm: 4 }}
                         sx={{ marginTop: '1rem' }}
                         alignItems={'center'}>
-                        <FormControl fullWidth variant="standard">
-                            <InputLabel htmlFor="standard-adornment-amount">
-                                {t('global.price')}
-                            </InputLabel>
-                            <Input
-                                id="price"
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        €
-                                    </InputAdornment>
-                                }
-                            />
-                        </FormControl>
+                        <TextField
+                            fullWidth
+                            label={t('global.price')}
+                            value={maskedValues.price}
+                            onChange={handleMaskedValuesChange}
+                            name="price"
+                            id="formatted-price-input"
+                            InputProps={{
+                                inputComponent: PriceInput as any,
+                            }}
+                            variant="standard"
+                        />
                         <FormControl
                             variant="standard"
                             sx={{
@@ -161,15 +259,13 @@ export default function NewProduct() {
                             }}
                             fullWidth>
                             <InputLabel id="select-type-label">
-                                {t('global.type-of-piece')}
+                                {t('product.technique')}
                             </InputLabel>
                             <Select
                                 labelId="select-type-label"
                                 id="demo-simple-select-standard"
-                                value={selectedTypes}
-                                onChange={(e) =>
-                                    setSelectedTypes(e.target.value)
-                                }
+                                value={technique}
+                                onChange={(e) => setTechnique(e.target.value)}
                                 label={t('global.types')}>
                                 {availableTypes.map((tp, index) => (
                                     <MenuItem key={index} value={tp}>
@@ -188,23 +284,24 @@ export default function NewProduct() {
                     <Typography variant="h4">
                         {t('artist.new-piece-page.paper-details')}
                     </Typography>
-                    <TextField
-                        variant="standard"
-                        margin="normal"
-                        label={t('product.technique')}
-                        type="text"
-                        fullWidth
-                        error={false}
-                        helperText={''}
-                        id="technique"
-                        value={technique}
-                        onChange={(e) => setTechnique(e.target.value)}
-                    />
                     <Autocomplete
                         multiple
                         id="materials"
                         options={[]}
                         freeSolo
+                        value={materials}
+                        onChange={(
+                            _: React.SyntheticEvent<Element, Event>,
+                            newValue: string[] | null
+                        ) => {
+                            newValue != null
+                                ? setMaterials(newValue)
+                                : setMaterials([]);
+                        }}
+                        inputValue={materialsInput}
+                        onInputChange={(_, newInputValue) => {
+                            setMaterialsInput(newInputValue);
+                        }}
                         renderTags={(value: readonly string[], getTagProps) =>
                             value.map((option: string, index: number) => (
                                 <Chip
@@ -226,34 +323,59 @@ export default function NewProduct() {
                     <Stack
                         direction={'row'}
                         spacing={2}
-                        sx={{ marginTop: '1rem' }}
+                        sx={{ marginTop: '1rem', marginBottom: '1rem' }}
                         alignItems={'center'}>
                         <TextField
-                            variant="standard"
-                            margin="normal"
-                            label={t('product.width')}
-                            type="text"
                             fullWidth
-                            error={false}
-                            helperText={''}
-                            id="width"
-                            value={width}
-                            onChange={(e) => setWidth(e.target.value)}
+                            label={t('product.width')}
+                            value={maskedValues.width}
+                            onChange={handleMaskedValuesChange}
+                            name="width"
+                            id="formatted-width-input"
+                            InputProps={{
+                                inputComponent: DimensionInput as any,
+                            }}
+                            variant="standard"
                         />
                         <Typography alignSelf={'flex-end'}>X</Typography>
                         <TextField
-                            variant="standard"
-                            margin="normal"
-                            label={t('product.height')}
-                            type="text"
                             fullWidth
-                            error={false}
-                            helperText={''}
-                            id="height"
-                            value={height}
-                            onChange={(e) => setHeight(e.target.value)}
+                            label={t('product.height')}
+                            value={maskedValues.height}
+                            onChange={handleMaskedValuesChange}
+                            name="height"
+                            id="formatted-height-input"
+                            InputProps={{
+                                inputComponent: DimensionInput as any,
+                            }}
+                            variant="standard"
+                        />
+                        <Typography alignSelf={'flex-end'}>X</Typography>
+                        <TextField
+                            fullWidth
+                            label={t('product.depth')}
+                            value={maskedValues.depth}
+                            onChange={handleMaskedValuesChange}
+                            name="depth"
+                            id="formatted-depth-input"
+                            InputProps={{
+                                inputComponent: DimensionInput as any,
+                            }}
+                            variant="standard"
                         />
                     </Stack>
+                    <TextField
+                        fullWidth
+                        label={t('product.weight')}
+                        value={maskedValues.weight}
+                        onChange={handleMaskedValuesChange}
+                        name="weight"
+                        id="formatted-weight-input"
+                        InputProps={{
+                            inputComponent: DimensionInput as any,
+                        }}
+                        variant="standard"
+                    />
                 </Paper>
                 <Paper
                     sx={{
@@ -271,38 +393,47 @@ export default function NewProduct() {
                         accept="image/*"
                         onChange={onImageChange}
                     />
-                    <Grid container spacing={4}>
+                    <Grid container marginTop={2} spacing={4}>
                         {imageUrls.map((url, index) => (
                             <Grid xs={6} sm={4} md={3} key={index}>
                                 <Box
-                                    onMouseOver={() => onMouseOver(index)}
-                                    onMouseOut={() => onMouseOut(index)}
                                     component={'div'}
                                     position={'relative'}
                                     sx={{
                                         aspectRatio: '1/1',
-                                        overflow: 'hidden',
+                                        border: 2,
+                                        borderColor: theme.palette.primary.dark,
                                     }}>
                                     <img
                                         className="w-full h-full object-cover"
                                         src={url}
                                         alt={''}
                                     />
-                                    {show[index] && (
-                                        <IconButton
-                                            onClick={() => {
-                                                const newImages = [...images];
-                                                newImages.splice(index, 1);
-                                                setImages(newImages);
-                                            }}
-                                            sx={{
-                                                position: 'absolute',
-                                                right: '1rem',
-                                                top: '1rem',
-                                            }}>
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    )}
+                                    <IconButton
+                                        size={'small'}
+                                        onClick={() => {
+                                            const newImages = [...images];
+                                            newImages.splice(index, 1);
+                                            setImages(newImages);
+                                        }}
+                                        sx={{
+                                            position: 'absolute',
+                                            right: 0,
+                                            top: 0,
+                                            transform: 'translate(50%, -50%)',
+                                            border: 2,
+                                            BorderColor:
+                                                theme.palette.primary.dark,
+                                            backgroundColor:
+                                                theme.palette.primary.light,
+                                            '&:hover': {
+                                                backgroundColor:
+                                                    theme.palette.primary.dark,
+                                                opacity: 1,
+                                            },
+                                        }}>
+                                        <CloseIcon />
+                                    </IconButton>
                                 </Box>
                             </Grid>
                         ))}
@@ -319,7 +450,9 @@ export default function NewProduct() {
                                     title={t(
                                         'artist.new-piece-page.add-photos'
                                     )}>
-                                    <IconButton onClick={addNewImage}>
+                                    <IconButton
+                                        sx={{ border: 2 }}
+                                        onClick={addNewImage}>
                                         <AddIcon />
                                     </IconButton>
                                 </Tooltip>
@@ -327,6 +460,18 @@ export default function NewProduct() {
                         </Grid>
                     </Grid>
                 </Paper>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    size="large"
+                    style={{
+                        width: '50%',
+                        backgroundColor: 'black',
+                        color: 'white',
+                        alignSelf: 'center',
+                    }}>
+                    {t('global.submit')}
+                </Button>
             </Stack>
         </Box>
     );

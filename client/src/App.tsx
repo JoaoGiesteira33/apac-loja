@@ -43,6 +43,7 @@ const CheackoutPage = React.lazy(() => import('./pages/Checkout'));
 const PageNotFound = React.lazy(() => import('./pages/NotFound'));
 const InfoPage = React.lazy(() => import('./pages/InfoPage'));
 const ContactPage = React.lazy(() => import('./pages/Contact'));
+const CartBadge = React.lazy(() => import('./components/CartBadge'));
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 const getDesignTokens = (mode: PaletteMode) => ({
@@ -156,7 +157,7 @@ function App() {
         },
         {
             path: '/product/:product_id',
-            element: <ProductPage />,
+            element: <ProductPage loggedIn={loggedIn} />,
             requireAuth: false,
         },
         {
@@ -267,7 +268,10 @@ function App() {
                 <ColorModeContext.Provider value={colorMode}>
                     <ThemeProvider theme={theme}>
                         <CssBaseline />
-                        <div className={theme.palette.mode === 'dark' ? 'dark' : ''}>
+                        <div
+                            className={
+                                theme.palette.mode === 'dark' ? 'dark' : ''
+                            }>
                             <IconButton
                                 sx={{
                                     ml: 1,
@@ -325,10 +329,19 @@ function App() {
                                     ))}
                                 </Routes>
                             </Suspense>
-                            {checkChatRoute(location.pathname) ? <Chat /> : <></>}
-                            {location.pathname !== '/' 
-                                ? ( <Footer setHeight={setFooterSize} /> ) 
-                                : ( <></> )}
+                            {loggedIn && location.pathname !== '/cart' && (
+                                <CartBadge />
+                            )}
+                            {checkChatRoute(location.pathname) ? (
+                                <Chat />
+                            ) : (
+                                <></>
+                            )}
+                            {location.pathname !== '/' ? (
+                                <Footer setHeight={setFooterSize} />
+                            ) : (
+                                <></>
+                            )}
                         </div>
                     </ThemeProvider>
                 </ColorModeContext.Provider>

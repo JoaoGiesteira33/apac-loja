@@ -39,7 +39,11 @@ function extractFilters(req, res, next) {
     for (let i in filters) {
         if (typeof filters[i] === 'object') {
             for (let j in filters[i]) {
-                filters[i]['$' + j] = filters[i][j];
+                if (j == 'in' || j == 'nin') {
+                    filters[i]['$' + j] = filters[i][j].split(',');
+                } else {
+                    filters[i]['$' + j] = filters[i][j];
+                }
                 delete filters[i][j];
             }
         }

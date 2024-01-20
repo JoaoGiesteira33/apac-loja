@@ -21,7 +21,9 @@ module.exports.createProduct = function (data) {
 
 //     - replaceProductInfo
 module.exports.replaceProductInfo = function (id, data) {
-    return Product.replaceOne({ _id: id }, data).then((info) => {
+    return Product.replaceOne({ _id: id }, data, {
+        upsert: true,
+    }).then((info) => {
         return info;
     });
 };
@@ -56,4 +58,14 @@ module.exports.getProducts = function (filters, fields, page, limit, expand) {
         let hasMore = count > (page + 1) * limit && limit != 0;
         return { results: products, hasMore: hasMore };
     });
+};
+
+//      - getMaxPrice
+module.exports.getMaxPrice = function () {
+    return Product.find()
+        .sort({ price: -1 })
+        .limit(1)
+        .then((info) => {
+            return info[0].price;
+        });
 };

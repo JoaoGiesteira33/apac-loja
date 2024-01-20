@@ -10,6 +10,18 @@ const middleware = require('./myMiddleware');
 
 // ---------------------------------------------
 
+// GET Max Price
+router.get('/maxPrice', function (req, res, next) {
+    controllerProduct
+        .getMaxPrice()
+        .then((info) => {
+            res.status(200).jsonp(info);
+        })
+        .catch((error) => {
+            res.status(500).jsonp(error);
+        });
+});
+
 // GET Product Info
 router.get(
     '/:id',
@@ -71,14 +83,13 @@ router.put('/:id', hasAccess, function (req, res, next) {
                     req.body._seller = req._id;
                 }
                 controllerProduct
-                    .replaceProductInfo(req.params.id, req.body, {
-                        upsert: true,
-                    })
+                    .replaceProductInfo(req.params.id, req.body)
                     .then((info) => {
                         if (info.matchedCount == 0) {
-                            res.status(201).jsonp(info);
+                            res.status(201);
+                        } else {
+                            res.status(204);
                         }
-                        res.status(200).jsonp(info);
                     })
                     .catch((error) => {
                         res.status(500).jsonp(error);
@@ -165,10 +176,10 @@ router.get(
                 req.expand || ''
             )
             .then((info) => {
-                res.jsonp(info);
+                res.status(200).jsonp(info);
             })
             .catch((error) => {
-                res.jsonp(error);
+                res.status(500).jsonp(error);
             });
     }
 );

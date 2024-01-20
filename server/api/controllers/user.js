@@ -20,7 +20,9 @@ module.exports.createUser = function (data) {
 
 //     - replaceUserInfo
 module.exports.replaceUserInfo = function (id, data) {
-    return User.replaceOne({ _id: id }, data).then((info) => {
+    return User.replaceOne({ _id: id }, data, {
+        upsert: true,
+    }).then((info) => {
         return info;
     });
 };

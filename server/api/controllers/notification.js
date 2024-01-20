@@ -22,7 +22,9 @@ module.exports.createNotification = function (data) {
 
 //     - replaceNotificationInfo
 module.exports.replaceNotificationInfo = function (id, data) {
-    return Notification.replaceOne({ _id: id }, data).then((info) => {
+    return Notification.replaceOne({ _id: id }, data, {
+        upsert: true,
+    }).then((info) => {
         return info;
     });
 };

@@ -60,7 +60,6 @@ app.use('/order', orderRouter);
 app.use('/payment', paymentRouter);
 app.use('/shipment', shipmentRouter);
 app.use('/notification', notificationRouter);
-
 app.use('/email', emailRouter);
 
 // catch 404 and forward to error handler

@@ -53,7 +53,11 @@ router.put('/:id', isAdminOrAUTH, function (req, res, next) {
     controllerShipment
         .replaceShipmentInfo(req.params.id, req.body)
         .then((info) => {
-            res.status(204);
+            if (info.matchedCount == 0) {
+                res.status(201);
+            } else {
+                res.status(204);
+            }
         })
         .catch((error) => {
             res.status(500).jsonp(error);
@@ -135,7 +139,7 @@ router.post('/:id/states', hasAccess, function (req, res, next) {
                 });
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 

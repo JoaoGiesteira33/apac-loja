@@ -4,6 +4,8 @@ const router = express.Router();
 const controllerOrder = require('../controllers/order');
 const controllerShipment = require('../controllers/shipment');
 
+const { hasAccess, isAdminOrAUTH } = require('../utils/utils');
+
 const middleware = require('./myMiddleware');
 
 // ---------------------------------------------
@@ -26,7 +28,10 @@ router.get(
 );
 
 // POST Order Info
-router.post('/', function (req, res, next) {
+router.post('/', hasAccess, function (req, res, next) {
+    if (req._id && req.level != 'admin') {
+        req.body._client = req._id;
+    }
     //Create the shipments and then the order with their ids
     controllerOrder
         .createOrderWithShipments(req.body)
@@ -39,38 +44,68 @@ router.post('/', function (req, res, next) {
 });
 
 // PUT Order Info
-router.put('/:id', function (req, res, next) {
+router.put('/:id', hasAccess, function (req, res, next) {
     controllerOrder
-        .replaceOrderInfo(req.params.id, req.body)
-        .then((info) => {
-            res.jsonp(info);
+        .getOrderInfo(req.params.id)
+        .then((order) => {
+            if (req._id != order._client._id && req.level != 'admin') {
+                res.status(403).jsonp({
+                    error: 'You are not allowed to replace this order.',
+                });
+            } else {
+                controllerOrder
+                    .replaceOrderInfo(req.params.id, req.body)
+                    .then((info) => {
+                        if (info.matchedCount == 0) {
+                            res.status(201);
+                        } else {
+                            res.status(204);
+                        }
+                    })
+                    .catch((error) => {
+                        res.status(500).jsonp(error);
+                    });
+            }
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
 // PATCH Order Info
 router.patch('/:id', function (req, res, next) {
     controllerOrder
-        .updateOrderInfo(req.params.id, req.body)
-        .then((info) => {
-            res.jsonp(info);
+        .getOrderInfo(req.params.id)
+        .then((order) => {
+            if (req._id != order._client._id && req.level != 'admin') {
+                res.status(403).jsonp({
+                    error: 'You are not allowed to update this order.',
+                });
+            } else {
+                controllerOrder
+                    .updateOrderInfo(req.params.id, req.body)
+                    .then((info) => {
+                        res.status(204);
+                    })
+                    .catch((error) => {
+                        res.status(500).jsonp(error);
+                    });
+            }
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
 // DELETE Order Info
-router.delete('/:id', function (req, res, next) {
+router.delete('/:id', isAdminOrAUTH, function (req, res, next) {
     controllerOrder
         .deleteOrder(req.params.id)
         .then((info) => {
-            res.jsonp(info);
+            res.status(204);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
@@ -81,6 +116,9 @@ router.get(
     middleware.extractFilters,
     middleware.fieldSelector,
     function (req, res, next) {
+        if (req._id && req.level != 'admin') {
+            req.filters._client = req._id;
+        }
         controllerOrder
             .getOrders(
                 req.filters,
@@ -90,10 +128,10 @@ router.get(
                 req.expand || ''
             )
             .then((info) => {
-                res.jsonp(info);
+                res.status(200).jsonp(info);
             })
             .catch((error) => {
-                res.jsonp(error);
+                res.status(500).jsonp(error);
             });
     }
 );

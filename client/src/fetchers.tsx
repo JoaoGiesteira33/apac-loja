@@ -1,9 +1,14 @@
-import axios from 'axios';
+import axios, { Axios, AxiosError, AxiosResponse } from 'axios';
+import { ProductType } from './types/product';
+import { NestedPartial } from './types/nestedPartial';
+import { Result, err, ok } from './types/result';
 //import mime from 'mime';
 
-export const API_URL_USER = 'http://localhost:11000/user';
-export const API_URL_PROD = 'http://localhost:11000/product';
-export const AUTH_URL = 'http://localhost:11001';
+const BASE_URL = 'http://localhost';
+export const API_URL_USER = BASE_URL + ':11000/user';
+export const API_URL_PROD = BASE_URL + ':11000/product';
+export const API_URL_MAIL = BASE_URL + ':11000/email';
+export const AUTH_URL = BASE_URL + ':11001';
 //export const BASE_URL = 'http:/192.168.1.68:8000/api';
 
 export const loginUser = async (email: string, password: string) => {
@@ -84,7 +89,7 @@ export async function createOrder(body: [{ id: string; amount: number }]) {
         console.log('Error during register: ' + err.message);
         throw err.response;
     }
-};
+}
 
 export async function onApprove(data) {
     console.log('Capturing Order');
@@ -120,21 +125,51 @@ export const getProduct = async (id: string) => {
     }
 };
 
-/*
 export const sendEmail = async (toEmail, subject, message) => {
     try {
-        const response = await axios.post(`${BASE_URL}/users/send-email`, {
+        const response = await axios.post(`${API_URL_MAIL}/send`, {
             email: toEmail,
-            subject,
-            text: message
+            subject: '[Contacto Site] ' + subject,
+            text: message + '\n\n Enviado por: ' + toEmail,
         });
         return response.data;
     } catch (error) {
-        console.error("Error sending email:", error);
+        console.error('Error sending email:', error);
         throw error;
     }
 };
 
+export const getMaxPrice = async () => {
+    try {
+        const response = await axios.get(`${API_URL_PROD}/maxPrice`);
+        return response.data;
+    } catch (error) {
+        console.error('Error getting max price:', error);
+        throw error;
+    }
+};
+
+export const addProduct = async (
+    product: NestedPartial<ProductType>
+): Promise<Result<string, Error>> => {
+    console.log('Adding product');
+
+    if (product.price == null) product.price = 0;
+
+    try {
+        const response = await axios.post(`${BASE_URL}/products`, product);
+        return ok(response.data);
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log('error message: ', error.message);
+            return err(error);
+        } else {
+            console.log('unexpected error: ', error);
+            return err(new Error('Unexpected error'));
+        }
+    }
+};
+/*
 export const generateRecoveryCode = async (email) => {
     console.log("Generating recovery code for user with email " + email);
     try {
@@ -348,21 +383,6 @@ export const fetchProduct = async (id) => {
     }
     catch (err) {
         console.log("Error fetching product: " + err.message);
-    }
-}
-
-export const addProduct = async (product) => {
-    console.log("Adding product");
-
-    if(product.price === "")
-        product.price = 0;
-
-    try {
-        const response = await axios.post(`${BASE_URL}/products`, product);
-        return response.data;
-    }
-    catch (err) {
-        console.log("Error adding product: " + err.message);
     }
 }
 
