@@ -12,18 +12,49 @@ import {
     Typography,
 } from '@material-tailwind/react';
 
-import { Box, Grid } from '@mui/material';
+import { Alert } from '@mui/material';
 
-const ProductDetails = (data: { product: ProductType }) => {
-    const product = data.product;
+import { Box } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import useCart from '../../hooks/useCart';
+
+const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
+    const { product, loggedIn } = data;
+
+    const { cart, REDUCER_ACTIONS, dispatch } = useCart();
 
     const [selectedImage, setSelectedImage] = useState(product.photos[0]);
     const [lightboxStatus, setLightboxStatus] = useState(false);
     const [openCheckoutModel, setCheckoutModel] = useState(false);
+    const [loggedInError, setLoggedInError] = useState(false);
+
+    const checkIfInCart = () => {
+        // check if product is in cart array
+        var i = 0;
+        console.log('product_id', product._id);
+
+        while (i < cart.length) {
+            console.log('cart', cart[i].id);
+            if (cart[i]._id === product._id) {
+                return true;
+            }
+            i++;
+        }
+        return false;
+    };
 
     const handleLightbox = () => setLightboxStatus(!lightboxStatus);
-    const handleOpenCheckout = () => setCheckoutModel(!openCheckoutModel);
+    const handleOpenCheckout = () => {
+        console.log('loggedIn', loggedIn);
+        if (!data.loggedIn) {
+            setLoggedInError(true);
+        } else {
+            dispatch({ type: REDUCER_ACTIONS.ADD, payload: product });
+            setCheckoutModel(!openCheckoutModel);
+        }
+    };
     const handleCheckoutConfirm = () => navigate('/cart');
 
     useEffect(() => {
@@ -43,6 +74,7 @@ const ProductDetails = (data: { product: ProductType }) => {
                         status={lightboxStatus}
                         statusFunc={setLightboxStatus}
                         images={product.photos}
+                        selectedIndex={product.photos.indexOf(selectedImage)}
                     />
                 </Box>
                 {/* THUMBNAIL AREA */}
@@ -101,11 +133,27 @@ const ProductDetails = (data: { product: ProductType }) => {
                                 </Typography>
                             </div>
                             <div className="flex flex-col space-y-1">
+                                {loggedInError && (
+                                    <Alert
+                                        onClose={() => {
+                                            setLoggedInError(false);
+                                        }}
+                                        variant="filled"
+                                        severity="error"
+                                        sx={{
+                                            mx: 2,
+                                        }}>
+                                        {t('errors.cart.login')}
+                                    </Alert>
+                                )}
                                 <button
                                     type="button"
                                     className="text-white bg-gradient-to-r from-gray-700 to-gray-900 hover:bg-gradient-to-br font-poppins rounded-lg text-md px-5 py-2.5 text-center mb-4 mx-4"
-                                    onClick={handleOpenCheckout}>
-                                    BUY NOW
+                                    onClick={handleOpenCheckout}
+                                    disabled={checkIfInCart()}>
+                                    {checkIfInCart()
+                                        ? t('product.already-in-cart')
+                                        : t('product.add-to-cart')}
                                 </button>
                                 <Dialog
                                     open={openCheckoutModel}
@@ -119,7 +167,7 @@ const ProductDetails = (data: { product: ProductType }) => {
                                         <Typography
                                             className="font-poppins"
                                             variant="h4">
-                                            Proceder ao Checkout?
+                                            {t('product.checkout')}
                                         </Typography>
                                     </DialogHeader>
                                     <DialogBody className="flex flex-col items-center">
@@ -134,7 +182,7 @@ const ProductDetails = (data: { product: ProductType }) => {
                                         <Typography
                                             className="font-poppins"
                                             variant="paragraph">
-                                            Produto adicionado ao carrinho.
+                                            {t('product.checkout-text')}
                                         </Typography>
                                     </DialogBody>
                                     <DialogFooter>
@@ -143,13 +191,13 @@ const ProductDetails = (data: { product: ProductType }) => {
                                             color="red"
                                             onClick={handleOpenCheckout}
                                             className="mr-1">
-                                            <span>Cancel</span>
+                                            <span>{t('global.no')}</span>
                                         </Button>
                                         <Button
                                             variant="text"
                                             color="green"
                                             onClick={handleCheckoutConfirm}>
-                                            <span>Confirm</span>
+                                            <span>{t('global.yes')}</span>
                                         </Button>
                                     </DialogFooter>
                                 </Dialog>

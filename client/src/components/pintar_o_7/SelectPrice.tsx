@@ -56,7 +56,12 @@ const IOSSlider = styled(Slider)(({ theme }) => ({
         },
     },
 }));
-export default function SelectPrice({ value, changeValue, maxPrice }) {
+export default function SelectPrice({
+    value,
+    changeValue,
+    maxPrice,
+    mouseUpFunc,
+}) {
     const handleChange = (event: Event, newValue: number | number[]) => {
         changeValue(newValue as number[]);
     };
@@ -93,6 +98,7 @@ export default function SelectPrice({ value, changeValue, maxPrice }) {
                 max={maxPrice}
                 valueLabelDisplay="on"
                 onChange={handleChange}
+                onChangeCommitted={mouseUpFunc}
                 getAriaValueText={valuetext}
             />
         </Box>

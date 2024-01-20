@@ -1,39 +1,18 @@
-import { ReactElement, createContext, useEffect, useMemo, useReducer } from 'react';
-import { CartProductType } from '../types/cart';
-import { Key, decryptData, encryptData} from '../utils/Encryption';
+import {
+    ReactElement,
+    createContext,
+    useEffect,
+    useMemo,
+    useReducer,
+} from 'react';
+import { Key, decryptData, encryptData } from '../utils/Encryption';
+import { ProductType } from '../types/product';
 
-type CartStateType = { cart: CartProductType[] };
+type CartStateType = { cart: ProductType[] };
 
-const initCartState: CartStateType = { cart: [
-    // TODO remove this mock data
-    {
-        "id": 1,
-        "title": "Mona Lisa by Leonardo Da Vinci Transform to Wpap Pop Art Poster",
-        "year": 2013,
-        "thumbnailPhoto": "https://render.fineartamerica.com/images/rendered/default/poster/5.5/8/break/images/artworkimages/medium/3/mona-lisa-by-leonardo-da-vinci-transform-to-wpap-pop-art-ahmad-nusyirwan.jpg",
-        "quantity": 2,
-        "price": 22.35,
-        "stock": 10
-    },
-    {
-        "id": 2,
-        "title": "Industrial smoke-1",
-        "year": 2023,
-        "thumbnailPhoto": "https://zet.gallery/storage/images/products/c3b2/a821/ac2a/4db3/b5bb/4a30/d051/0972.jpg?mode=max&bgcolor=ffffff&width=717&height=717&quality=70",
-        "quantity": 1,
-        "price": 2000,
-        "stock": 10
-    },
-    {
-        "id": 3,
-        "title": "Sphinx",
-        "year": 2012,
-        "thumbnailPhoto": "https://zet.gallery/storage/images/products/443e/c7a8/6551/4bd6/b6ef/5ee1/20c9/a46d.jpg?mode=max&bgcolor=ffffff&width=717&height=717&quality=70",
-        "quantity": 1,
-        "price": 400,
-        "stock": 10
-    }
-] };
+const initCartState: CartStateType = {
+    cart: [],
+};
 
 const REDUCER_ACTION_TYPE = {
     ADD: 'ADD',
@@ -46,7 +25,7 @@ export type ReducerActionType = typeof REDUCER_ACTION_TYPE;
 
 export type ReducerAction = {
     type: string;
-    payload?: CartProductType;
+    payload?: ProductType;
 };
 
 const reducer = (
@@ -60,7 +39,7 @@ const reducer = (
             }
 
             const { id } = action.payload;
-            const filtredCart: CartProductType[] = state.cart.filter(
+            const filtredCart: ProductType[] = state.cart.filter(
                 (product) => product.id !== id
             );
 
@@ -72,14 +51,13 @@ const reducer = (
             }
 
             const { id } = action.payload;
-            const filtredCart: CartProductType[] = state.cart.filter(
+            const filtredCart: ProductType[] = state.cart.filter(
                 (product) => product.id !== id
             );
 
-            return { ...state, cart: [ ... filtredCart] };
+            return { ...state, cart: [...filtredCart] };
         }
         case REDUCER_ACTION_TYPE.CLEAR: {
-            
             return { ...state, cart: [] };
         }
         case REDUCER_ACTION_TYPE.SUBMIT: {
@@ -102,8 +80,8 @@ const useCartContext = (initCartState: CartStateType) => {
     const [state, dispatch] = useReducer(reducer, { cart: parsedCart });
 
     const REDUCER_ACTIONS = useMemo(() => {
-        return REDUCER_ACTION_TYPE
-    }, [])
+        return REDUCER_ACTION_TYPE;
+    }, []);
 
     const totalItems: number = state.cart.length;
 
@@ -112,7 +90,7 @@ const useCartContext = (initCartState: CartStateType) => {
         currency: 'EUR',
     }).format(
         state.cart.reduce((previousValue, cartItem) => {
-            return previousValue + cartItem.price
+            return previousValue + cartItem.price;
         }, 0)
     );
 
@@ -129,29 +107,29 @@ const useCartContext = (initCartState: CartStateType) => {
         subTotalPrice,
         cart,
     };
+};
 
-}
-
-export type UseCartContextType = ReturnType<typeof useCartContext>
+export type UseCartContextType = ReturnType<typeof useCartContext>;
 
 const initCartContextState: UseCartContextType = {
     dispatch: () => {},
     REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
-    totalItems: 3,
-    subTotalPrice: '2422.35',
+    totalItems: 0,
+    subTotalPrice: '',
     cart: initCartState.cart,
 };
 
-export const CartContext = createContext<UseCartContextType>(initCartContextState)
+export const CartContext =
+    createContext<UseCartContextType>(initCartContextState);
 
-type ChildrenType = { children?: ReactElement | ReactElement[] }
+type ChildrenType = { children?: ReactElement | ReactElement[] };
 
 export const CartProvider = ({ children }: ChildrenType): ReactElement => {
     return (
         <CartContext.Provider value={useCartContext(initCartState)}>
             {children}
         </CartContext.Provider>
-    )
-}
+    );
+};
 
-export default CartContext
+export default CartContext;

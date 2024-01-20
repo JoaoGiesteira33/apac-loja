@@ -12,11 +12,17 @@ import { useLocation } from 'react-router-dom';
 import { getProduct } from '../fetchers';
 import useProductSearch from '../hooks/useProductSearch';
 import ProductThumbnail from '../components/pintar_o_7/ProductThumbnail';
+import { useTranslation } from 'react-i18next';
 
-const Product = () => {
+import useCart from '../hooks/useCart';
+
+const Product = (props) => {
+    const { t } = useTranslation();
     const location = useLocation();
     const [product, setProduct] = useState(location.state);
     const { product_id } = useParams();
+
+    const { loggedIn } = props;
 
     const checkProduct = () => {
         if (product && product._id != product_id) {
@@ -85,25 +91,14 @@ const Product = () => {
             }}>
             {/* <MyBreadCrumb />*/}
             {/* <ProductDetails product={product1}/> */}
-            {product && <ProductDetails product={product} />}
+            {product && (
+                <ProductDetails product={product} loggedIn={loggedIn} />
+            )}
 
             <Divider />
-            <Typography variant="h6">
-                Outras obras de arte do artista
-            </Typography>
+            <Typography variant="h6">{t('product.more')}</Typography>
             {/* OUTRAS OBRAS DO ARTISTA */}
-            <Grid
-                container
-                sx={{
-                    justifyContent: {
-                        xs: 'center',
-                        sm:
-                            products && products.length === 0
-                                ? 'center'
-                                : 'space-between',
-                    },
-                }}
-                spacing={{ xs: 2, md: 4, lg: 8 }}>
+            <Grid container sx={{ marginTop: 2 }}>
                 {products &&
                     products.map((product, index) => (
                         <Grid
@@ -119,7 +114,7 @@ const Product = () => {
                     ))}
                 {products && products.length === 0 && !loading && (
                     <Typography variant="subtitle1" align="center">
-                        Este artista não tem mais obras disponíveis.
+                        {t('product.no_more')}
                     </Typography>
                 )}
             </Grid>

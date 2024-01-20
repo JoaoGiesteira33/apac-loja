@@ -3,8 +3,8 @@ import { Box, Paper } from '@mui/material';
 
 function ImageMagnifier({
     src,
-    magnifierHeight = 100,
-    magnifieWidth = 100,
+    magnifierHeight = 200,
+    magnifieWidth = 200,
     zoomLevel = 3,
 }: {
     src: string;

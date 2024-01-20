@@ -21,22 +21,20 @@ import { CartProductType } from '../types/cart';
 import useCart from '../hooks/useCart';
 import { useNavigate } from 'react-router-dom';
 
+import { useTranslation } from 'react-i18next';
+
 const CartDetails = () => {
+    const { t } = useTranslation();
     const { dispatch, totalItems, subTotalPrice, cart, REDUCER_ACTIONS } =
         useCart();
     const products = cart;
     const navigate = useNavigate();
 
-    const [shipping, setShipping] = useState('Standard');
-    const [subtotal, setSubtotal] = useState(100);
-    const [tax, setTax] = useState(15); // TODO get tax from backend
+    const [shippingCost, setShippingCost] = useState(0); // TODO get shipping cost from backend
+    const [subtotal, setSubtotal] = useState(parseFloat(subTotalPrice));
+    const [tax, setTax] = useState(0.23);
 
-    const total =
-        subtotal + (tax / 100) * subtotal + (shipping === 'STANDARD' ? 5 : 10);
-
-    const handleShipping = (event: SelectChangeEvent) => {
-        setShipping(event.target.value as string);
-    };
+    const total = subtotal + tax * subtotal + shippingCost;
 
     const handleCheckout = () => {
         // TODO handle checkout
@@ -64,10 +62,10 @@ const CartDetails = () => {
                 <Grid xs={12} sm={12} md={8}>
                     <Box component="div" className="flex justify-between my-4">
                         <Typography variant="h5" className="font-poppins">
-                            Carrinho de compras
+                            {t('cart.cart')}
                         </Typography>
                         <Typography variant="h5" className="font-poppins">
-                            {totalItems} Itens
+                            {totalItems} {t('cart.items')}
                         </Typography>
                     </Box>
 
@@ -79,8 +77,9 @@ const CartDetails = () => {
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Obra</TableCell>
-                                    <TableCell align="right">Preço</TableCell>
-                                    <TableCell align="right">Total</TableCell>
+                                    <TableCell align="right">
+                                        {t('cart.price')}
+                                    </TableCell>
                                     <TableCell align="right">
                                         <Button
                                             title="Clear all"
@@ -95,7 +94,7 @@ const CartDetails = () => {
                             <TableBody>
                                 {products.map((product) => (
                                     <TableRow
-                                        key={product.id}
+                                        key={product._id}
                                         sx={{
                                             '&:last-child td, &:last-child th':
                                                 { border: 0 },
@@ -104,14 +103,18 @@ const CartDetails = () => {
                                             <Grid container spacing={2}>
                                                 <Grid xs={3}>
                                                     <img
-                                                        src={
-                                                            product.thumbnailPhoto
-                                                        }
+                                                        src={product.photos[0]}
                                                         alt={product.title}
                                                         className="object-cover w-16 h-16 rounded-sm"
                                                     />
                                                 </Grid>
-                                                <Grid xs={8}>
+                                                <Grid
+                                                    xs={8}
+                                                    sx={{
+                                                        display: 'flex',
+                                                        //
+                                                        alignItems: 'center',
+                                                    }}>
                                                     {product.title}
                                                 </Grid>
                                             </Grid>
@@ -120,15 +123,12 @@ const CartDetails = () => {
                                             {product.price}€
                                         </TableCell>
                                         <TableCell align="right">
-                                            {product.price * product.quantity}€
-                                        </TableCell>
-                                        <TableCell align="center">
                                             <button
                                                 onClick={() =>
                                                     handleRemoveProduct(product)
                                                 }>
                                                 <DeleteRoundedIcon
-                                                    sx={{ fontSize: 20 }}
+                                                    sx={{ fontSize: 20, mx: 3 }}
                                                 />
                                             </button>
                                         </TableCell>
@@ -157,7 +157,7 @@ const CartDetails = () => {
                                 variant="body2"
                                 className="font-poppins"
                                 sx={{ marginBottom: '1rem' }}>
-                                Subtotal:
+                                {t('cart.subtotal')}:
                             </Typography>
                             <Typography
                                 variant="body2"
@@ -166,52 +166,39 @@ const CartDetails = () => {
                                 {subTotalPrice}
                             </Typography>
                         </Box>
-                        <Typography
-                            variant="body2"
-                            className="font-poppins"
-                            sx={{ marginBottom: '0.5rem' }}>
-                            Shipping:
-                        </Typography>
-                        <Select
-                            id="shipping-method"
-                            value={shipping}
-                            onChange={handleShipping}
-                            size="small"
-                            fullWidth
-                            sx={{ marginBottom: '1rem' }}>
-                            <MenuItem value={'STANDARD'}>
-                                <Typography
-                                    variant="body2"
-                                    className="font-poppins">
-                                    Standard Shipping-5€
-                                </Typography>
-                            </MenuItem>
-                            <MenuItem value={'EXPRESSO'}>
-                                <Typography
-                                    variant="body2"
-                                    className="font-poppins">
-                                    Expresso-10€
-                                </Typography>
-                            </MenuItem>
-                        </Select>
 
                         <Box component="div" className="flex justify-between">
                             <Typography
                                 variant="body2"
                                 className="font-poppins"
                                 sx={{ marginBottom: '1rem' }}>
-                                IVA(23%): 
+                                {t('cart.tax')}(23%):
                             </Typography>
                             <Typography
                                 variant="body2"
                                 className="font-poppins"
                                 sx={{ marginBottom: '1rem' }}>
-                                
                                 {new Intl.NumberFormat('pt-PT', {
-                                style: 'currency',
-                                currency: 'EUR',
-                                }).format(tax)}
-                                
+                                    style: 'currency',
+                                    currency: 'EUR',
+                                }).format(tax * subtotal)}
+                            </Typography>
+                        </Box>
+                        <Box component="div" className="flex justify-between">
+                            <Typography
+                                variant="body2"
+                                className="font-poppins"
+                                sx={{ marginBottom: '0.5rem' }}>
+                                {t('cart.shipping')}:
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                className="font-poppins"
+                                sx={{ marginBottom: '1rem' }}>
+                                {new Intl.NumberFormat('pt-PT', {
+                                    style: 'currency',
+                                    currency: 'EUR',
+                                }).format(shippingCost)}
                             </Typography>
                         </Box>
 
@@ -222,7 +209,7 @@ const CartDetails = () => {
                             className="font-poppins"
                             fontWeight={700}
                             sx={{ marginBottom: '2rem' }}>
-                            Total:{' '}
+                            {t('cart.total')}:{' '}
                             {new Intl.NumberFormat('pt-PT', {
                                 style: 'currency',
                                 currency: 'EUR',
@@ -232,7 +219,7 @@ const CartDetails = () => {
                             variant="contained"
                             className="w-full mb-4"
                             onClick={handleCheckout}>
-                            checkout
+                            {t('cart.reservation')}
                         </Button>
                     </Box>
                 </Grid>

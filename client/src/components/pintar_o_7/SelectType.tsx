@@ -44,11 +44,13 @@ export default function SelectTypes({
     setValues,
     isMultiple,
     disableUnderline = true,
+    onClose,
 }: {
     values: string[];
     setValues: React.Dispatch<React.SetStateAction<string[]>>;
     isMultiple: boolean;
     disableUnderline?: boolean;
+    onClose?: () => void;
 }) {
     const { t } = useTranslation();
     const handleSelectedTypesChange = (
@@ -78,6 +80,7 @@ export default function SelectTypes({
                 disableUnderline={disableUnderline}
                 value={values}
                 onChange={handleSelectedTypesChange}
+                onClose={onClose}
                 IconComponent={KeyboardArrowDownOutlinedIcon}
                 renderValue={
                     isMultiple ? () => [t('global.types')] : () => values

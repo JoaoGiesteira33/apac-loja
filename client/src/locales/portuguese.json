@@ -25,6 +25,9 @@
                 "city": "Cidade inválida",
                 "address": "Morada inválida",
                 "postal-code": "Código postal inválido"
+            },
+            "cart": {
+                "login": "Para adicionar itens ao carrinho, tem de ter a sessão iniciada."
             }
         },
         "artist": {
@@ -39,8 +42,27 @@
             },
             "no-pieces": "Este artista ainda não tem obras disponíveis"
         },
-        "cart": {},
-        "checkout": {},
+        "cart": {
+            "cart": "Carrinho de compras",
+            "product": "Produto",
+            "price": "Preço",
+            "total": "Total",
+            "items": "Itens",
+            "subtotal": "Subtotal",
+            "shipping": "Envio",
+            "tax": "Taxa",
+            "checkout": "Checkout",
+            "empty": "O seu carrinho está vazio",
+            "reservation": "Reservar produto(s)"
+        },
+        "checkout": {
+            "payment": {
+                "paypal": "Paypal",
+                "mbway": "MBWay",
+                "credit-card": "Cartão de Crédito",
+                "multibanco": "Multibanco"
+            }
+        },
         "global": {
             "mandatory": "* Campos obrigatórios",
             "load-more": "Carregar mais",
@@ -55,9 +77,13 @@
             "type-of-piece": "Tipo de Obra",
             "types": "Tipos",
             "send": "Enviar",
+            "yes": "Sim",
+            "no": "Não",
             "submit": "Submeter"
         },
-        "home": {},
+        "home": {
+            "iniciative": "Uma iniciativa"
+        },
         "forms": {
             "first-last-name": "Primeiro e último nome",
             "email": "Email",
@@ -76,14 +102,23 @@
         "product": {
             "technique": "Técnica",
             "dimensions": "Dimensões",
+            "measure": "Medida",
             "photos": "Fotos",
             "year": "Ano",
-            "width": "Largura",
-            "height": "Altura",
-            "depth": "Profundidade",
+            "width": "Largura (m)",
+            "height": "Altura (m)",
+            "depth": "Profundidade (m)",
+            "weight": "Peso (kg)",
             "materials": "Materiais",
             "materials-placeholder": "Adicione lista materiais utilizados (\u2936)",
-            "measure": "Medida"
+            "magnifier": "Passe o rato sobre a imagem para ver o trabalho artístico em pormenor.",
+            "add-to-cart": "Adicionar ao carrinho",
+            "checkout": "Proceder ao checkout?",
+            "checkout-text": "Produto adicionado ao carrinho.",
+            "product-details": "Detalhes do produto",
+            "more": "Outras obras de arte do artista",
+            "no-more": "Não existem mais obras de arte do artista",
+            "already-in-cart": "Este produto está no seu carrinho."
         },
         "profile": {
             "requests": {
