@@ -58,8 +58,6 @@ const CheckoutStep4 = () => {
         setValuePhone(newValue);
     };
 
-    console.log(valuePhone);
-
     const [showPhoneAlert, setShowPhoneAlert] = useState(false);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -69,32 +67,23 @@ const CheckoutStep4 = () => {
         <Box
             component="div"
             style={{
-                paddingLeft: '10%',
-                paddingRight: '10%',
+                
                 paddingBottom: 10,
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'left',
+                alignItems: 'center',
+                justifyContent: 'center',
                 background: 'white',
                 color: 'black',
             }}>
             <Paper
                 elevation={0}
-                style={{
-                    paddingLeft: '10%',
-                    paddingRight: '10%',
-                    paddingBottom: 10,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'left',
-                    background: 'white',
-                    color: 'black',
-                }}>
+                >
                 <Typography
                     component="h1"
                     variant="h5"
                     style={{ margin: '20px 0', color: 'black' }}>
-                    Método de pagamento
+                    {t('checkout.payment.title')}
                 </Typography>
                 <Box component="div" sx={{ width: '100%' }}>
                     <Box component="div">

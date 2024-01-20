@@ -1,8 +1,10 @@
 import { Box, Divider, Paper, Stack, Typography } from '@mui/material';
 import React from 'react';
 import useCart from '../hooks/useCart';
+import { useTranslation } from 'react-i18next';
 
 export const CheckoutStep3 = () => {
+    const { t } = useTranslation();
     const { subTotalPrice, cart } = useCart();
 
     return (
@@ -55,7 +57,7 @@ export const CheckoutStep3 = () => {
                                 component="h3"
                                 variant="h6"
                                 color="black">
-                                Valor
+                                {t('checkout.review.value')}
                             </Typography>
                         </Box>
                         <Divider />
@@ -115,7 +117,7 @@ export const CheckoutStep3 = () => {
                                 component="h3"
                                 variant="h6"
                                 color="black">
-                                Envio
+                                {t('checkout.review.shipping')}
                             </Typography>
                             <Typography
                                 component="h3"

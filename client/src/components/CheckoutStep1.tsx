@@ -27,14 +27,7 @@ const CheckoutStep1 = () => {
         <Box
             component="div"
             style={{
-                paddingLeft: '10%',
-                paddingRight: '10%',
-                paddingBottom: 10,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'left',
-                background: 'white',
-                color: 'black',
+                width: '100%',
             }}>
             <Paper
                 elevation={0}
@@ -46,7 +39,7 @@ const CheckoutStep1 = () => {
                     flexDirection: 'column',
                     alignItems: 'left',
                     background: 'white',
-                    color: 'black',
+                    color: 'black'
                 }}>
                 <Typography
                     component="h1"
