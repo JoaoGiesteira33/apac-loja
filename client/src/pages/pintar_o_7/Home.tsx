@@ -15,6 +15,7 @@ import AddCircleOutlineSharpIcon from '@mui/icons-material/AddCircleOutlineSharp
 import useProductSearch from '../../hooks/useProductSearch';
 import ProductThumbnail from '../../components/pintar_o_7/ProductThumbnail';
 import { useTranslation } from 'react-i18next';
+import { getMaxPrice } from '../../fetchers';
 
 export default function Home() {
     const [t] = useTranslation();
@@ -25,13 +26,17 @@ export default function Home() {
 
     const [productPage, setProductPage] = useState(1);
 
+    const [maxPrice, setMaxPrice] = useState(9999);
+
     const [featuredProducts, setFeaturedProducts] = useState({
+        'piece_info.state': 'available',
         featured: true,
     });
 
     const [selectedTypes, setSelectedTypes] = React.useState<string[]>([]);
     const [selectedPrice, setSelectedPrice] = React.useState<number[]>([
-        0, 9999,
+        0,
+        maxPrice,
     ]);
 
     const all = useProductSearch(productQuery, productPage);
@@ -49,6 +54,18 @@ export default function Home() {
                 ]
             );
     }, [featured.products]);
+
+    useEffect(() => {
+        getMaxPrice()
+            .then((res) => {
+                console.log('MaxPrice:', res);
+                setSelectedPrice([0, res]);
+                setMaxPrice(res);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
 
     return (
         <Box
@@ -99,9 +116,16 @@ export default function Home() {
                     />
                 </Box>
                 <SelectPrice
-                    maxPrice={9999}
+                    maxPrice={maxPrice}
                     value={selectedPrice}
                     changeValue={setSelectedPrice}
+                    mouseUpFunc={() => {
+                        setProductQuery({
+                            ...productQuery,
+                            'price[gte]': selectedPrice[0],
+                            'price[lte]': selectedPrice[1],
+                        });
+                    }}
                 />
             </Stack>
             <Divider variant="middle" />

@@ -135,6 +135,16 @@ export const sendEmail = async (toEmail, subject, message) => {
         throw error;
     }
 };
+
+export const getMaxPrice = async () => {
+    try {
+        const response = await axios.get(`${API_URL_PROD}/maxPrice`);
+        return response.data;
+    } catch (error) {
+        console.error('Error getting max price:', error);
+        throw error;
+    }
+};
 /*
 export const generateRecoveryCode = async (email) => {
     console.log("Generating recovery code for user with email " + email);
