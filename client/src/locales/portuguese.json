@@ -55,7 +55,14 @@
             "empty": "O seu carrinho está vazio",
             "reservation": "Reservar produto(s)"
         },
-        "checkout": {},
+        "checkout": {
+            "payment": {
+                "paypal": "Paypal",
+                "mbway": "MBWay",
+                "credit-card": "Cartão de Crédito",
+                "multibanco": "Multibanco"
+            }
+        },
         "global": {
             "mandatory": "* Campos obrigatórios",
             "load-more": "Carregar mais",

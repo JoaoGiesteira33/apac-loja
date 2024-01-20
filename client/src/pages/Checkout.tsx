@@ -13,7 +13,7 @@ const Checkout = () => {
     const [activeStep, setActiveStep] = useState(0);
 
     const handleNext = () => {
-        if (activeStep < 3) setActiveStep((cur) => cur + 1);
+        if (activeStep < 2) setActiveStep((cur) => cur + 1);
     };
     const handlePrev = () => {
         if (activeStep > 0) setActiveStep((cur) => cur - 1);
@@ -33,27 +33,26 @@ const Checkout = () => {
                 },
             }}>
             <Stepper activeStep={activeStep} alternativeLabel>
-                <Step key={0}>
+                {/* <Step key={0}>
                     <StepLabel>Faturação</StepLabel>
-                    {/* <StepContent>content</StepContent> */}
-                </Step>
-                <Step key={1}>
+                </Step> */}
+                <Step key={0}>
                     <StepLabel>Entregra</StepLabel>
                 </Step>
-                <Step key={2}>
+                <Step key={1}>
                     <StepLabel>Resumo</StepLabel>
                 </Step>
-                <Step key={3}>
+                <Step key={2}>
                     <StepLabel>Pagamento</StepLabel>
                 </Step>
             </Stepper>
 
             <Box component="div">
                 {/* Steps content */}
-                {activeStep === 0 && <CheckoutStep1 />}
-                {activeStep === 1 && <CheckoutStep2 />}
-                {activeStep === 2 && <CheckoutStep3 />}
-                {activeStep === 3 && <CheckoutStep4 />}
+                
+                {activeStep === 0 && <CheckoutStep2 />}
+                {activeStep === 1 && <CheckoutStep3 />}
+                {activeStep === 2 && < CheckoutStep4 />}
 
                 {/* Next and Prev buttons */}
                 <Box
@@ -75,7 +74,7 @@ const Checkout = () => {
                         onClick={handleNext}
                         variant="contained"
                         sx={{ mr: 1 }}
-                        disabled={activeStep === 3}>
+                        disabled={activeStep === 2}>
                         Próximo
                     </Button>
                 </Box>
