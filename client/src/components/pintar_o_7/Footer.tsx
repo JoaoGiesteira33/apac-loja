@@ -143,7 +143,10 @@ const Footer = (props) => {
                     display="flex"
                     alignItems="center"
                     justifyContent="center">
-                    <MY_LNK link="#" text="livro de reclamações" />
+                    <MY_LNK
+                        link="https://www.livroreclamacoes.pt/Inicio/"
+                        text="livro de reclamações"
+                    />
                 </Grid>
                 <Grid
                     item

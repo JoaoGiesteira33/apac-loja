@@ -7,10 +7,23 @@ import PhotoAlbumIcon from '@mui/icons-material/PhotoAlbum';
 import ProfileThumbnail from '../../components/Profile/ProfileThumbnail';
 import { useTranslation } from 'react-i18next';
 
+import { Box } from '@mui/material';
+
 export default function ProfileIndex(props) {
     const [t] = useTranslation();
     return (
-        <div className="p-8 flex items-center justify-center">
+        <Box
+            sx={{
+                paddingX: {
+                    xs: '2rem',
+                    sm: '4rem',
+                    md: '6rem',
+                    lg: '8rem',
+                },
+                paddingY: '3rem',
+                display: 'flex',
+                justifyContent: 'center',
+            }}>
             <div className="grid max-w-max max-h-max gap-2 md:gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 justify-center content-center items-center">
                 <Link className="inline-block" to="/profile/info">
                     <ProfileThumbnail
@@ -48,6 +61,6 @@ export default function ProfileIndex(props) {
                     />
                 </Link>
             </div>
-        </div>
+        </Box>
     );
 }

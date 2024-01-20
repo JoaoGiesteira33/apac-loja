@@ -22,6 +22,7 @@ export default function Home() {
     const [productQuery, setProductQuery] = useState({
         'piece_info.state': 'available',
     });
+
     const [productPage, setProductPage] = useState(1);
 
     const [featuredProducts, setFeaturedProducts] = useState({
@@ -59,7 +60,8 @@ export default function Home() {
             <Hero
                 title={'Pintar o 7'}
                 subtitle={
-                    'Uma iniciativa Associação Portuguesa das Artes e da Cultura'
+                    t('home.iniciative') +
+                    ' Associação Portuguesa das Artes e da Cultura'
                 }
                 img={randomFeaturedProduct && randomFeaturedProduct.photos[0]}
                 color={'#FF3D00'}
@@ -85,6 +87,13 @@ export default function Home() {
                     <SelectTypes
                         values={selectedTypes}
                         setValues={setSelectedTypes}
+                        onClose={() => {
+                            setProductQuery({
+                                ...productQuery,
+                                'piece_info.technique[in]':
+                                    selectedTypes.join(','),
+                            });
+                        }}
                         isMultiple={true}
                     />
                 </Box>
@@ -105,7 +114,7 @@ export default function Home() {
                         md: '6rem',
                         lg: '8rem',
                     },
-                    paddingTop: '3rem',
+                    paddingY: '3rem',
                     display: 'flex',
                     justifyContent: 'center',
                 }}>
