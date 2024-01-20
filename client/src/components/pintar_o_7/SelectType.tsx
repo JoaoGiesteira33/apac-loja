@@ -35,7 +35,7 @@ const availableTypes: string[] = [
     'Impressões e Gravuras',
     'Arte Digital',
     'Instalação',
-    'Desing',
+    'Design',
     'Arte Têxtil',
 ];
 
