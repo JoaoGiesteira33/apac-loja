@@ -13,14 +13,16 @@ import {
     TextField,
     Tooltip,
     Typography,
+    useTheme,
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import DeleteIcon from '@mui/icons-material/Delete';
+import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import { NumericFormat, NumericFormatProps } from 'react-number-format';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import React from 'react';
+import { BorderColor } from '@mui/icons-material';
 
 const availableTypes: string[] = [
     'Pintura',
@@ -100,6 +102,7 @@ const DimensionInput = React.forwardRef<NumericFormatProps, CustomProps>(
 
 export default function NewProduct() {
     const { t } = useTranslation();
+    const theme = useTheme();
     const inputRef = useRef(null);
 
     const [title, setTitle] = useState('');
@@ -109,7 +112,6 @@ export default function NewProduct() {
     const [materials, setMaterials] = useState<string>('');
     const [depth, setDepth] = useState<string>('');
     const [measureUnit, setMeasureUnit] = useState<string>('');
-    const [show, setShow] = useState<boolean[]>([]);
     const [maskedValues, setMaskedValues] = React.useState({
         price: '',
         width: '',
@@ -124,24 +126,11 @@ export default function NewProduct() {
         if (fileList) {
             const files = [...fileList, ...images];
             setImages(files);
-            setShow(new Array(files.length).fill(false));
         }
     }
 
     const addNewImage = () => {
         inputRef.current.click();
-    };
-
-    const onMouseOver = (index: number) => {
-        console.log(maskedValues.price);
-        const newShow = [...show];
-        newShow[index] = true;
-        setShow(newShow);
-    };
-    const onMouseOut = (index: number) => {
-        const newShow = [...show];
-        newShow[index] = false;
-        setShow(newShow);
     };
 
     const handleMaskedValuesChange = (
@@ -363,34 +352,43 @@ export default function NewProduct() {
                         {imageUrls.map((url, index) => (
                             <Grid xs={6} sm={4} md={3} key={index}>
                                 <Box
-                                    onMouseOver={() => onMouseOver(index)}
-                                    onMouseOut={() => onMouseOut(index)}
                                     component={'div'}
                                     position={'relative'}
                                     sx={{
                                         aspectRatio: '1/1',
-                                        overflow: 'hidden',
+                                        border: 2,
+                                        borderColor: theme.palette.primary.dark,
                                     }}>
                                     <img
                                         className="w-full h-full object-cover"
                                         src={url}
                                         alt={''}
                                     />
-                                    {show[index] && (
-                                        <IconButton
-                                            onClick={() => {
-                                                const newImages = [...images];
-                                                newImages.splice(index, 1);
-                                                setImages(newImages);
-                                            }}
-                                            sx={{
-                                                position: 'absolute',
-                                                right: '1rem',
-                                                top: '1rem',
-                                            }}>
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    )}
+                                    <IconButton
+                                        size={'small'}
+                                        onClick={() => {
+                                            const newImages = [...images];
+                                            newImages.splice(index, 1);
+                                            setImages(newImages);
+                                        }}
+                                        sx={{
+                                            position: 'absolute',
+                                            right: 0,
+                                            top: 0,
+                                            transform: 'translate(50%, -50%)',
+                                            border: 2,
+                                            BorderColor:
+                                                theme.palette.primary.dark,
+                                            backgroundColor:
+                                                theme.palette.primary.main,
+                                            '&:hover': {
+                                                backgroundColor:
+                                                    theme.palette.primary.dark,
+                                                opacity: 1,
+                                            },
+                                        }}>
+                                        <CloseIcon />
+                                    </IconButton>
                                 </Box>
                             </Grid>
                         ))}
@@ -422,7 +420,6 @@ export default function NewProduct() {
                     variant="contained"
                     size="large"
                     style={{
-                        margin: '20px 0',
                         width: '50%',
                         backgroundColor: 'black',
                         color: 'white',
