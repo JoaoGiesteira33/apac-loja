@@ -172,4 +172,16 @@ router.get(
     }
 );
 
+// GET Max Price
+router.get('/maxPrice', function (req, res, next) {
+    controllerProduct
+        .getMaxPrice()
+        .then((info) => {
+            res.status(200).jsonp(info);
+        })
+        .catch((error) => {
+            res.status(500).jsonp(error);
+        });
+});
+
 module.exports = router;
