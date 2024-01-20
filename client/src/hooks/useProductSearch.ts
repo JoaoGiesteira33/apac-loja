@@ -94,6 +94,8 @@ export default function useProductSearch(query: object, pageNumber: number) {
                 if (axios.isCancel(e)) return;
                 //else setError(true);
             });
+
+        return () => cancel();
     }, [query, pageNumber]);
 
     return { loading, error, MockData, hasMore, products };
