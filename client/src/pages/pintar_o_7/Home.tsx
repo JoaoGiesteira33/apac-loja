@@ -48,6 +48,7 @@ export default function Home() {
                 ]
             );
     }, [featured.products]);
+
     return (
         <Box
             component="div"

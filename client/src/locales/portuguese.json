@@ -30,7 +30,7 @@
         "artist": {
             "pieces": "obras do artista",
             "your-pieces": "As suas obras",
-            "new-piece": "Nova obra",
+            "new-piece": "Nova Obra",
             "new-piece-page": {
                 "paper-basic-info": "Informação da Obra",
                 "paper-details": "Detalhes",
@@ -54,7 +54,8 @@
             "contact": "Fala connosco",
             "type-of-piece": "Tipo de Obra",
             "types": "Tipos",
-            "send": "Enviar"
+            "send": "Enviar",
+            "submit": "Submeter"
         },
         "home": {},
         "forms": {
@@ -81,7 +82,8 @@
             "height": "Altura",
             "depth": "Profundidade",
             "materials": "Materiais",
-            "materials-placeholder": "Adicione lista materiais utilizados (\u2936)"
+            "materials-placeholder": "Adicione lista materiais utilizados (\u2936)",
+            "measure": "Medida"
         },
         "profile": {
             "requests": {

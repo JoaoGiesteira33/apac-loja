@@ -38,6 +38,7 @@
         "react-jwt": "^1.2.0",
         "react-material-ui-carousel": "^3.4.2",
         "react-multi-carousel": "^2.8.4",
+        "react-number-format": "^5.3.1",
         "react-router-dom": "^6.17.0",
         "socket.io-client": "^4.7.2",
         "three": "^0.158.0",
