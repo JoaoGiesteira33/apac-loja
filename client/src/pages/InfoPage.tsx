@@ -37,6 +37,30 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
     borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));
 
+const recursiveObjectToJSX = (obj: string | Array<Object>, level: number) => {
+    if (typeof obj === 'string') {
+        //Return string, applying HTML tags inside it
+        return (
+            <Typography
+                variant="body1"
+                dangerouslySetInnerHTML={{ __html: obj }}
+            />
+        );
+    } else {
+        return obj.map((item) => {
+            let { title, text } = item as any;
+            return (
+                <Box component="div" mb={2} alignItems={'center'}>
+                    <Typography variant="h6" fontWeight="bold" align="center">
+                        {title}
+                    </Typography>
+                    {recursiveObjectToJSX(text, level + 1)}
+                </Box>
+            );
+        });
+    }
+};
+
 const InfoPage: React.FC = (props) => {
     const { t } = useTranslation();
     return (
@@ -65,11 +89,27 @@ const InfoPage: React.FC = (props) => {
                         aria-controls="panel1-content"
                         id="panel1-header">
                         <Typography variant="h5" fontWeight="bold">
-                            {t('info.privacy')}
+                            {t('info.privacy.title')}
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Typography>{t('info.privacy_text')}</Typography>
+                        <Box
+                            component="div"
+                            sx={{
+                                flexGrow: 1,
+                                paddingY: 5,
+                                paddingX: {
+                                    xs: '2rem',
+                                    sm: '4rem',
+                                    md: '6rem',
+                                    lg: '8rem',
+                                },
+                            }}>
+                            {recursiveObjectToJSX(
+                                t('info.privacy.text', { returnObjects: true }),
+                                5
+                            )}
+                        </Box>
                     </AccordionDetails>
                 </Accordion>
                 <Accordion
@@ -78,14 +118,30 @@ const InfoPage: React.FC = (props) => {
                         aria-controls="panel2-content"
                         id="panel2-header">
                         <Typography variant="h5" fontWeight="bold">
-                            {t('info.terms')}
+                            {t('info.terms.title')}
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Typography>{t('info.terms_text')}</Typography>
+                        <Box
+                            component="div"
+                            sx={{
+                                flexGrow: 1,
+                                paddingY: 5,
+                                paddingX: {
+                                    xs: '2rem',
+                                    sm: '4rem',
+                                    md: '6rem',
+                                    lg: '8rem',
+                                },
+                            }}>
+                            {recursiveObjectToJSX(
+                                t('info.terms.text', { returnObjects: true }),
+                                5
+                            )}
+                        </Box>
                     </AccordionDetails>
                 </Accordion>
-                <Accordion>
+                {/* <Accordion>
                     <AccordionSummary
                         aria-controls="panel2-content"
                         id="panel2-header">
@@ -96,7 +152,7 @@ const InfoPage: React.FC = (props) => {
                     <AccordionDetails>
                         <Typography>{t('info.faq_text')}</Typography>
                     </AccordionDetails>
-                </Accordion>
+                </Accordion> */}
             </Box>
         </Box>
     );
