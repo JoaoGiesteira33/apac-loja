@@ -29,6 +29,7 @@ type PieceInfo = {
     dimensions: Dimensions;
     year: number;
     state: string;
+    weight: number;
 };
 
 type BookInfo = {

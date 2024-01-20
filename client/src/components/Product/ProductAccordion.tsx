@@ -5,38 +5,47 @@ import {
     AccordionTitle,
 } from 'flowbite-react';
 import { ProductType } from '../../types/product';
+import { useTranslation } from 'react-i18next';
 
 const ProductAccordion = (data: { product: ProductType }) => {
+    const { t } = useTranslation();
     const product = data.product;
 
     return (
         <Accordion collapseAll className="font-poppins">
             <AccordionPanel>
-                <AccordionTitle>Detalhes da Obra</AccordionTitle>
+                <AccordionTitle>{t('product.product-details')}</AccordionTitle>
                 <AccordionContent>
                     <p className="mb-2 text-gray-500 dark:text-gray-400">
-                        Tecnica: {product.piece_info?.technique}
+                        {t('product.technique')}:{' '}
+                        {product.piece_info?.technique}
                     </p>
                     <p className="mb-2 text-gray-500 dark:text-gray-400">
-                        Dimensões: {product.piece_info?.dimensions.width} x{' '}
+                        {t('product.dimensions')}
+                        {': '}
+                        {product.piece_info?.dimensions.width} x{' '}
                         {product.piece_info?.dimensions.height} x{' '}
                         {product.piece_info?.dimensions.depth}{' '}
                         {product.piece_info?.dimensions.measure}
                     </p>
                     <p className="mb-2 text-gray-500 dark:text-gray-400">
-                        Material: {product.piece_info?.material}
+                        {t('product.weight')}: {product.piece_info?.weight}
+                        {'kg'}
+                    </p>
+                    <p className="mb-2 text-gray-500 dark:text-gray-400">
+                        {t('product.materials')} {product.piece_info?.material}
                     </p>
                 </AccordionContent>
             </AccordionPanel>
             <AccordionPanel>
-                <AccordionTitle>Descrição</AccordionTitle>
+                <AccordionTitle>{t('global.description')}</AccordionTitle>
                 <AccordionContent>
                     <p className="mb-2 text-gray-500 dark:text-gray-400">
                         {product.description}
                     </p>
                 </AccordionContent>
             </AccordionPanel>
-            <AccordionPanel>
+            {/*<AccordionPanel>
                 <AccordionTitle>Entregas e Devoluções</AccordionTitle>
                 <AccordionContent>
                     <p className="mb-2 text-gray-500 dark:text-gray-400">
@@ -74,7 +83,7 @@ const ProductAccordion = (data: { product: ProductType }) => {
                         </li>
                     </ul>
                 </AccordionContent>
-            </AccordionPanel>
+    </AccordionPanel>*/}
         </Accordion>
     );
 };
