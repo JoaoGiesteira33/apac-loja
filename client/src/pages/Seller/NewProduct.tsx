@@ -37,8 +37,6 @@ const availableTypes: string[] = [
     'Arte Têxtil',
 ];
 
-const measureUnits: string[] = ['cm', 'm', 'mm', 'in', 'ft'];
-
 interface CustomProps {
     onChange: (event: { target: { name: string; value: string } }) => void;
     name: string;
@@ -108,14 +106,14 @@ export default function NewProduct() {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [selectedTypes, setSelectedTypes] = useState<string>('');
-    const [technique, setTechnique] = useState('');
-    const [materials, setMaterials] = useState<string>('');
-    const [depth, setDepth] = useState<string>('');
-    const [measureUnit, setMeasureUnit] = useState<string>('');
+    const [materials, setMaterials] = useState<string[]>([]);
+    const [materialsInput, setMaterialsInput] = useState<string>('');
     const [maskedValues, setMaskedValues] = React.useState({
         price: '',
         width: '',
         height: '',
+        depth: '',
+        weight: '',
     });
 
     const [images, setImages] = useState<File[]>([]);
@@ -136,17 +134,30 @@ export default function NewProduct() {
     const handleMaskedValuesChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
-        console.log(event.target.name);
-        console.log(event.target.value);
         setMaskedValues({
             ...maskedValues,
             [event.target.name]: event.target.value,
         });
     };
 
+    const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        console.log(title);
+        console.log(description);
+        console.log(selectedTypes);
+        console.log(materials);
+        console.log(maskedValues);
+
+        setMaterialsInput('');
+    };
+
     return (
         <Box
-            component="div"
+            component="form"
+            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                handleFormSubmit(e);
+            }}
             sx={{
                 paddingY: '2rem',
                 paddingX: {
@@ -257,6 +268,19 @@ export default function NewProduct() {
                         id="materials"
                         options={[]}
                         freeSolo
+                        value={materials}
+                        onChange={(
+                            _: React.SyntheticEvent<Element, Event>,
+                            newValue: string[] | null
+                        ) => {
+                            newValue != null
+                                ? setMaterials(newValue)
+                                : setMaterials([]);
+                        }}
+                        inputValue={materialsInput}
+                        onInputChange={(_, newInputValue) => {
+                            setMaterialsInput(newInputValue);
+                        }}
                         renderTags={(value: readonly string[], getTagProps) =>
                             value.map((option: string, index: number) => (
                                 <Chip
@@ -278,7 +302,7 @@ export default function NewProduct() {
                     <Stack
                         direction={'row'}
                         spacing={2}
-                        sx={{ marginTop: '1rem' }}
+                        sx={{ marginTop: '1rem', marginBottom: '1rem' }}
                         alignItems={'center'}>
                         <TextField
                             fullWidth
@@ -306,31 +330,31 @@ export default function NewProduct() {
                             variant="standard"
                         />
                         <Typography alignSelf={'flex-end'}>X</Typography>
-                        <FormControl
-                            variant="standard"
-                            sx={{
-                                m: 1,
-                                maxWidth: 100,
-                                margin: '0',
+                        <TextField
+                            fullWidth
+                            label={t('product.depth')}
+                            value={maskedValues.depth}
+                            onChange={handleMaskedValuesChange}
+                            name="depth"
+                            id="formatted-depth-input"
+                            InputProps={{
+                                inputComponent: DimensionInput as any,
                             }}
-                            fullWidth>
-                            <InputLabel id="select-type-label">
-                                {t('product.measure')}
-                            </InputLabel>
-                            <Select
-                                labelId="select-type-label"
-                                id="demo-simple-select-standard"
-                                value={measureUnit}
-                                onChange={(e) => setMeasureUnit(e.target.value)}
-                                label={t('product.measure')}>
-                                {measureUnits.map((tp, index) => (
-                                    <MenuItem key={index} value={tp}>
-                                        {tp}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                            variant="standard"
+                        />
                     </Stack>
+                    <TextField
+                        fullWidth
+                        label={t('product.weight')}
+                        value={maskedValues.weight}
+                        onChange={handleMaskedValuesChange}
+                        name="weight"
+                        id="formatted-weight-input"
+                        InputProps={{
+                            inputComponent: DimensionInput as any,
+                        }}
+                        variant="standard"
+                    />
                 </Paper>
                 <Paper
                     sx={{

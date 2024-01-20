@@ -43,5 +43,5 @@ type Dimensions = {
     height: number;
     width: number;
     depth: number;
-    measure: string; //{cm, mm, in, ft ...}
+    weight: number;
 };
