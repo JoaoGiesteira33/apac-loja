@@ -59,3 +59,13 @@ module.exports.getProducts = function (filters, fields, page, limit, expand) {
         return { results: products, hasMore: hasMore };
     });
 };
+
+//      - getMaxPrice
+module.exports.getMaxPrice = function () {
+    return Product.find()
+        .sort({ price: -1 })
+        .limit(1)
+        .then((info) => {
+            return info[0].price;
+        });
+};

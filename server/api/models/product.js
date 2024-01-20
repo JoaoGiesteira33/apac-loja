@@ -5,14 +5,33 @@ const Dimensions = new mongoose.Schema(
         width: Number,
         height: Number,
         depth: Number,
+        weight: Number,
     },
     { _id: false }
 );
 
 const PieceInfo = new mongoose.Schema(
     {
-        technique: String,
-        material: String,
+        technique: {
+            type: String,
+            enum: [
+                'Pintura',
+                'Escultura',
+                'Fotografia',
+                'Desenho',
+                'Colagens',
+                'Impressões e Gravuras',
+                'Arte Digital',
+                'Instalação',
+                'Design',
+                'Arte Têxtil',
+            ],
+            required: true,
+        },
+        materiais: {
+            type: [String],
+            default: [],
+        },
         dimensions: {
             type: Dimensions,
             required: true,
