@@ -77,10 +77,7 @@ module.exports.replaceShipmentInfo = function (id, data) {
 
 //      - updateShipmentInfo
 module.exports.updateShipmentInfo = function (id, data) {
-    console.log(data);
-    let dotData = utils.dotify(data);
-    console.log(dotData);
-    return Shipment.updateOne({ _id: id }, { $set: dotData }).then((info) => {
+    return Shipment.updateOne({ _id: id }, { $set: data }).then((info) => {
         return info;
     });
 };
@@ -93,7 +90,13 @@ module.exports.deleteShipment = function (id) {
 };
 
 //      - getShipments
-module.exports.getShipments = async function (filters, fields, page, limit, expand) {
+module.exports.getShipments = async function (
+    filters,
+    fields,
+    page,
+    limit,
+    expand
+) {
     const [shipments, count] = await Promise.all([
         Shipment.find(filters, fields)
             .sort({ _id: 'asc' })
@@ -164,7 +167,6 @@ module.exports.addPaymentInfo = async function (filter, data) {
         }
     );
 };
-
 
 // ADDITIONAL METHODS:
 
