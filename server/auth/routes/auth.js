@@ -231,23 +231,23 @@ router.get('/admin', isAdmin, function (req, res) {
 });
 
 // UPDATE -> [admin] atualizar password de um utilizador através do email
-router.put('/admin/password', isAdmin, function (req, res) {
-	if (req.body.userEmail && req.body.userPassword) {
-		controllerLogin.updateLoginPassword(req.body.userEmail, req.body.userPassword) // userEmail e userPassword tem de ser passados no body
-			.then(u => {
-				if (u)
-					res.status(200).jsonp({ message: "OK" })
-				else
-					res.status(401).jsonp({ error: "Erro ao processar o pedido" })
-			})
-			.catch(erro => {
-				res.status(401).jsonp({ error: "Erro na alteração do utilizador: " + erro })
-			})
-	}
-	else {
-		res.status(400).jsonp({ error: "Falta de parametros" })
-	}
-});
+// router.put('/admin/password', isAdmin, function (req, res) {
+// 	if (req.body.userEmail && req.body.userPassword) {
+// 		controllerLogin.updateLoginPassword(req.body.userEmail, req.body.userPassword) // userEmail e userPassword tem de ser passados no body
+// 			.then(u => {
+// 				if (u)
+// 					res.status(200).jsonp({ message: "OK" })
+// 				else
+// 					res.status(401).jsonp({ error: "Erro ao processar o pedido" })
+// 			})
+// 			.catch(erro => {
+// 				res.status(401).jsonp({ error: "Erro na alteração do utilizador: " + erro })
+// 			})
+// 	}
+// 	else {
+// 		res.status(400).jsonp({ error: "Falta de parametros" })
+// 	}
+// });
 // UPDATE -> atualizar email de um utilizador através do email
 router.put('/password', isMe, passport.authenticate('local'), function (req, res) { // tem de ter o parametro "username", por causa do isMe, e o parametro password por causa do authenticate
 	if (req.body.newPassword) {
