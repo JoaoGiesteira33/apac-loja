@@ -9,13 +9,12 @@ import { useRef, useEffect } from 'react';
 
 const Footer = (props) => {
     const navigate = useNavigate();
-    const COLOR = 'gray';
     const ICON_MARGIN = 0.5;
     const year = new Date().getFullYear();
 
     function MY_LNK({ link, text }: { link: string; text: string }) {
         return (
-            <Link className="font-poppins" color={COLOR} to={link}>
+            <Link className="font-poppins" to={link}>
                 {text}
             </Link>
         );
@@ -71,9 +70,7 @@ const Footer = (props) => {
                                 href={
                                     'https://www.instagram.com/galeriapintaro7/'
                                 }>
-                                <InstagramIcon
-                                    sx={{ color: COLOR, margin: ICON_MARGIN }}
-                                />
+                                <InstagramIcon sx={{ margin: ICON_MARGIN }} />
                             </a>
 
                             {/*<a
@@ -108,7 +105,9 @@ const Footer = (props) => {
                     alignItems="center">
                     <List>
                         <ListItem disablePadding sx={{ paddingBottom: 2 }}>
-                            <Typography color="gray" className="font-poppins">
+                            <Typography
+                                color="primary"
+                                className="font-poppins">
                                 menu
                             </Typography>
                         </ListItem>
@@ -170,7 +169,7 @@ const Footer = (props) => {
                         target="_blank"
                         href={'https://associacaoportuguesaartesecultura.pt/'}>
                         <Typography
-                            color="gray"
+                            color="primary"
                             sx={{ textDecoration: 'underline' }}>
                             uma iniciativa associação portuguesa das artes e da
                             cultura &copy; {year}

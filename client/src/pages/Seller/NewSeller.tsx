@@ -143,10 +143,9 @@ export default function NewSeller() {
                     type="submit"
                     variant="contained"
                     size="large"
+                    color="secondary"
                     style={{
                         width: '50%',
-                        backgroundColor: 'black',
-                        color: 'white',
                         alignSelf: 'center',
                     }}>
                     {t('global.submit')}

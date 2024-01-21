@@ -92,6 +92,7 @@ export default function Products() {
                 <Typography variant="h3">{t('artist.your-pieces')}</Typography>
                 <Button
                     component={Link}
+                    color="secondary"
                     to="/profile/new-product"
                     sx={{ alignSelf: 'flex-end' }}
                     startIcon={<AddIcon />}

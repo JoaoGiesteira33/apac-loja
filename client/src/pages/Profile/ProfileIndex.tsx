@@ -7,11 +7,12 @@ import PhotoAlbumIcon from '@mui/icons-material/PhotoAlbum';
 import ProfileThumbnail from '../../components/Profile/ProfileThumbnail';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useTranslation } from 'react-i18next';
-
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 
 export default function ProfileIndex(props) {
     const [t] = useTranslation();
+    const theme = useTheme();
+
     return (
         <Box
             component={'div'}

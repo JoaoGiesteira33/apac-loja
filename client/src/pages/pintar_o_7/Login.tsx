@@ -101,7 +101,7 @@ const Login = (props) => {
                 <Typography
                     component="h1"
                     variant="h5"
-                    style={{ margin: '20px 0', color: 'black' }}>
+                    style={{ margin: '20px 0' }}>
                     {t('global.login')}
                 </Typography>
                 <form onSubmit={handleLogin} style={{ width: '100%' }}>
@@ -178,12 +178,11 @@ const Login = (props) => {
                         <Button
                             type="submit"
                             variant="contained"
+                            color="secondary"
                             size="large"
                             style={{
                                 margin: '20px 0',
                                 width: '50%',
-                                backgroundColor: 'black',
-                                color: 'white',
                                 alignSelf: 'center',
                             }}>
                             {t('global.enter')}
@@ -192,7 +191,6 @@ const Login = (props) => {
                             fontStyle="italic"
                             sx={{
                                 textDecoration: 'underline',
-                                color: 'black',
                             }}
                             display="inline">
                             <Link to={'/register'}>
