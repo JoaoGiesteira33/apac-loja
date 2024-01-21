@@ -31,6 +31,9 @@
             }
         },
         "artist": {
+            "new-artist-page": {
+                "details": "Detalhes do Artista"
+            },
             "pieces": "obras do artista",
             "your-pieces": "As suas obras",
             "new-piece": "Nova Obra",
@@ -134,7 +137,9 @@
             "products": "Os meus produtos",
             "products_text": "Gerir os seus produtos",
             "logout": "Sair",
-            "logout_text": "Sair da conta"
+            "logout_text": "Sair da conta",
+            "new-seller": "Novo artista",
+            "new-seller-text": "Criar uma conta de artista nova"
         },
         "info": {
             "title": "políticas, termos & condições",
