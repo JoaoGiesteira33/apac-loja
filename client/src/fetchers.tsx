@@ -5,6 +5,7 @@ const BASE_URL = 'http://localhost';
 export const API_URL_USER = BASE_URL + ':11000/user';
 export const API_URL_PROD = BASE_URL + ':11000/product';
 export const API_URL_MAIL = BASE_URL + ':11000/email';
+export const API_URL_SHIP = BASE_URL + ':11000/shipment';
 export const AUTH_URL = BASE_URL + ':11001';
 //export const BASE_URL = 'http:/192.168.1.68:8000/api';
 
@@ -37,11 +38,10 @@ export const fetchUser = async (id: string, level: string, token: string) => {
             console.log('Error fetching client: ' + err.message);
             throw err.message;
         }
-    } else {
-        // if(level == "artist")
+    } else if (level === "admin" || level === 'seller') {
         try {
-            const response = axios.get(
-                `${API_URL_USER}/artist/${id}?token=${token}`
+            const response = await axios.get(
+                `${API_URL_USER}/seller/${id}?token=${token}`
             );
             return response.data;
         } catch (err) {
@@ -145,6 +145,55 @@ export const getMaxPrice = async () => {
         throw error;
     }
 };
+
+export const getApiUsers = async (token: string, query: object) => {
+    try {
+        const response = await axios.get(`${API_URL_USER}`, {
+            params: {
+                limit: 0,
+                ...query,
+                token: token,
+            },
+        });
+        console.log('API Users:', response.data.results);
+        return response.data.results;
+    } catch (error) {
+        console.error('Error getting users:', error);
+        throw error;
+    }
+};
+
+export const getAuthUsers = async (token: string) => {
+    try {
+        const response = await axios.get(`${AUTH_URL}/notAdmin`, {
+            params: {
+                token: token,
+            },
+        });
+        console.log('Auth Users:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error getting users:', error);
+        throw error;
+    }
+};
+
+export const getShipments = async (token: string) => {
+    try {
+        const response = await axios.get(`${API_URL_SHIP}`, {
+            params: {
+                token: token,
+                limit: 0,
+            },
+        });
+        console.log('Shipments:', response.data.results);
+        return response.data.results;
+    } catch (error) {
+        console.error('Error getting shipments:', error);
+        throw error;
+    }
+}
+
 /*
 export const generateRecoveryCode = async (email) => {
     console.log("Generating recovery code for user with email " + email);

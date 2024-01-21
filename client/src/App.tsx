@@ -2,11 +2,14 @@ import React, { Suspense, useEffect } from 'react';
 
 import Footer from './components/pintar_o_7/Footer';
 import ReactNavbar from './components/pintar_o_7/ReactNavbar';
-//import Navbar from './components/pintar_o_7/Navbar';
 import Chat from './components/experinecia_chat/Chat';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-
-//import { Route, Routes } from 'react-router-dom';
+import {
+    Route,
+    Routes,
+    useLocation,
+    useNavigate,
+    Navigate,
+} from 'react-router-dom';
 import { CanvasModel } from './components/canvasModel';
 import ProfileInfo from './pages/Profile/ProfileInfo';
 import ProfileIndex from './pages/Profile/ProfileIndex';
@@ -19,12 +22,15 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { input } from '@material-tailwind/react';
 import { rootCertificates } from 'tls';
 import ProfileOrderHistory from './pages/Profile/ProfileOrderHistory';
-import { useJwt, isExpired } from 'react-jwt';
+import { isExpired, decodeToken } from 'react-jwt';
 import Requests from './pages/Administrator/Requests';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Products from './pages/Seller/Products';
 import NewProduct from './pages/Seller/NewProduct';
+import PrivateRoutes from './routes/PrivateRoutes';
+import SellerPrivateRoutes from './routes/SellerPrivateRoutes';
+import AdminPrivateRoutes from './routes/AdminPrivateRoutes';
 
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
@@ -44,6 +50,7 @@ const PageNotFound = React.lazy(() => import('./pages/NotFound'));
 const InfoPage = React.lazy(() => import('./pages/InfoPage'));
 const ContactPage = React.lazy(() => import('./pages/Contact'));
 const CartBadge = React.lazy(() => import('./components/CartBadge'));
+const Dashboard = React.lazy(() => import('./pages/Administrator/Dashboard'));
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 const getDesignTokens = (mode: PaletteMode) => ({
@@ -120,6 +127,7 @@ function App() {
     };
 
     const [loggedIn, setLoggedIn] = React.useState<boolean>(false);
+    const [tokenLevel, setTokenLevel] = React.useState(undefined);
 
     const colorMode = React.useMemo(
         () => ({
@@ -138,102 +146,96 @@ function App() {
         {
             path: '/',
             element: <InitialPage loggedIn={loggedIn} />,
-            requireAuth: false,
         },
         {
             path: '/gallery',
             element: <HomePagePintarO7 />,
-            requireAuth: false,
         },
         {
             path: '/artists',
             element: <ArtistsIndexPage />,
-            requireAuth: false,
         },
         {
             path: '/artists/:id',
             element: <ArtistPage />,
-            requireAuth: false,
         },
         {
             path: '/product/:product_id',
             element: <ProductPage loggedIn={loggedIn} />,
-            requireAuth: false,
-        },
-        {
-            path: '/3dmodel',
-            element: <CanvasModel />,
-            requireAuth: false,
         },
         {
             path: '/product',
             element: <ProductPage />,
-            requireAuth: false,
-        },
-        {
-            path: '/profile',
-            element: <ProfileIndex setLoggedIn={setLoggedIn} />,
-            requireAuth: true,
-        },
-        {
-            path: '/profile/info',
-            element: <ProfileInfo />,
-            requireAuth: true,
-        },
-        {
-            path: '/profile/products',
-            element: <Products />,
-            requireAuth: true,
-        },
-        {
-            path: '/profile/new-product',
-            element: <NewProduct />,
-            requireAuth: true,
         },
         {
             path: '/login',
             element: <LoginPage setLoggedIn={setLoggedIn} />,
-            requireAuth: false,
         },
         {
             path: '/register',
             element: <RegisterPage />,
-            requireAuth: false,
-        },
-        {
-            path: '/cart',
-            element: <CartPage />,
-            requireAuth: true,
-        },
-        {
-            path: '/checkout', // TODO -> ver melhor como funcionam as rotas
-            element: <CheackoutPage />,
-            requireAuth: true,
-        },
-        {
-            path: '/profile/order-history',
-            element: <ProfileOrderHistory />,
-            requireAuth: true,
-        },
-        {
-            path: '/requests',
-            element: <Requests />,
-            requireAuth: true,
         },
         {
             path: '/info',
             element: <InfoPage />,
-            requireAuth: false,
         },
         {
             path: '/contact',
             element: <ContactPage />,
-            requireAuth: false,
         },
         {
             path: '*',
             element: <PageNotFound />,
-            requireAuth: false,
+        },
+    ];
+
+    const protectedRoutes = [
+        {
+            path: '/profile',
+            element: (
+                <ProfileIndex setLoggedIn={setLoggedIn} level={tokenLevel} />
+            ),
+        },
+        {
+            path: '/profile/info',
+            element: <ProfileInfo />,
+        },
+        {
+            path: '/cart',
+            element: <CartPage />,
+        },
+        {
+            path: '/checkout', // TODO -> ver melhor como funcionam as rotas
+            element: <CheackoutPage />,
+        },
+        {
+            path: '/profile/order-history',
+            element: <ProfileOrderHistory />,
+        },
+    ];
+
+    const adminRoutes = [
+        {
+            path: '/dashboard',
+            element: <Dashboard />,
+        },
+    ];
+
+    const sellerRoutes = [
+        {
+            path: '/profile/products',
+            element: <Products />,
+            authLevel: 'seller',
+        },
+        {
+            path: '/profile/new-product',
+            element: <NewProduct />,
+            authLevel: 'seller',
+        },
+        {
+            path: '/requests',
+            element: <Requests />,
+            authLevel: 'seller',
         },
     ];
 
@@ -244,13 +246,14 @@ function App() {
 
     useEffect(() => {
         let token = localStorage.getItem('token');
-        console.log(token);
+
         if (token) {
             if (isExpired(token)) {
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
                 localStorage.removeItem('loggedIn');
             } else if (localStorage.getItem('loggedIn')) {
+                setTokenLevel(decodeToken(token).level);
                 setLoggedIn(true);
             }
         }
@@ -311,22 +314,35 @@ function App() {
                                     </Box>
                                 }>
                                 <Routes>
-                                    {/* <Suspense fallback={<Loading />}> *criar este componente depois* */}
                                     {routes.map((route, index) => (
                                         <Route
                                             key={index}
                                             path={route.path}
-                                            element={
-                                                // TO DO -> DESCOMENTAR ISTO ESTÁ FUNCIONAL
-                                                //       route.requireAuth && !loggedIn ? (
-                                                //           <LoginPage
-                                                //               setLoggedIn={setLoggedIn}
-                                                //           />
-                                                //       ) : (
-                                                route.element
-                                                //       )
-                                            }></Route>
+                                            element={route.element}
+                                        />
                                     ))}
+                                    {protectedRoutes.map((route, index) => (
+                                        <Route
+                                            key={index}
+                                            path={route.path}
+                                            element={route.element}
+                                        />
+                                    ))}
+                                    {sellerRoutes.map((route, index) => (
+                                        <Route
+                                            key={index}
+                                            path={route.path}
+                                            element={route.element}
+                                        />
+                                    ))}
+                                    {adminRoutes.map((route, index) => (
+                                        <Route
+                                            key={index}
+                                            path={route.path}
+                                            element={route.element}
+                                        />
+                                    ))}
+
                                 </Routes>
                             </Suspense>
                             {loggedIn && location.pathname !== '/cart' && (
@@ -351,3 +367,49 @@ function App() {
 }
 
 export default App;
+
+
+/*
+
+                                    <Route
+                                        element={
+                                            <PrivateRoutes level={tokenLevel} />
+                                        }>
+                                        {protectedRoutes.map((route, index) => (
+                                            <Route
+                                                key={index}
+                                                path={route.path}
+                                                element={route.element}
+                                            />
+                                        ))}
+                                    </Route>
+                                    <Route
+                                        element={
+                                            <SellerPrivateRoutes
+                                                level={tokenLevel}
+                                            />
+                                        }>
+                                        {sellerRoutes.map((route, index) => (
+                                            <Route
+                                                key={index}
+                                                path={route.path}
+                                                element={route.element}
+                                            />
+                                        ))}
+                                    </Route>
+                                    <Route
+                                        element={
+                                            <AdminPrivateRoutes
+                                                level={tokenLevel}
+                                            />
+                                        }>
+                                        {adminRoutes.map((route, index) => (
+                                            <Route
+                                                key={index}
+                                                path={route.path}
+                                                element={route.element}
+                                            />
+                                        ))}
+                                    </Route>
+
+*/

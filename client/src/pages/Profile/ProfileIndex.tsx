@@ -1,16 +1,21 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HistoryIcon from '@mui/icons-material/History';
 import PhotoAlbumIcon from '@mui/icons-material/PhotoAlbum';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import ProfileThumbnail from '../../components/Profile/ProfileThumbnail';
 import { useTranslation } from 'react-i18next';
 
 import { Box } from '@mui/material';
+import { decodeToken } from 'react-jwt';
 
 export default function ProfileIndex(props) {
     const [t] = useTranslation();
+    const { level } = props;
+
     return (
         <Box
             sx={{
@@ -32,20 +37,39 @@ export default function ProfileIndex(props) {
                         icon={<AccountCircleIcon />}
                     />
                 </Link>
-                <Link className="inline-block" to="/profile/order-history">
-                    <ProfileThumbnail
-                        title={t('profile.order_history')}
-                        description={t('profile.order_history_text')}
-                        icon={<HistoryIcon />}
-                    />
-                </Link>
-                <Link className="inline-block" to="/profile/products">
-                    <ProfileThumbnail
-                        title={t('profile.products')}
-                        description={t('profile.products_text')}
-                        icon={<PhotoAlbumIcon />}
-                    />
-                </Link>
+                {/* CLIENT ONLY THUMBNAILS */}
+                {//level == 'client' && (
+                    <Link className="inline-block" to="/profile/order-history">
+                        <ProfileThumbnail
+                            title={t('profile.order_history')}
+                            description={t('profile.order_history_text')}
+                            icon={<HistoryIcon />}
+                        />
+                    </Link>
+                //)
+                }
+                {/* SELLER ONLY THUMBNAILS */}
+                {//level == 'seller' && (
+                    <Link className="inline-block" to="/profile/products">
+                        <ProfileThumbnail
+                            title={t('profile.products')}
+                            description={t('profile.products_text')}
+                            icon={<PhotoAlbumIcon />}
+                        />
+                    </Link>
+                //)
+                }
+                {/* ADMIN ONLY THUMBNAILS */}
+                {//level == 'admin' && (
+                    <Link className="inline-block" to="/dashboard">
+                        <ProfileThumbnail
+                            title={t('profile.dashboard')}
+                            description={t('profile.dashboard_text')}
+                            icon={<DashboardIcon />}
+                        />
+                    </Link>
+                //)
+                }
                 <Link
                     className="inline-block"
                     to="/login"
