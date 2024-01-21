@@ -1,8 +1,8 @@
 var secrets = require('docker-secret').secrets;
 
-const utils = require('../utils/utils');
 const Orders = require('../controllers/order');
 const Products = require('../controllers/product');
+const Shipments = require('../controllers/shipment');
 const shipment = require('../models/shipment');
 const paypalBaseUrl = secrets.PAYPAL_ENVIRONMENT == "sandbox" 
     ? secrets.PAYPAL_SANDBOX_URL
@@ -233,6 +233,45 @@ module.exports.createEuPagoCreditCardOrder = async function(data) {
     }
 }
 
+module.exports.receiveEuPagoWebhook = async function(data) {
+    try {
+        const shipmentsArray = await Shipments.getShipments(
+            {"payments.transactionId": data.transactionId}, 
+            {}, 0, 0, '');
+        console.log("Shipments=", shipmentsArray);
+        for (const shipment of shipmentsArray.results) {
+            console.log("ShipmentId=", shipment._id);
+            const len = shipment.states.length - 1;
+            const oldState = shipment.states[len];
+            if (oldState.value != 'unpaid' && oldState.value != 'reserved') {
+                return {
+                    httpStatusCode: 500,
+                    jsonResponse: {
+                        errorMessage: "Could not process webhook"
+                    },
+                };
+            }
+            const updatedState = oldState.value == 'unpaid' ? 'pending' : 'paid';
+    
+            await Shipments.updateShipmentState({ '_id': shipment._id }, updatedState);
+        }
+        return {
+            httpStatusCode: 200,
+            jsonResponse: {
+                message: "Processed EuPago webhook successfully!",
+                transactionId: data.transactionId,
+            },
+        };
+    } catch {
+        return {
+            httpStatusCode: 500,
+            jsonResponse: {
+                errorMessage: "Could not process webhook"
+            },
+        };
+    }
+}
+
 // Utils
 
 async function handlePaypalResponse(response, data) {
@@ -241,17 +280,31 @@ async function handlePaypalResponse(response, data) {
         var status = response.status;
         if (200 <= status <= 299) {
             try {
-                await Orders.createOrderWithShipments({
-                    shipments: data.shipments.map(shipment => ({
-                        ...shipment,
-                        "states": [{}],
-                    })),
-                    payment: {
-                        transactionId: jsonResponse.id,
-                        method: 'paypal'
-                    },
-                    "_client": data._client
-                })
+                if (data.reservation) {
+                    await Orders.createOrderWithShipments({
+                        shipments: data.shipments.map(shipment => ({
+                            ...shipment,
+                            "states": [{}],
+                            payments: [
+                                {
+                                    transactionId: jsonResponse.id,
+                                    method: "paypal"
+                                }
+                            ]
+                        })),
+                        "_client": data._client
+                    });
+                } else {
+                    for(const element of data.cart) {
+                        await Shipments.addPaymentInfo(
+                            { _product: element._product }, 
+                            { 
+                                transactionId: jsonResponse.id, 
+                                method: 'paypal'
+                            }
+                        );
+                    }
+                }
             } catch (error) {
                 status = 500;
                 jsonResponse = { "error": "Could not create Paypal order" };
@@ -275,17 +328,33 @@ async function handleEuPagoResponse(response, data) {
             : 401
         if (status == 200) {
             try {
-                await Orders.createOrderWithShipments({
-                    shipments: data.shipments.map(shipment => ({
-                        ...shipment,
-                        "states": [{}],
-                    })),
-                    payment: {
-                        transactionId: jsonResponse.transactionId,
-                        method: 'eupago'
-                    },
-                    "_client": data._client
-                })
+                if (data.reservation) {
+                    await Orders.createOrderWithShipments({
+                        shipments: data.shipments.map(shipment => ({
+                            ...shipment,
+                            "states": [{}],
+                            payments: [
+                                {
+                                    transactionId: jsonResponse.transactionID,
+                                    method: "eupago",
+                                    reference: jsonResponse.reference
+                                }
+                            ]
+                        })),
+                        "_client": data._client
+                    });
+                } else {
+                    for(const element of data.cart) {
+                        await Shipments.addPaymentInfo(
+                            { _product: element._product },
+                            {
+                                transactionId: jsonResponse.transactionID,
+                                method: 'eupago',
+                                reference: jsonResponse.reference
+                            }
+                        );
+                    }
+                }
             } catch (error) {
                 status = 500;
                 jsonResponse = { "error": "Could not create EuPago order" };
@@ -329,10 +398,3 @@ async function handleEuPagoResponse(response, data) {
 //        console.log("Failed to generate Access Token:", error);
 //    }
 //}
-
-// host static files
-// TODO for reference app.use(express.static("client"));
-// serve index.html
-//app.get("/", (req, res) => {
-//    res.sendFile(path.resolve("./client/checkout.html"));
-//});
