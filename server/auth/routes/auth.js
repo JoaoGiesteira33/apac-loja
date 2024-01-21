@@ -125,7 +125,7 @@ router.post('/registo', function (req, res) {
 				axios.post(API_URL_USER + '/client', data)
 					.then(resp1 => {
 						if (resp1 && resp1.status && resp1.status == 200){
-							res.status(200).jsonp({ message: "OK" })
+							res.status(201).jsonp({ message: "OK" })
 						}
 						else {
 							//apagar do login !!!
@@ -527,7 +527,7 @@ router.post('/esqueci', async function (req, res) {
 
 });
 // POST -> alterar a password de um utilizador após verificar o código fornecido
-router.post('/esqueci-verificar', passport.authenticate('local'), function (req, res) {
+router.post('/esqueci-verificar', function (req, res) {
 	controllerLogin.verifyRecoveryCode(req.body.email, req.body.code)// email e code tem de ser passados no body
 		.then(b => {
 			if (b) {
