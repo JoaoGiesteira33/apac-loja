@@ -22,8 +22,6 @@ services:
             - PAYPAL_ENVIRONMENT
             - PAYPAL_SANDBOX_URL
             - PAYPAL_LIVE_URL
-            - EUPAGO_CLIENT_ID
-            - EUPAGO_CLIENT_SECRET
             - EUPAGO_API_KEY
             - EUPAGO_USERNAME
             - EUPAGO_PASSWORD
@@ -88,10 +86,6 @@ secrets:
         file: ./env/PAYPAL_SANDBOX_URL.txt
     PAYPAL_LIVE_URL:
         file: ./env/PAYPAL_LIVE_URL.txt
-    EUPAGO_CLIENT_ID:
-        file: ./env/EUPAGO_CLIENT_ID.txt
-    EUPAGO_CLIENT_SECRET:
-        file: ./env/EUPAGO_CLIENT_SECRET.txt
     EUPAGO_API_KEY:
         file: ./env/EUPAGO_API_KEY.txt
     EUPAGO_USERNAME:

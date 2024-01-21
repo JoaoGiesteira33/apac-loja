@@ -3,7 +3,6 @@ var secrets = require('docker-secret').secrets;
 const Orders = require('../controllers/order');
 const Products = require('../controllers/product');
 const Shipments = require('../controllers/shipment');
-const shipment = require('../models/shipment');
 const paypalBaseUrl = secrets.PAYPAL_ENVIRONMENT == "sandbox" 
     ? secrets.PAYPAL_SANDBOX_URL
     : secrets.PAYPAL_LIVE_URL;
