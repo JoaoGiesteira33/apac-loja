@@ -1,6 +1,7 @@
 import {
     Alert,
     Box,
+    Button,
     Paper,
     Tab,
     Tabs,
@@ -52,13 +53,9 @@ const CheckoutStep4 = () => {
     const [phone, setPhone] = useState('');
     const [valuePhone, setValuePhone] = React.useState('+351');
 
-    const handleChangePhone = (
-        newValue: string
-    ) => {
+    const handleChangePhone = (newValue: string) => {
         setValuePhone(newValue);
     };
-
-    console.log(valuePhone);
 
     const [showPhoneAlert, setShowPhoneAlert] = useState(false);
 
@@ -69,32 +66,20 @@ const CheckoutStep4 = () => {
         <Box
             component="div"
             style={{
-                paddingLeft: '10%',
-                paddingRight: '10%',
                 paddingBottom: 10,
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'left',
+                alignItems: 'center',
+                justifyContent: 'center',
                 background: 'white',
                 color: 'black',
             }}>
-            <Paper
-                elevation={0}
-                style={{
-                    paddingLeft: '10%',
-                    paddingRight: '10%',
-                    paddingBottom: 10,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'left',
-                    background: 'white',
-                    color: 'black',
-                }}>
+            <Paper elevation={0}>
                 <Typography
                     component="h1"
                     variant="h5"
                     style={{ margin: '20px 0', color: 'black' }}>
-                    Método de pagamento
+                    {t('checkout.payment.title')}
                 </Typography>
                 <Box component="div" sx={{ width: '100%' }}>
                     <Box component="div">
@@ -120,10 +105,28 @@ const CheckoutStep4 = () => {
                         <PayPalComponent />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
-                        <MuiTelInput value={valuePhone} onChange={handleChangePhone} variant='standard'/>
+                        <Box
+                            component="div"
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '1rem',
+                            }}>
+                            <MuiTelInput
+                                value={valuePhone}
+                                onChange={handleChangePhone}
+                                variant="standard"
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                sx={{ marginX: '15%' }}>
+                                {t('checkout.payment.pay')}
+                            </Button>
+                        </Box>
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={2}>
-                        < MultibancoComponent />
+                        <MultibancoComponent />
                     </CustomTabPanel>
                 </Box>
             </Paper>

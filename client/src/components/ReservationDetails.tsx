@@ -2,10 +2,7 @@ import {
     Box,
     Button,
     Divider,
-    MenuItem,
     Paper,
-    Select,
-    SelectChangeEvent,
     Table,
     TableBody,
     TableCell,
@@ -24,8 +21,10 @@ import { useTranslation } from 'react-i18next';
 import { ProductType } from '../types/product';
 import { ReserveModal } from './ReserveModal';
 
-const CartDetails = () => {
+export const ReservationDetails = () => {
     const { t } = useTranslation();
+
+    // TODO: useReservationCart() hook
     const { dispatch, totalItems, subTotalPrice, cart, REDUCER_ACTIONS } =
         useCart();
     const products = cart;
@@ -36,12 +35,6 @@ const CartDetails = () => {
     const [tax, setTax] = useState(0.23);
 
     const total = subtotal + tax * subtotal + shippingCost;
-
-    const handleCheckout = () => {
-        // TODO handle checkout
-        navigate('/checkout');
-        //dispatch({ type: REDUCER_ACTIONS.SUBMIT });
-    };
 
     const handleClearCart = () => {
         dispatch({ type: REDUCER_ACTIONS.CLEAR });
@@ -63,7 +56,7 @@ const CartDetails = () => {
                 <Grid xs={12} sm={12} md={8}>
                     <Box component="div" className="flex justify-between my-4">
                         <Typography variant="h5" className="font-poppins">
-                            {t('cart.cart')}
+                            {t('cart.reservation.cart')}
                         </Typography>
                         <Typography variant="h5" className="font-poppins">
                             {totalItems} {t('cart.items')}
@@ -210,24 +203,17 @@ const CartDetails = () => {
                             className="font-poppins"
                             fontWeight={700}
                             sx={{ marginBottom: '2rem' }}>
-                            {t('cart.total')}:{' '}
+                            {t('cart.reservation.reservation')}:{' '}
                             {new Intl.NumberFormat('pt-PT', {
                                 style: 'currency',
                                 currency: 'EUR',
-                            }).format(total)}
+                            }).format(total*0.25)}
                         </Typography>
-
-                        <Button
-                            variant="contained"
-                            className="w-full mb-4"
-                            onClick={handleCheckout}>
-                            {t('cart.checkout')}
-                        </Button>
+                        
+                        <ReserveModal />
                     </Box>
                 </Grid>
             </Grid>
         </Box>
     );
-};
-
-export default CartDetails;
+}

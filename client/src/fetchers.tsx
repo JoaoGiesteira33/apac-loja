@@ -1,4 +1,7 @@
-import axios from 'axios';
+import axios, { Axios, AxiosError, AxiosResponse } from 'axios';
+import { ProductType } from './types/product';
+import { NestedPartial } from './types/nestedPartial';
+import { Result, err, ok } from './types/result';
 //import mime from 'mime';
 
 const BASE_URL = 'http://localhost';
@@ -143,6 +146,27 @@ export const getMaxPrice = async () => {
     } catch (error) {
         console.error('Error getting max price:', error);
         throw error;
+    }
+};
+
+export const addProduct = async (
+    product: NestedPartial<ProductType>
+): Promise<Result<string, Error>> => {
+    console.log('Adding product');
+
+    if (product.price == null) product.price = 0;
+
+    try {
+        const response = await axios.post(`${BASE_URL}/products`, product);
+        return ok(response.data);
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log('error message: ', error.message);
+            return err(error);
+        } else {
+            console.log('unexpected error: ', error);
+            return err(new Error('Unexpected error'));
+        }
     }
 };
 /*
@@ -359,21 +383,6 @@ export const fetchProduct = async (id) => {
     }
     catch (err) {
         console.log("Error fetching product: " + err.message);
-    }
-}
-
-export const addProduct = async (product) => {
-    console.log("Adding product");
-
-    if(product.price === "")
-        product.price = 0;
-
-    try {
-        const response = await axios.post(`${BASE_URL}/products`, product);
-        return response.data;
-    }
-    catch (err) {
-        console.log("Error adding product: " + err.message);
     }
 }
 
