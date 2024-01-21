@@ -41,7 +41,10 @@
                 "paper-basic-info": "Informação da Obra",
                 "paper-details": "Detalhes",
                 "paper-photos": "Fotos",
-                "add-photos": "Adicionar fotos"
+                "add-thumbnail": "Adicionar foto principal",
+                "choose-thumbnail": "Escolha uma foto de capa",
+                "add-photos": "Adicionar fotos opcionais",
+                "choose-photos": "Adicione mais fotos (opcional)"
             },
             "no-pieces": "Este artista ainda não tem obras disponíveis"
         },
@@ -78,7 +81,6 @@
                 "postal-code-error": "Código postal inválido",
                 "shipping-cost": "Valor do envio da entrega",
                 "shipping-info": "Todas as obras são transportadas com seguro de envio."
-                
             },
             "review": {
                 "title": "Resumo da encomenda",

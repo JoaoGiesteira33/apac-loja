@@ -101,6 +101,8 @@ const DimensionInput = React.forwardRef<NumericFormatProps, CustomProps>(
     }
 );
 
+const MAX_IMAGES = 12;
+
 export default function NewProduct() {
     const { t } = useTranslation();
     const theme = useTheme();
@@ -120,17 +122,27 @@ export default function NewProduct() {
     });
 
     const [images, setImages] = useState<File[]>([]);
+
     const imageUrls = images.map((file) => URL.createObjectURL(file));
 
-    function onImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const onAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         const fileList = e.target.files;
         if (fileList) {
-            const files = [...fileList, ...images];
+            let files = [...images, ...fileList];
+            if (files.length > MAX_IMAGES) {
+                files = files.slice(0, MAX_IMAGES);
+            }
             setImages(files);
         }
-    }
+    };
 
-    const addNewImage = () => {
+    const onDeleteImage = (index: number) => {
+        const newImages = [...images];
+        newImages.splice(index, 1);
+        setImages(newImages);
+    };
+
+    const addNewImageButtonClick = () => {
         inputRef.current.click();
     };
 
@@ -391,9 +403,38 @@ export default function NewProduct() {
                         type="file"
                         multiple
                         accept="image/*"
-                        onChange={onImageChange}
+                        onChange={onAddImage}
                     />
                     <Grid container marginTop={2} spacing={4}>
+                        {imageUrls.length === 0 && (
+                            <Grid xs={6} sm={4} md={3}>
+                                <Box
+                                    component={'div'}
+                                    display={'flex'}
+                                    alignItems={'center'}
+                                    justifyContent={'center'}
+                                    flexDirection={'column'}
+                                    sx={{
+                                        aspectRatio: '1/1',
+                                    }}>
+                                    <Tooltip
+                                        title={t(
+                                            'artist.new-piece-page.add-thumbnail'
+                                        )}>
+                                        <IconButton
+                                            sx={{ border: 2 }}
+                                            onClick={addNewImageButtonClick}>
+                                            <AddIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Typography textAlign={'center'}>
+                                        {t(
+                                            'artist.new-piece-page.add-thumbnail'
+                                        )}
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                        )}
                         {imageUrls.map((url, index) => (
                             <Grid xs={6} sm={4} md={3} key={index}>
                                 <Box
@@ -412,9 +453,7 @@ export default function NewProduct() {
                                     <IconButton
                                         size={'small'}
                                         onClick={() => {
-                                            const newImages = [...images];
-                                            newImages.splice(index, 1);
-                                            setImages(newImages);
+                                            onDeleteImage(index);
                                         }}
                                         sx={{
                                             position: 'absolute',
@@ -437,27 +476,38 @@ export default function NewProduct() {
                                 </Box>
                             </Grid>
                         ))}
-                        <Grid xs={6} sm={4} md={3}>
-                            <Box
-                                component={'div'}
-                                display={'flex'}
-                                alignItems={'center'}
-                                justifyContent={'center'}
-                                sx={{
-                                    aspectRatio: '1/1',
-                                }}>
-                                <Tooltip
-                                    title={t(
-                                        'artist.new-piece-page.add-photos'
-                                    )}>
-                                    <IconButton
-                                        sx={{ border: 2 }}
-                                        onClick={addNewImage}>
-                                        <AddIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </Box>
-                        </Grid>
+                        {imageUrls.length < MAX_IMAGES &&
+                            imageUrls.length > 0 && (
+                                <Grid xs={6} sm={4} md={3}>
+                                    <Box
+                                        component={'div'}
+                                        display={'flex'}
+                                        alignItems={'center'}
+                                        justifyContent={'center'}
+                                        flexDirection={'column'}
+                                        sx={{
+                                            aspectRatio: '1/1',
+                                        }}>
+                                        <Tooltip
+                                            title={t(
+                                                'artist.new-piece-page.add-photos'
+                                            )}>
+                                            <IconButton
+                                                sx={{ border: 2 }}
+                                                onClick={
+                                                    addNewImageButtonClick
+                                                }>
+                                                <AddIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Typography textAlign={'center'}>
+                                            {t(
+                                                'artist.new-piece-page.choose-photos'
+                                            )}
+                                        </Typography>
+                                    </Box>
+                                </Grid>
+                            )}
                     </Grid>
                 </Paper>
                 <Button
