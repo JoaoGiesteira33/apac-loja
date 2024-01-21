@@ -37,8 +37,7 @@ const MultibancoComponent = () => {
                     component="h3"
                     variant="h5"
                     sx={{ marginY: '1rem', marginLeft: '1rem' }}>
-                    <InfoOutlined />{' '}
-                    {t('checkout.payment.credit-card')}
+                    <InfoOutlined /> {t('checkout.payment.credit-card')}
                 </Typography>
                 <Divider variant="middle" />
                 <CardContent
@@ -48,7 +47,9 @@ const MultibancoComponent = () => {
                         gap: 2,
                     }}>
                     <FormControl sx={{ gridColumn: '1/-1' }}>
-                        <FormLabel>{t('checkout.payment.card-number')}</FormLabel>
+                        <FormLabel>
+                            {t('checkout.payment.card-number')}
+                        </FormLabel>
                         <TextField
                             placeholder="0000 0000 0000 0000"
                             variant="standard"
@@ -66,7 +67,9 @@ const MultibancoComponent = () => {
                         />
                     </FormControl>
                     <FormControl>
-                        <FormLabel>{t('checkout.payment.card-expiration')}</FormLabel>
+                        <FormLabel>
+                            {t('checkout.payment.card-expiration')}
+                        </FormLabel>
                         <TextField
                             placeholder="MM/YYYY"
                             variant="standard"
@@ -88,7 +91,9 @@ const MultibancoComponent = () => {
                         />
                     </FormControl>
                     <FormControl sx={{ gridColumn: '1/-1' }}>
-                        <FormLabel>{t('checkout.payment.card-holder')}</FormLabel>
+                        <FormLabel>
+                            {t('checkout.payment.card-holder')}
+                        </FormLabel>
                         <TextField
                             placeholder={t('checkout.payment.full-name')}
                             variant="standard"
@@ -100,7 +105,10 @@ const MultibancoComponent = () => {
                     </FormControl>
 
                     <CardActions sx={{ gridColumn: '1/-1' }}>
-                        <Button variant="contained" color="primary">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{ width: '100%', marginX: '15%' }}>
                             {t('checkout.payment.pay')}
                         </Button>
                     </CardActions>

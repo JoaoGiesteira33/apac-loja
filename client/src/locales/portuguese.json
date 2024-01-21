@@ -43,6 +43,7 @@
             "no-pieces": "Este artista ainda não tem obras disponíveis"
         },
         "cart": {
+            "continue-shopping": "Continuar a comprar",
             "cart": "Carrinho de compras",
             "product": "Produto",
             "price": "Preço",
@@ -53,7 +54,17 @@
             "tax": "Taxa",
             "checkout": "Checkout",
             "empty": "O seu carrinho está vazio",
-            "reservation": "Reservar produto(s)"
+            "reservation-button": "Reservar produto(s)",
+            "reservation": {
+                "title": "Reservar",
+                "text": "Para reservar o(s) produto(s), é necessário pagar 25% do valor total. Depois de reservar, o artista terá que confirmar a reserva para poder pagar o restante do valor.",
+                "cancel-button": "Cancelar",
+                "info": "O valor da reserva será devolvido na totalidade caso o artista não confirme a reserva.",
+                "info2": "O valor do transporte não está incluído nesta parte.",
+                "cart": "Carrinho de reservas",
+                "reservation": "Reserva"
+
+            }
         },
         "checkout": {
             "stepper": {

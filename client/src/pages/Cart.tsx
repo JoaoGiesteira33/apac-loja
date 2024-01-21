@@ -2,8 +2,11 @@ import { Box, Link } from '@mui/material';
 import CartDetails from '../components/CartDetails';
 import { useNavigate } from 'react-router-dom';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import { useTranslation } from 'react-i18next';
+import { ReservationDetails } from '../components/ReservationDetails';
 
 const Cart = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     return (
@@ -18,7 +21,9 @@ const Cart = () => {
                 },
                 paddingY: '3rem',
             }}>
-            <CartDetails />
+
+            <ReservationDetails />
+            
 
             <Link
                 component="button"
@@ -28,8 +33,10 @@ const Cart = () => {
                 }}
                 sx={{ marginY: '1rem' }}>
                 <KeyboardBackspaceIcon sx={{ fontSize: 20 }} />
-                Continue shopping
+                {t('cart.continue-shopping')}
             </Link>
+
+            <CartDetails />
         </Box>
     );
 };
