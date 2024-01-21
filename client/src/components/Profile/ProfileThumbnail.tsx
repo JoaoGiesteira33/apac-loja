@@ -1,3 +1,4 @@
+import { Paper, useTheme } from '@mui/material';
 import Box from '@mui/system/Box';
 
 export default function ProfileThumbnail(props: {
@@ -5,11 +6,12 @@ export default function ProfileThumbnail(props: {
     description: string;
     icon: JSX.Element;
 }) {
+    const theme = useTheme();
+
     return (
-        <Box
-            color={'secondary'}
+        <Paper
             component="div"
-            className="mx-auto mb-10 rounded-xl shadow-md overflow-hidden max-w-xs md:max-w-md">
+            className="mx-auto mb-10 overflow-hidden max-w-xs md:max-w-md">
             <Box component="div" className="flex">
                 <Box
                     component="div"
@@ -23,6 +25,6 @@ export default function ProfileThumbnail(props: {
                     <p className="mt-2">{props.description}</p>
                 </Box>
             </Box>
-        </Box>
+        </Paper>
     );
 }

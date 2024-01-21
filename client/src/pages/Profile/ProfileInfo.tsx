@@ -340,10 +340,15 @@ export default function ProfileInfo() {
                 </Paper>
                 {profileChanged && (
                     <Button
-                        fullWidth
                         type="submit"
+                        color="secondary"
                         startIcon={<SaveSharpIcon />}
-                        variant="contained">
+                        variant="contained"
+                        size="large"
+                        style={{
+                            width: '50%',
+                            alignSelf: 'center',
+                        }}>
                         {t('forms.save')}
                     </Button>
                 )}

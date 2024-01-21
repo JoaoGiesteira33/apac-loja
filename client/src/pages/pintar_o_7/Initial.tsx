@@ -21,7 +21,8 @@ export default function Initial(props) {
     const protectedPagesLinks = ['/login', '/profile'];
 
     const Item = styled(Paper)(({ theme }) => ({
-        padding: theme.spacing(3),
+        paddingTop: theme.spacing(3),
+        paddingBottom: theme.spacing(3),
         textAlign: 'center',
         fontSize: 'clamp(1rem, 3.3vw, 1.3rem)',
         backgroundColor: 'transparent',
@@ -105,7 +106,6 @@ export default function Initial(props) {
                     bottom: 0,
                     paddingBottom: 10,
                     display: displayConfig[0],
-                    backgroundColor: 'white',
                 }}>
                 <Grid item xs={12}>
                     <Divider />
@@ -144,7 +144,6 @@ export default function Initial(props) {
                     bottom: 0,
                     paddingBottom: 10,
                     display: displayConfig[1],
-                    backgroundColor: 'white',
                 }}>
                 <Grid item xs={12}>
                     <Divider variant="middle" />
@@ -180,7 +179,6 @@ export default function Initial(props) {
                     position: 'absolute',
                     bottom: 0,
                     display: displayConfig[2],
-                    backgroundColor: 'white',
                 }}>
                 <Grid item xs={12}>
                     <Divider variant="middle" />

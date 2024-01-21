@@ -1,8 +1,10 @@
 import { Box, Divider, Paper, Stack, Typography } from '@mui/material';
 import React from 'react';
 import useCart from '../hooks/useCart';
+import { useTranslation } from 'react-i18next';
 
 export const CheckoutStep3 = () => {
+    const { t } = useTranslation();
     const { subTotalPrice, cart } = useCart();
 
     return (
@@ -47,25 +49,24 @@ export const CheckoutStep3 = () => {
                             <Typography
                                 component="h3"
                                 variant="h6"
-                                color="black"
-                                >
+                                color="black">
                                 Item
                             </Typography>
                             <Typography
                                 component="h3"
                                 variant="h6"
                                 color="black">
-                                Valor
+                                {t('checkout.review.value')}
                             </Typography>
                         </Box>
                         <Divider />
                         {cart.map((item) => (
                             <Box
-                            component="div"
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                            }}>
+                                component="div"
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                }}>
                                 <Typography
                                     component="p"
                                     variant="body1"
@@ -86,11 +87,11 @@ export const CheckoutStep3 = () => {
                         ))}
                         <Divider />
                         <Box
-                        component="div"
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                        }}>
+                            component="div"
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                            }}>
                             <Typography
                                 component="h3"
                                 variant="h6"
@@ -106,16 +107,16 @@ export const CheckoutStep3 = () => {
                         </Box>
                         <Divider />
                         <Box
-                        component="div"
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                        }}>
+                            component="div"
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                            }}>
                             <Typography
                                 component="h3"
                                 variant="h6"
                                 color="black">
-                                Envio
+                                {t('checkout.review.shipping')}
                             </Typography>
                             <Typography
                                 component="h3"
@@ -130,21 +131,15 @@ export const CheckoutStep3 = () => {
                         <Divider />
                     </Stack>
                     <Box
-                    component="div"
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                    }}>
-                        <Typography
-                            component="h3"
-                            variant="h5"
-                            color="black">
+                        component="div"
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}>
+                        <Typography component="h3" variant="h5" color="black">
                             Total
                         </Typography>
-                        <Typography
-                            component="h3"
-                            variant="h6"
-                            color="black">
+                        <Typography component="h3" variant="h6" color="black">
                             {new Intl.NumberFormat('pt-PT', {
                                 style: 'currency',
                                 currency: 'EUR',
@@ -154,7 +149,7 @@ export const CheckoutStep3 = () => {
                     <Typography
                         component="p"
                         variant="caption"
-                        color="gray"
+                        color="primary"
                         className="font-poppins">
                         *IVA incluíodo
                     </Typography>

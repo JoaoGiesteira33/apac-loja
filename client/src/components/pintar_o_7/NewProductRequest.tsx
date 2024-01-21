@@ -97,6 +97,7 @@ export default function NewProductRequest(props: { product: ProductType }) {
                             <ButtonGroup
                                 orientation="horizontal"
                                 variant="contained"
+                                color="secondary"
                                 disableElevation
                                 aria-label="horizontal contained button group">
                                 <IconButton>
@@ -111,6 +112,7 @@ export default function NewProductRequest(props: { product: ProductType }) {
                                 orientation="horizontal"
                                 variant="contained"
                                 disableElevation
+                                color="secondary"
                                 aria-label="horizontal contained button group">
                                 <Button startIcon={<CheckIcon />}>
                                     Accept

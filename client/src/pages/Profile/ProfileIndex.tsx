@@ -7,17 +7,18 @@ import HistoryIcon from '@mui/icons-material/History';
 import PhotoAlbumIcon from '@mui/icons-material/PhotoAlbum';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ProfileThumbnail from '../../components/Profile/ProfileThumbnail';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useTranslation } from 'react-i18next';
-
-import { Box } from '@mui/material';
-import { decodeToken } from 'react-jwt';
+import { Box, useTheme } from '@mui/material';
 
 export default function ProfileIndex(props) {
     const [t] = useTranslation();
+    const theme = useTheme();
     const { level } = props;
 
     return (
         <Box
+            component={'div'}
             sx={{
                 paddingX: {
                     xs: '2rem',
@@ -57,6 +58,16 @@ export default function ProfileIndex(props) {
                             icon={<PhotoAlbumIcon />}
                         />
                     </Link>
+                //)
+                }
+                {//level == 'seller' && (
+                <Link className="inline-block" to="/artists/add">
+                    <ProfileThumbnail
+                        title={t('profile.new-seller')}
+                        description={t('profile.new-seller-text')}
+                        icon={<PersonAddIcon />}
+                    />
+                </Link>
                 //)
                 }
                 {/* ADMIN ONLY THUMBNAILS */}

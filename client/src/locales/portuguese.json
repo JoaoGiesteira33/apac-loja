@@ -31,6 +31,9 @@
             }
         },
         "artist": {
+            "new-artist-page": {
+                "details": "Detalhes do Artista"
+            },
             "pieces": "obras do artista",
             "your-pieces": "As suas obras",
             "new-piece": "Nova Obra",
@@ -38,11 +41,15 @@
                 "paper-basic-info": "Informação da Obra",
                 "paper-details": "Detalhes",
                 "paper-photos": "Fotos",
-                "add-photos": "Adicionar fotos"
+                "add-thumbnail": "Adicionar foto principal",
+                "choose-thumbnail": "Escolha uma foto de capa",
+                "add-photos": "Adicionar fotos opcionais",
+                "choose-photos": "Adicione mais fotos (opcional)"
             },
             "no-pieces": "Este artista ainda não tem obras disponíveis"
         },
         "cart": {
+            "continue-shopping": "Continuar a comprar",
             "cart": "Carrinho de compras",
             "product": "Produto",
             "price": "Preço",
@@ -53,9 +60,62 @@
             "tax": "Taxa",
             "checkout": "Checkout",
             "empty": "O seu carrinho está vazio",
-            "reservation": "Reservar produto(s)"
+            "reservation-button": "Reservar produto(s)",
+            "reservation": {
+                "title": "Reservar",
+                "text": "Para reservar o(s) produto(s), é necessário pagar 25% do valor total. Depois de reservar, o artista terá que confirmar a reserva para poder pagar o restante do valor.",
+                "cancel-button": "Cancelar",
+                "info": "O valor da reserva será devolvido na totalidade caso o artista não confirme a reserva.",
+                "info2": "O valor do transporte não está incluído nesta parte.",
+                "cart": "Carrinho de reservas",
+                "reservation": "Reserva"
+
+            }
         },
-        "checkout": {},
+        "checkout": {
+            "stepper": {
+                "shipping": "Entrega",
+                "payment": "Pagamento",
+                "review": "Resumo",
+                "next-button": "Próximo",
+                "prev-button": "Anterior"
+            },
+            "shipping": {
+                "title": "Dados de entrega",
+                "country": "País",
+                "city": "Cidade",
+                "city-error": "Cidade inválida",
+                "address": "Morada",
+                "address-error": "Morada inválida",
+                "address2": "Apartamento, bloco, lote, prédio, andar, etc.",
+                "postal-code": "Código postal",
+                "postal-code-error": "Código postal inválido",
+                "shipping-cost": "Valor do envio da entrega",
+                "shipping-info": "Todas as obras são transportadas com seguro de envio."
+            },
+            "review": {
+                "title": "Resumo da encomenda",
+                "value": "Valor",
+                "shipping": "Envio"
+            },
+            "payment": {
+                "title": "Método de pagamento",
+                "paypal": "Paypal",
+                "mbway": "MBWay",
+                "credit-card": "Cartão de Crédito",
+                "multibanco": "Multibanco",
+                "card-number": "Número do cartão",
+                "card-number-error": "Número do cartão inválido",
+                "card-holder": "Nome do titular",
+                "card-holder-error": "Nome do titular inválido",
+                "full-name": "Nome completo",
+                "card-expiration": "Data de validade",
+                "card-expiration-error": "Data de validade inválida",
+                "card-cvc": "CVC",
+                "card-cvc-error": "CVC inválido",
+                "pay": "Pagar"
+            }
+        },
         "global": {
             "mandatory": "* Campos obrigatórios",
             "load-more": "Carregar mais",
@@ -98,9 +158,10 @@
             "measure": "Medida",
             "photos": "Fotos",
             "year": "Ano",
-            "width": "Largura",
-            "height": "Altura",
-            "depth": "Profundidade",
+            "width": "Largura (m)",
+            "height": "Altura (m)",
+            "depth": "Profundidade (m)",
+            "weight": "Peso (kg)",
             "materials": "Materiais",
             "materials-placeholder": "Adicione lista materiais utilizados (\u2936)",
             "magnifier": "Passe o rato sobre a imagem para ver o trabalho artístico em pormenor.",
@@ -128,7 +189,9 @@
             "logout": "Sair",
             "logout_text": "Sair da conta",
             "dashboard": "Dashboard",
-            "dashboard_text": "Consultar dashboard de estatísticas"
+            "dashboard_text": "Consultar dashboard de estatísticas",
+            "new-seller": "Novo artista",
+            "new-seller-text": "Criar uma conta de artista nova"
         },
         "info": {
             "title": "políticas, termos & condições",

@@ -1,5 +1,6 @@
 import {
     Box,
+    Divider,
     FormControl,
     InputLabel,
     MenuItem,
@@ -10,16 +11,23 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import CountrySelect from './pintar_o_7/CountrySelect';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import { useTranslation } from 'react-i18next';
 
-const CheckoutStep2 = () => {
+interface CheckoutStep2Props {
+    validate: boolean;
+    setValidFunc: Dispatch<SetStateAction<boolean>>;
+}
+
+const CheckoutStep2 = ({ validate, setValidFunc }: CheckoutStep2Props) => {
+    const { t } = useTranslation();
+
     const [country, setCountry] = useState('');
     const [city, setCity] = useState('');
     const [address, setAddress] = useState('');
     const [postalCode, setPostalCode] = useState('');
-    const [shipping, setShipping] = useState('');
 
     const [showCountryAlert, setShowCountryAlert] = useState(false);
 
@@ -27,8 +35,43 @@ const CheckoutStep2 = () => {
     const [showAddressError, setShowAddressError] = useState(false);
     const [showPostalCodeError, setShowPostalCodeError] = useState(false);
 
-    const handleChange = (event: SelectChangeEvent) => {
-        setShipping(event.target.value);
+    const checkPostalCode = (postalCode: string) => {
+        const re = /^[0-9]{4}-[0-9]{3}$/;
+        return re.test(postalCode);
+    };
+
+    const disableAlerts = () => {
+        setShowCityError(false);
+        setShowAddressError(false);
+        setShowPostalCodeError(false);
+    };
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        disableAlerts();
+
+        if (country === '') {
+            setShowCountryAlert(true);
+            return;
+        }
+
+        if (city === '') {
+            setShowCityError(true);
+            return;
+        }
+
+        if (address === '') {
+            setShowAddressError(true);
+            return;
+        }
+
+        if (!checkPostalCode(postalCode) && postalCode !== '') {
+            setShowPostalCodeError(true);
+            return;
+        }
+
+        setValidFunc(true);
     };
 
     return (
@@ -60,9 +103,9 @@ const CheckoutStep2 = () => {
                     component="h1"
                     variant="h5"
                     style={{ margin: '20px 0', color: 'black' }}>
-                    Dados de entrega
+                    {t('checkout.shipping.title')}
                 </Typography>
-                <form style={{ width: '100%' }}>
+                <form style={{ width: '100%' }} onSubmit={handleSubmit}>
                     {/* ----------- ADDRESS ---------------- */}
                     <Stack
                         direction={{ xs: 'column', sm: 'row' }}
@@ -77,12 +120,16 @@ const CheckoutStep2 = () => {
                         <TextField
                             variant="standard"
                             margin="normal"
-                            label="Cidade"
+                            label={t('checkout.shipping.city')}
                             type="text"
                             id="city"
                             name="client_fields.demographics.address.city"
                             error={showCityError}
-                            helperText={showCityError ? 'Cidade Inválida' : ' '}
+                            helperText={
+                                showCityError
+                                    ? t('checkout.shipping.city-error')
+                                    : ' '
+                            }
                             autoComplete="city"
                             value={city}
                             sx={{ maxWidth: { sx: '100%', sm: '40%' } }}
@@ -97,13 +144,15 @@ const CheckoutStep2 = () => {
                             <TextField
                                 variant="standard"
                                 margin="normal"
-                                label="Morada"
+                                label={t('checkout.shipping.address')}
                                 type="text"
                                 name="client_fields.demographics.address.street"
                                 fullWidth
                                 error={showAddressError}
                                 helperText={
-                                    showAddressError ? 'Morada Inválida' : ' '
+                                    showAddressError
+                                        ? t('checkout.shipping.address-error')
+                                        : ' '
                                 }
                                 id="address"
                                 autoComplete="address"
@@ -113,13 +162,15 @@ const CheckoutStep2 = () => {
                             <TextField
                                 variant="standard"
                                 margin="normal"
-                                label="Código Postal"
+                                label={t('checkout.shipping.postal-code')}
                                 type="text"
                                 name="client_fields.demographics.address.postal_code"
                                 error={showPostalCodeError}
                                 helperText={
                                     showPostalCodeError
-                                        ? 'Código Postal Inválido'
+                                        ? t(
+                                              'checkout.shipping.postal-code-error'
+                                          )
                                         : ' '
                                 }
                                 id="postalCode"
@@ -133,45 +184,39 @@ const CheckoutStep2 = () => {
                             margin="normal"
                             fullWidth
                             name="adress2"
-                            label="Apartamento, bloco, lote, prédio, andar, etc."
+                            label={t('checkout.shipping.address2')}
                             type="text"
                             id="afress2"
                         />
                     </Box>
                     {/* ----------- Shipping ---------------- */}
-                    <Stack direction="column" spacing={{ xs: 1, sm: 2 }} sx={{ marginBottom: 1, marginTop: 2 }}>
+                    <Stack
+                        direction="column"
+                        spacing={{ xs: 1, sm: 2 }}
+                        sx={{ marginBottom: 1, marginTop: 2 }}>
                         <Typography
                             variant="h6"
                             color="black"
                             className="font-poppins">
-                            Selecione o método de entrega:
+                            {t('checkout.shipping.shipping-cost')}
                         </Typography>
-                        <FormControl
-                            variant="standard"
-                            sx={{ m: 1, minWidth: 120 }}>
-                            <InputLabel id="Shippinglabel">
-                                Método de entrega
-                            </InputLabel>
-                            <Select
-                                labelId="Shippinglabel"
-                                id="shipping-select-standard"
-                                value={shipping}
-                                onChange={handleChange}
-                                label="Método de entrega">
-                                <MenuItem value={'STANDARD'}>Standard - 5€</MenuItem>
-                                <MenuItem value={'EXPRESSO'}>Expresso - 10€</MenuItem>
-                                <MenuItem value={'CUSTOM'}>
-                                    Depende da localização do utilizador
-                                </MenuItem>
-                            </Select>
-                            <Typography
-                                fontSize="small"
-                                color="gray"
-                                className="font-poppins">
-                                <InfoRoundedIcon className="h-4 w-4" /> Todas as
-                                obras são transportadas com seguro de envio.
-                            </Typography>
-                        </FormControl>
+                        <Typography
+                            variant="body1"
+                            color="black"
+                            className="font-poppins">
+                            {new Intl.NumberFormat('pt-PT', {
+                                style: 'currency',
+                                currency: 'EUR',
+                            }).format(13.99)}
+                        </Typography>
+                        <Divider />
+                        <Typography
+                            fontSize="small"
+                            color="primary"
+                            className="font-poppins">
+                            <InfoRoundedIcon className="h-4 w-4" />
+                            {t('checkout.shipping.shipping-info')}
+                        </Typography>
                     </Stack>
                 </form>
             </Paper>

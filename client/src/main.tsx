@@ -12,13 +12,21 @@ import './i18n';
 import { ViewportProvider } from './contexts/viewPortContext';
 import { BrowserRouter } from 'react-router-dom';
 import { CartProvider } from './contexts/cartProvider.tsx';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <ViewportProvider>
             <BrowserRouter>
                 <CartProvider>
-                    <App />
+                    <PayPalScriptProvider
+                        options={{
+                            clientId: 'test',
+                            components: 'buttons',
+                            currency: 'USD',
+                        }}>
+                        <App />
+                    </PayPalScriptProvider>
                 </CartProvider>
             </BrowserRouter>
         </ViewportProvider>

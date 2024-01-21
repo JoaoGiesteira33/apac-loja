@@ -38,9 +38,9 @@ const reducer = (
                 throw new Error('action.payload is undefined in ADD');
             }
 
-            const { id } = action.payload;
+            const { _id } = action.payload;
             const filtredCart: ProductType[] = state.cart.filter(
-                (product) => product.id !== id
+                (product) => product._id !== _id
             );
 
             return { ...state, cart: [...filtredCart, action.payload] };
@@ -50,9 +50,9 @@ const reducer = (
                 throw new Error('action.payload is undefined in REMOVE');
             }
 
-            const { id } = action.payload;
+            const { _id } = action.payload;
             const filtredCart: ProductType[] = state.cart.filter(
-                (product) => product.id !== id
+                (product) => product._id !== _id
             );
 
             return { ...state, cart: [...filtredCart] };

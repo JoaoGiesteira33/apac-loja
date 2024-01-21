@@ -14,7 +14,7 @@ import { CanvasModel } from './components/canvasModel';
 import ProfileInfo from './pages/Profile/ProfileInfo';
 import ProfileIndex from './pages/Profile/ProfileIndex';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { amber, blue, deepOrange, grey } from '@mui/material/colors';
+import { grey, orange } from '@mui/material/colors';
 import { IconButton, PaletteMode, CircularProgress, Box } from '@mui/material';
 import { CssBaseline } from '@mui/material/';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
@@ -33,6 +33,9 @@ import SellerPrivateRoutes from './routes/SellerPrivateRoutes';
 import AdminPrivateRoutes from './routes/AdminPrivateRoutes';
 
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { element } from 'three/examples/jsm/nodes/Nodes.js';
+import NewSeller from './pages/Seller/NewSeller';
+import { light } from '@mui/material/styles/createPalette';
 
 // dynamically load components as they are needed
 const InitialPage = React.lazy(() => import('./pages/pintar_o_7/Initial'));
@@ -61,8 +64,18 @@ const getDesignTokens = (mode: PaletteMode) => ({
         mode,
         ...(mode === 'light'
             ? {
-                  // palette values for light mode
+                  // Light Mode
                   primary: grey,
+                  secondary: {
+                      main: '#000000',
+                      light: '#333333',
+                      dark: '#000000',
+                      contrastText: '#ffffff',
+                  },
+                  background: {
+                      default: '#fff',
+                      paper: '#fff',
+                  },
                   divider: grey[900],
                   text: {
                       primary: grey[900],
@@ -70,16 +83,12 @@ const getDesignTokens = (mode: PaletteMode) => ({
                   },
               }
             : {
-                  // palette values for dark mode
-                  primary: deepOrange,
-                  divider: deepOrange[700],
+                  // Dark Mode
+                  primary: grey,
+                  secondary: orange,
                   background: {
-                      default: deepOrange[900],
-                      paper: deepOrange[900],
-                  },
-                  text: {
-                      primary: '#fff',
-                      secondary: grey[500],
+                      default: '#121212',
+                      paper: '#1f1f1f',
                   },
               }),
     },
@@ -87,7 +96,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
         MuiSelect: {
             styleOverrides: {
                 icon: {
-                    color: mode === 'light' ? grey[800] : '#fff',
+                    color: mode === 'light' ? grey[800] : grey[400],
                 },
             },
         },
@@ -158,6 +167,11 @@ function App() {
         {
             path: '/artists/:id',
             element: <ArtistPage />,
+        },
+        {
+            path: '/artists/add',
+            element: <NewSeller />,
+            requireAuth: false,
         },
         {
             path: '/product/:product_id',
@@ -271,7 +285,8 @@ function App() {
                 <ColorModeContext.Provider value={colorMode}>
                     <ThemeProvider theme={theme}>
                         <CssBaseline />
-                        <div
+                        <Box
+                            component="div"
                             className={
                                 theme.palette.mode === 'dark' ? 'dark' : ''
                             }>
@@ -358,7 +373,7 @@ function App() {
                             ) : (
                                 <></>
                             )}
-                        </div>
+                        </Box>
                     </ThemeProvider>
                 </ColorModeContext.Provider>
             </PayPalScriptProvider>

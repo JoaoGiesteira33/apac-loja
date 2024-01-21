@@ -63,8 +63,7 @@ module.exports.replaceOrderInfo = function (id, data) {
 
 //      - updateOrderInfo || this is used for patch request
 module.exports.updateOrderInfo = function (id, data) {
-    let dotData = utils.dotify(data);
-    return Order.updateOne({ _id: id }, { $set: dotData }).then((info) => {
+    return Order.updateOne({ _id: id }, { $set: data }).then((info) => {
         return info;
     });
 };

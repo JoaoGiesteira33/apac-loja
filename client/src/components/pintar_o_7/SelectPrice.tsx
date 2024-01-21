@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 
 function valuetext(value: number) {
     return `${value}€`;
@@ -14,7 +14,6 @@ const IOSSlider = styled(Slider)(({ theme }) => ({
     '& .MuiSlider-thumb': {
         height: 28,
         width: 28,
-        backgroundColor: '#fff',
         boxShadow: iOSBoxShadow,
         '&:focus, &:hover, &.Mui-active': {
             boxShadow:
@@ -36,7 +35,6 @@ const IOSSlider = styled(Slider)(({ theme }) => ({
         },
         '& *': {
             background: 'transparent',
-            color: theme.palette.mode === 'dark' ? '#fff' : '#000',
         },
     },
     '& .MuiSlider-track': {
@@ -44,15 +42,12 @@ const IOSSlider = styled(Slider)(({ theme }) => ({
     },
     '& .MuiSlider-rail': {
         opacity: 0.5,
-        backgroundColor: '#bfbfbf',
     },
     '& .MuiSlider-mark': {
-        backgroundColor: '#bfbfbf',
         height: 8,
         width: 1,
         '&.MuiSlider-markActive': {
             opacity: 1,
-            backgroundColor: 'currentColor',
         },
     },
 }));
@@ -62,6 +57,7 @@ export default function SelectPrice({
     maxPrice,
     mouseUpFunc,
 }) {
+    const theme = useTheme();
     const handleChange = (event: Event, newValue: number | number[]) => {
         changeValue(newValue as number[]);
     };

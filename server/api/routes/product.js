@@ -8,6 +8,10 @@ const { hasAccess, isAdminOrAUTH } = require('../utils/utils');
 
 const middleware = require('./myMiddleware');
 
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
 // ---------------------------------------------
 
 // GET Max Price
@@ -177,6 +181,55 @@ router.get(
             )
             .then((info) => {
                 res.status(200).jsonp(info);
+            })
+            .catch((error) => {
+                res.status(500).jsonp(error);
+            });
+    }
+);
+
+// Advanced Methods
+
+// POST Product Photo
+router.post(
+    '/:id/photos',
+    hasAccess,
+    upload.array('files', 12),
+    function (req, res, next) {
+        if (req.level == 'client') {
+            res.status(403).jsonp({
+                error: 'You are not allowed to upload product photos.',
+            });
+        }
+        controllerProduct
+            .getProductInfo(req.params.id)
+            .then((product) => {
+                if (
+                    product != null &&
+                    product._seller != req._id &&
+                    req.level != 'admin'
+                ) {
+                    res.status(403).jsonp({
+                        error: 'You are not allowed to upload photos to this product.',
+                    });
+                } else {
+                    let photos = req.files.map((file) => {
+                        return {
+                            name: file.originalname,
+                            mimetype: file.mimetype,
+                            size: file.size,
+                            data: file.buffer,
+                        };
+                    });
+                    controllerProduct
+                        .addPhotos(req.params.id, photos)
+                        .then((info) => {
+                            res.status(201).jsonp(info);
+                        })
+                        .catch((error) => {
+                            res.status(500).jsonp(error);
+                        });
+                }
             })
             .catch((error) => {
                 res.status(500).jsonp(error);

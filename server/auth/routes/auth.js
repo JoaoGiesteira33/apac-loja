@@ -138,7 +138,7 @@ router.post('/registo', function (req, res) {
 				axios.post(API_URL_USER + '/client', data)
 					.then(resp1 => {
 						if (resp1 && resp1.status && resp1.status == 200){
-							res.status(200).jsonp({ message: "OK" })
+							res.status(201).jsonp({ message: "OK" })
 						}
 						else {
 							//apagar do login !!!
@@ -244,23 +244,23 @@ router.get('/admin', isAdmin, function (req, res) {
 });
 
 // UPDATE -> [admin] atualizar password de um utilizador através do email
-router.put('/admin/password', isAdmin, function (req, res) {
-	if (req.body.userEmail && req.body.userPassword) {
-		controllerLogin.updateLoginPassword(req.body.userEmail, req.body.userPassword) // userEmail e userPassword tem de ser passados no body
-			.then(u => {
-				if (u)
-					res.status(200).jsonp({ message: "OK" })
-				else
-					res.status(401).jsonp({ error: "Erro ao processar o pedido" })
-			})
-			.catch(erro => {
-				res.status(401).jsonp({ error: "Erro na alteração do utilizador: " + erro })
-			})
-	}
-	else {
-		res.status(400).jsonp({ error: "Falta de parametros" })
-	}
-});
+// router.put('/admin/password', isAdmin, function (req, res) {
+// 	if (req.body.userEmail && req.body.userPassword) {
+// 		controllerLogin.updateLoginPassword(req.body.userEmail, req.body.userPassword) // userEmail e userPassword tem de ser passados no body
+// 			.then(u => {
+// 				if (u)
+// 					res.status(200).jsonp({ message: "OK" })
+// 				else
+// 					res.status(401).jsonp({ error: "Erro ao processar o pedido" })
+// 			})
+// 			.catch(erro => {
+// 				res.status(401).jsonp({ error: "Erro na alteração do utilizador: " + erro })
+// 			})
+// 	}
+// 	else {
+// 		res.status(400).jsonp({ error: "Falta de parametros" })
+// 	}
+// });
 // UPDATE -> atualizar email de um utilizador através do email
 router.put('/password', isMe, passport.authenticate('local'), function (req, res) { // tem de ter o parametro "username", por causa do isMe, e o parametro password por causa do authenticate
 	if (req.body.newPassword) {
@@ -540,7 +540,7 @@ router.post('/esqueci', async function (req, res) {
 
 });
 // POST -> alterar a password de um utilizador após verificar o código fornecido
-router.post('/esqueci-verificar', passport.authenticate('local'), function (req, res) {
+router.post('/esqueci-verificar', function (req, res) {
 	controllerLogin.verifyRecoveryCode(req.body.email, req.body.code)// email e code tem de ser passados no body
 		.then(b => {
 			if (b) {

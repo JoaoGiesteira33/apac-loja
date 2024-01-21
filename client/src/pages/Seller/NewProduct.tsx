@@ -13,14 +13,19 @@ import {
     TextField,
     Tooltip,
     Typography,
+    useTheme,
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import DeleteIcon from '@mui/icons-material/Delete';
+import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import { NumericFormat, NumericFormatProps } from 'react-number-format';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import React from 'react';
+import { ProductType } from '../../types/product';
+import { NestedPartial } from '../../types/nestedPartial';
+import { addProduct } from '../../fetchers';
+import { Result } from '../../types/result';
 
 const availableTypes: string[] = [
     'Pintura',
@@ -34,8 +39,6 @@ const availableTypes: string[] = [
     'Design',
     'Arte Têxtil',
 ];
-
-const measureUnits: string[] = ['cm', 'm', 'mm', 'in', 'ft'];
 
 interface CustomProps {
     onChange: (event: { target: { name: string; value: string } }) => void;
@@ -98,66 +101,98 @@ const DimensionInput = React.forwardRef<NumericFormatProps, CustomProps>(
     }
 );
 
+const MAX_IMAGES = 12;
+
 export default function NewProduct() {
     const { t } = useTranslation();
+    const theme = useTheme();
     const inputRef = useRef(null);
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [selectedTypes, setSelectedTypes] = useState<string>('');
-    const [technique, setTechnique] = useState('');
-    const [materials, setMaterials] = useState<string>('');
-    const [depth, setDepth] = useState<string>('');
-    const [measureUnit, setMeasureUnit] = useState<string>('');
-    const [show, setShow] = useState<boolean[]>([]);
+    const [technique, setTechnique] = useState<string>('');
+    const [materials, setMaterials] = useState<string[]>([]);
+    const [materialsInput, setMaterialsInput] = useState<string>('');
     const [maskedValues, setMaskedValues] = React.useState({
         price: '',
         width: '',
         height: '',
+        depth: '',
+        weight: '',
     });
 
     const [images, setImages] = useState<File[]>([]);
+
     const imageUrls = images.map((file) => URL.createObjectURL(file));
 
-    function onImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const onAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         const fileList = e.target.files;
         if (fileList) {
-            const files = [...fileList, ...images];
+            let files = [...images, ...fileList];
+            if (files.length > MAX_IMAGES) {
+                files = files.slice(0, MAX_IMAGES);
+            }
             setImages(files);
-            setShow(new Array(files.length).fill(false));
         }
-    }
+    };
 
-    const addNewImage = () => {
+    const onDeleteImage = (index: number) => {
+        const newImages = [...images];
+        newImages.splice(index, 1);
+        setImages(newImages);
+    };
+
+    const addNewImageButtonClick = () => {
         inputRef.current.click();
-    };
-
-    const onMouseOver = (index: number) => {
-        console.log(maskedValues.price);
-        const newShow = [...show];
-        newShow[index] = true;
-        setShow(newShow);
-    };
-    const onMouseOut = (index: number) => {
-        const newShow = [...show];
-        newShow[index] = false;
-        setShow(newShow);
     };
 
     const handleMaskedValuesChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
-        console.log(event.target.name);
-        console.log(event.target.value);
         setMaskedValues({
             ...maskedValues,
             [event.target.name]: event.target.value,
         });
     };
 
+    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setMaterialsInput('');
+
+        const product: NestedPartial<ProductType> = {
+            title: title,
+            description: description,
+            price: parseFloat(maskedValues.price),
+            product_type: 'piece',
+            piece_info: {
+                technique: technique,
+                materials: materials,
+                dimensions: {
+                    width: parseFloat(maskedValues.width),
+                    height: parseFloat(maskedValues.height),
+                    depth: parseFloat(maskedValues.depth),
+                    weight: parseFloat(maskedValues.weight),
+                },
+            },
+        };
+
+        const addProductResponse: Result<string, Error> = await addProduct(
+            product
+        );
+
+        if (addProductResponse.isOk()) {
+            console.log(addProductResponse.value);
+        } else {
+            console.log(addProductResponse.error);
+        }
+    };
+
     return (
         <Box
-            component="div"
+            component="form"
+            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                handleFormSubmit(e);
+            }}
             sx={{
                 paddingY: '2rem',
                 paddingX: {
@@ -241,10 +276,8 @@ export default function NewProduct() {
                             <Select
                                 labelId="select-type-label"
                                 id="demo-simple-select-standard"
-                                value={selectedTypes}
-                                onChange={(e) =>
-                                    setSelectedTypes(e.target.value)
-                                }
+                                value={technique}
+                                onChange={(e) => setTechnique(e.target.value)}
                                 label={t('global.types')}>
                                 {availableTypes.map((tp, index) => (
                                     <MenuItem key={index} value={tp}>
@@ -268,6 +301,19 @@ export default function NewProduct() {
                         id="materials"
                         options={[]}
                         freeSolo
+                        value={materials}
+                        onChange={(
+                            _: React.SyntheticEvent<Element, Event>,
+                            newValue: string[] | null
+                        ) => {
+                            newValue != null
+                                ? setMaterials(newValue)
+                                : setMaterials([]);
+                        }}
+                        inputValue={materialsInput}
+                        onInputChange={(_, newInputValue) => {
+                            setMaterialsInput(newInputValue);
+                        }}
                         renderTags={(value: readonly string[], getTagProps) =>
                             value.map((option: string, index: number) => (
                                 <Chip
@@ -289,7 +335,7 @@ export default function NewProduct() {
                     <Stack
                         direction={'row'}
                         spacing={2}
-                        sx={{ marginTop: '1rem' }}
+                        sx={{ marginTop: '1rem', marginBottom: '1rem' }}
                         alignItems={'center'}>
                         <TextField
                             fullWidth
@@ -317,31 +363,31 @@ export default function NewProduct() {
                             variant="standard"
                         />
                         <Typography alignSelf={'flex-end'}>X</Typography>
-                        <FormControl
-                            variant="standard"
-                            sx={{
-                                m: 1,
-                                maxWidth: 100,
-                                margin: '0',
+                        <TextField
+                            fullWidth
+                            label={t('product.depth')}
+                            value={maskedValues.depth}
+                            onChange={handleMaskedValuesChange}
+                            name="depth"
+                            id="formatted-depth-input"
+                            InputProps={{
+                                inputComponent: DimensionInput as any,
                             }}
-                            fullWidth>
-                            <InputLabel id="select-type-label">
-                                {t('product.measure')}
-                            </InputLabel>
-                            <Select
-                                labelId="select-type-label"
-                                id="demo-simple-select-standard"
-                                value={measureUnit}
-                                onChange={(e) => setMeasureUnit(e.target.value)}
-                                label={t('product.measure')}>
-                                {measureUnits.map((tp, index) => (
-                                    <MenuItem key={index} value={tp}>
-                                        {tp}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                            variant="standard"
+                        />
                     </Stack>
+                    <TextField
+                        fullWidth
+                        label={t('product.weight')}
+                        value={maskedValues.weight}
+                        onChange={handleMaskedValuesChange}
+                        name="weight"
+                        id="formatted-weight-input"
+                        InputProps={{
+                            inputComponent: DimensionInput as any,
+                        }}
+                        variant="standard"
+                    />
                 </Paper>
                 <Paper
                     sx={{
@@ -357,75 +403,124 @@ export default function NewProduct() {
                         type="file"
                         multiple
                         accept="image/*"
-                        onChange={onImageChange}
+                        onChange={onAddImage}
                     />
                     <Grid container marginTop={2} spacing={4}>
+                        {imageUrls.length === 0 && (
+                            <Grid xs={6} sm={4} md={3}>
+                                <Box
+                                    component={'div'}
+                                    display={'flex'}
+                                    alignItems={'center'}
+                                    justifyContent={'center'}
+                                    flexDirection={'column'}
+                                    sx={{
+                                        aspectRatio: '1/1',
+                                    }}>
+                                    <Tooltip
+                                        title={t(
+                                            'artist.new-piece-page.add-thumbnail'
+                                        )}>
+                                        <IconButton
+                                            sx={{ border: 2 }}
+                                            onClick={addNewImageButtonClick}>
+                                            <AddIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Typography textAlign={'center'}>
+                                        {t(
+                                            'artist.new-piece-page.add-thumbnail'
+                                        )}
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                        )}
                         {imageUrls.map((url, index) => (
                             <Grid xs={6} sm={4} md={3} key={index}>
                                 <Box
-                                    onMouseOver={() => onMouseOver(index)}
-                                    onMouseOut={() => onMouseOut(index)}
                                     component={'div'}
                                     position={'relative'}
                                     sx={{
                                         aspectRatio: '1/1',
-                                        overflow: 'hidden',
+                                        border: 2,
+                                        borderColor: theme.palette.primary,
                                     }}>
                                     <img
                                         className="w-full h-full object-cover"
                                         src={url}
                                         alt={''}
                                     />
-                                    {show[index] && (
-                                        <IconButton
-                                            onClick={() => {
-                                                const newImages = [...images];
-                                                newImages.splice(index, 1);
-                                                setImages(newImages);
-                                            }}
-                                            sx={{
-                                                position: 'absolute',
-                                                right: '1rem',
-                                                top: '1rem',
-                                            }}>
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    )}
+                                    <IconButton
+                                        size={'small'}
+                                        onClick={() => {
+                                            onDeleteImage(index);
+                                        }}
+                                        sx={{
+                                            position: 'absolute',
+                                            right: 0,
+                                            top: 0,
+                                            transform: 'translate(50%, -50%)',
+                                            color: theme.palette.primary
+                                                .contrastText,
+                                            backgroundColor:
+                                                theme.palette.mode === 'dark'
+                                                    ? theme.palette.primary
+                                                          .light
+                                                    : theme.palette.primary
+                                                          .dark,
+                                            opacity: 1,
+                                            '&:hover': {
+                                                backgroundColor:
+                                                    theme.palette.error.dark,
+                                                opacity: 1,
+                                            },
+                                        }}>
+                                        <CloseIcon />
+                                    </IconButton>
                                 </Box>
                             </Grid>
                         ))}
-                        <Grid xs={6} sm={4} md={3}>
-                            <Box
-                                component={'div'}
-                                display={'flex'}
-                                alignItems={'center'}
-                                justifyContent={'center'}
-                                sx={{
-                                    aspectRatio: '1/1',
-                                }}>
-                                <Tooltip
-                                    title={t(
-                                        'artist.new-piece-page.add-photos'
-                                    )}>
-                                    <IconButton
-                                        sx={{ border: 2 }}
-                                        onClick={addNewImage}>
-                                        <AddIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </Box>
-                        </Grid>
+                        {imageUrls.length < MAX_IMAGES &&
+                            imageUrls.length > 0 && (
+                                <Grid xs={6} sm={4} md={3}>
+                                    <Box
+                                        component={'div'}
+                                        display={'flex'}
+                                        alignItems={'center'}
+                                        justifyContent={'center'}
+                                        flexDirection={'column'}
+                                        sx={{
+                                            aspectRatio: '1/1',
+                                        }}>
+                                        <Tooltip
+                                            title={t(
+                                                'artist.new-piece-page.add-photos'
+                                            )}>
+                                            <IconButton
+                                                sx={{ border: 2 }}
+                                                onClick={
+                                                    addNewImageButtonClick
+                                                }>
+                                                <AddIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Typography textAlign={'center'}>
+                                            {t(
+                                                'artist.new-piece-page.choose-photos'
+                                            )}
+                                        </Typography>
+                                    </Box>
+                                </Grid>
+                            )}
                     </Grid>
                 </Paper>
                 <Button
                     type="submit"
                     variant="contained"
+                    color="secondary"
                     size="large"
                     style={{
-                        margin: '20px 0',
                         width: '50%',
-                        backgroundColor: 'black',
-                        color: 'white',
                         alignSelf: 'center',
                     }}>
                     {t('global.submit')}

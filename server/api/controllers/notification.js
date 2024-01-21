@@ -31,12 +31,9 @@ module.exports.replaceNotificationInfo = function (id, data) {
 
 //      - updateNotificationInfo || this is used for patch request
 module.exports.updateNotificationInfo = function (id, data) {
-    let dotData = utils.dotify(data);
-    return Notification.updateOne({ _id: id }, { $set: dotData }).then(
-        (info) => {
-            return info;
-        }
-    );
+    return Notification.updateOne({ _id: id }, { $set: data }).then((info) => {
+        return info;
+    });
 };
 
 //      - deleteNotification
