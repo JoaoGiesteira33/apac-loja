@@ -3,6 +3,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
 import { SxProps, Theme } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
 
 export default function CountrySelect(props: {
     selection: string;
@@ -10,6 +11,7 @@ export default function CountrySelect(props: {
     sx?: SxProps<Theme>;
     showCountryAlert: boolean;
 }) {
+    const { t } = useTranslation();
     return (
         <Autocomplete
             inputValue={props.selection}
@@ -39,7 +41,7 @@ export default function CountrySelect(props: {
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label="País"
+                    label={t('checkout.shipping.country')}
                     variant="standard"
                     error={props.showCountryAlert}
                     helperText={

@@ -39,11 +39,15 @@ const State = new mongoose.Schema(
 
 const Payment = new mongoose.Schema(
     {
-        transactionId: String,
+        transactionId: {
+            type: String,
+            required: true
+        },
         method: {
             type: String,
             enum: ['paypal', 'eupago'],
         },
+        reference: String
     },
     { _id: false }
 );

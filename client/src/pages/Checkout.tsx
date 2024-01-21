@@ -2,18 +2,28 @@ import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import Button from '@mui/material/Button';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { StepLabel } from '@mui/material';
-import CheckoutStep1 from '../components/CheckoutStep1';
 import CheckoutStep2 from '../components/CheckoutStep2';
 import { CheckoutStep3 } from '../components/CheckoutStep3';
 import CheckoutStep4 from '../components/CheckoutStep4';
+import { useTranslation } from 'react-i18next';
 
 const Checkout = () => {
+    const { t } = useTranslation();
+
     const [activeStep, setActiveStep] = useState(0);
+    const [validateStep, setValidateStep] = useState(false);
+
+    //const myForm = useRef(null)
 
     const handleNext = () => {
-        if (activeStep < 2) setActiveStep((cur) => cur + 1);
+        // TODO step validation
+        //if (!myForm.current.reportValidity()) return;
+
+        if (activeStep < 2){
+            setActiveStep((cur) => cur + 1);
+        } 
     };
     const handlePrev = () => {
         if (activeStep > 0) setActiveStep((cur) => cur - 1);
@@ -23,7 +33,9 @@ const Checkout = () => {
         <Box
             component="div"
             sx={{
+                display: 'block',
                 width: '100%',
+                overflow: 'hidden',
                 paddingY: '2rem',
                 paddingX: {
                     xs: '2rem',
@@ -33,24 +45,21 @@ const Checkout = () => {
                 },
             }}>
             <Stepper activeStep={activeStep} alternativeLabel>
-                {/* <Step key={0}>
-                    <StepLabel>Faturação</StepLabel>
-                </Step> */}
                 <Step key={0}>
-                    <StepLabel>Entregra</StepLabel>
+                    <StepLabel>{t('checkout.stepper.shipping')}</StepLabel>
                 </Step>
                 <Step key={1}>
-                    <StepLabel>Resumo</StepLabel>
+                    <StepLabel>{t('checkout.stepper.review')}</StepLabel>
                 </Step>
                 <Step key={2}>
-                    <StepLabel>Pagamento</StepLabel>
+                    <StepLabel>{t('checkout.stepper.payment')}</StepLabel>
                 </Step>
             </Stepper>
 
-            <Box component="div">
+            <Box component='div'>
                 {/* Steps content */}
                 
-                {activeStep === 0 && <CheckoutStep2 />}
+                {activeStep === 0 && <CheckoutStep2 validate={validateStep} setValidFunc={setValidateStep}/>}
                 {activeStep === 1 && <CheckoutStep3 />}
                 {activeStep === 2 && < CheckoutStep4 />}
 
@@ -61,13 +70,15 @@ const Checkout = () => {
                         display: 'flex',
                         flexDirection: 'row',
                         paddingTop: 2,
+                        paddingLeft: '15%',
+                        paddingRight: '15%',
                     }}>
                     <Button
                         variant="outlined"
                         disabled={activeStep === 0}
                         onClick={handlePrev}
                         sx={{ mr: 1 }}>
-                        Anterior
+                        {t('checkout.stepper.prev-button')}
                     </Button>
                     <Box component="div" style={{ flex: '1 1 auto' }} />
                     <Button
@@ -75,7 +86,7 @@ const Checkout = () => {
                         variant="contained"
                         sx={{ mr: 1 }}
                         disabled={activeStep === 2}>
-                        Próximo
+                        {t('checkout.stepper.next-button')}
                     </Button>
                 </Box>
             </Box>

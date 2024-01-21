@@ -27,6 +27,8 @@ import Products from './pages/Seller/Products';
 import NewProduct from './pages/Seller/NewProduct';
 
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { element } from 'three/examples/jsm/nodes/Nodes.js';
+import NewSeller from './pages/Seller/NewSeller';
 
 // dynamically load components as they are needed
 const InitialPage = React.lazy(() => import('./pages/pintar_o_7/Initial'));
@@ -153,6 +155,11 @@ function App() {
         {
             path: '/artists/:id',
             element: <ArtistPage />,
+            requireAuth: false,
+        },
+        {
+            path: '/artists/add',
+            element: <NewSeller />,
             requireAuth: false,
         },
         {

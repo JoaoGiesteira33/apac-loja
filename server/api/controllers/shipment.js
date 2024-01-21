@@ -38,16 +38,18 @@ module.exports.createManyShipments = async function (data, session) {
                 shipment._client
             );
 
-            if (state == 'reserved') {
-                notification.save({ session: session });
-            } else {
-                return notification.save({ session: session }).then(() => {
-                    const Product = require('../models/product');
-                    return Product.updateOne(
-                        { _id: shipment._product },
-                        { $set: { 'piece_info.state': 'unavailable' } }
-                    );
-                });
+            if (notification) {
+                if (state == 'reserved') {
+                    notification.save({ session: session });
+                } else {
+                    return notification.save({ session: session }).then(() => {
+                        const Product = require('../models/product');
+                        return Product.updateOne(
+                            { _id: shipment._product },
+                            { $set: { 'piece_info.state': 'unavailable' } }
+                        );
+                    });
+                }
             }
         });
 
@@ -91,19 +93,78 @@ module.exports.deleteShipment = function (id) {
 };
 
 //      - getShipments
-module.exports.getShipments = function (filters, fields, page, limit, expand) {
-    return Promise.all([
+module.exports.getShipments = async function (filters, fields, page, limit, expand) {
+    const [shipments, count] = await Promise.all([
         Shipment.find(filters, fields)
             .sort({ _id: 'asc' })
             .skip(page * limit)
             .limit(limit)
             .populate(expand),
         Shipment.countDocuments(filters),
-    ]).then(([shipments, count]) => {
-        let hasMore = count > (page + 1) * limit && limit != 0;
-        return { results: shipments, hasMore: hasMore };
-    });
+    ]);
+    let hasMore = count > (page + 1) * limit && limit != 0;
+    return { results: shipments, hasMore: hasMore };
 };
+
+//      - updateShipmentState
+// Push a new state to the states array
+module.exports.updateShipmentState = async function (filter, value) {
+    let session = await Shipment.startSession();
+
+    try {
+        session.startTransaction();
+
+        let shipment = await Shipment.findOneAndUpdate(
+            filter,
+            { $push: { states: { value: value, date: Date.now() } } },
+            { session: session, new: true }
+        );
+
+        let state = shipment.states.slice(-1)[0].value;
+
+        let notification = generateNotification(
+            state,
+            shipment._product,
+            shipment._seller,
+            shipment._client
+        );
+
+        await notification.save({ session: session });
+
+        if (
+            ['reserved', 'paid', 'sent', 'delivered', 'canceled'].includes(
+                state
+            )
+        ) {
+            const Product = require('../models/product');
+            await Product.updateOne(
+                { _id: shipment._product },
+                { $set: { state: 'unavailable' } },
+                { session: session }
+            );
+        }
+
+        await session.commitTransaction();
+        return shipment;
+    } catch (err) {
+        console.log(err);
+        await session.abortTransaction();
+        throw err;
+    } finally {
+        session.endSession();
+    }
+};
+
+//      - addPaymentInfo
+// Add payment info to shipment
+module.exports.addPaymentInfo = async function (filter, data) {
+    return Shipment.updateOne(filter, { $push: { payments: data } }).then(
+        (info) => {
+            return info;
+        }
+    );
+};
+
 
 // ADDITIONAL METHODS:
 
@@ -149,61 +210,3 @@ function generateNotification(state, _product, _seller, _client) {
             });
     }
 }
-
-// updateShipmentState
-// Push a new state to the states array
-module.exports.updateShipmentState = async function (id, value) {
-    let session = await Shipment.startSession();
-
-    try {
-        session.startTransaction();
-
-        let shipment = await Shipment.findOneAndUpdate(
-            { _id: id },
-            { $push: { states: { value: value, date: Date.now() } } },
-            { session: session, new: true }
-        );
-
-        let state = shipment.states.slice(-1)[0].value;
-
-        let notification = generateNotification(
-            state,
-            shipment._product,
-            shipment._seller,
-            shipment._client
-        );
-
-        await notification.save({ session: session });
-
-        if (
-            ['reserved', 'paid', 'sent', 'delivered', 'canceled'].includes(
-                state
-            )
-        ) {
-            const Product = require('../models/product');
-            await Product.updateOne(
-                { _id: shipment._product },
-                { $set: { state: 'unavailable' } },
-                { session: session }
-            );
-        }
-
-        await session.commitTransaction();
-        return shipment;
-    } catch (err) {
-        console.log(err);
-        await session.abortTransaction();
-        throw err;
-    } finally {
-        session.endSession();
-    }
-};
-
-// Add payment info to shipment
-module.exports.addPaymentInfo = function (id, data) {
-    return Shipment.updateOne({ _id: id }, { $push: { payments: data } }).then(
-        (info) => {
-            return info;
-        }
-    );
-};
