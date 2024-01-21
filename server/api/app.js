@@ -16,6 +16,7 @@ var shipmentRouter = require('./routes/shipment');
 var notificationRouter = require('./routes/notification');
 
 var emailRouter = require('./routes/email');
+var fileRouter = require('./routes/file');
 
 var db_url =
     'mongodb+srv://' +
@@ -61,6 +62,7 @@ app.use('/payment', paymentRouter);
 app.use('/shipment', shipmentRouter);
 app.use('/notification', notificationRouter);
 app.use('/email', emailRouter);
+app.use('/file', fileRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
