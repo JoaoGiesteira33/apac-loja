@@ -443,7 +443,7 @@ export default function NewProduct() {
                                     sx={{
                                         aspectRatio: '1/1',
                                         border: 2,
-                                        borderColor: theme.palette.primary.dark,
+                                        borderColor: theme.palette.primary,
                                     }}>
                                     <img
                                         className="w-full h-full object-cover"
@@ -460,14 +460,18 @@ export default function NewProduct() {
                                             right: 0,
                                             top: 0,
                                             transform: 'translate(50%, -50%)',
-                                            border: 2,
-                                            BorderColor:
-                                                theme.palette.primary.dark,
+                                            color: theme.palette.primary
+                                                .contrastText,
                                             backgroundColor:
-                                                theme.palette.primary.light,
+                                                theme.palette.mode === 'dark'
+                                                    ? theme.palette.primary
+                                                          .light
+                                                    : theme.palette.primary
+                                                          .dark,
+                                            opacity: 1,
                                             '&:hover': {
                                                 backgroundColor:
-                                                    theme.palette.primary.dark,
+                                                    theme.palette.error.dark,
                                                 opacity: 1,
                                             },
                                         }}>
@@ -513,11 +517,10 @@ export default function NewProduct() {
                 <Button
                     type="submit"
                     variant="contained"
+                    color="secondary"
                     size="large"
                     style={{
                         width: '50%',
-                        backgroundColor: 'black',
-                        color: 'white',
                         alignSelf: 'center',
                     }}>
                     {t('global.submit')}

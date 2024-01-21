@@ -10,12 +10,6 @@ import { ListItemIcon, styled } from '@mui/material';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { useTranslation } from 'react-i18next';
 
-const MyKeyboardArrowDownOutlinedIcon = styled('KeyboardArrowDownOutlinedIcon')(
-    ({ primary }) => ({
-        backgroundColor: primary ? 'palevioletred' : 'white',
-        color: primary ? 'white' : 'palevioletred',
-    })
-);
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {

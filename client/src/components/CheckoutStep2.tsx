@@ -125,7 +125,11 @@ const CheckoutStep2 = ({ validate, setValidFunc }: CheckoutStep2Props) => {
                             id="city"
                             name="client_fields.demographics.address.city"
                             error={showCityError}
-                            helperText={showCityError ? t('checkout.shipping.city-error') : ' '}
+                            helperText={
+                                showCityError
+                                    ? t('checkout.shipping.city-error')
+                                    : ' '
+                            }
                             autoComplete="city"
                             value={city}
                             sx={{ maxWidth: { sx: '100%', sm: '40%' } }}
@@ -146,7 +150,9 @@ const CheckoutStep2 = ({ validate, setValidFunc }: CheckoutStep2Props) => {
                                 fullWidth
                                 error={showAddressError}
                                 helperText={
-                                    showAddressError ? t('checkout.shipping.address-error') : ' '
+                                    showAddressError
+                                        ? t('checkout.shipping.address-error')
+                                        : ' '
                                 }
                                 id="address"
                                 autoComplete="address"
@@ -162,7 +168,9 @@ const CheckoutStep2 = ({ validate, setValidFunc }: CheckoutStep2Props) => {
                                 error={showPostalCodeError}
                                 helperText={
                                     showPostalCodeError
-                                        ? t('checkout.shipping.postal-code-error')
+                                        ? t(
+                                              'checkout.shipping.postal-code-error'
+                                          )
                                         : ' '
                                 }
                                 id="postalCode"
@@ -204,9 +212,9 @@ const CheckoutStep2 = ({ validate, setValidFunc }: CheckoutStep2Props) => {
                         <Divider />
                         <Typography
                             fontSize="small"
-                            color="gray"
+                            color="primary"
                             className="font-poppins">
-                            <InfoRoundedIcon className="h-4 w-4" /> 
+                            <InfoRoundedIcon className="h-4 w-4" />
                             {t('checkout.shipping.shipping-info')}
                         </Typography>
                     </Stack>

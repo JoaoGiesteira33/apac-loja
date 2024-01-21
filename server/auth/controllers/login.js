@@ -1,7 +1,7 @@
 // Login API controller
 //
-var Login = require('../models/login')
-var crypto = require('crypto')
+var Login = require('../models/login');
+var crypto = require('crypto');
 
 let tempStorage = {};
 let bruteForceProtection = {};
@@ -17,15 +17,16 @@ let bruteForceProtection = {};
  * @returns {Promise<Login>} - Promise com o utilizador criado
  */
 
-module.exports.registar = async info => {
-	return await Login.register(
-		new Login({
-			username: info.email,
-			nivel: info.nivel,
-			dataRegisto: info.dataRegisto
-		}),
-		info.password)
-}
+module.exports.registar = async (info) => {
+    return await Login.register(
+        new Login({
+            username: info.email,
+            nivel: info.nivel,
+            dataRegisto: info.dataRegisto,
+        }),
+        info.password
+    );
+};
 
 /**
  * Atualiza a data do ultimo acesso do utilizador
@@ -39,8 +40,11 @@ module.exports.registar = async info => {
  */
 
 module.exports.login = async (email, data) => {
-	return Login.updateOne({ username: email }, { "$set": { "dataUltimoAcesso": data } })
-}
+    return Login.updateOne(
+        { username: email },
+        { $set: { dataUltimoAcesso: data } }
+    );
+};
 
 /**
  * Verifica se um utilizador existe através do seu email
@@ -48,14 +52,13 @@ module.exports.login = async (email, data) => {
  * @returns {Boolean} - True se existir, false se não existir
  */
 
-module.exports.existsEmail = async mail => {
-	try {
-		return await Login.findOne({ username: mail }) ? true : false;
-	}
-	catch (erro) {
-		return false;
-	}
-}
+module.exports.existsEmail = async (mail) => {
+    try {
+        return (await Login.findOne({ username: mail })) ? true : false;
+    } catch (erro) {
+        return false;
+    }
+};
 
 /**
  * Verifica se um utilizador existe através do seu email
@@ -63,9 +66,9 @@ module.exports.existsEmail = async mail => {
  * @returns {Login} - Utilizador encontrado
  */
 
-module.exports.getLogin = async mail => {
-	return Login.findOne({ username: mail })
-}
+module.exports.getLogin = async (mail) => {
+    return Login.findOne({ username: mail });
+};
 
 /**
  * Atualiza o email de um utilizador
@@ -80,12 +83,14 @@ module.exports.getLogin = async mail => {
  */
 
 module.exports.updateLoginEmail = async (oldEmail, newMail) => {
-	const l = await Login.findOne({ username: newMail })
-	if (l)
-		throw new Error("Email already in use!")
+    const l = await Login.findOne({ username: newMail });
+    if (l) throw new Error('Email already in use!');
 
-	return Login.updateOne({ username: oldEmail }, { "$set": { "username": newMail } })
-}
+    return Login.updateOne(
+        { username: oldEmail },
+        { $set: { username: newMail } }
+    );
+};
 
 /**
  * Atualiza a password de um utilizador
@@ -96,13 +101,12 @@ module.exports.updateLoginEmail = async (oldEmail, newMail) => {
  */
 
 module.exports.updateLoginPassword = async (mail, password) => {
-	const l = await Login.findOne({ username: mail })
-	if (!l)
-		throw new Error("User not found!")
-	await l.setPassword(password)
-	await l.save()
-	return l
-}
+    const l = await Login.findOne({ username: mail });
+    if (!l) throw new Error('User not found!');
+    await l.setPassword(password);
+    await l.save();
+    return l;
+};
 
 /**
  * Atualiza o nivel de um utilizador
@@ -116,8 +120,8 @@ module.exports.updateLoginPassword = async (mail, password) => {
  */
 
 module.exports.updateLoginNivel = async (mail, nivel) => {
-	return Login.updateOne({ username: mail }, { "$set": { "nivel": nivel } })
-}
+    return Login.updateOne({ username: mail }, { $set: { nivel: nivel } });
+};
 
 /**
  * Apaga um utilizador
@@ -127,17 +131,17 @@ module.exports.updateLoginNivel = async (mail, nivel) => {
  * @returns {Number} Object.deletedCount - Número de documentos eliminados
  */
 
-module.exports.deleteLogin = async mail => {
-	return Login.deleteOne({ username: mail })
-}
+module.exports.deleteLogin = async (mail) => {
+    return Login.deleteOne({ username: mail });
+};
 
 /**
  * Apaga informações auxiliares para o processo de verificação de códigos
  * @param {String} userEmail - Email do utilizador
  */
 function forceDeleteHash(userEmail) {
-	delete tempStorage[userEmail];
-	delete bruteForceProtection[userEmail];
+    delete tempStorage[userEmail];
+    delete bruteForceProtection[userEmail];
 }
 
 /**
@@ -147,13 +151,13 @@ function forceDeleteHash(userEmail) {
  */
 
 function storeHashTemporarily(userEmail, hash) {
-	tempStorage[userEmail] = hash;
-	bruteForceProtection[userEmail] = 3; // 3 attempts
+    tempStorage[userEmail] = hash;
+    bruteForceProtection[userEmail] = 3; // 3 attempts
 
-	// Delete the hash after 5 minutes (300000ms)
-	setTimeout(() => {
-		forceDeleteHash(userEmail);
-	}, 300000);
+    // Delete the hash after 5 minutes (300000ms)
+    setTimeout(() => {
+        forceDeleteHash(userEmail);
+    }, 300000);
 }
 
 /**
@@ -163,9 +167,9 @@ function storeHashTemporarily(userEmail, hash) {
  */
 
 function brutedForce(userEmail) {
-	bruteForceProtection[userEmail] -= 1;
+    bruteForceProtection[userEmail] -= 1;
 
-	return bruteForceProtection[userEmail] < 0;
+    return bruteForceProtection[userEmail] < 0;
 }
 
 /**
@@ -175,7 +179,7 @@ function brutedForce(userEmail) {
  */
 
 function getStoredHash(userEmail) {
-	return tempStorage[userEmail];
+    return tempStorage[userEmail];
 }
 
 /**
@@ -184,19 +188,21 @@ function getStoredHash(userEmail) {
  * @returns {String} - Código de recuperação de conta
  */
 
-module.exports.generateRecoveryCode = async userEmail => {
-	const existsMail = Login.existsEmail(userEmail);
-	if (!existsMail)
-		return null;
+module.exports.generateRecoveryCode = async (userEmail) => {
+    const existsMail = Login.existsEmail(userEmail);
+    if (!existsMail) return null;
 
-	const recoveryCode = crypto.randomBytes(7).toString('hex').toUpperCase();
+    const recoveryCode = crypto.randomBytes(7).toString('hex').toUpperCase();
 
-	const hash = crypto.createHmac('sha256', secrets.AUTH_KEY).update(recoveryCode).digest('hex');
+    const hash = crypto
+        .createHmac('sha256', secrets.AUTH_KEY)
+        .update(recoveryCode)
+        .digest('hex');
 
-	storeHashTemporarily(userEmail, hash);
+    storeHashTemporarily(userEmail, hash);
 
-	return recoveryCode;
-}
+    return recoveryCode;
+};
 
 /**
  * Verifica se um código fornecido é válido
@@ -206,18 +212,26 @@ module.exports.generateRecoveryCode = async userEmail => {
  * @throws {Error} - Erro se o utilizador já tiver tentado utilizar o código mais do que as vezes permitidas
  */
 module.exports.verifyRecoveryCode = async (userEmail, submittedCode) => {
-	if (!brutedForce(userEmail)) {
+    if (!brutedForce(userEmail)) {
+        const hashToCheck = crypto
+            .createHmac('sha256', secrets.AUTH_KEY)
+            .update(submittedCode)
+            .digest('hex');
 
-		const hashToCheck = crypto.createHmac('sha256', secrets.AUTH_KEY).update(submittedCode).digest('hex');
+        const storedHash = getStoredHash(userEmail);
 
-		const storedHash = getStoredHash(userEmail);
+        const result = storedHash === hashToCheck;
+        if (result) {
+            //prevenir que através de sniffing de pacotes utilizar o mesmo código que já foi utilizado
+            forceDeleteHash(userEmail);
+        }
+    } else throw new Error('Too many attempts!');
+};
 
-		const result = storedHash === hashToCheck;
-		if (result) {
-			//prevenir que através de sniffing de pacotes utilizar o mesmo código que já foi utilizado
-			forceDeleteHash(userEmail);
-		}
-	}
-	else
-		throw new Error("Too many attempts!");
-}
+/** 
+ * Retorna todos os utilizadores
+ * @returns {Array<Login>} - Array com todos os utilizadores que não sejam admins
+ **/
+module.exports.getUsers = async () => {
+    return await Login.find({ nivel: { $ne: 'admin' } });
+};

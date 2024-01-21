@@ -5,9 +5,6 @@ import Box from '@mui/system/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 
 export default function ProductThumbnail(props) {
-    useEffect(() => {
-        console.log(props.product);
-    });
     return (
         <Box component="div" sx={{ flexGrow: 1 }}>
             <Link to={`/product/${props.product._id}`} state={props.product}>

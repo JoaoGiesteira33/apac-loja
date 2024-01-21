@@ -117,15 +117,16 @@ router.get(
     '/seller/:id',
     isMeOrAdmin,
     middleware.expandExtractor,
+    middleware.extractFilters,
     middleware.fieldSelector,
     function (req, res) {
         controllerUser
             .getUserInfo(req.params.id, req.expand || '')
             .then((info) => {
-                res.jsonp(info);
+                res.status(200).jsonp(info);
             })
             .catch((error) => {
-                res.jsonp(error);
+                res.status(400).jsonp(error);
             });
     }
 );

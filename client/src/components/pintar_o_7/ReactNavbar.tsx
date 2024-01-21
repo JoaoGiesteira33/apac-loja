@@ -4,12 +4,8 @@ import {
     Box,
     Toolbar,
     IconButton,
-    Typography,
-    Menu,
-    MenuItem,
-    Container,
     Grid,
-    Divider,
+    useTheme,
 } from '@mui/material';
 
 import MenuIcon from '@mui/icons-material/Menu';
@@ -30,6 +26,7 @@ const padX = {
 };
 
 function ReactNavbar(props) {
+    const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
     const [open, setOpen] = React.useState(false);
@@ -46,7 +43,7 @@ function ReactNavbar(props) {
             elevation={0}
             sx={{
                 fontSize: '1.2rem',
-                color: 'gray',
+                backgroundColor: theme.palette.background.default,
             }}>
             <Toolbar disableGutters sx={{ mb: 2, py: 8, paddingX: padX }}>
                 <Link to="/">
@@ -60,11 +57,11 @@ function ReactNavbar(props) {
                 </Link>
 
                 <Box
+                    component={'div'}
                     sx={{
                         flexGrow: 1,
                         display: { xs: 'none', md: 'flex' },
                         textAlign: 'right',
-                        color: 'gray',
                     }}>
                     <Grid container>
                         {pages.map((page, index) => (
@@ -76,7 +73,7 @@ function ReactNavbar(props) {
                                         pagesLinks[index],
                                         location.pathname
                                     )
-                                        ? { fontWeight: 'bold', color: 'black' }
+                                        ? { fontWeight: 'bold' }
                                         : {}
                                 }
                                 key={page}>
@@ -93,7 +90,7 @@ function ReactNavbar(props) {
                             sx={
                                 location.pathname ==
                                 lastpageLinks[props.loggedIn ? 1 : 0]
-                                    ? { fontWeight: 'bold', color: 'black' }
+                                    ? { fontWeight: 'bold' }
                                     : {}
                             }>
                             <Link
@@ -105,7 +102,9 @@ function ReactNavbar(props) {
                     </Grid>
                 </Box>
 
-                <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                <Box
+                    component={'div'}
+                    sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                     <IconButton
                         size="large"
                         onClick={() => {
@@ -142,9 +141,10 @@ function ReactNavbar(props) {
                         className="hover:bg-gray-50">
                         <Link to={pagesLinks[index]} className="font-poppins">
                             <Box
+                                component={'div'}
                                 sx={
                                     location.pathname == pagesLinks[index]
-                                        ? { color: 'black', fontWeight: 'bold' }
+                                        ? { fontWeight: 'bold' }
                                         : {}
                                 }>
                                 {page}
@@ -157,10 +157,11 @@ function ReactNavbar(props) {
                         to={lastpageLinks[props.loggedIn ? 1 : 0]}
                         className="font-poppins">
                         <Box
+                            component={'div'}
                             sx={
                                 location.pathname ==
                                 lastpageLinks[props.loggedIn ? 1 : 0]
-                                    ? { color: 'black', fontWeight: 'bold' }
+                                    ? { fontWeight: 'bold' }
                                     : {}
                             }>
                             {lastpage[props.loggedIn ? 1 : 0]}

@@ -14,6 +14,19 @@ var axios = require('axios');
 const API_URL_USER = 'http://api/user';
 
 // ---------------------------------------------
+// GET -> [admin] obter todos os utilizadores que não sejam admins
+router.get('/notAdmin', isAdmin, function (req, res) {
+	controllerLogin.getUsers()
+		.then(u => {
+			if (u)
+				res.status(200).jsonp(u)
+			else
+				res.status(401).jsonp({ error: "Erro ao processar o pedido" })
+		})
+		.catch(erro => {
+			res.status(401).jsonp({ error: "Erro na obtenção dos utilizadores: " + erro })
+		})
+})
 
 // GET verifica se é admin
 router.get('/admin/verificar', isAdmin, function (req, res) {

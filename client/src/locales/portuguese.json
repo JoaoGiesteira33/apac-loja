@@ -188,6 +188,8 @@
             "products_text": "Gerir os seus produtos",
             "logout": "Sair",
             "logout_text": "Sair da conta",
+            "dashboard": "Dashboard",
+            "dashboard_text": "Consultar dashboard de estatísticas",
             "new-seller": "Novo artista",
             "new-seller-text": "Criar uma conta de artista nova"
         },
@@ -350,6 +352,37 @@
             "contact": "contactos",
             "profile": "perfil",
             "login": "login"
+        },
+        "months": {
+            "0": "Jan",
+            "1": "Fev",
+            "2": "Mar",
+            "3": "Abr",
+            "4": "Mai",
+            "5": "Jun",
+            "6": "Jul",
+            "7": "Ago",
+            "8": "Set",
+            "9": "Out",
+            "10": "Nov",
+            "11": "Dez"
+        },
+        "dashboard": {
+            "registerMonth": "Registos por mês",
+            "artistsCity": "Artistas por cidade",
+            "clientsCity": "Clientes por cidade",
+            "lastVisited_client": "Ultima visita de clientes (dias)",
+            "lastVisited_seller": "Ultima visita de artistas (dias)",
+            "age": "Idade dos clientes",
+            "7": "< 7",
+            "15": "< 15",
+            "30": "< 30",
+            "60": "< 60",
+            "rest": ">= 60",
+            "shipmentState": "Estado das encomendas",
+            "pending": "Pendentes",
+            "reserved": "Reservadas",
+            "paid": "Pagas"
         }
     }
 }
