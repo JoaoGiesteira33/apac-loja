@@ -1,4 +1,5 @@
 const Product = require('../models/product');
+const controllerFile = require('./file');
 
 const utils = require('../utils/utils');
 
@@ -68,4 +69,25 @@ module.exports.getMaxPrice = function () {
         .then((info) => {
             return info[0].price;
         });
+};
+
+//      - addPhotos
+module.exports.addPhotos = async function (id, photos) {
+    let session = await Product.startSession();
+    try {
+        session.startTransaction();
+        let files = await controllerFile.createManyFiles(photos);
+        let filePaths = files.map((file) => file._id);
+        await Product.updateOne(
+            { _id: id },
+            { $push: { photos: { $each: filePaths } } }
+        );
+        await session.commitTransaction();
+        return files;
+    } catch (error) {
+        await session.abortTransaction();
+        throw error;
+    } finally {
+        session.endSession();
+    }
 };

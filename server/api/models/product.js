@@ -98,4 +98,22 @@ const Product = new mongoose.Schema({
     },
 });
 
+// When adding updating photos to push new ones verify that the total number of photos will be less than 12
+Product.pre('updateOne', function (next) {
+    if (this._update.$push && this._update.$push.photos) {
+        this.model.findById(this._conditions._id).then((product) => {
+            if (
+                product.photos.length + this._update.$push.photos.$each.length >
+                12
+            ) {
+                next(new Error('The maximum number of photos is 12.'));
+            } else {
+                next();
+            }
+        });
+    } else {
+        next();
+    }
+});
+
 module.exports = mongoose.model('productModel', Product, 'products');
