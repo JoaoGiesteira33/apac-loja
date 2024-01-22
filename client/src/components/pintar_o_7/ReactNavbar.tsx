@@ -66,7 +66,7 @@ function ReactNavbar(props) {
                     <Grid container>
                         {pages.map((page, index) => (
                             <Grid
-                                item
+                                
                                 xs={3}
                                 sx={
                                     checkRoute(
@@ -74,8 +74,9 @@ function ReactNavbar(props) {
                                         location.pathname
                                     )
                                         ? { fontWeight: 'bold' }
-                                        : {}
+                                        : { color: theme.palette.text.secondary }
                                 }
+
                                 key={page}>
                                 <Link
                                     to={pagesLinks[index]}
@@ -85,13 +86,13 @@ function ReactNavbar(props) {
                             </Grid>
                         ))}
                         <Grid
-                            item
+                            
                             xs={3}
                             sx={
                                 location.pathname ==
                                 lastpageLinks[props.loggedIn ? 1 : 0]
                                     ? { fontWeight: 'bold' }
-                                    : {}
+                                    : { color: theme.palette.text.secondary }
                             }>
                             <Link
                                 to={lastpageLinks[props.loggedIn ? 1 : 0]}
@@ -131,7 +132,7 @@ function ReactNavbar(props) {
                 spacing={2}>
                 {pages.map((page, index) => (
                     <Grid
-                        item
+                        
                         xs={12}
                         key={page}
                         sx={{
@@ -152,7 +153,7 @@ function ReactNavbar(props) {
                         </Link>
                     </Grid>
                 ))}
-                <Grid item xs={12} sx={{ py: 1 }} className="hover:bg-gray-50">
+                <Grid xs={12} sx={{ py: 1 }} className="hover:bg-gray-50">
                     <Link
                         to={lastpageLinks[props.loggedIn ? 1 : 0]}
                         className="font-poppins">

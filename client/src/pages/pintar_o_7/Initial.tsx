@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import Box from '@mui/system/Box';
-
 import logoApac from '../../assets/LOGO_negrito.png';
-import { Divider, Grid, Link, CircularProgress } from '@mui/material';
+import { Divider, Grid, Link, CircularProgress, useTheme, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +10,8 @@ import useProductSearch from '../../hooks/useProductSearch';
 
 export default function Initial(props) {
     const [t] = useTranslation();
+    const theme = useTheme();
+
     const displayConfig = [
         { xs: 'none', md: 'flex', sm: 'none' },
         { xs: 'none', md: 'none', sm: 'flex' },
@@ -20,25 +20,27 @@ export default function Initial(props) {
     const protectedPages = [t('initial.login'), t('initial.profile')];
     const protectedPagesLinks = ['/login', '/profile'];
 
-    const Item = styled(Paper)(({ theme }) => ({
+    const Item = styled(Box)(() => ({
         paddingTop: theme.spacing(3),
         paddingBottom: theme.spacing(3),
         textAlign: 'center',
         fontSize: 'clamp(1rem, 3.3vw, 1.3rem)',
-        backgroundColor: 'transparent',
         boxShadow: 'none',
         fontWeight: 'bold',
+        backgroundColor: theme.palette.background.default,
     }));
 
     function MY_LNK({ link, text }: { link: string; text: string }) {
         return (
-            <Link
+            <Box
+                component={Link}
                 className="font-poppins"
                 href={link}
                 underline="none"
-                color={'black'}>
+                color={theme.palette.text.primary}
+                >
                 {text}
-            </Link>
+            </Box>
         );
     }
 
@@ -106,27 +108,28 @@ export default function Initial(props) {
                     bottom: 0,
                     paddingBottom: 10,
                     display: displayConfig[0],
+                    backgroundColor: theme.palette.background.default,
                 }}>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <Divider />
                 </Grid>
-                <Grid item xs={4} />
-                <Grid item xs={2}>
+                <Grid xs={4} />
+                <Grid xs={2}>
                     <Item>
                         <MY_LNK link="gallery" text={t('initial.gallery')} />
                     </Item>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid xs={2}>
                     <Item>
                         <MY_LNK link="artists" text={t('initial.artists')} />
                     </Item>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid xs={2}>
                     <Item>
                         <MY_LNK link="contact" text={t('initial.contact')} />
                     </Item>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid xs={2}>
                     <Item>
                         <MY_LNK
                             link={protectedPagesLinks[props.loggedIn ? 1 : 0]}
@@ -144,26 +147,27 @@ export default function Initial(props) {
                     bottom: 0,
                     paddingBottom: 10,
                     display: displayConfig[1],
+                    backgroundColor: theme.palette.background.default,
                 }}>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <Divider variant="middle" />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid xs={3}>
                     <Item>
                         <MY_LNK link="gallery" text={t('initial.gallery')} />
                     </Item>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid xs={3}>
                     <Item>
                         <MY_LNK link="artists" text={t('initial.artists')} />
                     </Item>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid xs={3}>
                     <Item>
                         <MY_LNK link="contact" text={t('initial.contact')} />
                     </Item>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid xs={3}>
                     <Item>
                         <MY_LNK
                             link={protectedPagesLinks[props.loggedIn ? 1 : 0]}
@@ -179,26 +183,27 @@ export default function Initial(props) {
                     position: 'absolute',
                     bottom: 0,
                     display: displayConfig[2],
+                    backgroundColor: theme.palette.background.default,
                 }}>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <Divider variant="middle" />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <Item>
                         <MY_LNK link="gallery" text={t('initial.gallery')} />
                     </Item>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <Item>
                         <MY_LNK link="artists" text={t('initial.artists')} />
                     </Item>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <Item>
                         <MY_LNK link="contact" text={t('initial.contact')} />
                     </Item>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <Item>
                         <MY_LNK
                             link={protectedPagesLinks[props.loggedIn ? 1 : 0]}

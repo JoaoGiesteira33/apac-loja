@@ -1,4 +1,4 @@
-import { TextField, Typography } from '@mui/material';
+import { TextField, Typography, useTheme } from '@mui/material';
 import { socket } from '../../socket';
 import Button from '@mui/material/Button';
 
@@ -28,6 +28,7 @@ export function ConnectionManager({ username, setUsername, setSessionID, unselec
     socket.disconnect();
   }
 
+  const theme = useTheme();
   return (
     <>
 

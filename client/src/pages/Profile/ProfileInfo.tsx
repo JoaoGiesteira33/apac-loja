@@ -1,16 +1,23 @@
-import { useRef, useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 
 import Box from '@mui/system/Box';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 
-import { Button, Stack, Typography } from '@mui/material';
+import { Alert, Button, Slide, Stack, Typography } from '@mui/material';
 
-import CountrySelect from '../../components/pintar_o_7/CountrySelect';
+import CountrySelect, {
+    CountryType,
+} from '../../components/pintar_o_7/CountrySelect';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import SaveSharpIcon from '@mui/icons-material/SaveSharp';
 import dayjs, { Dayjs } from 'dayjs';
 import { useTranslation } from 'react-i18next';
+import { getCountry } from '../../types/country';
+import { User } from '../../types/user';
+import { NestedPartial } from '../../types/nestedPartial';
+import { updateUser } from '../../fetchers';
+import { is } from '@react-three/fiber/dist/declarations/src/core/utils';
 
 const TODAY_MINUS_18_YEARS: Dayjs = dayjs().subtract(18, 'year');
 
@@ -26,7 +33,15 @@ export default function ProfileInfo() {
         if (userInfo) return userInfo.email;
         else return '';
     });
-    const [country, setCountry] = useState(() => {
+    const [country, setCountry] = useState<CountryType | null>(() => {
+        if (userInfo) {
+            const countryLabel =
+                userInfo.client_fields.demographics.address.country;
+            const country = getCountry(countryLabel);
+            return country;
+        } else return null;
+    });
+    const [countryInput, setCountryInput] = useState<string>(() => {
         if (userInfo)
             return userInfo.client_fields.demographics.address.country;
         else return '';
@@ -44,57 +59,60 @@ export default function ProfileInfo() {
         if (userInfo) return userInfo.client_fields.demographics.address.city;
         else return '';
     });
-    const [phone, setPhone] = useState(() => {
-        if (userInfo) return userInfo.client_fields.demographics.phone;
-        else return '';
-    });
-    const [birth_date, setBirthDate] = useState(() => {
+    const [phone, setPhone] = useState<string>(() => {
         if (userInfo) {
+            const phoneFromLocalStorage =
+                userInfo.client_fields.demographics.phone;
+            if (phoneFromLocalStorage != null) return phoneFromLocalStorage;
+            else return '';
+        } else return '';
+    });
+    const [birth_date, setBirthDate] = useState<Dayjs>(() => {
+        if (userInfo) {
+            if (userInfo.client_fields.demographics.birth_date == null)
+                return dayjs();
             return dayjs(userInfo.client_fields.demographics.birth_date);
         } else {
             return dayjs();
         }
     });
 
-    const originalName = useRef(() => {
-        if (userInfo) return userInfo.client_fields.demographics.name;
-        else return '';
-    });
-    const originalEmail = useRef(() => {
-        if (userInfo) return userInfo.email;
-        else return '';
-    });
-    const originalCountry = useRef(() => {
-        if (userInfo)
-            return userInfo.client_fields.demographics.address.country;
-        else return '';
-    });
-    const originalAddress = useRef(() => {
-        if (userInfo) return userInfo.client_fields.demographics.address.street;
-        else return '';
-    });
-    const originalPostalCode = useRef(() => {
-        if (userInfo)
-            return userInfo.client_fields.demographics.address.postal_code;
-        else return '';
-    });
-    const originalCity = useRef(() => {
-        if (userInfo) return userInfo.client_fields.demographics.address.city;
-        else return '';
-    });
-    const originalPhone = useRef(() => {
-        if (userInfo) return userInfo.client_fields.demographics.phone;
-        else return '';
-    });
-    const originalBirthDate = useRef(() => {
-        if (userInfo) {
-            return dayjs(userInfo.client_fields.demographics.birth_date);
-        } else {
-            return dayjs();
-        }
-    });
+    let originalName = '';
+    if (userInfo && userInfo.client_fields.demographics.name)
+        originalName = userInfo.client_fields.demographics.name;
 
-    const [profileChanged, setProfileChanged] = useState(true);
+    let originalEmail = '';
+    if (userInfo && userInfo.email) originalEmail = userInfo.email;
+
+    let originalCountry = undefined;
+    if (userInfo && userInfo.client_fields.demographics.address.country) {
+        const originalCountryLabel =
+            userInfo.client_fields.demographics.address.country;
+        originalCountry = getCountry(originalCountryLabel);
+    }
+
+    let originalAddress = '';
+    if (userInfo && userInfo.client_fields.demographics.address.street)
+        originalAddress = userInfo.client_fields.demographics.address.street;
+
+    let originalPostalCode = '';
+    if (userInfo && userInfo.client_fields.demographics.address.postal_code)
+        originalPostalCode =
+            userInfo.client_fields.demographics.address.postal_code;
+
+    let originalCity = '';
+    if (userInfo && userInfo.client_fields.demographics.address.city)
+        originalCity = userInfo.client_fields.demographics.address.city;
+
+    let originalPhone = '';
+    if (userInfo && userInfo.client_fields.demographics.phone)
+        originalPhone = userInfo.client_fields.demographics.phone;
+
+    let originalBirthDate = dayjs();
+    if (userInfo && userInfo.client_fields.demographics.birth_date)
+        originalBirthDate = dayjs(
+            userInfo.client_fields.demographics.birth_date
+        );
 
     const [showNameAlert, setShowNameAlert] = useState(false);
     const [showEmailAlert, setShowEmailAlert] = useState(false);
@@ -104,6 +122,9 @@ export default function ProfileInfo() {
     const [showAddressError, setShowAddressError] = useState(false);
     const [showPostalCodeError, setShowPostalCodeError] = useState(false);
     const [showCountryAlert, setShowCountryAlert] = useState(false);
+
+    const [didSaveAlert, setDidSaveAlert] = useState(false);
+    const [saveErrorAlert, setSaveErrorAlert] = useState(false);
 
     const checkEmail = (email: string) => {
         const re = /\S+@\S+\.\S+/;
@@ -120,24 +141,41 @@ export default function ProfileInfo() {
         setShowPostalCodeError(false);
     };
 
-    const hasProfileChanged = () => {
+    const hasProfileChanged = useMemo(() => {
         return (
-            name !== originalName.current ||
-            email !== originalEmail.current ||
-            country !== originalCountry.current ||
-            address !== originalAddress.current ||
-            postalCode !== originalPostalCode.current ||
-            city !== originalCity.current ||
-            phone !== originalPhone.current ||
-            birth_date !== originalBirthDate.current
+            name !== originalName ||
+            email !== originalEmail ||
+            country !== originalCountry ||
+            address !== originalAddress ||
+            postalCode !== originalPostalCode ||
+            city !== originalCity ||
+            phone !== originalPhone ||
+            !originalBirthDate.isSame(birth_date)
         );
-    };
+    }, [
+        name,
+        originalName,
+        email,
+        originalEmail,
+        country,
+        originalCountry,
+        address,
+        originalAddress,
+        postalCode,
+        originalPostalCode,
+        city,
+        originalCity,
+        phone,
+        originalPhone,
+        originalBirthDate,
+        birth_date,
+    ]);
 
-    const handleProfileSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleProfileSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         disableAllAlerts();
 
-        if (!hasProfileChanged()) return;
+        if (!hasProfileChanged) return;
         let hasErrors: boolean = false;
 
         if (name === '') {
@@ -174,185 +212,236 @@ export default function ProfileInfo() {
             hasErrors = true;
         }
         if (hasErrors) return;
+
+        const userInfo: NestedPartial<User> = {
+            email: email,
+            client_fields: {
+                demographics: {
+                    address: {
+                        street: address,
+                        city: city,
+                        postal_code: postalCode,
+                        country: countryInput,
+                    },
+                    name: name,
+                    phone: phone,
+                    birth_date: birth_date.format('YYYY-MM-DD'),
+                },
+            },
+        };
+        console.log('userInfo: ', userInfo);
+        setDidSaveAlert(true);
+        setTimeout(() => {
+            setDidSaveAlert(false);
+            setSaveErrorAlert(false);
+        }, 5000);
+
+        // const token = localStorage.getItem('token');
+        // if (token == null) return;
+
+        // const res = await updateUser(userInfo, token);
+        // if (res.isOk()) {
+        //     // TODO - show success alert
+        // } else {
+        //     //error?
+        // }
     };
 
     return (
-        <Box
-            onSubmit={(e) => handleProfileSubmit(e)}
-            component="form"
-            sx={{
-                paddingY: '2rem',
-                paddingX: {
-                    xs: '2rem',
-                    sm: '4rem',
-                    md: '6rem',
-                    lg: '20%',
-                },
-            }}>
-            <Stack
-                direction="column"
-                spacing={4}
-                alignItems={'center'}
-                justifyContent={'flex-start'}>
-                <Paper
-                    sx={{
-                        width: '100%',
-                        padding: '2rem',
-                    }}>
-                    <Typography variant="h4">Account</Typography>
-                    <TextField
-                        variant="standard"
-                        margin="normal"
-                        fullWidth
-                        error={showNameAlert}
-                        helperText={
-                            showNameAlert ? t('errors.profile.name') : ' '
-                        }
-                        label={t('forms.first-last-name')}
-                        type="text"
-                        id="name"
-                        autoComplete="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
-                    <TextField
-                        variant="standard"
-                        margin="normal"
-                        fullWidth
-                        error={showEmailAlert}
-                        helperText={
-                            showEmailAlert ? t('errors.profile.email') : ' '
-                        }
-                        label={t('forms.email')}
-                        type="email"
-                        id="email"
-                        autoComplete="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <TextField
-                        variant="standard"
-                        margin="normal"
-                        fullWidth
-                        label={t('forms.phone-number')}
-                        error={showPhoneAlert}
-                        helperText={
-                            showPhoneAlert
-                                ? t('errors.profile.phone-number')
-                                : ' '
-                        }
-                        type="tel"
-                        id="phone"
-                        autoComplete="tel"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                    />
-                    <DatePicker
-                        disableFuture
-                        openTo="day"
-                        views={['year', 'month', 'day']}
-                        format="DD/MM/YYYY"
-                        maxDate={TODAY_MINUS_18_YEARS}
-                        label={t('forms.birth-date')}
-                        value={birth_date}
-                        slotProps={{
-                            textField: {
-                                variant: 'standard',
-                                fullWidth: true,
-                                required: true,
-                                name: 'client_fields.client_fields.demographics.birth_date',
-                                margin: 'normal',
-                            },
-                        }}
-                        onChange={(value) => setBirthDate(value)}
-                    />
-                </Paper>
-                <Paper
-                    sx={{
-                        width: '100%',
-                        padding: '2rem',
-                    }}>
-                    <Typography variant="h4">Address</Typography>
-                    <Stack
-                        direction={{ xs: 'column', sm: 'row' }}
-                        spacing={{ xs: 1, sm: 2 }}
-                        sx={{ marginBottom: 1, marginTop: 2 }}>
-                        <CountrySelect
-                            selection={country}
-                            setSelection={setCountry}
-                            sx={{ marginTop: '1rem', flex: 1 }}
-                            showCountryAlert={showCountryAlert}
-                        />
-                        <TextField
-                            variant="standard"
-                            margin="normal"
-                            label={t('forms.city')}
-                            type="text"
-                            id="city"
-                            error={showCityError}
-                            helperText={
-                                showCityError ? t('errors.profile.city') : ' '
-                            }
-                            autoComplete="city"
-                            value={city}
-                            sx={{ maxWidth: { sx: '100%', sm: '40%' } }}
-                            onChange={(e) => setCity(e.target.value)}
-                        />
-                    </Stack>
-                    <Stack
-                        direction={{ xs: 'column', sm: 'row' }}
-                        spacing={{ xs: 1, sm: 2 }}
-                        sx={{ marginBottom: 1, marginTop: 2 }}>
-                        <TextField
-                            variant="standard"
-                            margin="normal"
-                            label={t('forms.address')}
-                            type="text"
-                            fullWidth
-                            error={showAddressError}
-                            helperText={
-                                showAddressError
-                                    ? t('errors.profile.address')
-                                    : ' '
-                            }
-                            id="address"
-                            autoComplete="address"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
-                        />
-                        <TextField
-                            variant="standard"
-                            margin="normal"
-                            label={t('forms.postal-code')}
-                            type="text"
-                            error={showPostalCodeError}
-                            helperText={
-                                showPostalCodeError
-                                    ? t('errors.profile.postal-code')
-                                    : ' '
-                            }
-                            id="postalCode"
-                            autoComplete="postalCode"
-                            value={postalCode}
-                            onChange={(e) => setPostalCode(e.target.value)}
-                        />
-                    </Stack>
-                </Paper>
-                {profileChanged && (
-                    <Button
-                        type="submit"
-                        color="secondary"
-                        startIcon={<SaveSharpIcon />}
-                        variant="contained"
-                        size="large"
-                        style={{
-                            width: '50%',
-                            alignSelf: 'center',
+        <>
+            <Box
+                onSubmit={(e) => handleProfileSubmit(e)}
+                component="form"
+                sx={{
+                    paddingY: '2rem',
+                    paddingX: {
+                        xs: '2rem',
+                        sm: '4rem',
+                        md: '6rem',
+                        lg: '20%',
+                    },
+                }}>
+                <Stack
+                    direction="column"
+                    spacing={4}
+                    alignItems={'center'}
+                    justifyContent={'flex-start'}>
+                    <Paper
+                        sx={{
+                            width: '100%',
+                            padding: '2rem',
                         }}>
-                        {t('forms.save')}
-                    </Button>
-                )}
-            </Stack>
-        </Box>
+                        <Typography variant="h4">Account</Typography>
+                        <TextField
+                            variant="standard"
+                            margin="normal"
+                            fullWidth
+                            error={showNameAlert}
+                            helperText={
+                                showNameAlert ? t('errors.profile.name') : ' '
+                            }
+                            label={t('forms.first-last-name')}
+                            type="text"
+                            id="name"
+                            autoComplete="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                        <TextField
+                            variant="standard"
+                            margin="normal"
+                            fullWidth
+                            error={showEmailAlert}
+                            helperText={
+                                showEmailAlert ? t('errors.profile.email') : ' '
+                            }
+                            label={t('forms.email')}
+                            type="email"
+                            id="email"
+                            autoComplete="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <TextField
+                            variant="standard"
+                            margin="normal"
+                            fullWidth
+                            label={t('forms.phone-number')}
+                            error={showPhoneAlert}
+                            helperText={
+                                showPhoneAlert
+                                    ? t('errors.profile.phone-number')
+                                    : ' '
+                            }
+                            type="tel"
+                            id="phone"
+                            autoComplete="tel"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                        />
+                        <DatePicker
+                            disableFuture
+                            openTo="day"
+                            views={['year', 'month', 'day']}
+                            format="DD/MM/YYYY"
+                            maxDate={TODAY_MINUS_18_YEARS}
+                            label={t('forms.birth-date')}
+                            value={birth_date}
+                            slotProps={{
+                                textField: {
+                                    variant: 'standard',
+                                    fullWidth: true,
+                                    required: true,
+                                    name: 'client_fields.client_fields.demographics.birth_date',
+                                    margin: 'normal',
+                                },
+                            }}
+                            onChange={(value) => setBirthDate(value)}
+                        />
+                    </Paper>
+                    <Paper
+                        sx={{
+                            width: '100%',
+                            padding: '2rem',
+                        }}>
+                        <Typography variant="h4">Address</Typography>
+                        <Stack
+                            direction={{ xs: 'column', sm: 'row' }}
+                            spacing={{ xs: 1, sm: 2 }}
+                            sx={{ marginBottom: 1, marginTop: 2 }}>
+                            <CountrySelect
+                                selection={country}
+                                setSelection={setCountry}
+                                selectionInput={countryInput}
+                                setSelectionInput={setCountryInput}
+                                sx={{ marginTop: '1rem', flex: 1 }}
+                                showCountryAlert={showCountryAlert}
+                            />
+                            <TextField
+                                variant="standard"
+                                margin="normal"
+                                label={t('forms.city')}
+                                type="text"
+                                id="city"
+                                error={showCityError}
+                                helperText={
+                                    showCityError
+                                        ? t('errors.profile.city')
+                                        : ' '
+                                }
+                                autoComplete="city"
+                                value={city}
+                                sx={{ maxWidth: { sx: '100%', sm: '40%' } }}
+                                onChange={(e) => setCity(e.target.value)}
+                            />
+                        </Stack>
+                        <Stack
+                            direction={{ xs: 'column', sm: 'row' }}
+                            spacing={{ xs: 1, sm: 2 }}
+                            sx={{ marginBottom: 1, marginTop: 2 }}>
+                            <TextField
+                                variant="standard"
+                                margin="normal"
+                                label={t('forms.address')}
+                                type="text"
+                                fullWidth
+                                error={showAddressError}
+                                helperText={
+                                    showAddressError
+                                        ? t('errors.profile.address')
+                                        : ' '
+                                }
+                                id="address"
+                                autoComplete="address"
+                                value={address}
+                                onChange={(e) => setAddress(e.target.value)}
+                            />
+                            <TextField
+                                variant="standard"
+                                margin="normal"
+                                label={t('forms.postal-code')}
+                                type="text"
+                                error={showPostalCodeError}
+                                helperText={
+                                    showPostalCodeError
+                                        ? t('errors.profile.postal-code')
+                                        : ' '
+                                }
+                                id="postalCode"
+                                autoComplete="postalCode"
+                                value={postalCode}
+                                onChange={(e) => setPostalCode(e.target.value)}
+                            />
+                        </Stack>
+                    </Paper>
+                    {hasProfileChanged && (
+                        <Button
+                            type="submit"
+                            color="secondary"
+                            startIcon={<SaveSharpIcon />}
+                            variant="contained"
+                            size="large"
+                            style={{
+                                width: '50%',
+                                alignSelf: 'center',
+                            }}>
+                            {t('forms.save')}
+                        </Button>
+                    )}
+                </Stack>
+            </Box>
+            <Slide
+                direction="down"
+                in={didSaveAlert}
+                mountOnEnter
+                unmountOnExit>
+                <Alert
+                    className="fixed top-10 left-1/2 translate-x-1/2"
+                    variant="filled"
+                    severity="success">
+                    {t('forms.saved')}
+                </Alert>
+            </Slide>
+        </>
     );
 }

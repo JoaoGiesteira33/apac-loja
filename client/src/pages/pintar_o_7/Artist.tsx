@@ -45,13 +45,13 @@ export default function ArtistPage() {
                 <Grid
                     container
                     sx={{ display: { xs: 'none', sm: 'flex' }, my: 10 }}>
-                    <Grid item xs={2}>
+                    <Grid xs={2}>
                         <Avatar
                             src={artist.seller_fields.profile_picture}
                             sx={{ width: '15vw', height: '15vw' }}
                         />
                     </Grid>
-                    <Grid item xs={10}>
+                    <Grid xs={10}>
                         <Box
                             component="div"
                             sx={{
@@ -86,7 +86,7 @@ export default function ArtistPage() {
                 <Grid
                     container
                     sx={{ display: { xs: 'flex', sm: 'none' }, my: 1 }}>
-                    <Grid item xs={12}>
+                    <Grid xs={12}>
                         <Avatar
                             sx={{
                                 width: '8rem',
@@ -96,7 +96,7 @@ export default function ArtistPage() {
                             src={artist.seller_fields.profile_picture}
                         />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid xs={12}>
                         <Typography
                             variant="h4"
                             fontWeight="bold"

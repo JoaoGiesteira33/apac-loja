@@ -34,11 +34,11 @@ const Footer = (props) => {
                 },
             }}>
             <Grid container sx={{ paddingBottom: 5 }}>
-                <Grid item xs={12}>
+                <Grid  xs={12}>
                     <Divider />
                 </Grid>
                 <Grid
-                    item
+                    
                     xs={6}
                     sm={3}
                     md={3}
@@ -96,7 +96,7 @@ const Footer = (props) => {
                     </List>
                 </Grid>
                 <Grid
-                    item
+                    
                     xs={6}
                     sm={5}
                     md={5}
@@ -125,7 +125,7 @@ const Footer = (props) => {
             </Grid>
             <Grid container>
                 <Grid
-                    item
+                    
                     xs={12}
                     md={3}
                     lg={2}
@@ -135,7 +135,7 @@ const Footer = (props) => {
                     <MY_LNK link="info" text="termos e condições" />
                 </Grid>
                 <Grid
-                    item
+                    
                     xs={12}
                     md={3}
                     lg={2}
@@ -148,7 +148,7 @@ const Footer = (props) => {
                     />
                 </Grid>
                 <Grid
-                    item
+                    
                     xs={12}
                     md={3}
                     lg={2}
@@ -158,7 +158,7 @@ const Footer = (props) => {
                     <MY_LNK link="info" text="política de privacidade" />
                 </Grid>
                 <Grid
-                    item
+                    
                     xs={12}
                     md={3}
                     lg={6}

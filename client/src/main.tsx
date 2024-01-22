@@ -13,9 +13,11 @@ import { ViewportProvider } from './contexts/viewPortContext';
 import { BrowserRouter } from 'react-router-dom';
 import { CartProvider } from './contexts/cartProvider.tsx';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { ErrorBoundary } from 'react-error-boundary';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
+        <ErrorBoundary fallback={<p>Something went wrong. Try refreshing the page.</p>}>
         <ViewportProvider>
             <BrowserRouter>
                 <CartProvider>
@@ -30,5 +32,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 </CartProvider>
             </BrowserRouter>
         </ViewportProvider>
+        </ErrorBoundary>
     </React.StrictMode>
 );
