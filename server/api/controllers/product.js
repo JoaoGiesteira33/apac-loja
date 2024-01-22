@@ -77,7 +77,7 @@ module.exports.addPhotos = async function (id, photos) {
     try {
         session.startTransaction();
         let files = await controllerFile.createManyFiles(photos);
-        let filePaths = files.map((file) => file._id);
+        let filePaths = files.map((file) => 'file/' + file._id);
         await Product.updateOne(
             { _id: id },
             { $push: { photos: { $each: filePaths } } }
