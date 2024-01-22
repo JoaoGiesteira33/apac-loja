@@ -31,25 +31,36 @@ module.exports.createManyShipments = async function (data, session) {
         //Create notifications
         let notificationPromises = shipments.map((shipment) => {
             let state = shipment.states.slice(-1)[0].value;
-            let notification = generateNotification(
+            let notifications = generateNotifications(
                 state,
                 shipment._product,
                 shipment._seller,
                 shipment._client
             );
 
-            if (notification) {
-                if (state == 'reserved') {
-                    notification.save({ session: session });
-                } else {
-                    return notification.save({ session: session }).then(() => {
-                        const Product = require('../models/product');
-                        return Product.updateOne(
-                            { _id: shipment._product },
-                            { $set: { 'piece_info.state': 'unavailable' } }
-                        );
-                    });
-                }
+            if (notifications) {
+                return Promise.all(
+                    notifications.map((notification) => {
+                        if (state == 'reserved') {
+                            return notification.save({ session: session });
+                        } else {
+                            return notification
+                                .save({ session: session })
+                                .then(() => {
+                                    const Product = require('../models/product');
+                                    return Product.updateOne(
+                                        { _id: shipment._product },
+                                        {
+                                            $set: {
+                                                'piece_info.state':
+                                                    'unavailable',
+                                            },
+                                        }
+                                    );
+                                });
+                        }
+                    })
+                );
             }
         });
 
@@ -123,26 +134,33 @@ module.exports.updateShipmentState = async function (filter, value) {
             { session: session, new: true }
         );
 
-        let state = shipment.states.slice(-1)[0].value;
-
-        let notification = generateNotification(
-            state,
+        let notifications = generateNotifications(
+            value,
             shipment._product,
             shipment._seller,
             shipment._client
         );
 
-        await notification.save({ session: session });
+        if (notifications) {
+            await Promise.all(
+                notifications.map((notification) => {
+                    return notification.save({ session: session });
+                })
+            );
+        }
 
-        if (
-            ['reserved', 'paid', 'sent', 'delivered', 'canceled'].includes(
-                state
-            )
-        ) {
+        if (['reserved', 'paid', 'sent', 'delivered'].includes(value)) {
             const Product = require('../models/product');
             await Product.updateOne(
                 { _id: shipment._product },
                 { $set: { state: 'unavailable' } },
+                { session: session }
+            );
+        } else if (value == 'canceled') {
+            const Product = require('../models/product');
+            await Product.updateOne(
+                { _id: shipment._product },
+                { $set: { state: 'available' } },
                 { session: session }
             );
         }
@@ -150,7 +168,70 @@ module.exports.updateShipmentState = async function (filter, value) {
         await session.commitTransaction();
         return shipment;
     } catch (err) {
-        console.log(err);
+        await session.abortTransaction();
+        throw err;
+    } finally {
+        session.endSession();
+    }
+};
+
+module.exports.updateShipmentsState = async function (filter, value) {
+    let session = await Shipment.startSession();
+    try {
+        session.startTransaction();
+
+        let shipments = await Shipment.find(filter).session(session);
+
+        await Shipment.updateMany(
+            filter,
+            { $push: { states: { value: value, date: Date.now() } } },
+            { session: session }
+        );
+
+        let notificationPromises = shipments.map((shipment) => {
+            let notifications = generateNotifications(
+                value,
+                shipment._product,
+                shipment._seller,
+                shipment._client
+            );
+            if (notifications) {
+                console.log(notifications);
+                return Promise.all(
+                    notifications.map((notification) => {
+                        return notification.save({ session: session });
+                    })
+                );
+            }
+        });
+        await Promise.all(notificationPromises);
+
+        if (['reserved', 'paid', 'sent', 'delivered'].includes(value)) {
+            const Product = require('../models/product');
+            let productPromises = shipments.map((shipment) => {
+                return Product.updateOne(
+                    { _id: shipment._product },
+                    { $set: { state: 'unavailable' } },
+                    { session: session }
+                );
+            });
+            await Promise.all(productPromises);
+        } else if (value == 'canceled') {
+            let shipments = await Shipment.find(filter).session(session);
+            const Product = require('../models/product');
+            let productPromises = shipments.map((shipment) => {
+                return Product.updateOne(
+                    { _id: shipment._product },
+                    { $set: { state: 'available' } },
+                    { session: session }
+                );
+            });
+            await Promise.all(productPromises);
+        }
+
+        await session.commitTransaction();
+        return shipments;
+    } catch {
         await session.abortTransaction();
         throw err;
     } finally {
@@ -170,45 +251,131 @@ module.exports.addPaymentInfo = async function (filter, data) {
 
 // ADDITIONAL METHODS:
 
-function generateNotification(state, _product, _seller, _client) {
+function generateNotifications(state, _product, _seller, _client) {
     const Notification = require('../models/notification');
     switch (state) {
         case 'pending':
-            return new Notification({
-                _user: _seller,
-                title: 'Pedido de pré-reserva',
-                message:
-                    'Um cliente realizou um pedido de pré-reserva do seu produto.',
-                link: `/product/${_product}`,
-            });
+            return [
+                new Notification({
+                    _user: _seller,
+                    title: 'Pedido de pré-reserva',
+                    message:
+                        'Um cliente realizou um pedido de pré-reserva do seu produto.',
+                    link: `/product/${_product}`,
+                }),
+            ];
         case 'reserved':
-            return new Notification({
-                _user: _client,
-                title: 'Pedido de pré-reserva aceite',
-                message:
-                    'O vendedor aceitou o seu pedido de pré-reserva do produto.',
-                link: `/product/${_product}`,
-            });
+            return [
+                new Notification({
+                    _user: _client,
+                    title: 'Pedido de pré-reserva aceite',
+                    message:
+                        'O vendedor aceitou o seu pedido de pré-reserva do produto.',
+                    link: `/product/${_product}`,
+                }),
+            ];
         case 'paid':
-            return new Notification({
-                _user: _seller,
-                title: 'Compra do seu produto',
-                message: 'Um cliente comprou o seu produto.',
-                link: `/product/${_product}`,
-            });
+            return [
+                new Notification({
+                    _user: _seller,
+                    title: 'Compra do seu produto',
+                    message: 'Um cliente comprou o seu produto.',
+                    link: `/product/${_product}`,
+                }),
+            ];
         case 'sent':
-            return new Notification({
-                _user: _client,
-                title: 'O produto que comprou foi enviado',
-                message: 'O vendedor enviou o produto.',
-                link: `/product/${_product}`,
-            });
+            return [
+                new Notification({
+                    _user: _client,
+                    title: 'O produto que comprou foi enviado',
+                    message: 'O vendedor enviou o produto.',
+                    link: `/product/${_product}`,
+                }),
+            ];
         case 'delivered':
-            return new Notification({
-                _user: _seller,
-                title: 'O produto que vendeu foi entregue',
-                message: 'O cliente recebeu o produto.',
-                link: `/product/${_product}`,
-            });
+            return [
+                new Notification({
+                    _user: _seller,
+                    title: 'O produto que vendeu foi entregue',
+                    message: 'O cliente recebeu o produto.',
+                    link: `/product/${_product}`,
+                }),
+            ];
+        case 'canceled':
+            return [
+                new Notification({
+                    _user: _client,
+                    title: 'A sua compra foi cancelada',
+                    message: 'A encomenda do produto foi cancelada.',
+                    link: `/product/${_product}`,
+                }),
+                new Notification({
+                    _user: _seller,
+                    title: 'A sua venda foi cancelada',
+                    message: 'A encomenda do seu produto foi cancelada.',
+                    link: `/product/${_product}`,
+                }),
+            ];
     }
 }
+
+// Scheduled tasks
+
+module.exports.overdueCheck = async function (days, state) {
+    let date = new Date();
+    date.setDate(date.getDate() - days);
+    console.log(date);
+    return this.updateShipmentsState(
+        {
+            $expr: {
+                $and: [
+                    {
+                        $lte: [
+                            {
+                                $arrayElemAt: ['$states.date', -1],
+                            },
+                            date,
+                        ],
+                    },
+                    {
+                        $eq: [
+                            {
+                                $arrayElemAt: ['$states.value', -1],
+                            },
+                            state,
+                        ],
+                    },
+                ],
+            },
+        },
+        'canceled'
+    );
+};
+
+// overduePayment
+module.exports.overduePayment = async function () {
+    console.log('overduePayment');
+    return this.overdueCheck(2, 'reserved');
+};
+
+// overdueShipment
+module.exports.overdueShipment = async function () {
+    console.log('overdueShipment');
+    return this.overdueCheck(5, 'paid');
+};
+
+// overdueDelivery
+module.exports.overdueDelivery = async function () {
+    console.log('overdueDelivery');
+    return this.overdueCheck(5, 'sent');
+};
+
+// Use node-cron to schedule the overdue checks
+const cron = require('node-cron');
+cron.schedule('* * * * *', async function () {
+    console.log('Running overdue checks job');
+    await module.exports.overduePayment();
+    await module.exports.overdueShipment();
+    await module.exports.overdueDelivery();
+    console.log('Finished overdue checks job');
+});
