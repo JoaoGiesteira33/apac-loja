@@ -41,13 +41,13 @@ const Payment = new mongoose.Schema(
     {
         transactionId: {
             type: String,
-            required: true
+            required: true,
         },
         method: {
             type: String,
             enum: ['paypal', 'eupago'],
         },
-        reference: String
+        reference: String,
     },
     { _id: false }
 );
@@ -98,6 +98,28 @@ const Shipment = new mongoose.Schema({
     address: Address,
     shipping_proof: String, // Path to the file submitted by the seller
     evaluation: Evaluation,
+});
+
+Shipment.pre('save', function (next) {
+    //Check if there is another shipment with the same product, that is not canceled
+    mongoose
+        .model('shipmentModel')
+        .findOne({
+            _product: this._product,
+            'states.value': { $ne: 'canceled' },
+        })
+        .then((shipment) => {
+            if (shipment) {
+                throw new Error(
+                    'There is already a shipment for this product that is not canceled.'
+                );
+            } else {
+                next();
+            }
+        })
+        .catch((error) => {
+            next(error);
+        });
 });
 
 module.exports = mongoose.model('shipmentModel', Shipment, 'shipments');

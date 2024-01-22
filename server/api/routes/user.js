@@ -7,6 +7,10 @@ const controllerShipment = require('../controllers/shipment');
 
 const { isAdmin, isMeOrAdmin, isAdminOrAUTH } = require('../utils/utils');
 
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
 const middleware = require('./myMiddleware');
 
 // ---------------------CLIENT------------------------
@@ -295,6 +299,27 @@ router.get(
                 req.query.limit || 28,
                 req.expand || ''
             )
+            .then((info) => {
+                res.status(200).jsonp(info);
+            })
+            .catch((error) => {
+                res.status(500).jsonp(error);
+            });
+    }
+);
+
+router.post(
+    '/:id/photo',
+    isMeOrAdmin,
+    upload.single('file'),
+    function (req, res) {
+        controllerUser
+            .updateUserPhoto(req.params.id, {
+                name: req.file.originalname,
+                mimetype: req.file.mimetype,
+                size: req.file.size,
+                data: req.file.buffer,
+            })
             .then((info) => {
                 res.status(200).jsonp(info);
             })

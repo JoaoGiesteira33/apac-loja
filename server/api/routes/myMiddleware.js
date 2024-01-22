@@ -30,6 +30,20 @@ function fieldSelector(req, res, next) {
     next();
 }
 
+function operatorWhitelist(op) {
+    return (
+        op == 'eq' ||
+        op == 'ne' ||
+        op == 'gt' ||
+        op == 'gte' ||
+        op == 'lt' ||
+        op == 'lte' ||
+        op == 'in' ||
+        op == 'nin' ||
+        op == 'regex'
+    );
+}
+
 // Serve para poder passar valores de filtros, para pesquisas
 // Exemplo: /artist?nome=joao&idade=18
 // campo select é reservado para a seleção de campos
@@ -39,6 +53,10 @@ function extractFilters(req, res, next) {
     for (let i in filters) {
         if (typeof filters[i] === 'object') {
             for (let j in filters[i]) {
+                if (!operatorWhitelist(j)) {
+                    delete filters[i][j];
+                    continue;
+                }
                 if (j == 'in' || j == 'nin') {
                     filters[i]['$' + j] = filters[i][j].split(',');
                 } else {
@@ -61,4 +79,17 @@ function expandExtractor(req, res, next) {
     next();
 }
 
-module.exports = { fieldSelector, extractFilters, expandExtractor };
+function sortExtractor(req, res, next) {
+    let sort = req.query.sort;
+    if (sort) {
+        req.sort = flatten(sort);
+    }
+    next();
+}
+
+module.exports = {
+    fieldSelector,
+    extractFilters,
+    expandExtractor,
+    sortExtractor,
+};

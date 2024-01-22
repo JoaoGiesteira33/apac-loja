@@ -9,7 +9,7 @@ router.get('/:filename', function (req, res, next) {
             console.log(info);
             res.header('Content-Type', info.mimetype);
             res.header('Content-Length', info.size);
-            res.send(info.data);
+            res.status(200).send(info.data);
         })
         .catch((error) => {
             res.status(500).jsonp(error);
