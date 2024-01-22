@@ -52,6 +52,24 @@ const Payment = new mongoose.Schema(
     { _id: false }
 );
 
+const Address = new mongoose.Schema(
+    {
+        street: {
+            type: String,
+        },
+        postal_code: {
+            type: String,
+        },
+        city: {
+            type: String,
+        },
+        country: {
+            type: String,
+        },
+    },
+    { _id: false }
+);
+
 const Shipment = new mongoose.Schema({
     _client: {
         type: ObjectId,
@@ -77,6 +95,7 @@ const Shipment = new mongoose.Schema({
         type: [Payment],
         default: [],
     },
+    address: Address,
     shipping_proof: String, // Path to the file submitted by the seller
     evaluation: Evaluation,
 });
