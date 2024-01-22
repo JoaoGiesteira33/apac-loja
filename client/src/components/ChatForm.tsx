@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { IconButton } from '@mui/material';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
@@ -24,7 +24,7 @@ interface MessagePanelProps {
 }
 
 export function ChatForm({ user, onMessage }: MessagePanelProps) {
-
+  const theme = useTheme();
   const [input, setInput] = useState('');
   const [emojisOpen, setEmojisOpen] = useState(false);
 
@@ -37,35 +37,53 @@ export function ChatForm({ user, onMessage }: MessagePanelProps) {
   const onSubmit = () => {
       onMessage(input);
       setInput('');
+      
+      // Close emoji picker on message
+      if (emojisOpen)
+        handleEmojisOpen();
   };
 
   const isValid = input.length > 0;
-
 
   return (
     <Box
         component="div"
         sx={{
+            backgroundColor: theme.palette.primary.main,
             display: 'inline-flex',
             flexGrow: 1,
-            backgroundColor: '#f6f6f6',
-            width: 2 / 5,
+            width: {xs: '90%', sm: '60%', md: '40%'},
+            height: {xs: '10%', sm: '10%', md: '10%'},
             position: 'fixed',
-            bottom: 64,
-            right: 16,
+            bottom: '5%',
+            right: '5%',
         }}>
+
+        {emojisOpen && (
+            // Fixed position flexible box
+            <Box
+                component="div"
+                sx={{
+                    display: 'inline-flex',
+                    flexGrow: 1,
+                    position: 'fixed',
+                    bottom: {xs: '15%', sm: '14%', md: '13%'},
+                    right: {xs: '5%', sm: '15%', md: '15%'},
+                }}>
+                    
+                <Picker data={data} onEmojiSelect={handleEmojiSelect} theme={theme.palette.mode}/>
+            </Box>
+            // TODO: Handle On click outside (close emoji picker)
+        )}
 
         <Box
             component="div"
             sx={{
                 display: 'inline',
-                backgroundColor: '#ffffff',
+                backgroundColor: theme.palette.primary.main,
+                justifyContent: { xs: 'center', sm: 'space-between' },
                 width: 1 / 4,
             }}>
-
-            {emojisOpen && (
-                <Picker data={data} onEmojiSelect={handleEmojiSelect} />
-            )}
 
             <IconButton>
                 <AttachFileIcon />
@@ -86,6 +104,12 @@ export function ChatForm({ user, onMessage }: MessagePanelProps) {
             placeholder="Aa"
             multiline
             fullWidth
+            maxRows={2}
+            sx={{
+                flexGrow: 1,
+                backgroundColor: theme.palette.primary.main,
+                overflow: 'auto',
+            }}
         />
 
 
@@ -94,7 +118,7 @@ export function ChatForm({ user, onMessage }: MessagePanelProps) {
             sx={{
                 display: 'inline',
                 flexGrow: 1,
-                backgroundColor: '#ffffff',
+                backgroundColor: theme.palette.primary.main,
                 width: 1 / 8,
             }}>
 

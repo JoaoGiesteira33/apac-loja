@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {socket} from '../../socket';
 import MessagePanel from './MessagePanel';
 import { Button } from '@mui/material';
@@ -7,7 +7,7 @@ import { ConnectionManager } from './ConnectionManager';
 import SpeedDial from '@mui/material/SpeedDial';
 import CloseIcon from '@mui/icons-material/Close';
 import ChatIcon from '@mui/icons-material/Chat';
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 
 import { ChatForm } from '../ChatForm';
 
@@ -29,6 +29,7 @@ interface Message {
 
 //function Chat({ userID }: { userID: string}) {
 function Chat() {
+  const theme = useTheme();
   const defaultUser = { username: '', connected: false, self: false, messages: [], hasNewMessages: false };
   const [selectedUser, setSelectedUser] = useState<User>(defaultUser);
   const [selected, setSelected] = useState(false);
@@ -209,6 +210,18 @@ function Chat() {
     };
   }, [selectedUser, users]);
 
+  
+  // Scroll to bottom of chat
+  const messagesEndRef = useRef(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  });
+
 return (
     <div>
       <SpeedDial
@@ -221,8 +234,14 @@ return (
       </SpeedDial>
 
       {open && <>
-      <Box component="div" sx={{ backgroundColor: '#1976d2', width: 2 / 5, p: 1, position: 'fixed', bottom: 446, right: 16}}>
-        
+      <Box component="div" sx={{  backgroundColor: theme.palette.primary.main,
+                                  width: {xs: '90%', sm: '60%', md: '40%'},
+                                  height: {xs: '20%', sm: '15%', md: '15%'},                                  
+                                  position: 'fixed',
+                                  bottom: {xs: '75%', sm: '74%', md: '72%'},
+                                  right: '5%'}}
+        >
+      
         <ConnectionManager username={username} setUsername={setUsername} setSessionID={setSessionID} unselectUser={unselectUser} />
         
         {socket.connected ? users.map((user) => (
@@ -241,20 +260,19 @@ return (
         <Box
             component="div"
             sx={{
-                backgroundColor: '#f6f6f6',
-                width: 2 / 5,
-                height: 350,
+                backgroundColor: theme.palette.primary.main,
+                width: {xs: '90%', sm: '60%', md: '40%'},
+                height: {xs: '60%', sm: '60%', md: '60%'},
                 overflow: 'auto',
                 position: 'fixed',
-                bottom: 96,
-                right: 16,
-                p: 2,
+                bottom: {xs: '15%', sm: '15%', md: '15%'},
+                right: '5%',
             }}>
 
           {(selected ? <MessagePanel user={selectedUser} onMessage={onMessage} /> : <></>)}
-
+        
+          <div ref={messagesEndRef} />
         </Box>
-
 
         <ChatForm user={selectedUser} onMessage={onMessage}/>
         </>}
