@@ -106,7 +106,7 @@ Product.pre('updateOne', function (next) {
                 product.photos.length + this._update.$push.photos.$each.length >
                 12
             ) {
-                next(new Error('The maximum number of photos is 12.'));
+                throw new Error('Too many photos');
             } else {
                 next();
             }

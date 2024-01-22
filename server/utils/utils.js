@@ -147,8 +147,11 @@ function isAdminOrAUTH(req, res, next) {
                 req.level = payload.level;
                 req.token = myToken;
                 next();
-            }
-            if (payload.level == 'auth') {
+            } else if (payload.level == 'auth') {
+                req.user = payload.username;
+                req._id = payload._id;
+                req.level = payload.level;
+                req.token = myToken;
                 next();
             } else {
                 res.status(401).jsonp({ error: 'Access denied!' });
