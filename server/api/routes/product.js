@@ -90,9 +90,9 @@ router.put('/:id', hasAccess, function (req, res, next) {
                     .replaceProductInfo(req.params.id, req.body)
                     .then((info) => {
                         if (info.matchedCount == 0) {
-                            res.status(201);
+                            res.status(201).jsonp(info);
                         } else {
-                            res.status(204);
+                            res.status(200).jsonp(info);
                         }
                     })
                     .catch((error) => {
@@ -127,7 +127,7 @@ router.patch('/:id', hasAccess, function (req, res, next) {
                 controllerProduct
                     .updateProductInfo(req.params.id, req.body)
                     .then((info) => {
-                        res.status(204);
+                        res.status(201).jsonp(info);
                     })
                     .catch((error) => {
                         res.status(500).jsonp(error);
@@ -151,8 +151,8 @@ router.delete('/:id', hasAccess, function (req, res, next) {
             } else {
                 controllerProduct
                     .deleteProduct(req.params.id)
-                    .then(() => {
-                        res.status(204);
+                    .then((info) => {
+                        res.status(200).jsonp(info);
                     })
                     .catch((error) => {
                         res.status(500).jsonp(error);

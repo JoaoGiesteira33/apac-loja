@@ -27,7 +27,7 @@ router.get(
                 res.status(200).jsonp(info);
             })
             .catch((error) => {
-                res.status(400).jsonp(error);
+                res.status(500).jsonp(error);
             });
     }
 );
@@ -40,7 +40,7 @@ router.post('/client', isAdminOrAUTH, function (req, res) {
             res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.status(400).jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
@@ -50,13 +50,13 @@ router.put('/client/:id', isMeOrAdmin, function (req, res) {
         .replaceUserInfo(req.params.id, req.body)
         .then((info) => {
             if (info.matchedCount == 0) {
-                res.status(201);
+                res.status(201).jsonp(info);
             } else {
-                res.status(204);
+                res.status(200).jsonp(info);
             }
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
@@ -65,10 +65,10 @@ router.patch('/client/:id', isMeOrAdmin, function (req, res) {
     controllerUser
         .updateUserInfo(req.params.id, req.body)
         .then((info) => {
-            res.jsonp(info);
+            res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
@@ -80,7 +80,7 @@ router.delete('/client/:id', isAdminOrAUTH, function (req, res) {
             res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.status(400).jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
@@ -102,10 +102,10 @@ router.get(
                 req.expand || ''
             )
             .then((info) => {
-                res.jsonp(info);
+                res.status(200).jsonp(info);
             })
             .catch((error) => {
-                res.jsonp(error);
+                res.status(500).jsonp(error);
             });
     }
 );
@@ -126,7 +126,7 @@ router.get(
                 res.status(200).jsonp(info);
             })
             .catch((error) => {
-                res.status(400).jsonp(error);
+                res.status(500).jsonp(error);
             });
     }
 );
@@ -136,10 +136,10 @@ router.post('/seller', isAdminOrAUTH, function (req, res) {
     controllerUser
         .createUser(req.body)
         .then((info) => {
-            res.jsonp(info);
+            res.status(201).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
@@ -148,10 +148,14 @@ router.put('/seller/:id', isMeOrAdmin, function (req, res) {
     controllerUser
         .replaceUserInfo(req.params.id, req.body)
         .then((info) => {
-            res.jsonp(info);
+            if (info.matchedCount == 0) {
+                res.status(201).jsonp(info);
+            } else {
+                res.status(200).jsonp(info);
+            }
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
@@ -160,10 +164,10 @@ router.patch('/seller/:id', isMeOrAdmin, function (req, res) {
     controllerUser
         .updateUserInfo(req.params.id, req.body)
         .then((info) => {
-            res.jsonp(info);
+            res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
@@ -175,7 +179,7 @@ router.delete('/seller/:id', isAdminOrAUTH, function (req, res) {
             res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.status(400).jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
@@ -196,10 +200,10 @@ router.get(
                 req.expand || ''
             )
             .then((info) => {
-                res.jsonp(info);
+                res.status(200).jsonp(info);
             })
             .catch((error) => {
-                res.jsonp(error);
+                res.status(500).jsonp(error);
             });
     }
 );
@@ -219,7 +223,7 @@ router.get(
                 res.status(200).jsonp(info);
             })
             .catch((error) => {
-                res.status(400).jsonp(error);
+                res.status(500).jsonp(error);
             });
     }
 );
@@ -232,7 +236,7 @@ router.post('/', isAdmin, function (req, res) {
             res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.status(400).jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
@@ -241,10 +245,14 @@ router.put('/:id', isMeOrAdmin, function (req, res) {
     controllerUser
         .replaceUserInfo(req.params.id, req.body)
         .then((info) => {
-            res.jsonp(info);
+            if (info.matchedCount == 0) {
+                res.status(201).jsonp(info);
+            } else {
+                res.status(200).jsonp(info);
+            }
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
@@ -253,10 +261,10 @@ router.patch('/:id', isMeOrAdmin, function (req, res) {
     controllerUser
         .updateUserInfo(req.params.id, req.body)
         .then((info) => {
-            res.jsonp(info);
+            res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
@@ -268,7 +276,7 @@ router.delete('/:id', isAdmin, function (req, res) {
             res.status(200).jsonp(info);
         })
         .catch((error) => {
-            res.status(400).jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
@@ -288,10 +296,10 @@ router.get(
                 req.expand || ''
             )
             .then((info) => {
-                res.jsonp(info);
+                res.status(200).jsonp(info);
             })
             .catch((error) => {
-                res.jsonp(error);
+                res.status(500).jsonp(error);
             });
     }
 );
@@ -336,17 +344,20 @@ router.get('/seller/:id/products', isMeOrAdmin, function (req, res) {
                             }
                             return product;
                         });
-                        res.jsonp({ results: products, hasMore: info.hasMore });
+                        res.status(200).jsonp({
+                            results: products,
+                            hasMore: info.hasMore,
+                        });
                     })
                     .catch((error) => {
-                        res.jsonp(error);
+                        res.status(500).jsonp(error);
                     });
             } else {
-                res.jsonp(info);
+                res.status(500).jsonp(info);
             }
         })
         .catch((error) => {
-            res.jsonp(error);
+            res.status(500).jsonp(error);
         });
 });
 
