@@ -2,6 +2,8 @@ import axios, { Axios, AxiosError, AxiosResponse } from 'axios';
 import { ProductType } from './types/product';
 import { NestedPartial } from './types/nestedPartial';
 import { Result, err, ok } from './types/result';
+import { User } from './types/user';
+import { decodeToken } from 'react-jwt';
 //import mime from 'mime';
 
 const BASE_URL = 'http://localhost';
@@ -41,7 +43,7 @@ export const fetchUser = async (id: string, level: string, token: string) => {
             console.log('Error fetching client: ' + err.message);
             throw err.message;
         }
-    } else if (level === "admin" || level === 'seller') {
+    } else if (level === 'admin' || level === 'seller') {
         try {
             const response = await axios.get(
                 `${API_URL_USER}/seller/${id}?token=${token}`
@@ -195,7 +197,7 @@ export const getShipments = async (token: string) => {
         console.error('Error getting shipments:', error);
         throw error;
     }
-}
+};
 
 export const addProduct = async (
     product: NestedPartial<ProductType>
@@ -206,6 +208,33 @@ export const addProduct = async (
 
     try {
         const response = await axios.post(`${BASE_URL}/products`, product);
+        return ok(response.data);
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log('error message: ', error.message);
+            return err(error);
+        } else {
+            console.log('unexpected error: ', error);
+            return err(new Error('Unexpected error'));
+        }
+    }
+};
+
+export const updateUser = async (
+    userInfo: NestedPartial<User>,
+    token: string
+): Promise<Result<string, Error>> => {
+    try {
+        const decodedToken = decodeToken(token);
+        const response = await axios.patch(
+            `${API_URL_USER}/${(decodedToken as { _id: string })._id}`,
+            {
+                params: {
+                    token: token,
+                },
+                data: userInfo,
+            }
+        );
         return ok(response.data);
     } catch (error) {
         if (axios.isAxiosError(error)) {
