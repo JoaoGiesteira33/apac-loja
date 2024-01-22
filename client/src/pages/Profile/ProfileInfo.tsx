@@ -213,7 +213,7 @@ export default function ProfileInfo() {
         }
         if (hasErrors) return;
 
-        const userInfo: NestedPartial<User> = {
+        const newUserInfo: NestedPartial<User> = {
             email: email,
             client_fields: {
                 demographics: {
@@ -233,8 +233,13 @@ export default function ProfileInfo() {
         const token = localStorage.getItem('token');
         if (token == null) return;
 
-        const res = await updateUser(userInfo, token);
+        const res = await updateUser(newUserInfo, token);
         if (res.isOk()) {
+            const newUserInfoLocalStorage = { ...userInfo, newUserInfo };
+            localStorage.setItem(
+                'user',
+                JSON.stringify(newUserInfoLocalStorage)
+            );
             setDidSaveAlert(true);
             setSaveErrorAlert(false);
             setTimeout(() => {
