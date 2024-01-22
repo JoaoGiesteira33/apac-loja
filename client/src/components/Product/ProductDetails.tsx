@@ -17,6 +17,7 @@ import { Alert } from '@mui/material';
 import { Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import useCart from '../../hooks/useCart';
+import { checkLink } from '../../fetchers';
 
 const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
     const { t } = useTranslation();
@@ -83,7 +84,7 @@ const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
                         {product.photos.map((photo) => (
                             <div className="aspect-w-1 aspect-h-1">
                                 <img
-                                    src={photo}
+                                    src={checkLink(photo)}
                                     alt={product.title}
                                     className="object-cover w-14 h-14 rounded-sm cursor-pointer hover:opacity-80"
                                     onClick={() => setSelectedImage(photo)}
@@ -97,7 +98,7 @@ const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
                     <div className="flex flex-col space-y-2">
                         <div className="w-full h-96 sm:h-128 md:h-176">
                             <img
-                                src={selectedImage}
+                                src={checkLink(selectedImage)}
                                 alt={product.title}
                                 className="object-cover w-full h-full rounded-md cursor-pointer object-center  "
                                 onClick={handleLightbox}
@@ -173,7 +174,7 @@ const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
                                     <DialogBody className="flex flex-col items-center">
                                         <div className="w-52 h-52">
                                             <img
-                                                src={selectedImage}
+                                                src={checkLink(selectedImage)}
                                                 alt={product.title}
                                                 className="object-cover w-full h-full rounded-md cursor-pointer object-center  "
                                                 onClick={handleLightbox}

@@ -17,6 +17,7 @@ import {
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import dayjs from 'dayjs';
+import { checkLink } from '../../fetchers';
 
 export default function NewProductRequest(props: { product: ProductType }) {
     const theme = useTheme();
@@ -33,7 +34,7 @@ export default function NewProductRequest(props: { product: ProductType }) {
                     {props.product ? (
                         <img
                             className="w-full h-full aspect-square object-cover"
-                            src={props.product.photos[0]}></img>
+                            src={checkLink(props.product.photos[0])}></img>
                     ) : (
                         <Skeleton variant="rectangular">
                             <img className="object-cover"></img>
@@ -84,8 +85,8 @@ export default function NewProductRequest(props: { product: ProductType }) {
                             </Typography>
                             <Avatar
                                 src={
-                                    (props.product._seller as User)
-                                        .seller_fields?.profile_picture
+                                    checkLink((props.product._seller as User)
+                                        .seller_fields?.profile_picture)
                                 }
                                 alt={
                                     (props.product._seller as User)

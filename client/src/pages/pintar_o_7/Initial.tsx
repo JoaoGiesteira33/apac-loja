@@ -5,6 +5,7 @@ import { Divider, Grid, Link, CircularProgress, useTheme, Box } from '@mui/mater
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { useTranslation } from 'react-i18next';
+import { checkLink } from '../../fetchers';
 
 import useProductSearch from '../../hooks/useProductSearch';
 
@@ -75,7 +76,7 @@ export default function Initial(props) {
             />
             {randomProduct && (
                 <img
-                    src={randomProduct.photos[0]}
+                    src={checkLink(randomProduct.photos[0])}
                     alt="Hero"
                     className="max-h-screen w-full h-full object-cover"
                     style={{

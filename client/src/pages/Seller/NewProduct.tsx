@@ -26,6 +26,7 @@ import { ProductType } from '../../types/product';
 import { NestedPartial } from '../../types/nestedPartial';
 import { addProduct } from '../../fetchers';
 import { Result } from '../../types/result';
+import { checkLink } from '../../fetchers';
 
 const availableTypes: string[] = [
     'Pintura',
@@ -447,7 +448,7 @@ export default function NewProduct() {
                                     }}>
                                     <img
                                         className="w-full h-full object-cover"
-                                        src={url}
+                                        src={checkLink(url)}
                                         alt={''}
                                     />
                                     <IconButton

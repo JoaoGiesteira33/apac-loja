@@ -247,3 +247,10 @@ export const updateUser = async (
         }
     }
 };
+
+
+export const checkLink = (link) => {
+    const regex = new RegExp('^(http|https)://', 'i');
+    if(regex.test(link)) return link;
+    else return API_URL+link;
+}

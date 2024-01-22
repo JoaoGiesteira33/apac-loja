@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Box from '@mui/system/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Divider, Typography } from '@mui/material';
+import { checkLink } from '../../fetchers';
 
 // TO DO - TROCAR DE PRODUCT PARA ARTIST
 
@@ -26,7 +27,7 @@ export default function ArtistThumbnail(props) {
                 <Box component="div" className="w-full aspect-square">
                     <img
                         className="w-full h-full aspect-square object-cover"
-                        src={props.artist.seller_fields.profile_picture}
+                        src={checkLink(props.artist.seller_fields.profile_picture)}
                     />
                 </Box>
             </Link>

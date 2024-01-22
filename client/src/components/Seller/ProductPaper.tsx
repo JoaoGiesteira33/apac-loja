@@ -10,6 +10,7 @@ import {
     useTheme,
 } from '@mui/material';
 import dayjs from 'dayjs';
+import { checkLink } from '../../fetchers';
 
 export default function ProductPaper(props: { product: ProductType }) {
     const theme = useTheme();
@@ -26,7 +27,7 @@ export default function ProductPaper(props: { product: ProductType }) {
                     {props.product ? (
                         <img
                             className="w-full h-full aspect-square object-cover"
-                            src={props.product.photos[0]}></img>
+                            src={checkLink(props.product.photos[0])}></img>
                     ) : (
                         <Skeleton variant="rectangular">
                             <img className="object-cover"></img>

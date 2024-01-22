@@ -4,13 +4,7 @@ import { Link } from 'react-router-dom';
 import Box from '@mui/system/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 
-import { API_URL } from '../../fetchers';
-
-const checkLink = (link) => {
-    const regex = new RegExp('^(http|https)://', 'i');
-    if(regex.test(link)) return link;
-    else return API_URL+link;
-}
+import { checkLink } from '../../fetchers';
 
 export default function ProductThumbnail(props) {
     return (

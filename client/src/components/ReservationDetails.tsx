@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ProductType } from '../types/product';
 import { ReserveModal } from './ReserveModal';
+import { checkLink } from '../fetchers';
 
 export const ReservationDetails = () => {
     const { t } = useTranslation();
@@ -97,7 +98,7 @@ export const ReservationDetails = () => {
                                             <Grid container spacing={2}>
                                                 <Grid xs={3}>
                                                     <img
-                                                        src={product.photos[0]}
+                                                        src={checkLink(product.photos[0])}
                                                         alt={product.title}
                                                         className="object-cover w-16 h-16 rounded-sm"
                                                     />

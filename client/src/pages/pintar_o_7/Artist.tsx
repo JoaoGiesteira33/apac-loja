@@ -10,6 +10,7 @@ import AddCircleOutlineSharpIcon from '@mui/icons-material/AddCircleOutlineSharp
 import ProductThumbnail from '../../components/pintar_o_7/ProductThumbnail';
 import useProductSearch from '../../hooks/useProductSearch';
 import { useTranslation } from 'react-i18next';
+import { checkLink } from '../../fetchers';
 
 export default function ArtistPage() {
     const { t } = useTranslation();
@@ -47,7 +48,7 @@ export default function ArtistPage() {
                     sx={{ display: { xs: 'none', sm: 'flex' }, my: 10 }}>
                     <Grid xs={2}>
                         <Avatar
-                            src={artist.seller_fields.profile_picture}
+                            src={checkLink(artist.seller_fields.profile_picture)}
                             sx={{ width: '15vw', height: '15vw' }}
                         />
                     </Grid>
@@ -93,7 +94,7 @@ export default function ArtistPage() {
                                 height: '8rem',
                                 margin: '1rem auto',
                             }}
-                            src={artist.seller_fields.profile_picture}
+                            src={checkLink(artist.seller_fields.profile_picture)}
                         />
                     </Grid>
                     <Grid xs={12}>

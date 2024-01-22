@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
+import { checkLink } from '../fetchers';
 
 export function ChatAvatar(data: {
     text: string;
@@ -23,6 +24,6 @@ export function ChatAvatar(data: {
     );
 
     return (
-        <Avatar alt={data.username} src={avatarImage} />
+        <Avatar alt={data.username} src={checkLink(avatarImage)} />
     );
 }

@@ -12,6 +12,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ImageMagnifier from './ImageMagnifier';
 import Carousel from 'react-material-ui-carousel';
 import { useTranslation } from 'react-i18next';
+import { checkLink } from '../../fetchers';
 
 export function ImageLightBox(data) {
     const { t } = useTranslation();
@@ -64,7 +65,7 @@ export function ImageLightBox(data) {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                             }}>
-                            <ImageMagnifier src={image} />
+                            <ImageMagnifier src={checkLink(image)} />
                         </Box>
                     ))}
                 </Carousel>
