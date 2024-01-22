@@ -76,7 +76,13 @@ router.patch('/:id', hasAccess, function (req, res, next) {
                 controllerNotification
                     .updateNotificationInfo(req.params.id, req.body)
                     .then((info) => {
-                        res.status(200).jsonp(info);
+                        if (info.matchedCount == 1) {
+                            res.status(201).jsonp(info);
+                        } else {
+                            res.status(400).jsonp({
+                                error: 'Error updating notification.',
+                            });
+                        }
                     })
                     .catch((error) => {
                         res.status(500).jsonp(error);
