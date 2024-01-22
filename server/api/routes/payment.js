@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const controllerPayment = require('../controllers/payment');
+const controllerPaypal = require('../controllers/paypal');
+const controllerEupago = require('../controllers/eupago');
 const { hasAccess } = require('../utils/utils');
 
 // ***************************************
@@ -15,7 +16,7 @@ router.post('/paypal/orders', hasAccess, function (req, res) {
         });
     } else {
         console.log("Creating Paypal order=", req.body);
-        controllerPayment.createPaypalOrder(req.body)
+        controllerPaypal.createPaypalOrder(req.body)
             .then(rep => res.status(rep.httpStatusCode).json(rep.jsonResponse))
             .catch(error => {
                 console.log("Failed to create order: ", error);
@@ -25,21 +26,15 @@ router.post('/paypal/orders', hasAccess, function (req, res) {
 });
 
 router.post("/paypal/orders/:paypalOrderId/capture", hasAccess, function (req, res) {
-    if (req.body._client != req._id) {
-        res.status(403).jsonp({
-            error: 'Not allowed to capture order.',
+    controllerPaypal.capturePaypalOrder(req.params.paypalOrderId)
+        .then((rep) => { 
+            res.status(rep.httpStatusCode).json(rep.jsonResponse);
+            // TODO atualizar order status (paypalOrderId != orderId)
+        })
+        .catch ((error) => {
+            console.log("Failed to create order:", error);
+            res.status(500).json({ error: "Failed to capture order." });
         });
-    } else {
-        capturePaypalOrder(req.params.paypalOrderId)
-            .then((rep) => { 
-                res.status(rep.httpStatusCode).json(rep.jsonResponse);
-                // TODO atualizar order status (paypalOrderId != orderId)
-            })
-            .catch ((error) => {
-                console.log("Failed to create order:", error);
-                res.status(500).json({ error: "Failed to capture order." });
-            });
-    }
 });
 
 // ***************************************
@@ -54,7 +49,7 @@ router.post('/eupago/mbway/orders', hasAccess, function (req, res) {
         });
     } else {
         console.log("Creating EuPago order=", req.body);
-        controllerPayment.createEuPagoMBWayOrder(req.body, 0.25)
+        controllerEupago.createEuPagoMBWayOrder(req.body)
         .then(response => res.status(response.httpStatusCode).json(response.jsonResponse))
         .catch(error => {
             console.log("Failed to create order: ", error);
@@ -71,7 +66,7 @@ router.post('/eupago/creditCard/orders', hasAccess, function (req, res) {
         });
     } else {
         console.log("Creating EuPago Credit Card order=", req.body);
-        controllerPayment.createEuPagoCreditCardOrder(req.body)
+        controllerEupago.createEuPagoCreditCardOrder(req.body)
             .then(response => res.status(response.httpStatusCode).json(response.jsonResponse))
             .catch(error => {
                 console.log("Failed to create order: ", error);
@@ -83,7 +78,7 @@ router.post('/eupago/creditCard/orders', hasAccess, function (req, res) {
 // EuPago webhook payment confirmation
 router.get('/eupago/webhook', hasAccess, function (req, res) {
     console.log("Received EuPago Webhook: ", req.query);
-    controllerPayment.receiveEuPagoWebhook(req.query)
+    controllerEupago.receiveEuPagoWebhook(req.query)
         .then(response => res.status(response.httpStatusCode).json(response.jsonResponse))
         .catch(error => {
             console.log("Failed to process webhook: ", error);

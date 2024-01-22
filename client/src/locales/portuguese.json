@@ -69,7 +69,6 @@
                 "info2": "O valor do transporte não está incluído nesta parte.",
                 "cart": "Carrinho de reservas",
                 "reservation": "Reserva"
-
             }
         },
         "checkout": {
@@ -151,7 +150,8 @@
             "save": "Guardar alterações",
             "subject": "Assunto",
             "message": "Mensagem",
-            "messageSuccess": "Mensagem enviada com sucesso!"
+            "messageSuccess": "Mensagem enviada com sucesso!",
+            "saved": "Gravado com sucesso!"
         },
         "product": {
             "technique": "Técnica",
