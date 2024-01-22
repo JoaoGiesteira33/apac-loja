@@ -229,22 +229,26 @@ export default function ProfileInfo() {
                 },
             },
         };
-        console.log('userInfo: ', userInfo);
-        setDidSaveAlert(true);
-        setTimeout(() => {
-            setDidSaveAlert(false);
+
+        const token = localStorage.getItem('token');
+        if (token == null) return;
+
+        const res = await updateUser(userInfo, token);
+        if (res.isOk()) {
+            setDidSaveAlert(true);
             setSaveErrorAlert(false);
-        }, 5000);
-
-        // const token = localStorage.getItem('token');
-        // if (token == null) return;
-
-        // const res = await updateUser(userInfo, token);
-        // if (res.isOk()) {
-        //     // TODO - show success alert
-        // } else {
-        //     //error?
-        // }
+            setTimeout(() => {
+                setDidSaveAlert(false);
+                setSaveErrorAlert(false);
+            }, 5000);
+        } else {
+            setSaveErrorAlert(true);
+            setDidSaveAlert(false);
+            setTimeout(() => {
+                setSaveErrorAlert(false);
+                setDidSaveAlert(false);
+            }, 5000);
+        }
     };
 
     return (
@@ -430,17 +434,33 @@ export default function ProfileInfo() {
                     )}
                 </Stack>
             </Box>
+            <Slide direction="up" in={didSaveAlert} mountOnEnter unmountOnExit>
+                <Box
+                    className="fixed bottom-10"
+                    component={'div'}
+                    width={'100vw'}
+                    display={'flex'}
+                    justifyContent={'center'}>
+                    <Alert variant="filled" severity="success">
+                        {t('forms.saved')}
+                    </Alert>
+                </Box>
+            </Slide>
             <Slide
-                direction="down"
-                in={didSaveAlert}
+                direction="up"
+                in={saveErrorAlert}
                 mountOnEnter
                 unmountOnExit>
-                <Alert
-                    className="fixed top-10 left-1/2 translate-x-1/2"
-                    variant="filled"
-                    severity="success">
-                    {t('forms.saved')}
-                </Alert>
+                <Box
+                    className="fixed bottom-10"
+                    component={'div'}
+                    width={'100vw'}
+                    display={'flex'}
+                    justifyContent={'center'}>
+                    <Alert variant="filled" severity="error">
+                        {t('forms.save-error')}
+                    </Alert>
+                </Box>
             </Slide>
         </>
     );

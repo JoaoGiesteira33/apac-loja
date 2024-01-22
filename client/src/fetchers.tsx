@@ -4,6 +4,7 @@ import { NestedPartial } from './types/nestedPartial';
 import { Result, err, ok } from './types/result';
 import { User } from './types/user';
 import { decodeToken } from 'react-jwt';
+import { StringKeyframeTrack } from 'three';
 //import mime from 'mime';
 
 const BASE_URL = 'http://localhost';
@@ -221,6 +222,27 @@ export const addProduct = async (
     }
 };
 
+export const createUser = async (
+    userInfo: NestedPartial<User>,
+    token: string
+): Promise<Result<string, Error>> => {
+    try {
+        const response = await axios.post(`${API_URL_USER}/seller}`, {
+            params: {
+                token: token,
+            },
+            data: userInfo,
+        });
+        return ok(response.data);
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return err(error);
+        } else {
+            return err(new Error('Unexpected error'));
+        }
+    }
+};
+
 export const updateUser = async (
     userInfo: NestedPartial<User>,
     token: string
@@ -239,18 +261,40 @@ export const updateUser = async (
         return ok(response.data);
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            console.log('error message: ', error.message);
             return err(error);
         } else {
-            console.log('unexpected error: ', error);
             return err(new Error('Unexpected error'));
         }
     }
 };
 
+export const uploadPhoto = async (
+    token: string,
+    id: string,
+    photo: File
+): Promise<Result<string, Error>> => {
+    try {
+        const data: FormData = new FormData();
+        data.append('file', photo);
+        const response = await axios.post(`${API_URL_USER}/${id}/avatar`, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+            params: {
+                token: token,
+            },
+            body: data,
+        });
+        return ok(response.data);
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return err(error);
+        } else {
+            return err(new Error('Unexpected error'));
+        }
+    }
+};
 
 export const checkLink = (link) => {
     const regex = new RegExp('^(http|https)://', 'i');
-    if(regex.test(link)) return link;
-    else return API_URL+link;
-}
+    if (regex.test(link)) return link;
+    else return API_URL + link;
+};
