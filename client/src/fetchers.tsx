@@ -5,6 +5,7 @@ import { Result, err, ok } from './types/result';
 //import mime from 'mime';
 
 const BASE_URL = 'http://localhost';
+export const API_URL = BASE_URL + ':11000/';
 export const API_URL_USER = BASE_URL + ':11000/user';
 export const API_URL_PROD = BASE_URL + ':11000/product';
 export const API_URL_MAIL = BASE_URL + ':11000/email';

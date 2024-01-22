@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
 
 function valuetext(value: number) {
     return `${value}€`;
@@ -61,6 +62,7 @@ export default function SelectPrice({
     const handleChange = (event: Event, newValue: number | number[]) => {
         changeValue(newValue as number[]);
     };
+    const [t] = useTranslation();
 
     const marks = [
         {
@@ -83,12 +85,11 @@ export default function SelectPrice({
                 alignItems: 'center',
                 paddingX: { xs: '2rem', sm: '4rem', md: '6rem', lg: '8rem' },
             }}>
-            <Typography sx={{ flexGrow: '1' }} id="slider-label">
-                Price Range
+            <Typography sx={{ flexGrow: '1', pr: 3 }} id="slider-label">
+                {t('home.price_range')} €
             </Typography>
             <IOSSlider
-                getAriaLabel={() => 'Price range'}
-                aria-label="Price range"
+                getAriaLabel={() => t('home.price_range')}
                 aria-labelledby="slider-label"
                 value={value}
                 max={maxPrice}

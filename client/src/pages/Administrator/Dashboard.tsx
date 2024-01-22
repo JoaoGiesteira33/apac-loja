@@ -318,7 +318,7 @@ const Dashboard: React.FC = () => {
                 Dashboard
             </Typography>
             <Grid container sx={rootEffect} spacing={3}>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <Typography variant="h6" gutterBottom fontWeight="bold" textAlign="center">
                         {t('dashboard.clientsCity')}
                     </Typography>
@@ -326,7 +326,7 @@ const Dashboard: React.FC = () => {
                         {ChartWithSkeleton(districtsStats, data.chart1,"bar")}
                     </Paper>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <Typography variant="h6" gutterBottom fontWeight="bold" textAlign="center">
                         {t('dashboard.artistsCity')}
                     </Typography>
@@ -334,7 +334,7 @@ const Dashboard: React.FC = () => {
                         {ChartWithSkeleton(districtsStats, data.chart2,"bar")}
                     </Paper>
                 </Grid>
-                <Grid item xs={12} sm={6} md={6}>
+                <Grid xs={12} sm={6} md={6}>
                     <Typography variant="h6" gutterBottom fontWeight="bold" textAlign="center">
                         {t('dashboard.registerMonth')}
                     </Typography>
@@ -342,7 +342,7 @@ const Dashboard: React.FC = () => {
                         {ChartWithSkeleton(registerMonth, data.chart3,"pie")}
                     </Paper>
                 </Grid>
-                <Grid item xs={12} sm={6} md={6}>
+                <Grid xs={12} sm={6} md={6}>
                     <Typography variant="h6" gutterBottom fontWeight="bold" textAlign="center">
                         {t('dashboard.shipmentState')}
                     </Typography>
@@ -350,7 +350,7 @@ const Dashboard: React.FC = () => {
                         {ChartWithSkeleton(shipmentState, data.chart7,"pie")}
                     </Paper>
                 </Grid>
-                <Grid item xs={12} sm={6} md={6}>
+                <Grid xs={12} sm={6} md={6}>
                     <Typography variant="h6" gutterBottom fontWeight="bold" textAlign="center">
                         {t('dashboard.lastVisited_client')}
                     </Typography>
@@ -358,7 +358,7 @@ const Dashboard: React.FC = () => {
                         {ChartWithSkeleton(lastVisited, data.chart4,"pie")}
                     </Paper>
                 </Grid>
-                <Grid item xs={12} sm={6} md={6}>
+                <Grid xs={12} sm={6} md={6}>
                     <Typography variant="h6" gutterBottom fontWeight="bold" textAlign="center">
                         {t('dashboard.lastVisited_seller')}
                     </Typography>
@@ -367,7 +367,7 @@ const Dashboard: React.FC = () => {
                     </Paper>
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <Typography variant="h6" gutterBottom fontWeight="bold" textAlign="center">
                         {t('dashboard.age')}
                     </Typography>

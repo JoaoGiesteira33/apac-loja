@@ -135,7 +135,8 @@
             "submit": "Submeter"
         },
         "home": {
-            "iniciative": "Uma iniciativa"
+            "iniciative": "Uma iniciativa",
+            "price_range": "Preço"
         },
         "forms": {
             "first-last-name": "Primeiro e último nome",

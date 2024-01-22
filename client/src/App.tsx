@@ -90,6 +90,12 @@ const getDesignTokens = (mode: PaletteMode) => ({
                       default: '#121212',
                       paper: '#1f1f1f',
                   },
+                  text: {
+                        primary: '#ffffff',
+                        secondary: grey[400],
+
+                    }
+                  
               }),
     },
     components: {

@@ -27,7 +27,6 @@ export default function CustomizedBadges() {
             ariaLabel="Icon fixo para chat"
             sx={{ position: 'fixed', bottom: 16, left: 16 }}
             icon={
-                <IconButton aria-label="cart">
                     <Badge
                         anchorOrigin={{
                             vertical: 'top',
@@ -37,7 +36,7 @@ export default function CustomizedBadges() {
                         color="secondary">
                         <ShoppingCartIcon sx={{ color: 'black' }} />
                     </Badge>
-                </IconButton>
+
             }
             onClick={() => navigate('/cart')}
         />

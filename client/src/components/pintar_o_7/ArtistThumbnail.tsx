@@ -38,7 +38,7 @@ export default function ArtistThumbnail(props) {
                         justifyContent: 'space-between',
                         marginTop: 0,
                     }}>
-                    <Grid item xs={12}>
+                    <Grid xs={12}>
                         {props.artist.seller_fields.about}
                     </Grid>
                 </Grid>
