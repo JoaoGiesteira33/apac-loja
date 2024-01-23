@@ -55,6 +55,7 @@ const InfoPage = React.lazy(() => import('./pages/InfoPage'));
 const ContactPage = React.lazy(() => import('./pages/Contact'));
 const CartBadge = React.lazy(() => import('./components/CartBadge'));
 const Dashboard = React.lazy(() => import('./pages/Administrator/Dashboard'));
+const Notifications = React.lazy(() => import('./pages/Profile/Notifications'));
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 const getDesignTokens = (mode: PaletteMode) => ({
@@ -230,6 +231,10 @@ function App() {
         {
             path: '/profile/order-history',
             element: <ProfileOrderHistory />,
+        },
+        {
+            path: '/profile/notifications',
+            element: <Notifications />,
         },
     ];
 

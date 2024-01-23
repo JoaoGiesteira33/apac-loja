@@ -69,7 +69,13 @@ router.patch('/:id', isAdminOrAUTH, function (req, res, next) {
     controllerShipment
         .updateShipmentInfo(req.params.id, req.body)
         .then((info) => {
-            res.status(200).jsonp(info);
+            if (info.matchedCount == 1) {
+                res.status(200).jsonp(info);
+            } else {
+                res.status(400).jsonp({
+                    error: 'Error updating shipment info.',
+                });
+            }
         })
         .catch((error) => {
             res.status(500).jsonp(error);

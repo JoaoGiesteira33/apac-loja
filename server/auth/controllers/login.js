@@ -205,6 +205,14 @@ module.exports.generateRecoveryCode = async (userEmail) => {
 };
 
 /**
+ * Gera uma password aleatória
+ * @returns {String} - Password aleatória
+ */
+module.exports.generateRandomPassword = async () => {
+    return crypto.randomBytes(9).toString('hex').toUpperCase();
+};
+
+/**
  * Verifica se um código fornecido é válido
  * @param {String} userEmail - Email do utilizador
  * @param {String} submittedCode - Código fornecido

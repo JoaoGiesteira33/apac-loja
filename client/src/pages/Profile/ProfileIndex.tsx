@@ -8,13 +8,34 @@ import PhotoAlbumIcon from '@mui/icons-material/PhotoAlbum';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ProfileThumbnail from '../../components/Profile/ProfileThumbnail';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useTranslation } from 'react-i18next';
-import { Box, useTheme } from '@mui/material';
+import { Badge, Box, useTheme } from '@mui/material';
+import { use } from 'i18next';
+import { getNotifications } from '../../fetchers';
 
 export default function ProfileIndex(props) {
     const [t] = useTranslation();
     const theme = useTheme();
     const { level } = props;
+    const [notificationsCount, setNotificationsCount] = useState(0);
+
+    // TODO: Fetch notifications count using an hook
+    useEffect(() => {
+        if (localStorage.getItem('loggedIn') == 'ok') {
+            const token = localStorage.getItem('token');
+            if (token) {
+                const fetchData = async () => {
+                    const data = await getNotifications(token);
+                    if (data) {
+                        console.log('Notifications:', data);
+                        setNotificationsCount(data.length);
+                    }
+                };
+                fetchData();
+            }
+        }
+    }, []);
 
     return (
         <Box
@@ -38,8 +59,29 @@ export default function ProfileIndex(props) {
                         icon={<AccountCircleIcon />}
                     />
                 </Link>
+                {
+                    //level == 'seller' && (
+                    <Link className="inline-block" to="/profile/notifications">
+                        <ProfileThumbnail
+                            title={t('profile.notifications.title')}
+                            description={t('profile.notifications.text')}
+                            icon={
+                                <Badge
+                                    color="error"
+                                    variant="dot"
+                                    badgeContent={notificationsCount}>
+                                    {' '}
+                                    {/* TODO: Replace with actual number of notifications*/}
+                                    <NotificationsIcon />
+                                </Badge>
+                            }
+                        />
+                    </Link>
+                    //)
+                }
                 {/* CLIENT ONLY THUMBNAILS */}
-                {//level == 'client' && (
+                {
+                    //level == 'client' && (
                     <Link className="inline-block" to="/profile/order-history">
                         <ProfileThumbnail
                             title={t('profile.order_history')}
@@ -47,10 +89,11 @@ export default function ProfileIndex(props) {
                             icon={<HistoryIcon />}
                         />
                     </Link>
-                //)
+                    //)
                 }
                 {/* SELLER ONLY THUMBNAILS */}
-                {//level == 'seller' && (
+                {
+                    //level == 'seller' && (
                     <Link className="inline-block" to="/profile/products">
                         <ProfileThumbnail
                             title={t('profile.products')}
@@ -58,20 +101,22 @@ export default function ProfileIndex(props) {
                             icon={<PhotoAlbumIcon />}
                         />
                     </Link>
-                //)
+                    //)
                 }
-                {//level == 'seller' && (
-                <Link className="inline-block" to="/artists/add">
-                    <ProfileThumbnail
-                        title={t('profile.new-seller')}
-                        description={t('profile.new-seller-text')}
-                        icon={<PersonAddIcon />}
-                    />
-                </Link>
-                //)
+                {
+                    //level == 'seller' && (
+                    <Link className="inline-block" to="/artists/add">
+                        <ProfileThumbnail
+                            title={t('profile.new-seller')}
+                            description={t('profile.new-seller-text')}
+                            icon={<PersonAddIcon />}
+                        />
+                    </Link>
+                    //)
                 }
                 {/* ADMIN ONLY THUMBNAILS */}
-                {//level == 'admin' && (
+                {
+                    //level == 'admin' && (
                     <Link className="inline-block" to="/dashboard">
                         <ProfileThumbnail
                             title={t('profile.dashboard')}
@@ -79,7 +124,7 @@ export default function ProfileIndex(props) {
                             icon={<DashboardIcon />}
                         />
                     </Link>
-                //)
+                    //)
                 }
                 <Link
                     className="inline-block"
