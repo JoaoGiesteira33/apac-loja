@@ -126,7 +126,7 @@ export default function Requests() {
                         <TextField
                             variant="standard"
                             margin="normal"
-                            label="Artista"
+                            label={t('artist.title')}
                             type="text"
                             fullWidth
                             value={artist}
@@ -137,7 +137,7 @@ export default function Requests() {
                             openTo="day"
                             views={['year', 'month', 'day']}
                             format="DD/MM/YYYY"
-                            label="Antes de"
+                            label={t('profile.beforeAt')}
                             value={dateFilter}
                             sx={{ width: '100%' }}
                             slotProps={{
@@ -161,7 +161,7 @@ export default function Requests() {
                                 />
                             )
                     )}
-                {error && <div>Error</div>}
+                {error && <div>{t('errors.title')}</div>}
                 {loading && (
                     <Box
                         component="div"

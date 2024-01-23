@@ -1,6 +1,7 @@
 {
     "translation": {
         "errors": {
+            "title": "Erro",
             "login": {
                 "email": "Email Inválido",
                 "password": "Palavra-passe deve ter pelo menos 6 caracteres!",
@@ -28,9 +29,12 @@
             },
             "cart": {
                 "login": "Para adicionar itens ao carrinho, tem de ter a sessão iniciada."
-            }
+            },
+            "not-found": "Oops! Página não encontrada",
+            "wrong-refresh": "Something went wrong. Try refreshing the page."
         },
         "artist": {
+            "title": "Artista",
             "new-artist-page": {
                 "details": "Detalhes do Artista"
             },
@@ -63,6 +67,7 @@
             "reservation-button": "Reservar produto(s)",
             "reservation": {
                 "title": "Reservar",
+                "piece": "Obra",
                 "text": "Para reservar o(s) produto(s), é necessário pagar 25% do valor total. Depois de reservar, o artista terá que confirmar a reserva para poder pagar o restante do valor.",
                 "cancel-button": "Cancelar",
                 "info": "O valor da reserva será devolvido na totalidade caso o artista não confirme a reserva.",
@@ -72,12 +77,16 @@
             }
         },
         "checkout": {
+            "shippmentNr": "Encomenda nº",
+            "orderNr": "Pedido nº",
             "stepper": {
                 "shipping": "Entrega",
                 "payment": "Pagamento",
                 "review": "Resumo",
                 "next-button": "Próximo",
-                "prev-button": "Anterior"
+                "prev-button": "Anterior",
+                "item": "Item",
+                "includedVAT": "IVA incluído"
             },
             "shipping": {
                 "title": "Dados de entrega",
@@ -131,9 +140,11 @@
             "send": "Enviar",
             "yes": "Sim",
             "no": "Não",
-            "submit": "Submeter"
+            "submit": "Submeter",
+            "select-country": "Selecione o país"
         },
         "home": {
+            "main_page": "Página principal",
             "iniciative": "Uma iniciativa",
             "price_range": "Preço"
         },
@@ -183,6 +194,7 @@
                 "title": "Dados de conta",
                 "description": "Verificar informação da conta"
             },
+            "beforeAt": "Antes de",
             "profile_text": "Verificar informação de perfil",
             "order_history": "Histórico de compras",
             "order_history_text": "Verificar histórico de compras",
@@ -201,6 +213,9 @@
         },
         "info": {
             "title": "políticas, termos & condições",
+            "reclamation": {
+                "title": "Livro de Reclamações"
+            },
             "terms": {
                 "title": "Termos e Condições",
                 "text": [

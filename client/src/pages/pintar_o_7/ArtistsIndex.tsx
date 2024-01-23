@@ -49,7 +49,7 @@ export default function ArtistsIndexPage() {
                 </Grid>
             </Box>
 
-            {error && <div>Error</div>}
+            {error && <div>{t('errors.title')}</div>}
             {loading && (
                 <Box
                     component="div"
