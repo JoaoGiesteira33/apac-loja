@@ -1,6 +1,13 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
+/**
+ * Order model
+ * @typedef {Object} Order
+ * @property {ObjectId} _client - Id of the client that ordered the products
+ * @property {Date} date - Date of the order
+ * @property {ObjectId[]} shipments - Ids of the shipments associated with the order
+ */
 const Order = new mongoose.Schema({
     _client: {
         type: ObjectId,
@@ -20,7 +27,6 @@ const Order = new mongoose.Schema({
         ],
         default: [],
     },
-    //Falta adicionar a parte do pagamento. Guardado aqui, ou na parte do shipment
 });
 
 module.exports = mongoose.model('orderModel', Order, 'orders');

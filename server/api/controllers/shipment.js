@@ -116,7 +116,7 @@ module.exports.getShipments = async function (
             .populate(expand),
         Shipment.countDocuments(filters),
     ]);
-    let hasMore = count > (page + 1) * limit && limit != 0;
+    let hasMore = count > (Number(page) + 1) * Number(limit) && limit != 0;
     return { results: shipments, hasMore: hasMore };
 };
 
@@ -324,7 +324,6 @@ function generateNotifications(state, _product, _seller, _client) {
 module.exports.overdueCheck = async function (days, state) {
     let date = new Date();
     date.setDate(date.getDate() - days);
-    console.log(date);
     return this.updateShipmentsState(
         {
             $expr: {
@@ -354,19 +353,16 @@ module.exports.overdueCheck = async function (days, state) {
 
 // overduePayment
 module.exports.overduePayment = async function () {
-    console.log('overduePayment');
     return this.overdueCheck(2, 'reserved');
 };
 
 // overdueShipment
 module.exports.overdueShipment = async function () {
-    console.log('overdueShipment');
     return this.overdueCheck(5, 'paid');
 };
 
 // overdueDelivery
 module.exports.overdueDelivery = async function () {
-    console.log('overdueDelivery');
     return this.overdueCheck(5, 'sent');
 };
 
