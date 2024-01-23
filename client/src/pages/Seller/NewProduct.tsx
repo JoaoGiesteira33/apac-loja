@@ -203,9 +203,7 @@ export default function NewProduct() {
             productId,
             inputRef.current.files
         );
-        if (uploadPhotosRes.isOk()) {
-            navigate(`/product/${productId}`);
-        }
+        navigate(`/product/${productId}`);
     };
 
     return (
