@@ -1,20 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import { Link } from 'react-router-dom';
-import {
-    Alert,
-    Box,
-    Button,
-    CircularProgress,
-    Stack,
-    Typography,
-} from '@mui/material';
-import AddCircleOutlineSharpIcon from '@mui/icons-material/AddCircleOutlineSharp';
-import useProductSearch from '../../hooks/useProductSearch';
-import dayjs from 'dayjs';
-import ProductPaper from '../../components/Seller/ProductPaper';
+import { Alert, Box, CircularProgress, Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import AddIcon from '@mui/icons-material/Add';
 import { NotificationType } from '../../types/notification';
 import NotificationPaper from '../../components/Profile/NotificationPaper';
 import { getNotifications } from '../../fetchers';
@@ -85,8 +72,6 @@ export default function Notifications() {
         }
     }, []);
 
-    //const { MockData, hasMore, loading, error, products } = useProductSearch();
-
     return (
         <Box
             component="div"
@@ -107,15 +92,7 @@ export default function Notifications() {
                 <Typography variant="h3">
                     {t('profile.notifications.title')}
                 </Typography>
-                {/* <Button
-                    component={Link}
-                    color="secondary"
-                    to="/profile/new-product"
-                    sx={{ alignSelf: 'flex-end' }}
-                    startIcon={<AddIcon />}
-                    variant="contained">
-                    {t('artist.new-piece')}
-                </Button> */}
+
                 {notifications &&
                     notifications.map((notification, index) => (
                         <NotificationPaper
@@ -136,18 +113,6 @@ export default function Notifications() {
                         <CircularProgress />
                     </Box>
                 )}
-                {/* {hasMore && (
-                    <Button
-                        startIcon={<AddCircleOutlineSharpIcon />}
-                        variant="outlined"
-                        onClick={() => {
-                            setProductPage(
-                                (prevPageNumber) => prevPageNumber + 1
-                            );
-                        }}>
-                        Load More
-                    </Button>
-                )} */}
             </Stack>
         </Box>
     );
