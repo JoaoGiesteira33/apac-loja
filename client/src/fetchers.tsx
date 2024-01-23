@@ -303,13 +303,12 @@ export const getNotifications = async (token: string) => {
         const response = await axios.get(`${API_URL_NOTIF}`, {
             params: {
                 token: token,
-                limit: 0,
             },
         });
         console.log('Notifications:', response.data.results);
         return response.data.results;
     } catch (error) {
-        console.error('Error getting notification:', error);
+        console.error(error);
         throw error;
     }
 };

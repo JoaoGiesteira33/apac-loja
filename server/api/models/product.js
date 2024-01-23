@@ -1,5 +1,13 @@
 const mongoose = require('mongoose');
 
+/**
+ * 2/3D Dimensions + Weight of the piece
+ * @typedef {Object} Dimensions
+ * @property {Number} width - Width of the piece
+ * @property {Number} height - Height of the piece
+ * @property {Number} depth - Depth of the piece
+ * @property {Number} weight - Weight of the piece
+ */
 const Dimensions = new mongoose.Schema(
     {
         width: Number,
@@ -10,6 +18,15 @@ const Dimensions = new mongoose.Schema(
     { _id: false }
 );
 
+/**
+ * Information about the piece
+ * @typedef {Object} PieceInfo
+ * @property {String} technique - Technique of the piece
+ * @property {String[]} materials - Materials used in the piece
+ * @property {Dimensions} dimensions - 2/3D Dimensions + Weight of the piece
+ * @property {Number} year - Year of the piece
+ * @property {String} state - State of the piece, if unavailable, it means it is being used in an order
+ */
 const PieceInfo = new mongoose.Schema(
     {
         technique: {
@@ -46,6 +63,14 @@ const PieceInfo = new mongoose.Schema(
     { _id: false }
 );
 
+/**
+ * Information about the book //UNUSED
+ * @typedef {Object} BookInfo
+ * @property {String} publisher - Publisher of the book
+ * @property {String} genre - Genre of the book
+ * @property {Number} stock - Stock of the book
+ * @property {String} isbn - ISBN of the book
+ */
 const BookInfo = new mongoose.Schema(
     {
         publisher: String,
@@ -62,6 +87,20 @@ const BookInfo = new mongoose.Schema(
     { _id: false }
 );
 
+/**
+ * Product model
+ * @typedef {Object} Product
+ * @property {String} title - Title of the product
+ * @property {String} author - Author of the product
+ * @property {String[]} photos - Photos of the product
+ * @property {String} description - Description of the product
+ * @property {Number} price - Price of the product
+ * @property {String} product_type - Type of the product
+ * @property {ObjectId} _seller - Id of the seller
+ * @property {PieceInfo} piece_info - Information about the piece, if applicable
+ * @property {BookInfo} book_info - Information about the book //UNUSED
+ * @property {Boolean} featured - If the product is featured or not
+ */
 const Product = new mongoose.Schema({
     title: {
         type: String,
@@ -98,7 +137,13 @@ const Product = new mongoose.Schema({
     },
 });
 
-// When adding updating photos to push new ones verify that the total number of photos will be less than 12
+/**
+ * Check if the product will have more than 12 photos after the update
+ * @param {Function} next - Callback function
+ * @returns {void}
+ * @throws {Error} - Too many photos
+ * @description This hook checks if the product will have more than 12 photos after the update, if so, it throws an error
+ */
 Product.pre('updateOne', function (next) {
     if (this._update.$push && this._update.$push.photos) {
         this.model.findById(this._conditions._id).then((product) => {

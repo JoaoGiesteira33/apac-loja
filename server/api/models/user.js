@@ -1,5 +1,12 @@
 const mongoose = require('mongoose');
 
+/**
+ * Statistics associated with the seller
+ * @typedef {Object} Statistics
+ * @property {Number} rating - Rating of the seller
+ * @property {Number} sales - Sales of the seller
+ * @property {Number} products - Products of the seller
+ */
 const Address = new mongoose.Schema(
     {
         street: {
@@ -23,8 +30,8 @@ const Address = new mongoose.Schema(
  * @typedef {Object} Demographics
  * @property {String} name - Name of the client/seller
  * @property {Date} birth_date - Birth date of the client/seller
- * @property {String} address - Address of the client/seller
- * @property {String} phone - Phone number of the client/seller
+ * @property {Address} address - Address of the client/seller
+ * @property {String} phone - Phone of the client/seller
  */
 const Demographics = new mongoose.Schema(
     {
@@ -45,23 +52,21 @@ const Demographics = new mongoose.Schema(
 );
 
 /**
- * Statistics associated with the client/seller
- * @typedef {Object} Statistics
+ * Information about the seller
+ * @typedef {Object} SellerFields
+ * @property {Demographics} demographics - Demographics of the seller
+ * @property {Statistics} statistics - Statistics of the seller
+ * @property {String} profile_picture - Profile picture of the seller
+ * @property {String} about - About of the seller
+ * @property {String} seller_type - Type of the seller, can be artist or bookseller
+ * @property {String} status - Status of the seller, can be active or inactive
  */
-const Statistics = new mongoose.Schema(
-    {
-        // Por enquanto não temos estatísticas
-    },
-    { _id: false }
-);
-
 const SellerFields = new mongoose.Schema(
     {
         demographics: {
             type: Demographics,
             required: true,
         },
-        statistics: Statistics,
         profile_picture: String,
         about: String,
         seller_type: {
@@ -78,19 +83,21 @@ const SellerFields = new mongoose.Schema(
     { _id: false }
 );
 
+/**
+ * Information about the client
+ * @typedef {Object} ClientFields
+ * @property {Demographics} demographics - Demographics of the client
+ * @property {String[]} search_history - Search history of the client
+ * @property {String[]} favorites - Favorites of the client
+ * @property {String[]} cart - Cart of the client
+ * @property {String[]} interests - Interests of the client
+ */
 const ClientFields = new mongoose.Schema(
     {
         demographics: {
             type: Demographics,
             required: true,
         },
-        statistics: Statistics,
-        /**
-    events: {
-        type: [Event],
-        default: []
-    },
-    */
         search_history: {
             type: [String],
             default: [],
@@ -112,12 +119,14 @@ const ClientFields = new mongoose.Schema(
 );
 
 /**
- * User
+ * User schema
  * @typedef {Object} User
- * @property {String} email - User email
- * @property {String} role - User role(seller/client/admin)
- * @property {Object} client_fields - Client fields
- * @property {Object} seller_fields - Seller fields
+ * @property {String} email - Email of the user
+ * @property {String} role - Role of the user, can be client, seller or admin
+ * @property {ClientFields} client_fields - Client fields
+ * @property {SellerFields} seller_fields - Seller fields
+ * @property {String[]} active_chat_id - Active chat ids
+ * @property {String[]} tags - Tags associated with the user //UNIMPLEMENTED
  */
 const User = new mongoose.Schema({
     email: {

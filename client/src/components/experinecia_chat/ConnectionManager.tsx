@@ -6,6 +6,7 @@ import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { useState } from 'react';
+import { width } from '@mui/system';
 
 export function ConnectionManager({ username, setUsername, setSessionID, unselectUser }:
                                   { username: string ,
@@ -31,17 +32,18 @@ export function ConnectionManager({ username, setUsername, setSessionID, unselec
   const theme = useTheme();
   return (
     <>
-
-      <Typography variant="h4">{(socket.connected ? "Connected as " + username : "Disconnected") }</Typography>
       
       {
         !socket.connected ? // IF not connected show the connection form 
           <>
-            <TextField 
+            <TextField
+                sx={{
+                  width: { sm: 150, md: 200 },
+                }}
                 id="outlined-basic" 
                 variant="outlined" 
                 value={username} 
-                placeholder='Nome de utilizador' 
+                placeholder='Nome' 
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setUsername(event.target.value);
                 }}

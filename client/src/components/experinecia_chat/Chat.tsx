@@ -9,7 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ChatIcon from '@mui/icons-material/Chat';
 import { Box, useTheme } from '@mui/material';
 
-import { ChatForm } from '../ChatForm';
+import { ChatForm } from './ChatForm';
 
 interface User {
   username: string;

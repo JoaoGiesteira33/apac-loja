@@ -2,7 +2,11 @@ import React from 'react';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 
 // This value is from the props in the UI
-const style = { layout: 'vertical' };
+const style = { 
+    layout: 'vertical',
+    color: 'silver',
+
+};
 
 function createOrder() {
     // replace this url with your server
@@ -43,6 +47,7 @@ function createOrder() {
         .then((response) => response.json())
         .then((order) => {
             // Your code here after create the order
+            console.log('order: ', order);
             return order.id;
         });
 }
