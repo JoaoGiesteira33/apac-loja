@@ -191,7 +191,7 @@ export default function ProfileInfo() {
             setShowPhoneAlert(true);
             hasErrors = true;
         }
-        if (birth_date === null) {
+        if (birth_date == null) {
             hasErrors = true;
         } else if (birth_date.isAfter(TODAY_MINUS_18_YEARS)) {
             hasErrors = true;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -9,15 +9,14 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import ProfileThumbnail from '../../components/Profile/ProfileThumbnail';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import { useTranslation } from 'react-i18next';
-import { Badge, Box, useTheme } from '@mui/material';
-import { use } from 'i18next';
-import { getNotifications } from '../../fetchers';
+import { Box } from '@mui/material';
+import { CurrentAccountContext } from '../../contexts/currentAccountContext';
 
-export default function ProfileIndex(props) {
+export default function ProfileIndex() {
     const [t] = useTranslation();
-    const theme = useTheme();
-    const { level } = props;
+    const { setLoggedIn, tokenLevel } = useContext(CurrentAccountContext);
 
     return (
         <Box
@@ -41,8 +40,7 @@ export default function ProfileIndex(props) {
                         icon={<AccountCircleIcon />}
                     />
                 </Link>
-                {
-                    //level == 'seller' && (
+                {(tokenLevel == 'seller' || tokenLevel == 'admin') && (
                     <Link className="inline-block" to="/profile/notifications">
                         <ProfileThumbnail
                             title={t('profile.notifications.title')}
@@ -50,11 +48,9 @@ export default function ProfileIndex(props) {
                             icon={<NotificationsIcon />}
                         />
                     </Link>
-                    //)
-                }
+                )}
                 {/* CLIENT ONLY THUMBNAILS */}
-                {
-                    //level == 'client' && (
+                {tokenLevel == 'client' && (
                     <Link className="inline-block" to="/profile/order-history">
                         <ProfileThumbnail
                             title={t('profile.order_history')}
@@ -62,11 +58,9 @@ export default function ProfileIndex(props) {
                             icon={<HistoryIcon />}
                         />
                     </Link>
-                    //)
-                }
+                )}
                 {/* SELLER ONLY THUMBNAILS */}
-                {
-                    //level == 'seller' && (
+                {tokenLevel == 'seller' && (
                     <Link className="inline-block" to="/profile/products">
                         <ProfileThumbnail
                             title={t('profile.products')}
@@ -74,10 +68,9 @@ export default function ProfileIndex(props) {
                             icon={<PhotoAlbumIcon />}
                         />
                     </Link>
-                    //)
-                }
-                {
-                    //level == 'seller' && (
+                )}
+                {/* ADMIN ONLY THUMBNAILS */}
+                {tokenLevel == 'admin' && (
                     <Link className="inline-block" to="/artists/add">
                         <ProfileThumbnail
                             title={t('profile.new-seller')}
@@ -85,11 +78,8 @@ export default function ProfileIndex(props) {
                             icon={<PersonAddIcon />}
                         />
                     </Link>
-                    //)
-                }
-                {/* ADMIN ONLY THUMBNAILS */}
-                {
-                    //level == 'admin' && (
+                )}
+                {tokenLevel == 'admin' && (
                     <Link className="inline-block" to="/dashboard">
                         <ProfileThumbnail
                             title={t('profile.dashboard')}
@@ -97,15 +87,23 @@ export default function ProfileIndex(props) {
                             icon={<DashboardIcon />}
                         />
                     </Link>
-                    //)
-                }
+                )}
+                {tokenLevel == 'admin' && (
+                    <Link className="inline-block" to="/requests">
+                        <ProfileThumbnail
+                            title={t('profile.dashboard')}
+                            description={t('profile.dashboard_text')}
+                            icon={<NewReleasesIcon />}
+                        />
+                    </Link>
+                )}
                 <Link
                     className="inline-block"
                     to="/login"
                     onClick={() => {
                         localStorage.removeItem('loggedIn');
                         localStorage.removeItem('user');
-                        props.setLoggedIn(null);
+                        setLoggedIn(false);
                     }}>
                     <ProfileThumbnail
                         title={t('profile.logout')}
