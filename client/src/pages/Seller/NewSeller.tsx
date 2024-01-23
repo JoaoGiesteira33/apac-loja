@@ -77,9 +77,13 @@ export default function NewSeller() {
 
         if (hasErrors) return;
         const userInfo: NestedPartial<User> = {
-            name: name,
+            seller_fields: {
+                demographics: {
+                    name: name,
+                    birth_date: birth_date!.format('YYYY-MM-DD'),
+                },
+            },
             email: email,
-            birth_date: birth_date,
         };
 
         const token = localStorage.getItem('token');
