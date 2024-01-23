@@ -322,7 +322,7 @@ router.get(
 );
 
 router.post(
-    '/:id/photo',
+    '/:id/avatar',
     isMeOrAdmin,
     upload.single('file'),
     function (req, res) {

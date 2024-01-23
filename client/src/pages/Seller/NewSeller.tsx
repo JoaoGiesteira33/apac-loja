@@ -77,9 +77,15 @@ export default function NewSeller() {
 
         if (hasErrors) return;
         const userInfo: NestedPartial<User> = {
-            name: name,
+            seller_fields: {
+                demographics: {                     
+                    name: name,                     
+                    birth_date: birth_date!.format('YYYY-MM-DD'),
+                },
+                seller_type: 'artist'             
+            },             
             email: email,
-            birth_date: birth_date,
+            nivel: 'seller',
         };
 
         const token = localStorage.getItem('token');
@@ -90,7 +96,7 @@ export default function NewSeller() {
             setDidSaveAlert(true);
             setSaveErrorAlert(false);
             console.log(resNewUser.value);
-            uploadAvatar(resNewUser.value);
+            uploadAvatar(resNewUser.value._id);
             setTimeout(() => {
                 setDidSaveAlert(false);
                 setSaveErrorAlert(false);

@@ -49,7 +49,7 @@ module.exports.getFiles = function (filters, fields, page, limit, expand) {
             .populate(expand),
         File.countDocuments(filters),
     ]).then(([files, count]) => {
-        let hasMore = count > (page + 1) * limit && limit != 0;
+        let hasMore = count > (Number(page) + 1) * Number(limit) && limit != 0;
         return { results: files, hasMore: hasMore };
     });
 };

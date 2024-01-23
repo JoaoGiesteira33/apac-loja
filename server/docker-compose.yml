@@ -43,6 +43,12 @@ services:
             - MONGO_USER
             - MONGO_PASSWORD
             - AUTH_KEY
+            - SERVICE
+            - EMAIL
+            - EMAIL_PORT
+            - SECURE
+            - USER_EMAIL
+            - USER_PASS
         ports:
             - 11001:80
         networks:
