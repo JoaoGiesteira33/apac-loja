@@ -227,11 +227,10 @@ export const createUser = async (
     token: string
 ): Promise<Result<string, Error>> => {
     try {
-        const response = await axios.post(`${API_URL_USER}/seller}`, {
+        const response = await axios.post(`${API_URL_USER}/seller}`, userInfo,{
             params: {
                 token: token,
             },
-            data: userInfo,
         });
         return ok(response.data);
     } catch (error) {
@@ -250,12 +249,11 @@ export const updateUser = async (
     try {
         const decodedToken = decodeToken(token);
         const response = await axios.patch(
-            `${API_URL_USER}/${(decodedToken as { _id: string })._id}`,
+            `${API_URL_USER}/${(decodedToken as { _id: string })._id}`,userInfo,
             {
                 params: {
                     token: token,
-                },
-                data: userInfo,
+                }
             }
         );
         return ok(response.data);

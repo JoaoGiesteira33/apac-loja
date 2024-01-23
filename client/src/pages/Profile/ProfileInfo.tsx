@@ -235,7 +235,7 @@ export default function ProfileInfo() {
 
         const res = await updateUser(newUserInfo, token);
         if (res.isOk()) {
-            const newUserInfoLocalStorage = { ...userInfo, newUserInfo };
+            const newUserInfoLocalStorage = { ...userInfo, ...newUserInfo };
             localStorage.setItem(
                 'user',
                 JSON.stringify(newUserInfoLocalStorage)
@@ -308,6 +308,7 @@ export default function ProfileInfo() {
                             type="email"
                             id="email"
                             autoComplete="email"
+                            disabled
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
