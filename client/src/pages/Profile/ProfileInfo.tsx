@@ -1,4 +1,4 @@
-import { useState, useMemo, useContext } from 'react';
+import { useState, useMemo } from 'react';
 
 import Box from '@mui/system/Box';
 import Paper from '@mui/material/Paper';
@@ -6,18 +6,15 @@ import TextField from '@mui/material/TextField';
 
 import { Alert, Button, Slide, Stack, Typography } from '@mui/material';
 
-import CountrySelect, {
-    CountryType,
-} from '../../components/pintar_o_7/CountrySelect';
+import CountrySelect from '../../components/pintar_o_7/CountrySelect';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import SaveSharpIcon from '@mui/icons-material/SaveSharp';
 import dayjs, { Dayjs } from 'dayjs';
 import { useTranslation } from 'react-i18next';
-import { getCountry } from '../../types/country';
+import { CountryType, getCountry } from '../../types/country';
 import { User } from '../../types/user';
 import { NestedPartial } from '../../types/nestedPartial';
 import { updateUser } from '../../fetchers';
-import { is } from '@react-three/fiber/dist/declarations/src/core/utils';
 
 const TODAY_MINUS_18_YEARS: Dayjs = dayjs().subtract(18, 'year');
 
@@ -33,14 +30,16 @@ export default function ProfileInfo() {
         if (userInfo) return userInfo.email;
         else return '';
     });
-    const [country, setCountry] = useState<CountryType | null>(() => {
-        if (userInfo) {
-            const countryLabel =
-                userInfo.client_fields.demographics.address.country;
-            const country = getCountry(countryLabel);
-            return country;
-        } else return null;
-    });
+    const [country, setCountry] = useState<CountryType | null | undefined>(
+        () => {
+            if (userInfo) {
+                const countryLabel =
+                    userInfo.client_fields.demographics.address.country;
+                const country = getCountry(countryLabel);
+                return country;
+            } else return null;
+        }
+    );
     const [countryInput, setCountryInput] = useState<string>(() => {
         if (userInfo)
             return userInfo.client_fields.demographics.address.country;
@@ -67,15 +66,17 @@ export default function ProfileInfo() {
             else return '';
         } else return '';
     });
-    const [birth_date, setBirthDate] = useState<Dayjs>(() => {
-        if (userInfo) {
-            if (userInfo.client_fields.demographics.birth_date == null)
+    const [birth_date, setBirthDate] = useState<Dayjs | null | undefined>(
+        () => {
+            if (userInfo) {
+                if (userInfo.client_fields.demographics.birth_date == null)
+                    return dayjs();
+                return dayjs(userInfo.client_fields.demographics.birth_date);
+            } else {
                 return dayjs();
-            return dayjs(userInfo.client_fields.demographics.birth_date);
-        } else {
-            return dayjs();
+            }
         }
-    });
+    );
 
     let originalName = '';
     if (userInfo && userInfo.client_fields.demographics.name)
@@ -117,7 +118,7 @@ export default function ProfileInfo() {
     const [showNameAlert, setShowNameAlert] = useState(false);
     const [showEmailAlert, setShowEmailAlert] = useState(false);
     const [showPhoneAlert, setShowPhoneAlert] = useState(false);
-    const [showOver18Alert, setShowOver18Alert] = useState(false);
+    const [, setShowOver18Alert] = useState(false);
     const [showCityError, setShowCityError] = useState(false);
     const [showAddressError, setShowAddressError] = useState(false);
     const [showPostalCodeError, setShowPostalCodeError] = useState(false);
@@ -207,7 +208,7 @@ export default function ProfileInfo() {
             setShowPostalCodeError(true);
             hasErrors = true;
         }
-        if (country === '') {
+        if (country == null) {
             setShowCountryAlert(true);
             hasErrors = true;
         }
