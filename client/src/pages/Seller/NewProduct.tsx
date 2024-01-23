@@ -24,9 +24,10 @@ import { useTranslation } from 'react-i18next';
 import React from 'react';
 import { ProductType } from '../../types/product';
 import { NestedPartial } from '../../types/nestedPartial';
-import { addProduct } from '../../fetchers';
+import { addProduct, uploadProductPhotos } from '../../fetchers';
 import { Result } from '../../types/result';
 import { checkLink } from '../../fetchers';
+import { useNavigate } from 'react-router-dom';
 
 const availableTypes: string[] = [
     'Pintura',
@@ -106,8 +107,9 @@ const MAX_IMAGES = 12;
 
 export default function NewProduct() {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const theme = useTheme();
-    const inputRef = useRef(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -177,14 +179,32 @@ export default function NewProduct() {
             },
         };
 
-        const addProductResponse: Result<string, Error> = await addProduct(
-            product
-        );
+        const token = localStorage.getItem('token');
+        if (token == null) return;
 
+        const addProductResponse: Result<object, Error> = await addProduct(
+            product,
+            token
+        );
         if (addProductResponse.isOk()) {
-            console.log(addProductResponse.value);
+            const productId = addProductResponse.value._id;
+            uploadPhotos(productId, token);
         } else {
             console.log(addProductResponse.error);
+        }
+    };
+
+    const uploadPhotos = async (productId: string, token: string) => {
+        if (!inputRef.current?.files) return;
+        if (images.length === 0) return;
+
+        const uploadPhotosRes = await uploadProductPhotos(
+            token,
+            productId,
+            inputRef.current.files
+        );
+        if (uploadPhotosRes.isOk()) {
+            navigate(`/product/${productId}`);
         }
     };
 
