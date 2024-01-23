@@ -37,6 +37,7 @@ import { element } from 'three/examples/jsm/nodes/Nodes.js';
 import NewSeller from './pages/Seller/NewSeller';
 import { light } from '@mui/material/styles/createPalette';
 import { CurrentAccountProvider } from './contexts/currentAccountContext';
+import ChatPage from './components/experinecia_chat/ChatPage';
 
 // dynamically load components as they are needed
 const InitialPage = React.lazy(() => import('./pages/pintar_o_7/Initial'));
@@ -202,6 +203,10 @@ function App() {
         {
             path: '/contact',
             element: <ContactPage />,
+        },
+        {
+            path: '/chat',
+            element: <ChatPage />,
         },
         {
             path: '*',
