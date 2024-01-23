@@ -151,7 +151,8 @@
             "subject": "Assunto",
             "message": "Mensagem",
             "messageSuccess": "Mensagem enviada com sucesso!",
-            "saved": "Gravado com sucesso!"
+            "saved": "Gravado com sucesso!",
+            "save-error": "Erro ao gravar. Contacte o suporte!"
         },
         "product": {
             "technique": "Técnica",
@@ -192,7 +193,11 @@
             "dashboard": "Dashboard",
             "dashboard_text": "Consultar dashboard de estatísticas",
             "new-seller": "Novo artista",
-            "new-seller-text": "Criar uma conta de artista nova"
+            "new-seller-text": "Criar uma conta de artista nova",
+            "notifications": {
+                "title": "Notificações",
+                "text": "Verificar notificações"
+            }
         },
         "info": {
             "title": "políticas, termos & condições",

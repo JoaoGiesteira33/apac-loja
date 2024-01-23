@@ -53,9 +53,9 @@ router.put('/:id', isAdminOrAUTH, function (req, res, next) {
         .replaceNotificationInfo(req.params.id, req.body)
         .then((info) => {
             if (info.matchedCount == 0) {
-                res.status(201);
+                res.status(201).jsonp(info);
             } else {
-                res.status(204);
+                res.status(200).jsonp(info);
             }
         })
         .catch((error) => {
@@ -76,7 +76,13 @@ router.patch('/:id', hasAccess, function (req, res, next) {
                 controllerNotification
                     .updateNotificationInfo(req.params.id, req.body)
                     .then((info) => {
-                        res.status(204);
+                        if (info.matchedCount == 1) {
+                            res.status(201).jsonp(info);
+                        } else {
+                            res.status(400).jsonp({
+                                error: 'Error updating notification.',
+                            });
+                        }
                     })
                     .catch((error) => {
                         res.status(500).jsonp(error);
@@ -101,7 +107,7 @@ router.delete('/:id', hasAccess, function (req, res, next) {
                 controllerNotification
                     .deleteNotification(req.params.id)
                     .then((info) => {
-                        res.status(204);
+                        res.status(200).jsonp(info);
                     })
                     .catch((error) => {
                         res.status(500).jsonp(error);
@@ -131,10 +137,10 @@ router.get(
                     req.expand || ''
                 )
                 .then((info) => {
-                    res.jsonp(info);
+                    res.status(200).jsonp(info);
                 })
                 .catch((error) => {
-                    res.jsonp(error);
+                    res.status(500).jsonp(error);
                 });
         }
     }

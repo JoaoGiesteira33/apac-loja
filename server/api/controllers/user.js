@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const controllerFile = require('./file');
 
 const utils = require('../utils/utils');
 // METHODS:
@@ -54,4 +55,30 @@ module.exports.getUsers = function (filters, fields, page, limit, expand) {
         let hasMore = count > (page + 1) * limit && limit != 0;
         return { results: users, hasMore: hasMore };
     });
+};
+
+module.exports.updateUserPhoto = async function (id, data) {
+    let session = await User.startSession();
+    try {
+        session.startTransaction();
+
+        let file = await controllerFile.createFile(data);
+        let filePath = 'file/' + file._id;
+        await User.updateOne(
+            { _id: id },
+            {
+                $set: {
+                    'seller_fields.profile_picture': filePath,
+                },
+            }
+        );
+
+        await session.commitTransaction();
+        return file;
+    } catch (error) {
+        await session.abortTransaction();
+        throw error;
+    } finally {
+        session.endSession();
+    }
 };
