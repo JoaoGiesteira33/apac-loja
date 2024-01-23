@@ -185,6 +185,9 @@ export default function Home() {
                 <Button
                     startIcon={<AddCircleOutlineSharpIcon />}
                     variant="outlined"
+                    sx={{
+                        marginBottom: '2rem',
+                    }}
                     onClick={() => {
                         setProductPage((prevPageNumber) => prevPageNumber + 1);
                     }}>
