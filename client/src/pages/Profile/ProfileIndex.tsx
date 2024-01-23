@@ -18,24 +18,6 @@ export default function ProfileIndex(props) {
     const [t] = useTranslation();
     const theme = useTheme();
     const { level } = props;
-    const [notificationsCount, setNotificationsCount] = useState(0);
-
-    // TODO: Fetch notifications count using an hook
-    useEffect(() => {
-        if (localStorage.getItem('loggedIn') == 'ok') {
-            const token = localStorage.getItem('token');
-            if (token) {
-                const fetchData = async () => {
-                    const data = await getNotifications(token);
-                    if (data) {
-                        console.log('Notifications:', data);
-                        setNotificationsCount(data.length);
-                    }
-                };
-                fetchData();
-            }
-        }
-    }, []);
 
     return (
         <Box
@@ -65,16 +47,7 @@ export default function ProfileIndex(props) {
                         <ProfileThumbnail
                             title={t('profile.notifications.title')}
                             description={t('profile.notifications.text')}
-                            icon={
-                                <Badge
-                                    color="error"
-                                    variant="dot"
-                                    badgeContent={notificationsCount}>
-                                    {' '}
-                                    {/* TODO: Replace with actual number of notifications*/}
-                                    <NotificationsIcon />
-                                </Badge>
-                            }
+                            icon={<NotificationsIcon />}
                         />
                     </Link>
                     //)
