@@ -130,7 +130,3 @@ export function ChatForm({ user, onMessage }: MessagePanelProps) {
     </Box>
   );
 }
-
-
-
-

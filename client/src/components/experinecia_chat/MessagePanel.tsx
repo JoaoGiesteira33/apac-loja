@@ -1,10 +1,4 @@
-import { Typography, Button } from '@mui/material';
-import { TextField } from '@mui/material';
-import { useState } from 'react';
-
-import { Box } from '@mui/material';
-import { ChatAvatar } from '../ChatAvatar';
-import { ChatMessage } from '../ChatMessage';
+import { ChatMessage } from './ChatMessage';
 
 interface MessagePanelProps {
     user: {

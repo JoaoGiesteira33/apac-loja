@@ -6,7 +6,7 @@ var jwt = require('jsonwebtoken')
 var secrets = require('docker-secret').secrets;
 
 const controllerLogin = require('../controllers/login');
-const { sendEmail, getDateTime, isAdmin, hasAccess, isMe } = require('../utils/utils');
+const { send_email, getDateTime, isAdmin, hasAccess, isMe } = require('../utils/utils');
 
 var axios = require('axios');
 
@@ -51,67 +51,85 @@ router.get('/verificar', hasAccess, function (req, res) {
 
 // POST -> [admin] fazer registo de um utilizador
 router.post('/admin/registo', isAdmin, function (req, res) {
-	if (req.body.email && req.body.password && req.body.nivel) {
+	if (req.body.email && req.body.nivel) {
+		const settedPassword = controllerLogin.generateRandomPassword();
+
+		const message = `Foi-lhe atribuída a seguinte password: ${settedPassword}`;
+
 		var info = {
 			...req.body,
-			dataRegisto: getDateTime()
+			dataRegisto: getDateTime(),
+			password: settedPassword
 		}
 
-		controllerLogin.registar(info)
-			.then(u => {
-				data = {
-					...info,
-					_id: u._id,
-					role: u.nivel
-				}
+		console.log(info)
+		console.log(req.query)
 
-				var configCookies = { headers: { Cookie: 'token=' + req.cookies.token } }
-				axios.post(API_URL_USER, data, configCookies)
-					.then(resp1 => {
-						if (resp1 && resp1.status == 200 && resp1.data) {
-							res.status(201).jsonp({ message: "OK" })
+
+		send_email(req.body.email, "Atribuição de password", message)
+			.then(() => {
+				controllerLogin.registar(info)
+					.then(u => {
+						data = {
+							...info,
+							_id: u._id,
+							role: u.nivel
 						}
-						else {
-							//apagar do login !!!
-							controllerLogin.deleteLogin(u.username)
-								.then(del => {
-									if (del && del.acknowledged == true && del.deletedCount == 1) {
-										res.status(400).jsonp({ error: "1. Erro na criação do utilizador: " + resp1.data })
-									}
-									else {
-										console.log("Erro na criação do user: " + u._id + " error: " + resp1.data + " , BD corrompida, insucesso ao apagar login com _id: " + u._id)
-										res.status(477).jsonp({ error: "1. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
-									}
-								})
-								.catch(error1 => {
-									var errorString1 = error1
-									console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror1: " + errorString1 + "\nerror2: " + resp1.data)
-									res.status(477).jsonp({ error: "2. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
-								})
-						}
-					})
-					.catch(error2 => {
-						//apagar do login !!!
-						var errorString2 = (error2 && error2.response && error2.response.data && error2.response.data.message) ? error2.response.data.message : "Erro desconhecido"
-						controllerLogin.deleteLogin(u.username)
-							.then(d => {
-								if (d && d.acknowledged == true && d.deletedCount == 1) {
-									res.status(400).jsonp({ error: "2. Erro na criação do utilizador: " + errorString2 })
+						
+						console.log(req.query.token)
+						var configCookies = { headers: { Cookie: 'token=' + req.query.token } }
+						axios.post(API_URL_USER, data, configCookies)
+							.then(resp1 => {
+								if (resp1 && resp1.status == 200 && resp1.data) {
+									res.status(201).jsonp({ ...resp1.data })
 								}
 								else {
-									console.log("Erro(" + errorString2 + ") na criação do user _id: " + u._id + ", BD corrompida, login _id: " + u._id + " não apagado")
-									res.status(477).jsonp({ error: "3. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+									//apagar do login !!!
+									controllerLogin.deleteLogin(u.username)
+										.then(del => {
+											if (del && del.acknowledged == true && del.deletedCount == 1) {
+												res.status(400).jsonp({ error: "1. Erro na criação do utilizador: " + resp1.data })
+											}
+											else {
+												console.log("Erro na criação do user: " + u._id + " error: " + resp1.data + " , BD corrompida, insucesso ao apagar login com _id: " + u._id)
+												res.status(477).jsonp({ error: "1. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+											}
+										})
+										.catch(error1 => {
+											var errorString1 = error1
+											console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + "\nerror1: " + errorString1 + "\nerror2: " + resp1.data)
+											res.status(477).jsonp({ error: "2. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+										})
 								}
 							})
-							.catch(error3 => {
-								console.log("Erro(" + errorString2 + ") na criação do user _id: " + u._id + ", BD corrompida, login _id: " + u._id + " deu erro ao apagar: " + error3)
-								res.status(477).jsonp({ error: "4. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+							.catch(error2 => {
+								//apagar do login !!!
+								var errorString2 = (error2 && error2.response && error2.response.data) ? error2.response.data : "Erro desconhecido"
+								controllerLogin.deleteLogin(u.username)
+									.then(d => {
+										if (d && d.acknowledged == true && d.deletedCount == 1) {
+											console.log(errorString2)
+											res.status(400).jsonp({ error: "2. Erro na criação do utilizador: " + errorString2 })
+										}
+										else {
+											console.log("Erro(" + errorString2 + ") na criação do user _id: " + u._id + ", BD corrompida, login _id: " + u._id + " não apagado")
+											res.status(477).jsonp({ error: "3. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+										}
+									})
+									.catch(error3 => {
+										console.log("Erro(" + errorString2 + ") na criação do user _id: " + u._id + ", BD corrompida, login _id: " + u._id + " deu erro ao apagar: " + error3)
+										res.status(477).jsonp({ error: "4. Erros críticos na criação do utilizador, BD corrompida, contacte admins!" })
+									})
 							})
-					})
 
+					})
+					.catch(erro => {
+						res.status(400).jsonp({ error: "3. Erro na criação do utilizador: " + erro })
+					})
 			})
-			.catch(erro => {
-				res.status(400).jsonp({ error: "3. Erro na criação do utilizador: " + erro })
+			.catch (error => {
+				console.log(error)
+				res.status(500).jsonp({ error: "Falha ao enviar email!" })
 			})
 	}
 	else {
@@ -137,7 +155,7 @@ router.post('/registo', function (req, res) {
 
 				axios.post(API_URL_USER + '/client', data)
 					.then(resp1 => {
-						if (resp1 && resp1.status && resp1.status == 200){
+						if (resp1 && resp1.status && resp1.status == 200) {
 							res.status(201).jsonp({ message: "OK" })
 						}
 						else {
@@ -309,7 +327,7 @@ router.delete('/admin', isAdmin, function (req, res) {
 		controllerLogin.getLogin(req.body.email)
 			.then(l => {
 				if (l) {
-					var configCookies = { headers: { Cookie: 'token=' + req.cookies.token } }
+					var configCookies = { headers: { Cookie: 'token=' + req.query.token } }
 					axios.get(API_URL_USER + '/' + l._id, configCookies)
 						.then(resp1 => {
 							if (resp1 && resp1.status == 200 && resp1.data) {
@@ -370,7 +388,7 @@ router.delete('/admin', isAdmin, function (req, res) {
 							}
 						})
 						.catch(error4 => {
-							var errorString3 = (error4 &&error4.response && error4.response.data && error4.response.data.message) ? error4.response.data.message : "Erro desconhecido"
+							var errorString3 = (error4 && error4.response && error4.response.data && error4.response.data.message) ? error4.response.data.message : "Erro desconhecido"
 							res.status(401).jsonp({ error: "Erro na obtenção do user: " + errorString3 })
 						})
 				}
@@ -395,7 +413,7 @@ router.delete('/apagar', isMe, async function (req, res) { // tem de ter o param
 			const message = `Foi efetuado um pedido de remoção da sua conta.\n\n
 			O código para remover a conta é:  ${code}`;
 
-			await sendEmail(req.user, "Remoção de conta", message); //rever funcao implementada !!!!!
+			await send_email(req.user, "Remoção de conta", message); //rever funcao implementada !!!!!
 
 			res.status(200).jsonp({ message: "OK" })
 		}
@@ -417,7 +435,7 @@ router.post('/apagar-verificar', isMe, function (req, res) { // tem de ter o par
 					.then(l => {
 						if (l) {
 							if (l.nivel == "client") {
-								var configCookies = { headers: { Cookie: 'token=' + req.cookies.token } }
+								var configCookies = { headers: { Cookie: 'token=' + req.query.token } }
 								axios.get(API_URL_USER + '/client/' + l._id, configCookies)
 									.then(resp1 => {
 										if (resp1 && resp1.status == 200 && resp1.data) {
@@ -525,7 +543,7 @@ router.post('/esqueci', async function (req, res) {
 			const message = `Foi efetuado um pedido de alteração da password da sua conta.\n\n
 			O código para recuperar a password é:  ${code}`;
 
-			await sendEmail(req.body.email, message); // rever funcao implementada !!!!!!
+			await send_email(req.body.email, message); // rever funcao implementada !!!!!!
 
 			res.status(200).jsonp({ message: "OK" })
 		}

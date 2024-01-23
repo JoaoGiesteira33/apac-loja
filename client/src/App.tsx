@@ -36,6 +36,8 @@ import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { element } from 'three/examples/jsm/nodes/Nodes.js';
 import NewSeller from './pages/Seller/NewSeller';
 import { light } from '@mui/material/styles/createPalette';
+import { CurrentAccountProvider } from './contexts/currentAccountContext';
+import ChatPage from './components/experinecia_chat/ChatPage';
 
 // dynamically load components as they are needed
 const InitialPage = React.lazy(() => import('./pages/pintar_o_7/Initial'));
@@ -54,6 +56,7 @@ const InfoPage = React.lazy(() => import('./pages/InfoPage'));
 const ContactPage = React.lazy(() => import('./pages/Contact'));
 const CartBadge = React.lazy(() => import('./components/CartBadge'));
 const Dashboard = React.lazy(() => import('./pages/Administrator/Dashboard'));
+const Notifications = React.lazy(() => import('./pages/Profile/Notifications'));
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 const getDesignTokens = (mode: PaletteMode) => ({
@@ -91,11 +94,9 @@ const getDesignTokens = (mode: PaletteMode) => ({
                       paper: '#1f1f1f',
                   },
                   text: {
-                        primary: '#ffffff',
-                        secondary: grey[400],
-
-                    }
-                  
+                      primary: '#ffffff',
+                      secondary: grey[400],
+                  },
               }),
     },
     components: {
@@ -204,6 +205,10 @@ function App() {
             element: <ContactPage />,
         },
         {
+            path: '/chat',
+            element: <ChatPage />,
+        },
+        {
             path: '*',
             element: <PageNotFound />,
         },
@@ -231,6 +236,10 @@ function App() {
         {
             path: '/profile/order-history',
             element: <ProfileOrderHistory />,
+        },
+        {
+            path: '/profile/notifications',
+            element: <Notifications />,
         },
     ];
 
@@ -280,115 +289,119 @@ function App() {
     }, []);
 
     const payPalOptions = {
-        clientId: 'test',
+        clientId: 'AfAh3uS1aukd2edCVrBmTKvPxcNA7X7m6PDWGRWbZjaMntsTBPZKSxVziEk8Dcx1IgY_tO97MQh1kZJ6', // testing
         currency: 'EUR',
         intent: 'capture',
+        debug: true, // only for testing
     };
 
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <PayPalScriptProvider options={payPalOptions}>
-                <ColorModeContext.Provider value={colorMode}>
-                    <ThemeProvider theme={theme}>
-                        <CssBaseline />
-                        <Box
-                            component="div"
-                            className={
-                                theme.palette.mode === 'dark' ? 'dark' : ''
-                            }>
-                            <IconButton
-                                sx={{
-                                    ml: 1,
-                                    position: 'absolute',
-                                    right: 0,
-                                    top: 0,
-                                    zIndex: 1,
-                                }}
-                                onClick={colorMode.toggleColorMode}
-                                color="inherit">
-                                {theme.palette.mode === 'dark' ? (
-                                    <Brightness7Icon />
-                                ) : (
-                                    <Brightness4Icon />
-                                )}
-                            </IconButton>
-
-                            {location.pathname !== '/' ? (
-                                <ReactNavbar
-                                    loggedIn={loggedIn}
-                                    setHeight={setNavbarSize}
-                                />
-                            ) : (
-                                <></>
-                            )}
-                            <Suspense
-                                fallback={
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            my: 10,
-                                        }}
-                                        component="div">
-                                        <CircularProgress />
-                                    </Box>
+        <CurrentAccountProvider
+            loggedIn={loggedIn}
+            setLoggedIn={setLoggedIn}
+            tokenLevel={tokenLevel ?? ''}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <PayPalScriptProvider options={payPalOptions}>
+                    <ColorModeContext.Provider value={colorMode}>
+                        <ThemeProvider theme={theme}>
+                            <CssBaseline />
+                            <Box
+                                component="div"
+                                className={
+                                    theme.palette.mode === 'dark' ? 'dark' : ''
                                 }>
-                                <Routes>
-                                    {routes.map((route, index) => (
-                                        <Route
-                                            key={index}
-                                            path={route.path}
-                                            element={route.element}
-                                        />
-                                    ))}
-                                    {protectedRoutes.map((route, index) => (
-                                        <Route
-                                            key={index}
-                                            path={route.path}
-                                            element={route.element}
-                                        />
-                                    ))}
-                                    {sellerRoutes.map((route, index) => (
-                                        <Route
-                                            key={index}
-                                            path={route.path}
-                                            element={route.element}
-                                        />
-                                    ))}
-                                    {adminRoutes.map((route, index) => (
-                                        <Route
-                                            key={index}
-                                            path={route.path}
-                                            element={route.element}
-                                        />
-                                    ))}
+                                <IconButton
+                                    sx={{
+                                        ml: 1,
+                                        position: 'absolute',
+                                        right: 0,
+                                        top: 0,
+                                        zIndex: 1,
+                                    }}
+                                    onClick={colorMode.toggleColorMode}
+                                    color="inherit">
+                                    {theme.palette.mode === 'dark' ? (
+                                        <Brightness7Icon />
+                                    ) : (
+                                        <Brightness4Icon />
+                                    )}
+                                </IconButton>
 
-                                </Routes>
-                            </Suspense>
-                            {loggedIn && location.pathname !== '/cart' && (
-                                <CartBadge />
-                            )}
-                            {checkChatRoute(location.pathname) ? (
-                                <Chat />
-                            ) : (
-                                <></>
-                            )}
-                            {location.pathname !== '/' ? (
-                                <Footer setHeight={setFooterSize} />
-                            ) : (
-                                <></>
-                            )}
-                        </Box>
-                    </ThemeProvider>
-                </ColorModeContext.Provider>
-            </PayPalScriptProvider>
-        </LocalizationProvider>
+                                {location.pathname !== '/' ? (
+                                    <ReactNavbar
+                                        loggedIn={loggedIn}
+                                        setHeight={setNavbarSize}
+                                    />
+                                ) : (
+                                    <></>
+                                )}
+                                <Suspense
+                                    fallback={
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                my: 10,
+                                            }}
+                                            component="div">
+                                            <CircularProgress />
+                                        </Box>
+                                    }>
+                                    <Routes>
+                                        {routes.map((route, index) => (
+                                            <Route
+                                                key={index}
+                                                path={route.path}
+                                                element={route.element}
+                                            />
+                                        ))}
+                                        {protectedRoutes.map((route, index) => (
+                                            <Route
+                                                key={index}
+                                                path={route.path}
+                                                element={route.element}
+                                            />
+                                        ))}
+                                        {sellerRoutes.map((route, index) => (
+                                            <Route
+                                                key={index}
+                                                path={route.path}
+                                                element={route.element}
+                                            />
+                                        ))}
+                                        {adminRoutes.map((route, index) => (
+                                            <Route
+                                                key={index}
+                                                path={route.path}
+                                                element={route.element}
+                                            />
+                                        ))}
+                                    </Routes>
+                                </Suspense>
+                                {loggedIn && location.pathname !== '/cart' && (
+                                    <CartBadge />
+                                )}
+                                {checkChatRoute(location.pathname) ? (
+                                    <Chat />
+                                ) : (
+                                    <></>
+                                )}
+                                {location.pathname !== '/' ? (
+                                    <Footer setHeight={setFooterSize} />
+                                ) : (
+                                    <></>
+                                )}
+                            </Box>
+                        </ThemeProvider>
+                    </ColorModeContext.Provider>
+                </PayPalScriptProvider>
+            </LocalizationProvider>
+        </CurrentAccountProvider>
     );
 }
 
 export default App;
-
 
 /*
 

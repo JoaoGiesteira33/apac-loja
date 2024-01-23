@@ -188,12 +188,18 @@
             "order_history_text": "Verificar histórico de compras",
             "products": "Os meus produtos",
             "products_text": "Gerir os seus produtos",
+            "requests-2": "Submissões obras",
+            "requests-2-text": "Gerir submissões de novas obras",
             "logout": "Sair",
             "logout_text": "Sair da conta",
             "dashboard": "Dashboard",
             "dashboard_text": "Consultar dashboard de estatísticas",
             "new-seller": "Novo artista",
-            "new-seller-text": "Criar uma conta de artista nova"
+            "new-seller-text": "Criar uma conta de artista nova",
+            "notifications": {
+                "title": "Notificações",
+                "text": "Verificar notificações"
+            }
         },
         "info": {
             "title": "políticas, termos & condições",

@@ -13,6 +13,7 @@ export const API_URL_USER = BASE_URL + ':11000/user';
 export const API_URL_PROD = BASE_URL + ':11000/product';
 export const API_URL_MAIL = BASE_URL + ':11000/email';
 export const API_URL_SHIP = BASE_URL + ':11000/shipment';
+export const API_URL_NOTIF = BASE_URL + ':11000/notification';
 export const AUTH_URL = BASE_URL + ':11001';
 //export const BASE_URL = 'http:/192.168.1.68:8000/api';
 
@@ -225,13 +226,13 @@ export const addProduct = async (
 export const createUser = async (
     userInfo: NestedPartial<User>,
     token: string
-): Promise<Result<string, Error>> => {
+): Promise<Result<object, Error>> => {
     try {
-        const response = await axios.post(`${API_URL_USER}/seller}`, {
+        const response = await axios.post(`${AUTH_URL}/admin/registo`, userInfo,
+        {
             params: {
                 token: token,
             },
-            data: userInfo,
         });
         return ok(response.data);
     } catch (error) {
@@ -250,12 +251,11 @@ export const updateUser = async (
     try {
         const decodedToken = decodeToken(token);
         const response = await axios.patch(
-            `${API_URL_USER}/${(decodedToken as { _id: string })._id}`,
+            `${API_URL_USER}/${(decodedToken as { _id: string })._id}`,userInfo,
             {
                 params: {
                     token: token,
-                },
-                data: userInfo,
+                }
             }
         );
         return ok(response.data);
@@ -276,12 +276,11 @@ export const uploadPhoto = async (
     try {
         const data: FormData = new FormData();
         data.append('file', photo);
-        const response = await axios.post(`${API_URL_USER}/${id}/avatar`, {
+        const response = await axios.post(`${API_URL_USER}/${id}/avatar`,data, {
             headers: { 'Content-Type': 'multipart/form-data' },
             params: {
                 token: token,
             },
-            body: data,
         });
         return ok(response.data);
     } catch (error) {
@@ -297,4 +296,19 @@ export const checkLink = (link) => {
     const regex = new RegExp('^(http|https)://', 'i');
     if (regex.test(link)) return link;
     else return API_URL + link;
+};
+
+export const getNotifications = async (token: string) => {
+    try {
+        const response = await axios.get(`${API_URL_NOTIF}`, {
+            params: {
+                token: token,
+            },
+        });
+        console.log('Notifications:', response.data.results);
+        return response.data.results;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 };
