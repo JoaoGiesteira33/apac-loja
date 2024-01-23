@@ -85,7 +85,13 @@ router.patch('/:id', function (req, res, next) {
                 controllerOrder
                     .updateOrderInfo(req.params.id, req.body)
                     .then((info) => {
-                        res.status(200).jsonp(info);
+                        if (info.matchedCount == 1) {
+                            res.status(200).jsonp(info);
+                        } else {
+                            res.status(400).jsonp({
+                                error: 'Error updating order.',
+                            });
+                        }
                     })
                     .catch((error) => {
                         res.status(500).jsonp(error);

@@ -69,7 +69,11 @@ router.patch('/client/:id', isMeOrAdmin, function (req, res) {
     controllerUser
         .updateUserInfo(req.params.id, req.body)
         .then((info) => {
-            res.status(200).jsonp(info);
+            if (info.matchedCount == 1) {
+                res.status(200).jsonp(info);
+            } else {
+                res.status(400).jsonp({ error: 'Error updating client info.' });
+            }
         })
         .catch((error) => {
             res.status(500).jsonp(error);
@@ -168,7 +172,11 @@ router.patch('/seller/:id', isMeOrAdmin, function (req, res) {
     controllerUser
         .updateUserInfo(req.params.id, req.body)
         .then((info) => {
-            res.status(200).jsonp(info);
+            if (info.matchedCount == 1) {
+                res.status(200).jsonp(info);
+            } else {
+                res.status(400).jsonp({ error: 'Error updating seller info.' });
+            }
         })
         .catch((error) => {
             res.status(500).jsonp(error);
@@ -265,7 +273,12 @@ router.patch('/:id', isMeOrAdmin, function (req, res) {
     controllerUser
         .updateUserInfo(req.params.id, req.body)
         .then((info) => {
-            res.status(200).jsonp(info);
+            if (info.matchedCount == 1) {
+                res.status(200).jsonp(info);
+            } else {
+                //No update was made, caused by user error
+                res.status(400).jsonp({ error: 'Error updating user info.' });
+            }
         })
         .catch((error) => {
             res.status(500).jsonp(error);
