@@ -289,9 +289,10 @@ function App() {
     }, []);
 
     const payPalOptions = {
-        clientId: 'test',
+        clientId: 'AfAh3uS1aukd2edCVrBmTKvPxcNA7X7m6PDWGRWbZjaMntsTBPZKSxVziEk8Dcx1IgY_tO97MQh1kZJ6', // testing
         currency: 'EUR',
         intent: 'capture',
+        debug: true, // only for testing
     };
 
     return (
