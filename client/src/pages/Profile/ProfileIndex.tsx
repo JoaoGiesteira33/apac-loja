@@ -91,8 +91,8 @@ export default function ProfileIndex() {
                 {tokenLevel == 'admin' && (
                     <Link className="inline-block" to="/requests">
                         <ProfileThumbnail
-                            title={t('profile.dashboard')}
-                            description={t('profile.dashboard_text')}
+                            title={t('profile.requests-2')}
+                            description={t('profile.requests-2-text')}
                             icon={<NewReleasesIcon />}
                         />
                     </Link>
