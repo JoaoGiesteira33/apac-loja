@@ -188,7 +188,7 @@ function getStoredHash(userEmail) {
  * @returns {String} - Código de recuperação de conta
  */
 
-module.exports.generateRecoveryCode = async (userEmail) => {
+module.exports.generateRecoveryCode = (userEmail) => {
     const existsMail = Login.existsEmail(userEmail);
     if (!existsMail) return null;
 
@@ -208,7 +208,7 @@ module.exports.generateRecoveryCode = async (userEmail) => {
  * Gera uma password aleatória
  * @returns {String} - Password aleatória
  */
-module.exports.generateRandomPassword = async () => {
+module.exports.generateRandomPassword = () => {
     return crypto.randomBytes(9).toString('hex').toUpperCase();
 };
 
@@ -219,7 +219,7 @@ module.exports.generateRandomPassword = async () => {
  * @returns {Boolean} - True se o código for válido, false se não for válido
  * @throws {Error} - Erro se o utilizador já tiver tentado utilizar o código mais do que as vezes permitidas
  */
-module.exports.verifyRecoveryCode = async (userEmail, submittedCode) => {
+module.exports.verifyRecoveryCode = (userEmail, submittedCode) => {
     if (!brutedForce(userEmail)) {
         const hashToCheck = crypto
             .createHmac('sha256', secrets.AUTH_KEY)

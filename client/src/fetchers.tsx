@@ -226,9 +226,10 @@ export const addProduct = async (
 export const createUser = async (
     userInfo: NestedPartial<User>,
     token: string
-): Promise<Result<string, Error>> => {
+): Promise<Result<object, Error>> => {
     try {
-        const response = await axios.post(`${API_URL_USER}/seller}`, userInfo,{
+        const response = await axios.post(`${AUTH_URL}/admin/registo`, userInfo,
+        {
             params: {
                 token: token,
             },
@@ -275,12 +276,11 @@ export const uploadPhoto = async (
     try {
         const data: FormData = new FormData();
         data.append('file', photo);
-        const response = await axios.post(`${API_URL_USER}/${id}/avatar`, {
+        const response = await axios.post(`${API_URL_USER}/${id}/avatar`,data, {
             headers: { 'Content-Type': 'multipart/form-data' },
             params: {
                 token: token,
             },
-            body: data,
         });
         return ok(response.data);
     } catch (error) {

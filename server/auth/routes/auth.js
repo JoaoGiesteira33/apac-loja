@@ -6,7 +6,7 @@ var jwt = require('jsonwebtoken')
 var secrets = require('docker-secret').secrets;
 
 const controllerLogin = require('../controllers/login');
-const { sendEmail, getDateTime, isAdmin, hasAccess, isMe } = require('../utils/utils');
+const { send_email, getDateTime, isAdmin, hasAccess, isMe } = require('../utils/utils');
 
 var axios = require('axios');
 
@@ -52,16 +52,21 @@ router.get('/verificar', hasAccess, function (req, res) {
 // POST -> [admin] fazer registo de um utilizador
 router.post('/admin/registo', isAdmin, function (req, res) {
 	if (req.body.email && req.body.nivel) {
-		var info = {
-			...req.body,
-			dataRegisto: getDateTime()
-		}
-
 		const settedPassword = controllerLogin.generateRandomPassword();
 
 		const message = `Foi-lhe atribuída a seguinte password: ${settedPassword}`;
 
-		sendEmail(req.body.email, "Atribuição de password", message)
+		var info = {
+			...req.body,
+			dataRegisto: getDateTime(),
+			password: settedPassword
+		}
+
+		console.log(info)
+		console.log(req.query)
+
+
+		send_email(req.body.email, "Atribuição de password", message)
 			.then(() => {
 				controllerLogin.registar(info)
 					.then(u => {
@@ -70,12 +75,13 @@ router.post('/admin/registo', isAdmin, function (req, res) {
 							_id: u._id,
 							role: u.nivel
 						}
-
-						var configCookies = { headers: { Cookie: 'token=' + req.cookies.token } }
+						
+						console.log(req.query.token)
+						var configCookies = { headers: { Cookie: 'token=' + req.query.token } }
 						axios.post(API_URL_USER, data, configCookies)
 							.then(resp1 => {
 								if (resp1 && resp1.status == 200 && resp1.data) {
-									res.status(201).jsonp({ message: "OK" })
+									res.status(201).jsonp({ ...resp1.data })
 								}
 								else {
 									//apagar do login !!!
@@ -98,10 +104,11 @@ router.post('/admin/registo', isAdmin, function (req, res) {
 							})
 							.catch(error2 => {
 								//apagar do login !!!
-								var errorString2 = (error2 && error2.response && error2.response.data && error2.response.data.message) ? error2.response.data.message : "Erro desconhecido"
+								var errorString2 = (error2 && error2.response && error2.response.data) ? error2.response.data : "Erro desconhecido"
 								controllerLogin.deleteLogin(u.username)
 									.then(d => {
 										if (d && d.acknowledged == true && d.deletedCount == 1) {
+											console.log(errorString2)
 											res.status(400).jsonp({ error: "2. Erro na criação do utilizador: " + errorString2 })
 										}
 										else {
@@ -320,7 +327,7 @@ router.delete('/admin', isAdmin, function (req, res) {
 		controllerLogin.getLogin(req.body.email)
 			.then(l => {
 				if (l) {
-					var configCookies = { headers: { Cookie: 'token=' + req.cookies.token } }
+					var configCookies = { headers: { Cookie: 'token=' + req.query.token } }
 					axios.get(API_URL_USER + '/' + l._id, configCookies)
 						.then(resp1 => {
 							if (resp1 && resp1.status == 200 && resp1.data) {
@@ -406,7 +413,7 @@ router.delete('/apagar', isMe, async function (req, res) { // tem de ter o param
 			const message = `Foi efetuado um pedido de remoção da sua conta.\n\n
 			O código para remover a conta é:  ${code}`;
 
-			await sendEmail(req.user, "Remoção de conta", message); //rever funcao implementada !!!!!
+			await send_email(req.user, "Remoção de conta", message); //rever funcao implementada !!!!!
 
 			res.status(200).jsonp({ message: "OK" })
 		}
@@ -428,7 +435,7 @@ router.post('/apagar-verificar', isMe, function (req, res) { // tem de ter o par
 					.then(l => {
 						if (l) {
 							if (l.nivel == "client") {
-								var configCookies = { headers: { Cookie: 'token=' + req.cookies.token } }
+								var configCookies = { headers: { Cookie: 'token=' + req.query.token } }
 								axios.get(API_URL_USER + '/client/' + l._id, configCookies)
 									.then(resp1 => {
 										if (resp1 && resp1.status == 200 && resp1.data) {
@@ -536,7 +543,7 @@ router.post('/esqueci', async function (req, res) {
 			const message = `Foi efetuado um pedido de alteração da password da sua conta.\n\n
 			O código para recuperar a password é:  ${code}`;
 
-			await sendEmail(req.body.email, message); // rever funcao implementada !!!!!!
+			await send_email(req.body.email, message); // rever funcao implementada !!!!!!
 
 			res.status(200).jsonp({ message: "OK" })
 		}
