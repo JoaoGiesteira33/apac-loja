@@ -129,6 +129,10 @@ const Product = new mongoose.Schema({
         ref: 'userModel',
         required: true,
     },
+    published_date: {
+        type: Date,
+        default: Date.now,
+    },
     piece_info: PieceInfo,
     book_info: BookInfo,
     featured: {
