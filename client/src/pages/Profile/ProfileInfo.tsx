@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useContext } from 'react';
 
 import Box from '@mui/system/Box';
 import Paper from '@mui/material/Paper';
@@ -15,15 +15,27 @@ import { CountryType, getCountry } from '../../types/country';
 import { User } from '../../types/user';
 import { NestedPartial } from '../../types/nestedPartial';
 import { updateUser } from '../../fetchers';
+import { CurrentAccountContext } from '../../contexts/currentAccountContext';
 
 const TODAY_MINUS_18_YEARS: Dayjs = dayjs().subtract(18, 'year');
 
 export default function ProfileInfo() {
     const [t] = useTranslation();
     const userInfo = JSON.parse(localStorage.getItem('user') as string);
+    
+    const { loggedIn, setLoggedIn, tokenLevel } = useContext(CurrentAccountContext);
+
+    let userInfoType = null;
+    if (userInfo && userInfo.seller_fields) {
+        userInfoType = userInfo.seller_fields;
+    }
+    else{
+        userInfoType = userInfo.client_fields; 
+    }
+
 
     const [name, setName] = useState(() => {
-        if (userInfo) return userInfo.client_fields.demographics.name;
+        if (userInfo) return userInfoType.demographics.name;
         else return '';
     });
     const [email, setEmail] = useState(() => {
@@ -32,36 +44,36 @@ export default function ProfileInfo() {
     });
     const [country, setCountry] = useState<CountryType | null | undefined>(
         () => {
-            if (userInfo) {
+            if (userInfo && userInfoType.demographics.address?.country) {
                 const countryLabel =
-                    userInfo.client_fields.demographics.address.country;
+                    userInfoType.demographics.address.country;
                 const country = getCountry(countryLabel);
                 return country;
             } else return null;
         }
     );
     const [countryInput, setCountryInput] = useState<string>(() => {
-        if (userInfo)
-            return userInfo.client_fields.demographics.address.country;
+        if (userInfo && userInfoType.demographics.address?.country)
+            return userInfoType.demographics.address.country;
         else return '';
     });
     const [address, setAddress] = useState(() => {
-        if (userInfo) return userInfo.client_fields.demographics.address.street;
+        if (userInfo && userInfoType.demographics.address?.street) return userInfoType.demographics.address.street;
         else return '';
     });
     const [postalCode, setPostalCode] = useState(() => {
-        if (userInfo)
-            return userInfo.client_fields.demographics.address.postal_code;
+        if (userInfo && userInfoType.demographics.address?.postal_code)
+            return userInfoType.demographics.address.postal_code;
         else return '';
     });
     const [city, setCity] = useState(() => {
-        if (userInfo) return userInfo.client_fields.demographics.address.city;
+        if (userInfo && userInfoType.demographics.address?.city) return userInfoType.demographics.address.city;
         else return '';
     });
     const [phone, setPhone] = useState<string>(() => {
-        if (userInfo) {
+        if (userInfo && userInfoType.demographics.phone) {
             const phoneFromLocalStorage =
-                userInfo.client_fields.demographics.phone;
+                userInfoType.demographics.phone;
             if (phoneFromLocalStorage != null) return phoneFromLocalStorage;
             else return '';
         } else return '';
@@ -69,9 +81,9 @@ export default function ProfileInfo() {
     const [birth_date, setBirthDate] = useState<Dayjs | null | undefined>(
         () => {
             if (userInfo) {
-                if (userInfo.client_fields.demographics.birth_date == null)
+                if (userInfoType.demographics.birth_date == null)
                     return dayjs();
-                return dayjs(userInfo.client_fields.demographics.birth_date);
+                return dayjs(userInfoType.demographics.birth_date);
             } else {
                 return dayjs();
             }
@@ -79,40 +91,40 @@ export default function ProfileInfo() {
     );
 
     let originalName = '';
-    if (userInfo && userInfo.client_fields.demographics.name)
-        originalName = userInfo.client_fields.demographics.name;
+    if (userInfo && userInfoType.demographics.name)
+        originalName = userInfoType.demographics.name;
 
     let originalEmail = '';
     if (userInfo && userInfo.email) originalEmail = userInfo.email;
 
     let originalCountry = undefined;
-    if (userInfo && userInfo.client_fields.demographics.address.country) {
+    if (userInfo && userInfoType.demographics.address?.country) {
         const originalCountryLabel =
-            userInfo.client_fields.demographics.address.country;
+            userInfoType.demographics.address.country;
         originalCountry = getCountry(originalCountryLabel);
     }
 
     let originalAddress = '';
-    if (userInfo && userInfo.client_fields.demographics.address.street)
-        originalAddress = userInfo.client_fields.demographics.address.street;
+    if (userInfo && userInfoType.demographics.address?.street)
+        originalAddress = userInfoType.demographics.address.street;
 
     let originalPostalCode = '';
-    if (userInfo && userInfo.client_fields.demographics.address.postal_code)
+    if (userInfo && userInfoType.demographics.address?.postal_code)
         originalPostalCode =
-            userInfo.client_fields.demographics.address.postal_code;
+            userInfoType.demographics.address.postal_code;
 
     let originalCity = '';
-    if (userInfo && userInfo.client_fields.demographics.address.city)
-        originalCity = userInfo.client_fields.demographics.address.city;
+    if (userInfo && userInfoType.demographics.address?.city)
+        originalCity = userInfoType.demographics.address.city;
 
     let originalPhone = '';
-    if (userInfo && userInfo.client_fields.demographics.phone)
-        originalPhone = userInfo.client_fields.demographics.phone;
+    if (userInfo && userInfoType.demographics.phone)
+        originalPhone = userInfoType.demographics.phone;
 
     let originalBirthDate = dayjs();
-    if (userInfo && userInfo.client_fields.demographics.birth_date)
+    if (userInfo && userInfoType.demographics.birth_date)
         originalBirthDate = dayjs(
-            userInfo.client_fields.demographics.birth_date
+            userInfoType.demographics.birth_date
         );
 
     const [showNameAlert, setShowNameAlert] = useState(false);
@@ -214,7 +226,7 @@ export default function ProfileInfo() {
         }
         if (hasErrors) return;
 
-        const newUserInfo: NestedPartial<User> = {
+        const newUserInfoC: NestedPartial<User> = {
             email: email,
             client_fields: {
                 demographics: {
@@ -231,6 +243,24 @@ export default function ProfileInfo() {
             },
         };
 
+        const newUserInfoS: NestedPartial<User> = {
+            email: email,
+            seller_fields: {
+                demographics: {
+                    address: {
+                        street: address,
+                        city: city,
+                        postal_code: postalCode,
+                        country: countryInput,
+                    },
+                    name: name,
+                    phone: phone,
+                    birth_date: birth_date.format('YYYY-MM-DD'),
+                },
+            },
+        };
+
+        let newUserInfo = tokenLevel == 'client' ? newUserInfoC : newUserInfoS;
         const token = localStorage.getItem('token');
         if (token == null) return;
 
