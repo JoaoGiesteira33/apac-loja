@@ -273,6 +273,8 @@ const Register = () => {
                         <CountrySelect
                             selection={country}
                             setSelection={setCountry}
+                            selectionInput={country}
+                            setSelectionInput={setCountry}
                             sx={{ marginTop: '1rem', flex: 1 }}
                             showCountryAlert={showCountryAlert}
                         />

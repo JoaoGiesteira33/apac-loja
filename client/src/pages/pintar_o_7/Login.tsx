@@ -13,6 +13,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { decodeToken } from 'react-jwt';
 import { useTranslation } from 'react-i18next';
 import { CurrentAccountContext } from '../../contexts/currentAccountContext';
+//import { CurrentChatContext } from '../../contexts/chatContext';
 
 const Login = () => {
     const [t] = useTranslation();
@@ -20,6 +21,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
 
     const { setLoggedIn, setTokenLevel } = useContext(CurrentAccountContext);
+    //const { setUsername, setSessionID, connect } = useContext(CurrentChatContext);
 
     const [showEmailAlert, setShowEmailAlert] = useState(false);
     const [showPassAlert, setShowPassAlert] = useState(false);
@@ -74,6 +76,9 @@ const Login = () => {
                     localStorage.setItem('loggedIn', 'ok');
                     setLoggedIn(true);
                     setTokenLevel(decodedToken.level);
+                    //setUsername(user.username);
+                    //setSessionID(user._id);
+                    //connect()
                     navigate('/gallery');
                 } else {
                     setErrorMessage('#1');
