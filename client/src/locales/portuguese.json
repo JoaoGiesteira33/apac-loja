@@ -111,6 +111,8 @@
                 "title": "Método de pagamento",
                 "paypal": "Paypal",
                 "mbway": "MBWay",
+                "mbway-pending": "Tem 5 minutos para confirmar o pagamento na app MBWay.",
+                "mbway-max-amaount": "O valor máximo para pagamento com MBWay é de 750€.",
                 "credit-card": "Cartão de Crédito",
                 "multibanco": "Multibanco",
                 "card-number": "Número do cartão",
@@ -186,7 +188,10 @@
             "product-details": "Detalhes do produto",
             "more": "Outras obras de arte do artista",
             "no_more": "Não existem mais obras de arte do artista",
-            "already-in-cart": "Este produto está no seu carrinho."
+            "already-in-cart": "Este produto está no seu carrinho.",
+            "pending": "Este produto está pendente para reserva.",
+            "paid": "Este produto já foi vendido.",
+            "reserved": "Este produto já foi reservado."
         },
         "profile": {
             "requests": {

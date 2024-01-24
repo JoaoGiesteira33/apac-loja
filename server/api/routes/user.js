@@ -100,6 +100,7 @@ router.get(
     middleware.extractFilters,
     middleware.fieldSelector,
     function (req, res) {
+        req.filters = req.filters || {};
         req.filters.role = 'client';
         controllerUser
             .getUsers(
@@ -202,6 +203,7 @@ router.get(
     middleware.extractFilters,
     middleware.fieldSelector,
     function (req, res) {
+        req.filters = req.filters || {};
         req.filters.role = 'seller';
         controllerUser
             .getUsers(

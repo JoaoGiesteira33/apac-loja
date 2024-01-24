@@ -237,6 +237,51 @@ export const getShipments = async (token: string) => {
     }
 };
 
+export const getShipmentByProduct = async (
+    token: string,
+    productId: string
+) => {
+    try {
+        const response = await axios.get(`${API_URL_SHIP}`, {
+            params: {
+                token: token,
+                limit: 0,
+                _product: productId,
+            },
+        });
+        if (response.data.results.length == 0) return null;
+        else return response.data.results[0];
+    } catch (error) {
+        console.error('Error getting shipments:', error);
+        throw error;
+    }
+};
+
+export const updateShipment = async (
+    shipment: Object,
+    token: string,
+    shipmentId: string
+): Promise<Result<object, Error>> => {
+    try {
+        const response = await axios.post(
+            `${API_URL_SHIP}/` + shipmentId + '/states',
+            shipment,
+            {
+                params: {
+                    token: token,
+                },
+            }
+        );
+        return ok(response.data);
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return err(error);
+        } else {
+            return err(new Error('Unexpected error'));
+        }
+    }
+};
+
 export const addProduct = async (
     product: NestedPartial<ProductType>,
     token: string
@@ -265,11 +310,15 @@ export const updateProduct = async (
     productId: string
 ): Promise<Result<object, Error>> => {
     try {
-        const response = await axios.patch(`${API_URL_PROD}/`+productId, product, {
-            params: {
-                token: token,
-            },
-        });
+        const response = await axios.patch(
+            `${API_URL_PROD}/` + productId,
+            product,
+            {
+                params: {
+                    token: token,
+                },
+            }
+        );
         return ok(response.data);
     } catch (error) {
         if (axios.isAxiosError(error)) {

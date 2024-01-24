@@ -103,7 +103,13 @@ router.get(
     hasAccess,
     function (req, res, next) {
         if (req._id && req.level != 'admin') {
-            req.filters._client = req._id;
+            req.filters = req.filters || {};
+            if (req.level == 'client') {
+                req.filters._client = req._id;
+            }
+            if (req.level == 'seller') {
+                req.filters._seller = req._id;
+            }
         }
         controllerShipment
             .getShipments(

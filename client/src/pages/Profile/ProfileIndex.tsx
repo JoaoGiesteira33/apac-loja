@@ -42,7 +42,7 @@ export default function ProfileIndex() {
                         icon={<AccountCircleIcon />}
                     />
                 </Link>}
-                {(tokenLevel == 'seller' || tokenLevel == 'admin') && (
+                {(tokenLevel == 'seller' || tokenLevel == 'admin' || tokenLevel == 'client') && (
                     <Link className="inline-block" to="/profile/notifications">
                         <ProfileThumbnail
                             title={t('profile.notifications.title')}
