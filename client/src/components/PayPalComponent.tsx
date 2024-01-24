@@ -1,101 +1,136 @@
-import React from 'react';
-import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
+import { PayPalButtons } from '@paypal/react-paypal-js';
+import { OrderType } from '../types/order';
+import { User } from '../types/user';
+import { ProductType } from '../types/product';
+import { API_URL_PAY } from '../fetchers';
+import { useState } from 'react';
 
 // This value is from the props in the UI
-const style = { 
+const style = {
     layout: 'vertical',
     color: 'silver',
-
 };
 
-function createOrder() {
-    // replace this url with your server
-    return fetch(
-        'http://localhost:11000/payment/paypal/orders?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluQGdtYWlsLmNvbSIsImxldmVsIjoiYWRtaW4iLCJfaWQiOiI2NWExOTUwZTVhYzYyYzRlNDI4ZGQyOTMiLCJpYXQiOjE3MDU5NzE3OTUsImV4cCI6MTcwNjA1ODE5NX0.I5_sR-b756KyYQbUgJ0yHfO0flv1vHe5hKqN4ndFB1g',
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            // use the "body" param to optionally pass additional order information
-            // like product ids and quantities
-            body: JSON.stringify({
-                reservation: 'true',
-                currency: 'EUR',
-                cart: [
-                    {
-                        _product: '65a1950e5ac62c4e428dd293', // test
-                        amount: 1,
-                    },
-                ],
-                _client: '65a1950e5ac62c4e428dd293',
-                address: {
-                    postal_code: '4710-111',
-                    city: 'Braga',
-                    country: 'Portugal',
-                    street: 'Rua dos Peos',
-                },
-                shipments: [
-                    {
-                        _product: '65a5243ba5028940d4e50aac',
-                        _seller: '65a522f06db87428b203c172',
-                    },
-                ],
-            }),
-        }
-    )
-        .then((response) => response.json())
-        .then((order) => {
-            // Your code here after create the order
-            console.log('order: ', order);
-            return order.id;
-        });
-}
-function onApprove(data) {
-    // replace this url with your server
-    return fetch(
-        'https://react-paypal-js-storybook.fly.dev/api/paypal/capture-order',
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                orderID: data.orderID,
-            }),
-        }
-    )
-        .then((response) => response.json())
-        .then((orderData) => {
-            // Your code here after capture the order
-            alert('Order Approved!');
-        });
+interface PayPalComponentProps {
+    cart: ProductType[];
+    user: User;
 }
 
-// Custom component to wrap the PayPalButtons and show loading spinner
-const ButtonWrapper = ({ showSpinner }) => {
-    const [{ isPending }] = usePayPalScriptReducer();
+const PayPalComponent = (props: PayPalComponentProps) => {
+    const { cart, user } = props;
+    const [paidFor, setPaidFor] = useState(false);
+    const token = localStorage.getItem('token');
+
+    /**
+     * This function is called when the user clicks on the PayPal button
+     */
+    const handleCreateOrder = () => {
+        return fetch(
+            `${API_URL_PAY}/paypal/orders?token=${token}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // use the "body" param to optionally pass additional order information
+                // like product ids and quantities
+                body: JSON.stringify({
+                    reservation: 'true',
+                    currency: 'EUR',
+                    cart: cart.map((product) => ({
+                        id: product._id,
+                        amount: 1,
+                    })),
+                    _client: user._id,
+                    address: {
+                        postal_code:
+                            user.client_fields?.demographics.address
+                                .postal_code,
+                        city: user.client_fields?.demographics.address.city,
+                        country:
+                            user.client_fields?.demographics.address.country,
+                        street: user.client_fields?.demographics.address.street,
+                    },
+                    shipments: cart.map((product) => ({
+                        _product: product._id,
+                        _seller: product._seller,
+                    })),
+                }),
+            }
+        )
+            .then((response) => response.json())
+            .then((order) => {
+                // Your code here after create the order
+                console.log('order: ', order);
+                return order.id;
+            });
+    };
+
+    /**
+     * This function is called when the user approves the transaction on PayPal
+     */
+    const handleOnApprove = (data: any) => {
+        const order: OrderType = data;
+
+        return fetch(
+            `${API_URL_PAY}/paypal/orders/${
+                order._id
+            }/capture?token=${token}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    intent: 'CAPTURE',
+                    orderID: order._id,
+                }),
+            }
+        )
+            .then((response) => response.json())
+            .then((orderData) => {
+                console.log('orderData: ', orderData);
+                setPaidFor(true);
+                // Your code here after capture the order
+                alert('Pagamento realizado com sucesso!');
+            });
+    };
+
+    /**
+     * This function is called when there is an error on PayPal
+     */
+    const handleError = (error: any) => {
+        // Your code here
+        console.log('error: ', error);
+        alert('Erro no processo de pagamento!');
+    };
+
+    /**
+     * This function is called when the user cancels the transaction on PayPal
+     */
+    const handleCancel = (data: any) => {
+        // Your code here
+        console.log('cancel: ', data);
+        alert('Pagamento cancelado!');
+    };
 
     return (
         <>
-            {showSpinner && isPending && <div className="spinner" />}
+            {/* {showSpinner && isPending && <div className="spinner" />} */}
             <PayPalButtons
-                style={style}
-                disabled={false}
-                forceReRender={[style]}
-                fundingSource={'paypal'}
-                createOrder={createOrder}
-                onApprove={onApprove}
+                style={{
+                    color: 'silver',
+                    layout: 'horizontal',
+                    height: 48,
+                    tagline: false,
+                }}
+                disabled={paidFor}
+                createOrder={handleCreateOrder}
+                onApprove={handleOnApprove}
+                onError={handleError}
+                onCancel={handleCancel}
             />
         </>
-    );
-};
-
-const PayPalComponent = () => {
-    return (
-        <div>
-            <ButtonWrapper showSpinner={false} />
-        </div>
     );
 };
 

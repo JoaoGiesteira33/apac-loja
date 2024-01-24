@@ -2,6 +2,7 @@ import {
     Alert,
     Box,
     Button,
+    Divider,
     Paper,
     Tab,
     Tabs,
@@ -13,6 +14,8 @@ import { useTranslation } from 'react-i18next';
 import { MuiTelInput } from 'mui-tel-input';
 import PayPalComponent from './PayPalComponent';
 import MultibancoComponent from './MultibancoComponent';
+import useCart from '../hooks/useCart';
+import { User } from '../types/user';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -48,6 +51,8 @@ function a11yProps(index: number) {
 
 const CheckoutStep4 = () => {
     const { t } = useTranslation();
+    const { cart } = useCart();
+    const user = localStorage.getItem('user') as Object as User;
 
     const [value, setValue] = useState(0);
     const [phone, setPhone] = useState('');
@@ -82,7 +87,25 @@ const CheckoutStep4 = () => {
                     {t('checkout.payment.title')}
                 </Typography>
                 <Box component="div" sx={{ width: '100%' }}>
-                    <Box component="div">
+                    <PayPalComponent cart={cart} user={user}/>
+                    
+                    <Divider sx={{ margin: '20px 0' }} />
+
+                    EuPago MBWay button
+
+                    <Divider sx={{ margin: '20px 0' }} />
+
+                    EuPago CreditCard button
+                </Box>
+            </Paper>
+        </Box>
+    );
+};
+
+export default CheckoutStep4;
+
+/* 
+<Box component="div">
                         <Tabs
                             value={value}
                             onChange={handleChange}
@@ -123,15 +146,11 @@ const CheckoutStep4 = () => {
                                 sx={{ marginX: '15%' }}>
                                 {t('checkout.payment.pay')}
                             </Button>
-                        </Box>
+                        </Box> 
+                        EuPago MBWay button
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={2}>
-                        <MultibancoComponent />
+                        <MultibancoComponent /> 
+                        EuPago CreditCard button
                     </CustomTabPanel>
-                </Box>
-            </Paper>
-        </Box>
-    );
-};
-
-export default CheckoutStep4;
+*/
