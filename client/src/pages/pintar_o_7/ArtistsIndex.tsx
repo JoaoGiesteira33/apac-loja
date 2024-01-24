@@ -67,6 +67,7 @@ export default function ArtistsIndexPage() {
 
     const artistFilterUpdate = (value: string) => {
         setArtistFilter(value);
+        setArtistPage(1);
         if (value === '') {
             let newArtistQuery = { ...artistQuery };
             delete newArtistQuery['seller_fields.demographics.name[regex]'];

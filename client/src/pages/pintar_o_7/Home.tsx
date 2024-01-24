@@ -72,22 +72,23 @@ export default function Home() {
     useEffect(() => {
         if (first === 0) {
             first++;
-        }else{
-        if (selectedTypes.length === 0) {
-            let newQuery = {...productQuery};
-            delete newQuery['piece_info.technique[in]'];
-            setProductQuery({
-                ...newQuery
-            });
         } else {
-            setProductQuery({
-                ...productQuery,
-                'piece_info.technique[in]': selectedTypes.join(','),
-            });
-        }
-    }
-    }, [selectedTypes]);
+            setProductPage(1);
 
+            if (selectedTypes.length === 0) {
+                let newQuery = { ...productQuery };
+                delete newQuery['piece_info.technique[in]'];
+                setProductQuery({
+                    ...newQuery,
+                });
+            } else {
+                setProductQuery({
+                    ...productQuery,
+                    'piece_info.technique[in]': selectedTypes.join(','),
+                });
+            }
+        }
+    }, [selectedTypes]);
 
     return (
         <Box
@@ -135,6 +136,7 @@ export default function Home() {
                     value={selectedPrice}
                     changeValue={setSelectedPrice}
                     mouseUpFunc={() => {
+                        setProductPage(1);
                         setProductQuery({
                             ...productQuery,
                             'price[gte]': selectedPrice[0],

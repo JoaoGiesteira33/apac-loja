@@ -28,22 +28,13 @@ export default function Products() {
         productPage
     );
 
-    const [ordersQuery, setOrdersQuery] = React.useState({});
-    const [ordersPage, setOrdersPage] = React.useState(1);
-    const {
-        MockData: MockOrders,
-        hasMore: hasMoreOrders,
-        loading: loadingOrders,
-        error: errorOrders,
-        products: orders,
-    } = useProductSearch(ordersQuery, ordersPage);
-
     // Filters
     const [selectedTypes, setSelectedTypes] = React.useState<string[]>([]);
     const [dateFilter, setDateFilter] = React.useState<Date | null>(null);
 
     const dateFilterUpdate = (value: Date | null) => {
         setDateFilter(value);
+        setProductPage(1);
 
         if (value === null) {
             setProductQuery({
@@ -59,6 +50,7 @@ export default function Products() {
     };
 
     useEffect(() => {
+        setProductPage(1);
         if (selectedTypes.length === 0) {
             setProductQuery({
                 ...productQuery,
