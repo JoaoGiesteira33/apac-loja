@@ -189,7 +189,8 @@
             "already-in-cart": "Este produto está no seu carrinho.",
             "pending": "Este produto está pendente para reserva.",
             "paid": "Este produto já foi vendido.",
-            "reserved": "Este produto já foi reservado."
+            "reserved": "Este produto já foi reservado.",
+            "no-photos-error": "É necessário adicionar pelo menos uma foto."
         },
         "profile": {
             "requests": {

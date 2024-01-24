@@ -68,14 +68,16 @@ export default function ArtistsIndexPage() {
     const artistFilterUpdate = (value: string) => {
         setArtistFilter(value);
         if (value === '') {
-            setArtistQuery({
-                ...artistQuery,
-                'author[regex]': '',
-            });
+            let newArtistQuery = { ...artistQuery };
+            delete newArtistQuery['seller_fields.demographics.name[regex]'];
+            delete newArtistQuery['seller_fields.demographics.name[options]'];
+
+            setArtistQuery(newArtistQuery);
         } else {
             setArtistQuery({
                 ...artistQuery,
-                'author[regex]': value,
+                'seller_fields.demographics.name[regex]': value,
+                'seller_fields.demographics.name[options]': 'i',
             });
         }
     };
