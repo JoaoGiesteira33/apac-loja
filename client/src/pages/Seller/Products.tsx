@@ -106,7 +106,7 @@ export default function Products() {
                                 <ProductPaper key={index} product={product} />
                             )
                     )}
-                {error && <div>Error</div>}
+                {error && <div>{t('errors.title')}</div>}
                 {loading && (
                     <Box
                         component="div"
@@ -128,7 +128,7 @@ export default function Products() {
                                 (prevPageNumber) => prevPageNumber + 1
                             );
                         }}>
-                        Load More
+                        {t('global.load-more')}
                     </Button>
                 )}
             </Stack>

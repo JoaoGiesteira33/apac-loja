@@ -40,7 +40,8 @@ function operatorWhitelist(op) {
         op == 'lte' ||
         op == 'in' ||
         op == 'nin' ||
-        op == 'regex'
+        op == 'regex' ||
+        op == 'options'
     );
 }
 

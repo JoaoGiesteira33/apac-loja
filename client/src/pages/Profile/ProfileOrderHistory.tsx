@@ -3,6 +3,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import Order from '../../components/pintar_o_7/Order';
 import { OrderType, ShipmentType, StateType } from '../../types/order';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 
 const createRandomOrder = (): OrderType => {
     const _id = Math.floor(Math.random() * 1000).toString();
@@ -60,6 +61,9 @@ export default function ProfileOrderHistory() {
         const MOCK_ORDERS = createRandomOrders();
         setOrders(MOCK_ORDERS);
     }, []);
+
+    const { t } = useTranslation();
+
     return (
         <Box
             component="div"
@@ -77,7 +81,7 @@ export default function ProfileOrderHistory() {
                 spacing={4}
                 alignItems={'center'}
                 justifyContent={'flex-start'}>
-                <Typography variant="h3">Order History</Typography>
+                <Typography variant="h3">{t('profile.order_history')}</Typography>
                 {orders.map((order) => {
                     return <Order key={order._id} order={order}></Order>;
                 })}

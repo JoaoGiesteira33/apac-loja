@@ -151,7 +151,7 @@ export default function ArtistPage() {
                 </Grid>
             </Box>
 
-            {error && <div>Error</div>}
+            {error && <div>{t('errors.title')}</div>}
             {loading && (
                 <Box
                     component="div"

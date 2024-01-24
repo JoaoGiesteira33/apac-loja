@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import { Box, Divider, Paper, Step, StepLabel, Stepper } from '@mui/material';
 import { OrderType } from '../../types/order';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 
 const Accordion = styled((props: AccordionProps) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -48,6 +49,8 @@ export default function Order(props: { order: OrderType }) {
             setExpanded(isExpanded ? panel : false);
         };
 
+    const { t } = useTranslation();
+    
     return (
         <Paper
             sx={{
@@ -55,7 +58,7 @@ export default function Order(props: { order: OrderType }) {
             }}>
             <Box component={'div'} sx={{ padding: '1rem' }}>
                 <Typography sx={{ wordWrap: 'break-word' }} variant="h5">
-                    Pedido nº{props.order._id}
+                    {t('checkout.orderNr')}{props.order._id}
                 </Typography>
                 <Typography variant="h6">
                     ({props.order.date ? props.order.date.toLocaleString() : ''}
@@ -76,7 +79,7 @@ export default function Order(props: { order: OrderType }) {
                                 aria-controls={`${props.order._id}-${index}-content`}
                                 id={`${props.order._id}-${index}-header`}>
                                 <Typography>
-                                    Encomenda nº{shipment.product_id}
+                                    {t('checkout.shippmentNr')}{shipment.product_id}
                                 </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
