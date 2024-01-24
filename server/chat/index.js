@@ -34,16 +34,6 @@ function isOnList(list, username) {
 
 io.use(async (socket, next) => {
   const sessionID = socket.handshake.auth.sessionID;
-  if (sessionID) {
-    // find existing session
-    const session = await sessionStore.findSession(sessionID);
-    if (session) {
-      socket.sessionID = sessionID;
-      socket.username = session.username;
-      return next();
-    }
-  }
-
   const username = socket.handshake.auth.username;
 
   if (!username) {
@@ -51,7 +41,7 @@ io.use(async (socket, next) => {
   }
 
   // create a new session
-  socket.sessionID = randomId();
+  socket.sessionID = sessionID || randomId();
   socket.username = username;
   next();
 });
@@ -111,7 +101,6 @@ io.on("connection", async (socket) => {
     }
   });
   console.log("--------- Users ---------")
-  console.log(users)
   const usernames = Object.keys(users);
   const sendingUsers = [];
   for (var key in usernames){
@@ -168,6 +157,13 @@ io.on("connection", async (socket) => {
     await send_email(email, subject, text);
 
     socket.emit("email sent");
+  });
+
+  socket.on("connection_error", (err) => {
+    console.log(err.req);      // the request object
+    console.log(err.code);     // the error code, for example 1
+    console.log(err.message);  // the error message, for example "Session ID unknown"
+    console.log(err.context);  // some additional error context
   });
 
   console.log(">>>>>>>>>>>>>>>>>>>>")

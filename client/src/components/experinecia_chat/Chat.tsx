@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import {socket} from '../../socket';
 import MessagePanel from './MessagePanel';
 import { Button } from '@mui/material';
@@ -10,6 +10,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import { Box, useTheme } from '@mui/material';
 
 import { ChatForm } from './ChatForm';
+import { CurrentChatContext } from '../../contexts/chatContext';
 
 interface User {
   username: string;
@@ -29,11 +30,11 @@ interface Message {
 
 //function Chat({ userID }: { userID: string}) {
 function Chat() {
+
   const theme = useTheme();
   const defaultUser = { username: '', connected: false, self: false, messages: [], hasNewMessages: false };
-  const [selectedUser, setSelectedUser] = useState<User>(defaultUser);
+  const { selectedUser, setSelectedUser, users, setUsers } = useContext(CurrentChatContext);
   const [selected, setSelected] = useState(false);
-  const [users, setUsers] = useState<User[]>([]);
   const [username,setUsername] = useState(() => {
     const savedUsername = localStorage.getItem("username");
     return savedUsername ? savedUsername : "";
@@ -56,11 +57,15 @@ function Chat() {
         content,
         to: selectedUser.username,
       });
-      selectedUser.messages.push({
+
+      let messages = selectedUser.messages;
+      messages.push({
         content,
         fromSelf: true,
         date: new Date().toLocaleString(),
       });
+
+      setSelectedUser({...selectedUser, messages});
       setUsers([...users]);
 
       if(!selectedUser.connected){
@@ -86,15 +91,15 @@ function Chat() {
   }
 
   useEffect(() => {
-    if (sessionID) {
-      console.log("--- INIT ---")
-      console.log("sessionID: " + sessionID);
-      console.log("username: " + username);
-      console.log("--- ---- ---")
-      // apenas é necessario enviar o sessionID pois o username esta ligado
-      socket.auth = { sessionID };
-      socket.connect();
-    }
+    //if (sessionID) {
+    //  console.log("--- INIT ---")
+    //  console.log("sessionID: " + sessionID);
+    //  console.log("username: " + username);
+    //  console.log("--- ---- ---")
+    //  // apenas é necessario enviar o sessionID pois o username esta ligado
+    //  socket.auth = { sessionID };
+    //  socket.connect();
+    //}
 
 
     socket.on('connect', () => {
@@ -129,6 +134,7 @@ function Chat() {
     });
 
     socket.on('users', (newUsers: User[]) => {
+      console.log("Receiving users");
       const updatedUsers = newUsers.map((user) => {
         user.messages.forEach((message) => {
           message.fromSelf = message.from === username;
@@ -153,6 +159,7 @@ function Chat() {
         return a.username > b.username ? 1 : 0;
       });
 
+      console.log("sortedUsers: ", sortedUsers);
       setUsers(sortedUsers);
     });
 
@@ -198,6 +205,17 @@ function Chat() {
       console.log("Email sent");
     })
 
+    socket.on("connect_error", (err) => {
+      // the reason of the error, for example "xhr poll error"
+      console.log(err.message);
+    
+      // some additional description, for example the status code of the initial HTTP response
+      console.log(err.description);
+    
+      // some additional context, for example the XMLHttpRequest object
+      console.log(err.context);
+    });
+
     return () => {
       // Cleanup socket event listeners when the component unmounts
       socket.off('connect');
@@ -207,6 +225,7 @@ function Chat() {
       socket.off('user disconnected');
       socket.off('private message');
       socket.off('email sent')
+      socket.off("connect_error");
     };
   }, [selectedUser, users]);
 
@@ -242,9 +261,9 @@ return (
                                   right: '5%'}}
         >
       
-        <ConnectionManager username={username} setUsername={setUsername} setSessionID={setSessionID} unselectUser={unselectUser} />
+        {/*<ConnectionManager username={username} setUsername={setUsername} setSessionID={setSessionID} unselectUser={unselectUser} />*/}
         
-        {socket.connected ? users.map((user) => (
+        {/*socket.connected ? users.map((user) => (
           user.username == username ? <></> :
             <Button 
               key={user.username}
@@ -252,7 +271,7 @@ return (
               onClick={() => onSelectUser(user)}>
                   { user.username + (user.hasNewMessages ? ' (+)' : '') }
             </Button>
-        )) : <></>}
+        )) : <></>*/}
 
       </Box>
               

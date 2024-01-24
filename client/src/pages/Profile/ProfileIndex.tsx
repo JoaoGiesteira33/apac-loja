@@ -13,10 +13,12 @@ import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/material';
 import { CurrentAccountContext } from '../../contexts/currentAccountContext';
+//import { CurrentChatContext } from '../../contexts/chatContext';
 
 export default function ProfileIndex() {
     const [t] = useTranslation();
     const { setLoggedIn, tokenLevel, setTokenLevel } = useContext(CurrentAccountContext);
+    //const { disconnect } = useContext(CurrentChatContext);
 
     return (
         <Box
@@ -104,6 +106,7 @@ export default function ProfileIndex() {
                         localStorage.removeItem('loggedIn');
                         localStorage.removeItem('user');
                         localStorage.removeItem('token');
+                        //disconnect();
                         setLoggedIn(false);
                         setTokenLevel("");
                     }}>

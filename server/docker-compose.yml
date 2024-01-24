@@ -54,27 +54,27 @@ services:
         networks:
             - apac-network
 
-    chat:
-        container_name: chat-container
-        image: apac_chat_img
-        command: /bin/bash -c "cd code && npm i && node cluster.js"
-        secrets:
-            - MONGO_CLUSTER
-            - MONGO_DB_NAME
-            - MONGO_USER
-            - MONGO_PASSWORD
-        ports:
-            - 11002:80
-        depends_on:
-            - redis
-            - api
-        networks:
-            - apac-network
-
-    redis:
-        image: redis:5
-        networks:
-            - apac-network
+    #chat:
+    #    container_name: chat-container
+    #    image: apac_chat_img
+    #    command: /bin/bash -c "cd code && npm i && node cluster.js"
+    #    secrets:
+    #        - MONGO_CLUSTER
+    #        - MONGO_DB_NAME
+    #        - MONGO_USER
+    #        - MONGO_PASSWORD
+    #    ports:
+    #        - 11002:3000
+    #    depends_on:
+    #        - redis
+    #        - api
+    #    networks:
+    #        - apac-network
+#
+    #redis:
+    #    image: redis:5
+    #    networks:
+    #        - apac-network
 
 volumes:
     dbdata:
