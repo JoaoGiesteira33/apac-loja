@@ -134,6 +134,7 @@
             "description": "Descrição",
             "title": "Título",
             "price": "Preço",
+            "author": "Autor",
             "contact": "Fala connosco",
             "type-of-piece": "Tipo de Obra",
             "types": "Tipos",
@@ -183,7 +184,7 @@
             "checkout-text": "Produto adicionado ao carrinho.",
             "product-details": "Detalhes do produto",
             "more": "Outras obras de arte do artista",
-            "no-more": "Não existem mais obras de arte do artista",
+            "no_more": "Não existem mais obras de arte do artista",
             "already-in-cart": "Este produto está no seu carrinho."
         },
         "profile": {
