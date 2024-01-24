@@ -5,7 +5,12 @@ const controllerUser = require('../controllers/user');
 const controllerProduct = require('../controllers/product');
 const controllerShipment = require('../controllers/shipment');
 
-const { isAdmin, isMeOrAdmin, isAdminOrAUTH } = require('../utils/utils');
+const {
+    isAdmin,
+    isMeOrAdmin,
+    isAdminOrAUTH,
+    hasAccess,
+} = require('../utils/utils');
 
 const multer = require('multer');
 const storage = multer.memoryStorage();
@@ -100,6 +105,7 @@ router.get(
     middleware.extractFilters,
     middleware.fieldSelector,
     function (req, res) {
+        req.filters = req.filters || {};
         req.filters.role = 'client';
         controllerUser
             .getUsers(
@@ -123,7 +129,7 @@ router.get(
 // GET Seller Info
 router.get(
     '/seller/:id',
-    isMeOrAdmin,
+    hasAccess,
     middleware.expandExtractor,
     middleware.extractFilters,
     middleware.fieldSelector,
@@ -202,6 +208,8 @@ router.get(
     middleware.extractFilters,
     middleware.fieldSelector,
     function (req, res) {
+        console.log(req.filters);
+        req.filters = req.filters || {};
         req.filters.role = 'seller';
         controllerUser
             .getUsers(
@@ -367,7 +375,6 @@ router.get('/seller/:id/products', isMeOrAdmin, function (req, res) {
                         ''
                     )
                     .then((shipments) => {
-                        console.log(shipments);
                         let products = info.results.map((product) => {
                             let shipment = shipments.results.find(
                                 (shipment) => {

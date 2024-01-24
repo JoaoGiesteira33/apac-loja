@@ -41,12 +41,18 @@ module.exports.createManyShipments = async function (data, session) {
             if (notifications) {
                 return Promise.all(
                     notifications.map((notification) => {
-                        if (state == 'reserved') {
-                            return notification.save({ session: session });
-                        } else {
-                            return notification
-                                .save({ session: session })
-                                .then(() => {
+                        return notification
+                            .save({ session: session })
+                            .then(() => {
+                                if (
+                                    [
+                                        'pending',
+                                        'reserved',
+                                        'paid',
+                                        'sent',
+                                        'delivered',
+                                    ].includes(state)
+                                ) {
                                     const Product = require('../models/product');
                                     return Product.updateOne(
                                         { _id: shipment._product },
@@ -57,8 +63,8 @@ module.exports.createManyShipments = async function (data, session) {
                                             },
                                         }
                                     );
-                                });
-                        }
+                                }
+                            });
                     })
                 );
             }
@@ -69,7 +75,6 @@ module.exports.createManyShipments = async function (data, session) {
         if (!sessionIsPassed) await session.commitTransaction();
         return shipments;
     } catch (err) {
-        console.log(err);
         if (!sessionIsPassed) await session.abortTransaction();
         throw err;
     } finally {
@@ -149,7 +154,9 @@ module.exports.updateShipmentState = async function (filter, value) {
             );
         }
 
-        if (['reserved', 'paid', 'sent', 'delivered'].includes(value)) {
+        if (
+            ['pending', 'reserved', 'paid', 'sent', 'delivered'].includes(value)
+        ) {
             const Product = require('../models/product');
             await Product.updateOne(
                 { _id: shipment._product },
@@ -196,7 +203,6 @@ module.exports.updateShipmentsState = async function (filter, value) {
                 shipment._client
             );
             if (notifications) {
-                console.log(notifications);
                 return Promise.all(
                     notifications.map((notification) => {
                         return notification.save({ session: session });
@@ -206,7 +212,9 @@ module.exports.updateShipmentsState = async function (filter, value) {
         });
         await Promise.all(notificationPromises);
 
-        if (['reserved', 'paid', 'sent', 'delivered'].includes(value)) {
+        if (
+            ['pending', 'reserved', 'paid', 'sent', 'delivered'].includes(value)
+        ) {
             const Product = require('../models/product');
             let productPromises = shipments.map((shipment) => {
                 return Product.updateOne(

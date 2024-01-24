@@ -27,7 +27,7 @@ export default function Requests() {
         expand: '_seller',
     });
     const [productPage, setProductPage] = React.useState(1);
-    const { MockData, hasMore, loading, error, products } = useProductSearch(
+    const { hasMore, loading, error, products, setProducts } = useProductSearch(
         productQuery,
         productPage
     );
@@ -59,29 +59,45 @@ export default function Requests() {
         if (value === null) {
             setProductQuery({
                 ...productQuery,
-                'published_date[lte]': dayjs(new Date()).format('YYYY-MM-DD'),
+                'published_date[lte]': dayjs(new Date())
+                    .add(1, 'day')
+                    .format('YYYY-MM-DD'),
             });
         } else {
             setProductQuery({
                 ...productQuery,
-                'published_date[lte]': dayjs(value).format('YYYY-MM-DD'),
+                'published_date[lte]': dayjs(value)
+                    .add(1, 'day')
+                    .format('YYYY-MM-DD'),
             });
         }
     };
 
+    const onChangeProductState = (productId: string) => {
+        console.log(productId);
+        setProducts(products.filter((product) => product._id !== productId));
+    };
+
+    let first = 0;
+
     useEffect(() => {
-        if (selectedTypes.length === 0) {
-            setProductQuery({
-                ...productQuery,
-                //'piece_info.type': '',
-            });
-        } else {
-            setProductQuery({
-                ...productQuery,
-                //'piece_info.type': selectedTypes.join(','),
-            });
+        if (first === 0) {
+            first++;
+        }else{
+            if (selectedTypes.length === 0) {
+                let newQuery = { ...productQuery };
+                delete newQuery['piece_info.technique[in]'];
+                setProductQuery({
+                    ...newQuery,
+                });
+            } else {
+                setProductQuery({
+                    ...productQuery,
+                    'piece_info.technique[in]': selectedTypes.join(','),
+                });
+            }
         }
-    }, [productQuery, selectedTypes]);
+    }, [selectedTypes]);
 
     return (
         <Box
@@ -151,16 +167,18 @@ export default function Requests() {
                         />
                     </Stack>
                 </Box>
-                {MockData &&
-                    MockData.map(
+                {products &&
+                    products.map(
                         (product, index) =>
                             product._seller instanceof Object && (
                                 <NewProductRequest
                                     key={index}
                                     product={product}
+                                    onChangeProductState={onChangeProductState}
                                 />
                             )
-                    )}
+                    )
+                    }
                 {error && <div>{t('errors.title')}</div>}
                 {loading && (
                     <Box
@@ -174,6 +192,11 @@ export default function Requests() {
                         <CircularProgress />
                     </Box>
                 )}
+                {!loading && (products || products.length === 0) && (
+                    <div>{t('errors.no-results')}</div>
+                )
+
+                }
                 {hasMore && (
                     <Button
                         startIcon={<AddCircleOutlineSharpIcon />}

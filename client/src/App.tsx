@@ -289,7 +289,7 @@ function App() {
     }, []);
 
     const payPalOptions = {
-        clientId: 'AfAh3uS1aukd2edCVrBmTKvPxcNA7X7m6PDWGRWbZjaMntsTBPZKSxVziEk8Dcx1IgY_tO97MQh1kZJ6', // testing
+        clientId: 'AXH3T6mt5FSd1rfMt0i2m6AadWj86MjC2qESbozuHcBXvS3Orwtt0FhxuG-MpxAkOPcYt1LD_ni4dpz4', // testing
         currency: 'EUR',
         intent: 'capture',
         debug: true, // only for testing
@@ -299,7 +299,9 @@ function App() {
         <CurrentAccountProvider
             loggedIn={loggedIn}
             setLoggedIn={setLoggedIn}
-            tokenLevel={tokenLevel ?? ''}>
+            tokenLevel={tokenLevel ?? ''}
+            setTokenLevel={setTokenLevel}
+            >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <PayPalScriptProvider options={payPalOptions}>
                     <ColorModeContext.Provider value={colorMode}>

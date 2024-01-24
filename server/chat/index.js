@@ -1,6 +1,6 @@
 const httpServer = require("http").createServer();
 const Redis = require("ioredis");
-const redisClient = new Redis();
+const redisClient = new Redis(6379,"redis");
 const io = require("socket.io")(httpServer, {
   cors: {
     origin: "http://localhost:5173",
@@ -21,7 +21,7 @@ const sessionStore = new RedisSessionStore(redisClient);
 const { RedisMessageStore } = require("./messageStore");
 const messageStore = new RedisMessageStore(redisClient);
 
-const { send_email } = require("./utils");
+const { send_email } =  require('./utils/utils');
 
 function isOnList(list, username) {
   for (let i = 0; i < list.length; i++) {
@@ -34,16 +34,6 @@ function isOnList(list, username) {
 
 io.use(async (socket, next) => {
   const sessionID = socket.handshake.auth.sessionID;
-  if (sessionID) {
-    // find existing session
-    const session = await sessionStore.findSession(sessionID);
-    if (session) {
-      socket.sessionID = sessionID;
-      socket.username = session.username;
-      return next();
-    }
-  }
-
   const username = socket.handshake.auth.username;
 
   if (!username) {
@@ -51,7 +41,7 @@ io.use(async (socket, next) => {
   }
 
   // create a new session
-  socket.sessionID = randomId();
+  socket.sessionID = sessionID || randomId();
   socket.username = username;
   next();
 });
@@ -111,7 +101,6 @@ io.on("connection", async (socket) => {
     }
   });
   console.log("--------- Users ---------")
-  console.log(users)
   const usernames = Object.keys(users);
   const sendingUsers = [];
   for (var key in usernames){
@@ -170,8 +159,17 @@ io.on("connection", async (socket) => {
     socket.emit("email sent");
   });
 
+  socket.on("connection_error", (err) => {
+    console.log(err.req);      // the request object
+    console.log(err.code);     // the error code, for example 1
+    console.log(err.message);  // the error message, for example "Session ID unknown"
+    console.log(err.context);  // some additional error context
+  });
+
   console.log(">>>>>>>>>>>>>>>>>>>>")
 });
+
+
 
 
 

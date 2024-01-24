@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import CheckoutStep4 from './CheckoutStep4';
+import CheckoutStep4 from './CheckoutPaymentStep';
 
 export const ReserveModal = () => {
     const { t } = useTranslation();

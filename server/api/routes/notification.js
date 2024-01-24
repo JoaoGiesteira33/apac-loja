@@ -120,29 +120,29 @@ router.delete('/:id', hasAccess, function (req, res, next) {
 // GET Notifications
 router.get(
     '/',
+    hasAccess,
     middleware.expandExtractor,
     middleware.fieldSelector,
     middleware.extractFilters,
-    hasAccess,
     function (req, res, next) {
         if (req._id && req.level != 'admin') {
+            req.filters = req.filters || {};
             req.filters._user = req._id;
-        } else {
-            controllerNotification
-                .getNotifications(
-                    req.filters,
-                    req.fields,
-                    req.page,
-                    req.limit,
-                    req.expand || ''
-                )
-                .then((info) => {
-                    res.status(200).jsonp(info);
-                })
-                .catch((error) => {
-                    res.status(500).jsonp(error);
-                });
         }
+        controllerNotification
+            .getNotifications(
+                req.filters,
+                req.fields,
+                req.page,
+                req.limit,
+                req.expand || ''
+            )
+            .then((info) => {
+                res.status(200).jsonp(info);
+            })
+            .catch((error) => {
+                res.status(500).jsonp(error);
+            });
     }
 );
 

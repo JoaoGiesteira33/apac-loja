@@ -75,6 +75,7 @@ export default function useProductSearch(query: object, pageNumber: number) {
 
         setLoading(true);
         setError(false);
+
         axios({
             method: 'GET',
             url: API_URL_PROD,
@@ -98,5 +99,5 @@ export default function useProductSearch(query: object, pageNumber: number) {
         return () => cancel();
     }, [query, pageNumber]);
 
-    return { loading, error, MockData, hasMore, products };
+    return { loading, error, MockData, hasMore, products, setProducts };
 }

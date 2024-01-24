@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import logoApac from '../../assets/LOGO_negrito.png';
 import { Divider, Grid, Link, CircularProgress, useTheme, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
 import { useTranslation } from 'react-i18next';
 import { checkLink } from '../../fetchers';
 

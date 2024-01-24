@@ -14,7 +14,11 @@ export const API_URL_PROD = BASE_URL + ':11000/product';
 export const API_URL_MAIL = BASE_URL + ':11000/email';
 export const API_URL_SHIP = BASE_URL + ':11000/shipment';
 export const API_URL_NOTIF = BASE_URL + ':11000/notification';
+export const API_URL_PAY = BASE_URL + ':11000/payment';
+export const API_URL_ORD = BASE_URL + ':11000/order';
 export const AUTH_URL = BASE_URL + ':11001';
+export const CHAT_URL = BASE_URL + ':11002';
+
 //export const BASE_URL = 'http:/192.168.1.68:8000/api';
 
 export const loginUser = async (email: string, password: string) => {
@@ -233,6 +237,51 @@ export const getShipments = async (token: string) => {
     }
 };
 
+export const getShipmentByProduct = async (
+    token: string,
+    productId: string
+) => {
+    try {
+        const response = await axios.get(`${API_URL_SHIP}`, {
+            params: {
+                token: token,
+                limit: 0,
+                _product: productId,
+            },
+        });
+        if (response.data.results.length == 0) return null;
+        else return response.data.results[0];
+    } catch (error) {
+        console.error('Error getting shipments:', error);
+        throw error;
+    }
+};
+
+export const updateShipment = async (
+    shipment: Object,
+    token: string,
+    shipmentId: string
+): Promise<Result<object, Error>> => {
+    try {
+        const response = await axios.post(
+            `${API_URL_SHIP}/` + shipmentId + '/states',
+            shipment,
+            {
+                params: {
+                    token: token,
+                },
+            }
+        );
+        return ok(response.data);
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return err(error);
+        } else {
+            return err(new Error('Unexpected error'));
+        }
+    }
+};
+
 export const addProduct = async (
     product: NestedPartial<ProductType>,
     token: string
@@ -240,7 +289,7 @@ export const addProduct = async (
     if (product.price == null) product.price = 0;
 
     try {
-        const response = await axios.post(`${BASE_URL}/products`, product, {
+        const response = await axios.post(`${API_URL_PROD}`, product, {
             params: {
                 token: token,
             },
@@ -248,10 +297,33 @@ export const addProduct = async (
         return ok(response.data);
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            console.log('error message: ', error.message);
             return err(error);
         } else {
-            console.log('unexpected error: ', error);
+            return err(new Error('Unexpected error'));
+        }
+    }
+};
+
+export const updateProduct = async (
+    product: NestedPartial<ProductType>,
+    token: string,
+    productId: string
+): Promise<Result<object, Error>> => {
+    try {
+        const response = await axios.patch(
+            `${API_URL_PROD}/` + productId,
+            product,
+            {
+                params: {
+                    token: token,
+                },
+            }
+        );
+        return ok(response.data);
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return err(error);
+        } else {
             return err(new Error('Unexpected error'));
         }
     }
@@ -354,3 +426,20 @@ export const getNotifications = async (token: string) => {
         throw error;
     }
 };
+
+export const getOrders = async (token: string, id: string) => {
+    try {
+        const response = await axios.get(`${API_URL_ORD}`, {
+            params: {
+                token: token,
+                _client: id,
+                expand: 'shipments',
+            },
+        });
+        console.log('Orders:', response.data.results);
+        return response.data.results;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}

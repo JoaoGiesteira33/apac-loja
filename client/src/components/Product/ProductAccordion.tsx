@@ -23,17 +23,22 @@ const ProductAccordion = (data: { product: ProductType }) => {
                     <p className="mb-2 text-gray-500 dark:text-gray-400">
                         {t('product.dimensions')}
                         {': '}
-                        {product.piece_info?.dimensions.width} x{' '}
-                        {product.piece_info?.dimensions.height} x{' '}
-                        {product.piece_info?.dimensions.depth}{' '}
-                        {product.piece_info?.dimensions.measure}
+                        {product.piece_info?.dimensions && (
+                            <>
+                                {product.piece_info?.dimensions.width} x{' '}
+                                {product.piece_info?.dimensions.height} x{' '}
+                                {product.piece_info?.dimensions.depth}{' '}
+                            </>
+                        )}
                     </p>
                     <p className="mb-2 text-gray-500 dark:text-gray-400">
-                        {t('product.weight')}: {product.piece_info?.weight}
-                        {'kg'}
+                        {t('product.weight')}: {product.piece_info?.dimensions?.weight}
+                        {product.piece_info?.dimensions && (
+                            <>{'kg'}</>
+                        )}
                     </p>
                     <p className="mb-2 text-gray-500 dark:text-gray-400">
-                        {t('product.materials')} {product.piece_info?.material}
+                        {t('product.materials')} {product.piece_info?.materials}
                     </p>
                 </AccordionContent>
             </AccordionPanel>
@@ -45,45 +50,6 @@ const ProductAccordion = (data: { product: ProductType }) => {
                     </p>
                 </AccordionContent>
             </AccordionPanel>
-            {/*<AccordionPanel>
-                <AccordionTitle>Entregas e Devoluções</AccordionTitle>
-                <AccordionContent>
-                    <p className="mb-2 text-gray-500 dark:text-gray-400">
-                        The main difference is that the core components from
-                        Flowbite are open source under the MIT license, whereas
-                        Tailwind UI is a paid product. Another difference is
-                        that Flowbite relies on smaller and standalone
-                        components, whereas Tailwind UI offers sections of
-                        pages.
-                    </p>
-                    <p className="mb-2 text-gray-500 dark:text-gray-400">
-                        However, we actually recommend using both Flowbite,
-                        Flowbite Pro, and even Tailwind UI as there is no
-                        technical reason stopping you from using the best of two
-                        worlds.
-                    </p>
-                    <p className="mb-2 text-gray-500 dark:text-gray-400">
-                        Learn more about these technologies:
-                    </p>
-                    <ul className="list-disc pl-5 text-gray-500 dark:text-gray-400">
-                        <li>
-                            <a
-                                href="https://flowbite.com/pro/"
-                                className="text-cyan-600 hover:underline dark:text-cyan-500">
-                                Flowbite Pro
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="https://tailwindui.com/"
-                                rel="nofollow"
-                                className="text-cyan-600 hover:underline dark:text-cyan-500">
-                                Tailwind UI
-                            </a>
-                        </li>
-                    </ul>
-                </AccordionContent>
-    </AccordionPanel>*/}
         </Accordion>
     );
 };

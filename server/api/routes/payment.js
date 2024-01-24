@@ -74,7 +74,7 @@ router.post('/eupago/creditCard/orders', hasAccess, function (req, res) {
 });
 
 // EuPago webhook payment confirmation
-router.get('/eupago/webhook', hasAccess, function (req, res) {
+router.get('/eupago/webhook', function (req, res) {
     console.log("Received EuPago Webhook: ", req.query);
     controllerPayment.receiveEuPagoWebhook(req.query)
         .then(response => res.status(response.httpStatusCode).json(response.jsonResponse))

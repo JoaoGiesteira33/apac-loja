@@ -13,10 +13,12 @@ import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/material';
 import { CurrentAccountContext } from '../../contexts/currentAccountContext';
+//import { CurrentChatContext } from '../../contexts/chatContext';
 
 export default function ProfileIndex() {
     const [t] = useTranslation();
-    const { setLoggedIn, tokenLevel } = useContext(CurrentAccountContext);
+    const { setLoggedIn, tokenLevel, setTokenLevel } = useContext(CurrentAccountContext);
+    //const { disconnect } = useContext(CurrentChatContext);
 
     return (
         <Box
@@ -33,14 +35,14 @@ export default function ProfileIndex() {
                 justifyContent: 'center',
             }}>
             <div className="grid max-w-max max-h-max gap-2 md:gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 justify-center content-center items-center">
-                <Link className="inline-block" to="/profile/info">
+                {(tokenLevel == 'seller' || tokenLevel == 'client') && <Link className="inline-block" to="/profile/info">
                     <ProfileThumbnail
                         title={t('profile.account.title')}
                         description={t('profile.account.description')}
                         icon={<AccountCircleIcon />}
                     />
-                </Link>
-                {(tokenLevel == 'seller' || tokenLevel == 'admin') && (
+                </Link>}
+                {(tokenLevel == 'seller' || tokenLevel == 'admin' || tokenLevel == 'client') && (
                     <Link className="inline-block" to="/profile/notifications">
                         <ProfileThumbnail
                             title={t('profile.notifications.title')}
@@ -103,7 +105,10 @@ export default function ProfileIndex() {
                     onClick={() => {
                         localStorage.removeItem('loggedIn');
                         localStorage.removeItem('user');
+                        localStorage.removeItem('token');
+                        //disconnect();
                         setLoggedIn(false);
+                        setTokenLevel("");
                     }}>
                     <ProfileThumbnail
                         title={t('profile.logout')}
