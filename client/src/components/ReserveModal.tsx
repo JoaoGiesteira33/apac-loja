@@ -62,7 +62,7 @@ export const ReserveModal = () => {
                         <CheckoutStep4 />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button onClick={handleClose}>{t('cart.reservation.cancel-button')}</Button>
                         {/* <Button type="submit">Subscribe</Button> */}
                     </DialogActions>
                     <Typography

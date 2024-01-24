@@ -6,6 +6,7 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import logo from '../../assets/LOGO.png';
 import { useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Footer = (props) => {
     const navigate = useNavigate();
@@ -19,6 +20,8 @@ const Footer = (props) => {
             </Link>
         );
     }
+
+    const { t } = useTranslation();
 
     return (
         <Box
@@ -112,13 +115,13 @@ const Footer = (props) => {
                             </Typography>
                         </ListItem>
                         <ListItem disablePadding>
-                            <MY_LNK link="gallery" text="a galeria" />
+                            <MY_LNK link="gallery" text={t('initial.gallery')} />
                         </ListItem>
                         <ListItem disablePadding>
-                            <MY_LNK link="artists" text="artistas" />
+                            <MY_LNK link="artists" text={t('initial.artists')} />
                         </ListItem>
                         <ListItem disablePadding>
-                            <MY_LNK link="contact" text="contacto" />
+                            <MY_LNK link="contact" text={t('initial.contact')} />
                         </ListItem>
                     </List>
                 </Grid>
@@ -132,7 +135,7 @@ const Footer = (props) => {
                     display="flex"
                     alignItems="center"
                     justifyContent="center">
-                    <MY_LNK link="info" text="termos e condições" />
+                    <MY_LNK link="info" text={t('info.terms.title')}/>
                 </Grid>
                 <Grid
                     
@@ -144,7 +147,7 @@ const Footer = (props) => {
                     justifyContent="center">
                     <MY_LNK
                         link="https://www.livroreclamacoes.pt/Inicio/"
-                        text="livro de reclamações"
+                        text={t('info.reclamation.title')}
                     />
                 </Grid>
                 <Grid
@@ -155,7 +158,7 @@ const Footer = (props) => {
                     display="flex"
                     alignItems="center"
                     justifyContent="center">
-                    <MY_LNK link="info" text="política de privacidade" />
+                    <MY_LNK link="info" text={t('info.privacy.title')} />
                 </Grid>
                 <Grid
                     
@@ -171,7 +174,7 @@ const Footer = (props) => {
                         <Typography
                             color="primary"
                             sx={{ textDecoration: 'underline' }}>
-                            uma iniciativa associação portuguesa das artes e da
+                            {t('home.iniciative')} associação portuguesa das artes e da
                             cultura &copy; {year}
                         </Typography>
                     </a>

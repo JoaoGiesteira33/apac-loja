@@ -71,7 +71,7 @@ export const ReservationDetails = () => {
                             aria-label="product table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Obra</TableCell>
+                                    <TableCell>{t('cart.reservation.piece')}</TableCell>
                                     <TableCell align="right">
                                         {t('cart.price')}
                                     </TableCell>
