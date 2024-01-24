@@ -37,6 +37,7 @@ export default function NewProductRequest(props: {
         const product: NestedPartial<ProductType> = {
             piece_info: {
                 state: 'available',
+                ...props.product.piece_info,
             },
         };
 
@@ -59,6 +60,7 @@ export default function NewProductRequest(props: {
         const product: NestedPartial<ProductType> = {
             piece_info: {
                 state: 'rejected',
+                ...props.product.piece_info,
             },
         };
 

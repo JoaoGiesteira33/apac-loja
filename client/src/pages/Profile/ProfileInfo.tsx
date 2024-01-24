@@ -22,17 +22,17 @@ const TODAY_MINUS_18_YEARS: Dayjs = dayjs().subtract(18, 'year');
 export default function ProfileInfo() {
     const [t] = useTranslation();
     const userInfo = JSON.parse(localStorage.getItem('user') as string);
-    
-    const { loggedIn, setLoggedIn, tokenLevel } = useContext(CurrentAccountContext);
+
+    const { loggedIn, setLoggedIn, tokenLevel } = useContext(
+        CurrentAccountContext
+    );
 
     let userInfoType = null;
     if (userInfo && userInfo.seller_fields) {
         userInfoType = userInfo.seller_fields;
+    } else {
+        userInfoType = userInfo.client_fields;
     }
-    else{
-        userInfoType = userInfo.client_fields; 
-    }
-
 
     const [name, setName] = useState(() => {
         if (userInfo) return userInfoType.demographics.name;
@@ -45,8 +45,7 @@ export default function ProfileInfo() {
     const [country, setCountry] = useState<CountryType | null | undefined>(
         () => {
             if (userInfo && userInfoType.demographics.address?.country) {
-                const countryLabel =
-                    userInfoType.demographics.address.country;
+                const countryLabel = userInfoType.demographics.address.country;
                 const country = getCountry(countryLabel);
                 return country;
             } else return null;
@@ -58,7 +57,8 @@ export default function ProfileInfo() {
         else return '';
     });
     const [address, setAddress] = useState(() => {
-        if (userInfo && userInfoType.demographics.address?.street) return userInfoType.demographics.address.street;
+        if (userInfo && userInfoType.demographics.address?.street)
+            return userInfoType.demographics.address.street;
         else return '';
     });
     const [postalCode, setPostalCode] = useState(() => {
@@ -67,13 +67,13 @@ export default function ProfileInfo() {
         else return '';
     });
     const [city, setCity] = useState(() => {
-        if (userInfo && userInfoType.demographics.address?.city) return userInfoType.demographics.address.city;
+        if (userInfo && userInfoType.demographics.address?.city)
+            return userInfoType.demographics.address.city;
         else return '';
     });
     const [phone, setPhone] = useState<string>(() => {
         if (userInfo && userInfoType.demographics.phone) {
-            const phoneFromLocalStorage =
-                userInfoType.demographics.phone;
+            const phoneFromLocalStorage = userInfoType.demographics.phone;
             if (phoneFromLocalStorage != null) return phoneFromLocalStorage;
             else return '';
         } else return '';
@@ -99,8 +99,7 @@ export default function ProfileInfo() {
 
     let originalCountry = undefined;
     if (userInfo && userInfoType.demographics.address?.country) {
-        const originalCountryLabel =
-            userInfoType.demographics.address.country;
+        const originalCountryLabel = userInfoType.demographics.address.country;
         originalCountry = getCountry(originalCountryLabel);
     }
 
@@ -110,8 +109,7 @@ export default function ProfileInfo() {
 
     let originalPostalCode = '';
     if (userInfo && userInfoType.demographics.address?.postal_code)
-        originalPostalCode =
-            userInfoType.demographics.address.postal_code;
+        originalPostalCode = userInfoType.demographics.address.postal_code;
 
     let originalCity = '';
     if (userInfo && userInfoType.demographics.address?.city)
@@ -123,9 +121,7 @@ export default function ProfileInfo() {
 
     let originalBirthDate = dayjs();
     if (userInfo && userInfoType.demographics.birth_date)
-        originalBirthDate = dayjs(
-            userInfoType.demographics.birth_date
-        );
+        originalBirthDate = dayjs(userInfoType.demographics.birth_date);
 
     const [showNameAlert, setShowNameAlert] = useState(false);
     const [showEmailAlert, setShowEmailAlert] = useState(false);
@@ -240,6 +236,7 @@ export default function ProfileInfo() {
                     phone: phone,
                     birth_date: birth_date.format('YYYY-MM-DD'),
                 },
+                ...userInfo.client_fields,
             },
         };
 
@@ -257,6 +254,7 @@ export default function ProfileInfo() {
                     phone: phone,
                     birth_date: birth_date.format('YYYY-MM-DD'),
                 },
+                ...userInfo.seller_fields,
             },
         };
 
