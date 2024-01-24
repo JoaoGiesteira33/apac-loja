@@ -36,7 +36,7 @@ export const CheckoutStep3 = () => {
                     component="h1"
                     variant="h5"
                     style={{ margin: '20px 0', color: 'black' }}>
-                    Resumo da encomenda
+                    {t('checkout.review.title')}
                 </Typography>
                 <form style={{ width: '100%' }}>
                     <Stack spacing={{ xs: 1, sm: 2 }}>
@@ -50,7 +50,7 @@ export const CheckoutStep3 = () => {
                                 component="h3"
                                 variant="h6"
                                 color="black">
-                                Item
+                                {t('checkout.stepper.item')}
                             </Typography>
                             <Typography
                                 component="h3"
@@ -96,7 +96,7 @@ export const CheckoutStep3 = () => {
                                 component="h3"
                                 variant="h6"
                                 color="black">
-                                Subtotal
+                                {t('cart.subtotal')}
                             </Typography>
                             <Typography
                                 component="h3"
@@ -137,7 +137,7 @@ export const CheckoutStep3 = () => {
                             justifyContent: 'space-between',
                         }}>
                         <Typography component="h3" variant="h5" color="black">
-                            Total
+                            {t('cart.total')}
                         </Typography>
                         <Typography component="h3" variant="h6" color="black">
                             {new Intl.NumberFormat('pt-PT', {
@@ -151,7 +151,7 @@ export const CheckoutStep3 = () => {
                         variant="caption"
                         color="primary"
                         className="font-poppins">
-                        *IVA incluíodo
+                        *{t('checkout.stepper.includedVAT')}
                     </Typography>
                 </form>
             </Paper>

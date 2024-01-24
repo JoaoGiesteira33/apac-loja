@@ -22,7 +22,7 @@ export default function ArtistsIndexPage() {
     );
 
     return (
-        <Box component="div">
+        <Box component="div" sx={{ alignItems: "center", display: "flex", flexDirection: "column"}}>
             <Box
                 component="div"
                 sx={{
@@ -49,7 +49,7 @@ export default function ArtistsIndexPage() {
                 </Grid>
             </Box>
 
-            {error && <div>Error</div>}
+            {error && <div>{t('errors.title')}</div>}
             {loading && (
                 <Box
                     component="div"
@@ -66,6 +66,7 @@ export default function ArtistsIndexPage() {
                 <Button
                     startIcon={<AddCircleOutlineSharpIcon />}
                     variant="outlined"
+                    sx={{ marginBottom: '2rem' }}
                     onClick={() => {
                         setArtistPage((prevPageNumber) => prevPageNumber + 1);
                     }}>

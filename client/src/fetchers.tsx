@@ -130,6 +130,37 @@ export const getProduct = async (id: string) => {
     }
 };
 
+export const uploadProductPhotos = async (
+    token: string,
+    id: string,
+    photos: FileList
+): Promise<Result<string, Error>> => {
+    try {
+        const data: FormData = new FormData();
+        for (const photo of photos) {
+            data.append('files', photo);
+        }
+
+        const response = await axios.post(
+            `${API_URL_PROD}/${id}/photos`,
+            data,
+            {
+                headers: { 'Content-Type': 'multipart/form-data' },
+                params: {
+                    token: token,
+                },
+            }
+        );
+        return ok(response.data);
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return err(error);
+        } else {
+            return err(new Error('Unexpected error'));
+        }
+    }
+};
+
 export const sendEmail = async (toEmail, subject, message) => {
     try {
         const response = await axios.post(`${API_URL_MAIL}/send`, {
@@ -203,14 +234,17 @@ export const getShipments = async (token: string) => {
 };
 
 export const addProduct = async (
-    product: NestedPartial<ProductType>
-): Promise<Result<string, Error>> => {
-    console.log('Adding product');
-
+    product: NestedPartial<ProductType>,
+    token: string
+): Promise<Result<object, Error>> => {
     if (product.price == null) product.price = 0;
 
     try {
-        const response = await axios.post(`${BASE_URL}/products`, product);
+        const response = await axios.post(`${API_URL_PROD}`, product, {
+            params: {
+                token: token,
+            },
+        });
         return ok(response.data);
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -228,12 +262,15 @@ export const createUser = async (
     token: string
 ): Promise<Result<object, Error>> => {
     try {
-        const response = await axios.post(`${AUTH_URL}/admin/registo`, userInfo,
-        {
-            params: {
-                token: token,
-            },
-        });
+        const response = await axios.post(
+            `${AUTH_URL}/admin/registo`,
+            userInfo,
+            {
+                params: {
+                    token: token,
+                },
+            }
+        );
         return ok(response.data);
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -251,11 +288,12 @@ export const updateUser = async (
     try {
         const decodedToken = decodeToken(token);
         const response = await axios.patch(
-            `${API_URL_USER}/${(decodedToken as { _id: string })._id}`,userInfo,
+            `${API_URL_USER}/${(decodedToken as { _id: string })._id}`,
+            userInfo,
             {
                 params: {
                     token: token,
-                }
+                },
             }
         );
         return ok(response.data);
@@ -276,12 +314,16 @@ export const uploadPhoto = async (
     try {
         const data: FormData = new FormData();
         data.append('file', photo);
-        const response = await axios.post(`${API_URL_USER}/${id}/avatar`,data, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-            params: {
-                token: token,
-            },
-        });
+        const response = await axios.post(
+            `${API_URL_USER}/${id}/avatar`,
+            data,
+            {
+                headers: { 'Content-Type': 'multipart/form-data' },
+                params: {
+                    token: token,
+                },
+            }
+        );
         return ok(response.data);
     } catch (error) {
         if (axios.isAxiosError(error)) {

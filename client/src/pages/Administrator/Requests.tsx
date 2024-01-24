@@ -27,7 +27,7 @@ export default function Requests() {
         expand: '_seller',
     });
     const [productPage, setProductPage] = React.useState(1);
-    const { MockData, hasMore, loading, error, products } = useProductSearch(
+    const { hasMore, loading, error, products } = useProductSearch(
         productQuery,
         productPage
     );
@@ -59,29 +59,30 @@ export default function Requests() {
         if (value === null) {
             setProductQuery({
                 ...productQuery,
-                'published_date[lte]': dayjs(new Date()).format('YYYY-MM-DD'),
+                'published_date[lte]': dayjs(new Date()).add(1,"day").format('YYYY-MM-DD'),
             });
         } else {
             setProductQuery({
                 ...productQuery,
-                'published_date[lte]': dayjs(value).format('YYYY-MM-DD'),
+                'published_date[lte]': dayjs(value).add(1,"day").format('YYYY-MM-DD'),
             });
         }
     };
 
     useEffect(() => {
         if (selectedTypes.length === 0) {
+            let newQuery = {...productQuery};
+            delete newQuery['piece_info.technique[in]'];
             setProductQuery({
-                ...productQuery,
-                //'piece_info.type': '',
+                ...newQuery
             });
         } else {
             setProductQuery({
                 ...productQuery,
-                //'piece_info.type': selectedTypes.join(','),
+                'piece_info.technique[in]': selectedTypes.join(','),
             });
         }
-    }, [productQuery, selectedTypes]);
+    }, [selectedTypes]);
 
     return (
         <Box
@@ -126,7 +127,7 @@ export default function Requests() {
                         <TextField
                             variant="standard"
                             margin="normal"
-                            label="Artista"
+                            label={t('artist.title')}
                             type="text"
                             fullWidth
                             value={artist}
@@ -137,7 +138,7 @@ export default function Requests() {
                             openTo="day"
                             views={['year', 'month', 'day']}
                             format="DD/MM/YYYY"
-                            label="Antes de"
+                            label={t('profile.beforeAt')}
                             value={dateFilter}
                             sx={{ width: '100%' }}
                             slotProps={{
@@ -151,8 +152,8 @@ export default function Requests() {
                         />
                     </Stack>
                 </Box>
-                {MockData &&
-                    MockData.map(
+                {products &&
+                    products.map(
                         (product, index) =>
                             product._seller instanceof Object && (
                                 <NewProductRequest
@@ -161,7 +162,7 @@ export default function Requests() {
                                 />
                             )
                     )}
-                {error && <div>Error</div>}
+                {error && <div>{t('errors.title')}</div>}
                 {loading && (
                     <Box
                         component="div"
