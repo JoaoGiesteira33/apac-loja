@@ -59,22 +59,31 @@ export default function Requests() {
         if (value === null) {
             setProductQuery({
                 ...productQuery,
-                'published_date[lte]': dayjs(new Date()).add(1,"day").format('YYYY-MM-DD'),
+                'published_date[lte]': dayjs(new Date())
+                    .add(1, 'day')
+                    .format('YYYY-MM-DD'),
             });
         } else {
             setProductQuery({
                 ...productQuery,
-                'published_date[lte]': dayjs(value).add(1,"day").format('YYYY-MM-DD'),
+                'published_date[lte]': dayjs(value)
+                    .add(1, 'day')
+                    .format('YYYY-MM-DD'),
             });
         }
     };
 
+    const onChangeProductState = (productId: string) => {
+        console.log(productId);
+        //products.filter((product) => product._id !== productId);
+    };
+
     useEffect(() => {
         if (selectedTypes.length === 0) {
-            let newQuery = {...productQuery};
+            let newQuery = { ...productQuery };
             delete newQuery['piece_info.technique[in]'];
             setProductQuery({
-                ...newQuery
+                ...newQuery,
             });
         } else {
             setProductQuery({
@@ -159,6 +168,7 @@ export default function Requests() {
                                 <NewProductRequest
                                     key={index}
                                     product={product}
+                                    onChangeProductState={onChangeProductState}
                                 />
                             )
                     )}

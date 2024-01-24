@@ -248,10 +248,31 @@ export const addProduct = async (
         return ok(response.data);
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            console.log('error message: ', error.message);
             return err(error);
         } else {
-            console.log('unexpected error: ', error);
+            return err(new Error('Unexpected error'));
+        }
+    }
+};
+
+export const updateProduct = async (
+    product: NestedPartial<ProductType>,
+    token: string,
+    productId: string
+): Promise<Result<object, Error>> => {
+    if (product.price == null) product.price = 0;
+
+    try {
+        const response = await axios.patch(`${API_URL_PROD}`, product, {
+            params: {
+                token: token,
+            },
+        });
+        return ok(response.data);
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return err(error);
+        } else {
             return err(new Error('Unexpected error'));
         }
     }
