@@ -13,7 +13,7 @@ import ProfileInfo from './pages/Profile/ProfileInfo';
 import ProfileIndex from './pages/Profile/ProfileIndex';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { grey, orange } from '@mui/material/colors';
-import { IconButton, PaletteMode, CircularProgress, Box } from '@mui/material';
+import { IconButton, PaletteMode, CircularProgress, Box, Button } from '@mui/material';
 import { CssBaseline } from '@mui/material/';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -29,6 +29,8 @@ import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import NewSeller from './pages/Seller/NewSeller';
 import { CurrentAccountProvider } from './contexts/currentAccountContext';
 import ChatPage from './components/experinecia_chat/ChatPage';
+
+import { useTranslation } from 'react-i18next';
 
 // dynamically load components as they are needed
 const InitialPage = React.lazy(() => import('./pages/pintar_o_7/Initial'));
@@ -284,6 +286,17 @@ function App() {
         intent: 'capture',
     };
 
+    const { t, i18n } = useTranslation()
+
+     const changeLanguageHandler = () =>
+     {
+            console.log("lang: ", i18n.language);
+            if(i18n.language == "pt")
+                i18n.changeLanguage("en");
+            else
+                i18n.changeLanguage("pt");
+     }
+
     return (
         <CurrentAccountProvider
             loggedIn={loggedIn}
@@ -317,6 +330,17 @@ function App() {
                                         <Brightness4Icon />
                                     )}
                                 </IconButton>
+                                <Button
+                                    sx={{
+                                        position: 'absolute',
+                                        right: 0,
+                                        top: 30,
+                                        zIndex: 1,
+                                    }}
+                                    onClick={() => changeLanguageHandler()}
+                                    color="inherit">
+                                    {i18n.language == "pt" ? "EN" : "PT"}
+                                </Button>
 
                                 {location.pathname !== '/' ? (
                                     <ReactNavbar
