@@ -62,10 +62,6 @@ router.post('/admin/registo', isAdmin, function (req, res) {
 			password: settedPassword
 		}
 
-		console.log(info)
-		console.log(req.query)
-
-
 		send_email(req.body.email, "Atribuição de password", message)
 			.then(() => {
 				controllerLogin.registar(info)
@@ -76,7 +72,6 @@ router.post('/admin/registo', isAdmin, function (req, res) {
 							role: u.nivel
 						}
 						
-						console.log(req.query.token)
 						var configCookies = { headers: { Cookie: 'token=' + req.query.token } }
 						axios.post(API_URL_USER, data, configCookies)
 							.then(resp1 => {
@@ -108,7 +103,6 @@ router.post('/admin/registo', isAdmin, function (req, res) {
 								controllerLogin.deleteLogin(u.username)
 									.then(d => {
 										if (d && d.acknowledged == true && d.deletedCount == 1) {
-											console.log(errorString2)
 											res.status(400).jsonp({ error: "2. Erro na criação do utilizador: " + errorString2 })
 										}
 										else {
@@ -128,7 +122,6 @@ router.post('/admin/registo', isAdmin, function (req, res) {
 					})
 			})
 			.catch (error => {
-				console.log(error)
 				res.status(500).jsonp({ error: "Falha ao enviar email!" })
 			})
 	}
@@ -413,12 +406,11 @@ router.delete('/apagar', isMe, async function (req, res) { // tem de ter o param
 			const message = `Foi efetuado um pedido de remoção da sua conta.\n\n
 			O código para remover a conta é:  ${code}`;
 
-			await send_email(req.user, "Remoção de conta", message); //rever funcao implementada !!!!!
+			await send_email(req.user, "Remoção de conta", message);
 
 			res.status(200).jsonp({ message: "OK" })
 		}
 		catch (erro) {
-			console.log(erro)
 			res.status(500).jsonp({ error: "Falha ao enviar email!" })
 		}
 	}
@@ -548,7 +540,6 @@ router.post('/esqueci', async function (req, res) {
 			res.status(200).jsonp({ message: "OK" })
 		}
 		catch (erro) {
-			console.log(erro)
 			res.status(500).jsonp({ error: "Falha ao enviar email!" })
 		}
 	}

@@ -208,7 +208,6 @@ router.get(
     middleware.extractFilters,
     middleware.fieldSelector,
     function (req, res) {
-        console.log(req.filters);
         req.filters = req.filters || {};
         req.filters.role = 'seller';
         controllerUser

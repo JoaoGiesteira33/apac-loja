@@ -39,7 +39,6 @@ module.exports.createOrderWithShipments = async function (data) {
         order.shipments = shipments.map((shipment) => shipment._id);
 
         let orderInfo = await Order.create([order], { session: session });
-        console.log(orderInfo);
 
         await session.commitTransaction();
         return orderInfo;

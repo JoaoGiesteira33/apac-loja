@@ -18,7 +18,6 @@ const paypalBaseUrl = secrets.PAYPAL_ENVIRONMENT == "sandbox"
 module.exports.createEuPagoMBWayOrder = async function(data) {
     if (data.cart && Array.isArray(data.cart)) {
         const cartValue = await calcOrderPrice(data);
-        console.log("Total cart value: " + cartValue);
 
         try {
             const options = {
@@ -53,7 +52,6 @@ module.exports.createEuPagoMBWayOrder = async function(data) {
 module.exports.createEuPagoCreditCardOrder = async function(data) {
     if (data.cart && Array.isArray(data.cart)) {
         const cartValue = await calcOrderPrice(data);
-        console.log("Total cart value: " + cartValue);
 
         try {
             const options = {
@@ -97,9 +95,7 @@ module.exports.receiveEuPagoWebhook = async function(data) {
         const shipmentsArray = await Shipments.getShipments(
             {"payments.transactionId": data.transactionId}, 
             {}, 0, 0, '');
-        console.log("Shipments=", shipmentsArray);
         for (const shipment of shipmentsArray.results) {
-            console.log("ShipmentId=", shipment._id);
             const len = shipment.states.length - 1;
             const oldState = shipment.states[len];
             if (oldState.value != 'unpaid' && oldState.value != 'reserved') {
@@ -238,6 +234,7 @@ const generatePaypalAccessToken = async function() {
         return data.access_token;
     } catch (error) {
         console.log("Failed to generate Access Token:", error);
+        //throw error;
     }
 };
 
@@ -249,7 +246,6 @@ module.exports.createPaypalOrder = async function(data) {
     // use the cart information passed from the front-end to calculate the purchase unit details
     if (data.cart && Array.isArray(data.cart)) {
         const cartValue = await calcOrderPrice(data);
-        console.log("Total cart value: " + cartValue);
 
         try {
             const accessToken = await generatePaypalAccessToken();
@@ -280,7 +276,6 @@ module.exports.createPaypalOrder = async function(data) {
                     method: "POST",
                     body: JSON.stringify(payload),
                 });
-            console.log(response);
             return handleCreateOrderResponse(response, data);
         } catch (err) {
             throw new Error("Error on request to Paypal: ", err);
@@ -368,7 +363,6 @@ async function handleCreateOrderResponse(response, data) {
 async function handleCaptureOrderResponse(response) {
     try {
         var jsonResponse = await response.json();
-        console.log(jsonResponse);
         const shipmentsArray = await Shipments.getShipments(
             {"payments.transactionId": jsonResponse.id}, 
             {}, 0, 0, '');
@@ -411,7 +405,6 @@ async function calcOrderPrice(data) {
         try {
             const product = await Products.getProductInfo(item._product);
             const shipmentFee = await calcShipmentFee(product, data.address);
-            console.log("Shipment fee=", shipmentFee);
             const value = product.price;
             tmpValue += value * item.amount * percentage;
             if (data.reservation == false) tmpValue += shipmentFee;
