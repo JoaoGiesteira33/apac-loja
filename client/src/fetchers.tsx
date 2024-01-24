@@ -260,10 +260,8 @@ export const updateProduct = async (
     token: string,
     productId: string
 ): Promise<Result<object, Error>> => {
-    if (product.price == null) product.price = 0;
-
     try {
-        const response = await axios.patch(`${API_URL_PROD}`, product, {
+        const response = await axios.patch(`${API_URL_PROD}/`+productId, product, {
             params: {
                 token: token,
             },
