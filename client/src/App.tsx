@@ -299,7 +299,9 @@ function App() {
         <CurrentAccountProvider
             loggedIn={loggedIn}
             setLoggedIn={setLoggedIn}
-            tokenLevel={tokenLevel ?? ''}>
+            tokenLevel={tokenLevel ?? ''}
+            setTokenLevel={setTokenLevel}
+            >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <PayPalScriptProvider options={payPalOptions}>
                     <ColorModeContext.Provider value={colorMode}>
