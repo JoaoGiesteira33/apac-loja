@@ -1,8 +1,15 @@
 import React from 'react';
-import { MuiTelInput } from 'mui-tel-input';
+import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
 import { Box, Button, Typography } from '@mui/material';
+import useCart from '../../hooks/useCart';
+import { Address, User } from '../../types/user';
+import { API_URL_PAY } from '../../fetchers';
 
 const MBWayComponent = () => {
+    const {cart} = useCart();
+    const user = JSON.parse(localStorage.getItem('user') as string) as User;
+    const address = user.client_fields?.demographics.address as Address;
+    const token = localStorage.getItem('token');
     const [valuePhone, setValuePhone] = React.useState('+351');
     const [pending, setPending] = React.useState(false);
 
@@ -10,10 +17,68 @@ const MBWayComponent = () => {
         setValuePhone(newValue);
     };
 
-    const handlePay = () => {
+    function createOrder(countryCode: string, phoneNumber: string) {
         // create order
-        alert('MBWay payment');
-        setPending(true);
+        // use the "body" param to optionally pass additional order information
+        // like product ids and quantities
+        fetch(`${API_URL_PAY}/eupago/mbway/orders?token=${token}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                reservation: 'true',
+                currency: 'EUR',
+                cart: cart.map((product) => ({
+                    id: product._id,
+                    amount: 1,
+                })),
+                _client: user._id,
+                address: {
+                    postal_code: address.postal_code,
+                    city: address.city,
+                    country: address.country,
+                    street: address.street,
+                },
+                shipments: cart.map((product) => ({
+                    _product: product._id,
+                    _seller: product._seller,
+                })),
+                phone: {
+                    country_code: countryCode,
+                    phone_number: phoneNumber,
+                },
+            }),
+        })
+            .then((response) => response.json())
+            .then((order) => {
+                // Your code here after create the order
+                alert('MBWay payment');
+                setPending(true);
+                console.log('order: ', order);
+                return order.id;
+            });
+    }
+
+    // set a timer for 5 min to turn off pending
+    React.useEffect(() => {
+        if (pending) {
+            setTimeout(() => {
+                setPending(false);
+            }, 5 * 60 * 1000);
+        }
+    }, [pending]);
+
+
+    const handlePay = () => {
+        // validate phone number
+        // parse phone number
+        const countryCode = valuePhone.substring(0, 4);
+        const phoneNumber = valuePhone.substring(5);
+
+        // create order
+        createOrder(countryCode, phoneNumber);
+        
     };
 
     return (
@@ -40,9 +105,15 @@ const MBWayComponent = () => {
                         <MuiTelInput
                             value={valuePhone}
                             onChange={handleChangePhone}
+                            required
+                            {...!matchIsValidTel(valuePhone) && {
+                                error: true,
+                                helperText: 'Invalid phone number',
+                            }}
                             variant="standard"
+                            inputProps={{ maxLength: 16 }}
                         />
-                        <Button variant="outlined" onClick={handlePay}>
+                        <Button variant="outlined" onClick={handlePay} disabled={!matchIsValidTel(valuePhone)}>
                             Pagar
                         </Button>
                     </Box>
