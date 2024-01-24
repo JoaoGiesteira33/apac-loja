@@ -53,8 +53,7 @@ const Product = (props) => {
 
     const { hasMore, loading, error, products } = useProductSearch(
         productQuery,
-        productPage,
-        'subtitute'
+        productPage
     );
 
     useEffect(() => {
@@ -123,6 +122,7 @@ const Product = (props) => {
                         {t('product.no_more')}
                     </Typography>
                 )}
+                
             </Grid>
         </Box>
     );

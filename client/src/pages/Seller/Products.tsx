@@ -19,7 +19,9 @@ import { decodeToken } from 'react-jwt';
 export default function Products() {
     const { t } = useTranslation();
     const { tokenLevel } = useContext(CurrentAccountContext);
-    const [productQuery, setProductQuery] = React.useState({});
+    const [productQuery, setProductQuery] = React.useState({
+     
+    });
     const [productPage, setProductPage] = React.useState(1);
     const { hasMore, loading, error, products } = useProductSearch(
         productQuery,
@@ -35,6 +37,7 @@ export default function Products() {
             const sellerId = decodedToken._id;
             if (!sellerId) return;
             setProductQuery({
+                expand: "_seller",
                 _seller: sellerId,
             });
         }
