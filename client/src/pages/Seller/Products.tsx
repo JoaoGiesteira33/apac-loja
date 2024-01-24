@@ -10,17 +10,15 @@ import {
 } from '@mui/material';
 import AddCircleOutlineSharpIcon from '@mui/icons-material/AddCircleOutlineSharp';
 import useProductSearch from '../../hooks/useProductSearch';
-import dayjs from 'dayjs';
 import ProductPaper from '../../components/Seller/ProductPaper';
 import { useTranslation } from 'react-i18next';
 import AddIcon from '@mui/icons-material/Add';
 import { CurrentAccountContext } from '../../contexts/currentAccountContext';
+import { decodeToken } from 'react-jwt';
 
 export default function Products() {
     const { t } = useTranslation();
-    const { loggedIn, setLoggedIn, tokenLevel } = useContext(
-        CurrentAccountContext
-    );
+    const { tokenLevel } = useContext(CurrentAccountContext);
     const [productQuery, setProductQuery] = React.useState({});
     const [productPage, setProductPage] = React.useState(1);
     const { hasMore, loading, error, products } = useProductSearch(
@@ -30,12 +28,17 @@ export default function Products() {
 
     useEffect(() => {
         if (tokenLevel === 'seller') {
-            const sellerId = decodeToken(token)._id;
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            const decodedToken = decodeToken(token);
+            if (!decodedToken) return;
+            const sellerId = decodedToken._id;
+            if (!sellerId) return;
             setProductQuery({
-                _seller: tokenLevel,
+                _seller: sellerId,
             });
         }
-    }, []);
+    }, [tokenLevel]);
 
     return (
         <Box
@@ -68,7 +71,12 @@ export default function Products() {
                     products.map(
                         (product, index) =>
                             product._seller instanceof Object && (
-                                <ProductPaper key={index} product={product} />
+                                <Link
+                                    key={index}
+                                    to={`/product/${product._id}`}
+                                    state={product}>
+                                    <ProductPaper product={product} />
+                                </Link>
                             )
                     )}
                 {error && <div>{t('errors.title')}</div>}
