@@ -19,7 +19,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { useTranslation } from 'react-i18next';
 import { ProductType } from '../types/product';
-import { ReserveModal } from './ReserveModal';
 import { checkLink } from '../fetchers';
 
 const CartDetails = () => {
@@ -29,11 +28,11 @@ const CartDetails = () => {
     const products = cart;
     const navigate = useNavigate();
 
-    const [shippingCost, setShippingCost] = useState(0); // TODO get shipping cost from backend
+    const [shippingCost, setShippingCost] = useState(0); 
     const [subtotal, setSubtotal] = useState(parseFloat(subTotalPrice));
     const [tax, setTax] = useState(0.23);
 
-    const total = subtotal + tax * subtotal + shippingCost;
+    const total = (subtotal + tax * subtotal + shippingCost) * 0.75;
 
     const handleCheckout = () => {
         // TODO handle checkout
@@ -91,7 +90,7 @@ const CartDetails = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {products.map((product) => (
+                                {/* {products.map((product) => (
                                     <TableRow
                                         key={product._id}
                                         sx={{
@@ -132,7 +131,7 @@ const CartDetails = () => {
                                             </button>
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                ))} */}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -142,12 +141,6 @@ const CartDetails = () => {
                     sm={12}
                     md={4}
                     className="dark:bg-gray-800 rounded-md ">
-                    {/*<Typography
-                        variant="h6"
-                        className="font-poppins"
-                        sx={{ marginY: '1rem' }}>
-                        Resumo da encomenda
-                                            </Typography>*/}
                     <Box component="div" className="p-5">
                         <Divider sx={{ marginY: '1rem' }} />
 
@@ -208,7 +201,7 @@ const CartDetails = () => {
                             className="font-poppins"
                             fontWeight={700}
                             sx={{ marginBottom: '2rem' }}>
-                            {t('cart.total')}:{' '}
+                            {t('cart.total')}(75%):{' '}
                             {new Intl.NumberFormat('pt-PT', {
                                 style: 'currency',
                                 currency: 'EUR',

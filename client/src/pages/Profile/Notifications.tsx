@@ -59,7 +59,6 @@ export default function Notifications() {
                 try {
                     const data = await getNotifications(token);
                     if (data) {
-                        console.log('Notifications:', data);
                         setNotifications(data);
                     }
                 } catch (e: any) {

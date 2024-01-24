@@ -25,13 +25,11 @@ import { checkLink } from '../fetchers';
 export const ReservationDetails = () => {
     const { t } = useTranslation();
 
-    // TODO: useReservationCart() hook
     const { dispatch, totalItems, subTotalPrice, cart, REDUCER_ACTIONS } =
         useCart();
     const products = cart;
-    const navigate = useNavigate();
 
-    const [shippingCost, setShippingCost] = useState(0); // TODO get shipping cost from backend
+    const [shippingCost, setShippingCost] = useState(0);
     const [subtotal, setSubtotal] = useState(parseFloat(subTotalPrice));
     const [tax, setTax] = useState(0.23);
 
@@ -138,12 +136,6 @@ export const ReservationDetails = () => {
                     sm={12}
                     md={4}
                     className="dark:bg-gray-800 rounded-md ">
-                    {/*<Typography
-                        variant="h6"
-                        className="font-poppins"
-                        sx={{ marginY: '1rem' }}>
-                        Resumo da encomenda
-                                            </Typography>*/}
                     <Box component="div" className="p-5">
                         <Divider sx={{ marginY: '1rem' }} />
 
@@ -204,7 +196,7 @@ export const ReservationDetails = () => {
                             className="font-poppins"
                             fontWeight={700}
                             sx={{ marginBottom: '2rem' }}>
-                            {t('cart.reservation.reservation')}:{' '}
+                            {t('cart.reservation.reservation')}(25%):{' '}
                             {new Intl.NumberFormat('pt-PT', {
                                 style: 'currency',
                                 currency: 'EUR',
