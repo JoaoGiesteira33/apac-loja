@@ -125,7 +125,6 @@ router.get(
     middleware.fieldSelector,
     middleware.extractFilters,
     function (req, res, next) {
-        console.log('req:', req._id);
         if (req._id && req.level != 'admin') {
             req.filters = req.filters || {};
             req.filters._user = req._id;
