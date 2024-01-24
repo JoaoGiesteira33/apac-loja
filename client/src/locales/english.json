@@ -1,7 +1,419 @@
 {
     "translation": {
-        "navbar": {
-            "search": "Search our store"
+        "errors": {
+            "no-results": "No results found",
+            "title": "Error",
+            "login": {
+                "email": "Invalid Email",
+                "password": "Password must be at least 6 characters long!",
+                "credentials": "Invalid credentials!",
+                "server-error": "Server error, please contact support."
+            },
+            "register": {
+                "email": "Invalid Email",
+                "password": "Password must be at least 6 characters long!",
+                "password-no-match": "Passwords do not match!",
+                "age": "Must be at least 18 years old!",
+                "city": "Invalid city",
+                "address": "Invalid address",
+                "phone-number": "Invalid phone number",
+                "postal-code": "Invalid postal code",
+                "submit": "Error while registering. Contact support!"
+            },
+            "profile": {
+                "name": "Invalid name",
+                "email": "Invalid email",
+                "phone-number": "Invalid phone number",
+                "city": "Invalid city",
+                "address": "Invalid address",
+                "postal-code": "Invalid postal code"
+            },
+            "cart": {
+                "login": "To add items to the cart, you must be signed in."
+            },
+            "not-found": "Oops! Page not found",
+            "wrong-refresh": "Something went wrong. Try refreshing the page."
+        },
+        "artist": {
+            "title": "Artist",
+            "new-artist-page": {
+                "details": "Artist Details"
+            },
+            "pieces": "artist's works",
+            "your-pieces": "Your works",
+            "new-piece": "New Work",
+            "new-piece-page": {
+                "paper-basic-info": "Work Information",
+                "paper-details": "Details",
+                "paper-photos": "Photos",
+                "add-thumbnail": "Add main photo",
+                "choose-thumbnail": "Choose a cover photo",
+                "add-photos": "Add optional photos",
+                "choose-photos": "Add more photos (optional)"
+            },
+            "no-pieces": "This artist has no available works yet"
+        },
+        "cart": {
+            "continue-shopping": "Continue Shopping",
+            "cart": "Shopping Cart",
+            "product": "Product",
+            "price": "Price",
+            "total": "Total",
+            "items": "Items",
+            "subtotal": "Subtotal",
+            "shipping": "Shipping",
+            "tax": "Tax",
+            "checkout": "Checkout",
+            "empty": "Your cart is empty",
+            "reservation-button": "Reserve product(s)",
+            "reservation": {
+                "title": "Reserve",
+                "piece": "Work",
+                "text": "To reserve the product(s), you need to pay 25% of the total amount. After reserving, the artist will have to confirm the reservation for you to pay the remaining amount.",
+                "cancel-button": "Cancel",
+                "info": "The reservation amount will be fully refunded if the artist does not confirm the reservation.",
+                "info2": "Transportation cost is not included in this part.",
+                "cart": "Reservation Cart",
+                "reservation": "Reservation"
+            }
+        },
+        "checkout": {
+            "shippmentNr": "Order No.",
+            "orderNr": "Request No.",
+            "stepper": {
+                "shipping": "Shipping",
+                "payment": "Payment",
+                "review": "Summary",
+                "next-button": "Next",
+                "prev-button": "Previous",
+                "item": "Item",
+                "includedVAT": "VAT included"
+            },
+            "shipping": {
+                "title": "Delivery details",
+                "country": "Country",
+                "city": "City",
+                "city-error": "Invalid city",
+                "address": "Address",
+                "address-error": "Invalid address",
+                "address2": "Apartment, block, lot, building, floor, etc.",
+                "postal-code": "Postal code",
+                "postal-code-error": "Invalid postal code",
+                "shipping-cost": "Shipping delivery cost",
+                "shipping-info": "All works are transported with shipping insurance."
+            },
+            "review": {
+                "title": "Order summary",
+                "value": "Value",
+                "shipping": "Shipping"
+            },
+            "payment": {
+                "title": "Payment method",
+                "paypal": "Paypal",
+                "mbway": "MBWay",
+                "mbway-pending": "You have 5 minutes to confirm the payment in the MBWay app.",
+                "mbway-max-amount": "The maximum amount for MBWay payment is €750.",
+                "credit-card": "Credit Card",
+                "multibanco": "Multibanco",
+                "card-number": "Card number",
+                "card-number-error": "Invalid card number",
+                "card-holder": "Cardholder name",
+                "card-holder-error": "Invalid cardholder name",
+                "full-name": "Full name",
+                "card-expiration": "Expiration date",
+                "card-expiration-error": "Invalid expiration date",
+                "card-cvc": "CVC",
+                "card-cvc-error": "Invalid CVC",
+                "pay": "Pay"
+            }
+        },
+        "global": {
+            "mandatory": "* Campos obrigatórios",
+            "load-more": "Carregar mais",
+            "login": "Entrar",
+            "enter": "Entrar",
+            "register": "Registar",
+            "postal-code": "Código postal",
+            "description": "Descrição",
+            "title": "Título",
+            "price": "Preço",
+            "author": "Autor",
+            "contact": "Fala connosco",
+            "type-of-piece": "Tipo de Obra",
+            "types": "Tipos",
+            "send": "Enviar",
+            "yes": "Sim",
+            "no": "Não",
+            "submit": "Submeter",
+            "select-country": "Selecione o país"
+        },
+        "home": {
+            "main_page": "Página principal",
+            "iniciative": "Uma iniciativa",
+            "price_range": "Preço"
+        },
+        "forms": {
+            "first-last-name": "Primeiro e último nome",
+            "email": "Email",
+            "birth-date": "Data de nascimento",
+            "password": "Palavra-passe",
+            "city": "Cidade",
+            "address": "Morada",
+            "phone-number": "Número de telemóvel",
+            "no-account": "Não tem conta? Registe-se!",
+            "postal-code": "Código postal",
+            "save": "Guardar alterações",
+            "subject": "Assunto",
+            "message": "Mensagem",
+            "messageSuccess": "Mensagem enviada com sucesso!",
+            "saved": "Gravado com sucesso!",
+            "save-error": "Erro ao gravar. Contacte o suporte!"
+        },
+        "product": {
+            "technique": "Técnica",
+            "dimensions": "Dimensões",
+            "measure": "Medida",
+            "photos": "Fotos",
+            "year": "Ano",
+            "width": "Largura (m)",
+            "height": "Altura (m)",
+            "depth": "Profundidade (m)",
+            "weight": "Peso (kg)",
+            "materials": "Materiais",
+            "materials-placeholder": "Adicione lista materiais utilizados (\u2936)",
+            "magnifier": "Passe o rato sobre a imagem para ver o trabalho artístico em pormenor.",
+            "add-to-cart": "Adicionar ao carrinho",
+            "checkout": "Proceder ao checkout?",
+            "checkout-text": "Produto adicionado ao carrinho.",
+            "product-details": "Detalhes do produto",
+            "more": "Outras obras de arte do artista",
+            "no_more": "Não existem mais obras de arte do artista",
+            "already-in-cart": "Este produto está no seu carrinho.",
+            "pending": "Este produto está pendente para reserva.",
+            "paid": "Este produto já foi vendido.",
+            "reserved": "Este produto já foi reservado.",
+            "no-photos-error": "É necessário adicionar pelo menos uma foto."
+        },
+        "profile": {
+            "requests": {
+                "title": "Novos pedidos"
+            },
+            "account": {
+                "title": "Dados de conta",
+                "description": "Verificar informação da conta"
+            },
+            "beforeAt": "Antes de",
+            "profile_text": "Verificar informação de perfil",
+            "order_history": "Histórico de compras",
+            "order_history_text": "Verificar histórico de compras",
+            "products": "Os meus produtos",
+            "products_text": "Gerir os seus produtos",
+            "requests-2": "Submissões obras",
+            "requests-2-text": "Gerir submissões de novas obras",
+            "logout": "Sair",
+            "logout_text": "Sair da conta",
+            "dashboard": "Dashboard",
+            "dashboard_text": "Consultar dashboard de estatísticas",
+            "new-seller": "Novo artista",
+            "new-seller-text": "Criar uma conta de artista nova",
+            "notifications": {
+                "title": "Notificações",
+                "text": "Verificar notificações"
+            }
+        },
+        "info": {
+            "title": "policies, terms & conditions",
+            "reclamation": {
+                "title": "Complaints Book"
+            },
+            "terms": {
+                "title": "Terms and Conditions",
+                "text": [
+                    {
+                        "title": "Introduction",
+                        "text": "The Portuguese Association of Arts and Culture, hereinafter referred to as 'APARCULT' (NIF 517210649), has introduced an online platform on its website, available at: <a href='https://associacaoportuguesaartesecultura.pt/'>link</a>. The platform, known as 'Galeria Pintar o 7,' provides a unique platform, allowing art enthusiasts (hereinafter referred to as 'Buyers') and creatives (hereinafter referred to as 'Artists') to connect to buy and sell products at pre-established prices, now referred to as 'Service.'<br>Transactions made between Buyers and Artists through this Service follow the guidelines outlined in the Terms and Conditions of Galeria Pintar o 7, an acceptance that is mandatory for the Buyer with each purchase and for the Artist when listing their products on Galeria Pintar o 7.<br>These Terms are dynamic and subject to changes. All parties involved will be duly informed of any substantial revisions, so it is advisable to periodically review the Terms to stay updated."
+                    },
+                    {
+                        "title": "I - General Part",
+                        "text": [
+                            {
+                                "title": "Article 1 - Scope and Object",
+                                "text": "These terms aim to define, among the parties involved, the terms and responsibilities underlying the provision of the Service. Furthermore, they aim to provide and clarify all essential information for both Buyers and Artists regarding the procedures for ordering, selling, paying, and delivering purchases made on Galeria Pintar o 7."
+                            },
+                            {
+                                "title": "Article 2 - Definitions",
+                                "text": "For the purposes of these terms and conditions, the following terms shall have the following definitions:<br><b>Association:</b> Refers to APARCULT, a non-profit association headquartered at Largo de Valverde, 50, Porto, parish of Campanhã, municipality of Porto.<br><b>Site:</b> Refers to the Internet site: <a href='https://associacaoportuguesaartesecultura.pt/home/projetos/pintar-o-7/'>link</a>, which acts as a centralized point of access to information available on the Internet.<br><b>Artist:</b> Represents the owner of the movable property, endowed with the capacity and legitimacy to promote its sale.<br><b>Buyer:</b> Designates an individual or legal entity with legal capacity wishing to acquire a movable property whose sale is promoted through the Galeria Pintar o 7 platform.<br><b>Registration:</b> Corresponds to the process by which any person, individual or collective, can register on the website. This process is mandatory for participation, whether for buying or selling, and is subject to applicable terms and conditions.<br><b>Galeria Pintar o 7:</b> Refers to the platform where buyers and artists can register for the purpose of conducting transactions to buy and sell products.<br><b>Service:</b> Consists of a set of tools that enable the Parties to register on Galeria Pintar o 7, get in touch, place orders, make payment for the Products, and confirm their receipt."
+                            },
+                            {
+                                "title": "Article 3 - Marketplace Operation",
+                                "text": "Galeria Pintar o 7 provides Buyers with the opportunity to view and purchase Products offered by Artists on the Galeria Pintar o 7 site. All transactions conducted through Galeria Pintar o 7 are directly concluded between the Buyer and the Artist, ensuring compliance with current legal requirements. APARCULT does not assume the role of agent, distributor, or representative of the Artists, nor does it act as a reseller of the Products presented by the Artists on Galeria Pintar o 7.<br>Artists retain the copyright to their original works. Galeria Pintar o 7 does not claim intellectual property rights over the artists' works. The full responsibility for the products advertised and sold on Galeria Pintar o 7 lies with the Artists. This includes, but is not limited to, aspects related to ownership, quality, safety, origin, warranty, and compliance with applicable law."
+                            }
+                        ]
+                    },
+                    {
+                        "title": "II - Conditions for Artists",
+                        "text": [
+                            {
+                                "title": "Article 4 - General Obligations",
+                                "text": "1. The Artist undertakes to fulfill all responsibilities with the aim of providing a quality service to Buyers.<br>2. The Artist undertakes to respond to service email messages within a maximum period of 2 working days from the date of their receipt.<br>3. From the moment the Artist contacts the Buyer outside the Galeria platform, any liability on the part of the platform is dissolved."
+                            },
+                            {
+                                "title": "Article 5 - Product Offering Obligations",
+                                "text": "1. The Artist undertakes to sell Products of which they are the owner or for which they have rights that allow their commercialization.<br>2. The Artist guarantees that the Products do not violate current legislation, applicable standards, and do not harm the rights of third parties. The Artist undertakes not to sell any counterfeit Product, and that does not fall under the terms of the Copyright and Related Rights Code or any Product whose marketing is regulated by legislative, regulatory, or contractual provisions.<br>3. The Artist is solely responsible for the Products they list for sale on the Galeria platform.<br>4. The Artist undertakes to act in good faith.<br>5. The Artist is solely responsible for the accuracy and truthfulness of the characteristics stated in the description and undertakes that these do not create the risk of misleading potential Buyers, both regarding the characteristics of the Product and its condition and price.<br>6. The Artist must communicate to the Buyer all the information and detailed characteristics that allow them to become aware of the essential characteristics of the Product."
+                            },
+                            {
+                                "title": "Article 6 - Obligations regarding Product Prices",
+                                "text": "1. The price of the Products is always set by the Artist, taking into account the applicable legislation. 2. In the case of a sale with a price reduction, the Artist must communicate the existence of the sale with a price reduction, as defined in Decree-Law No. 109/2019, of August 14. The Gallery Pintar o 7 reserves the right to remove from the platform any information that does not comply with these conditions. 3. The price must be indicated on the platform in euros, including all taxes and fees. Shipping costs will be added to the order value during the checkout process. 4. The gallery reserves the right to adjust commissions and fees, with prior notice to the artists."
+                            },
+                            {
+                                "title": "Article 7 - Obligations for the Sale of Products",
+                                "text": "1. Contracts for the purchase and sale of Products proposed by the Artist on the platform are exclusively concluded between the Artist and the Buyer. 2. The Artist is informed by the Gallery Pintar o 7, by email and in the Artist's area, about pending orders for the Products available for sale. 3. The Artist undertakes to confirm the necessary data for the shipment of the ordered product. 4. 25% of the Product value will be charged in the pre-booking (a 48-hour period in which the Artist must indicate if the work is still available for sale; if not, this amount will be fully refunded). 5. If the order is accepted by the Artist, the Buyer must make the full payment within 48 hours. 6. Once the payment is confirmed, the artwork will be shipped within a maximum of 3 (three) working days, not including the shipping time. 7. After confirming the receipt of the payment, the artist's payment will be made after the 14 days provided by law in case of a product return. 8. In case of inability to meet deadlines, the Artist must request via email to the Gallery at the time of pre-booking. The sale proceeds if the Buyer agrees to the new suggested deadlines; otherwise, the request will be canceled. 9. The Artist must accept and confirm the order. If the order is rejected, Gallery Pintar o 7 may terminate the contract between the parties."
+                            },
+                            {
+                                "title": "Article 8 - Obligations regarding the Delivery of Products",
+                                "text": "1. Once the order is accepted, the Artist undertakes to package the Product for shipment within 3 (three) working days from the date of order acceptance. 2. The Artist must comply with all applicable legislation, especially fiscal, regarding the commercial transaction of buying and selling the Product, assuming full responsibility for compliance. 3. The Artist undertakes to pack and protect the Products intended for shipment, following the association's manual, to prevent damage during transport. Failure to comply with the implied rules in the terms and conditions absolves Gallery Pintar o 7 of any liability; the artist then assumes full responsibility for the resulting damage. 4. Product shipping must be done exclusively by registered mail, in order to protect both parties in the process. 5. If the shipping period is exceeded, the order will be canceled, and the Buyer will be notified by email."
+                            },
+                            {
+                                "title": "Article 9 - Financial Provisions",
+                                "text": "1. The Gallery will pay the Artist the amount defined by the artist on the Product sales page after confirmation by the Buyer of receiving the Products. 2. A pre-booking will be made (a 48-hour period in which the Artist confirms the availability of the work in question for sale), and 25% of the amount will be charged. If the sale does not take place, the amount will be fully refunded. 3. For each order of Products received by a Buyer, APARCULT will charge the buyer a commission of 20% with VAT included at the current rate. This commission charged to the buyer is automatically added to the price set by the Artist, except during an ongoing campaign. 4. Payment will be made by bank transfer to the Artist's bank account. 5. In the event that the Buyer does not confirm the receipt of the Product and in the absence of any complaint known to the Artist, it is assumed that the product has been received, and the transfer will be made to the Artist after a period of 14 days from the date of confirmation of the Product's receipt by the Buyer. 6. In case of a complaint by the Buyer, once the 14-day period has elapsed, as mentioned in the previous point, and the transfer has been made to the Artist, the Gallery, after evaluating the Buyer's complaint and if justified, may refund the Buyer the full value of the ordered Product. The amount refunded by the Gallery to the Buyer will be debited to the Artist, who must make the payment to the existing account between the Artist and the Gallery or through any other means agreed between the Gallery and the Artist within a maximum period of 14 days."
+                            },
+                            {
+                                "title": "Article 10 - Discount Policy",
+                                "text": "1. The Gallery has the right to apply discounts at specific times of the year to promote sales. The discounts granted imply a reduction in the Gallery's margin by 5% or more. During any discount campaign, the Artist is not obligated to make any reduction in the sale price but is advised to do so."
+                            },
+                            {
+                                "title": "Article 11 - Disclaimer",
+                                "text": "1. Neither APARCULT nor its representatives, employees, or collaborators can be held responsible for errors related to the description, genuineness, or authenticity of any Product, except in the case of gross errors that they could not have ignored. 2. If APARCULT is sued for fault not attributable to it, the Artist undertakes to assume it and, as well, to reimburse APARCULT for all amounts that have been spent by it in this regard."
+                            }
+                        ]
+                    },
+                    {
+                        "title": "III - General Conditions of the Marketplace",
+                        "text": [
+                            {
+                                "title": "Article 12 - Warranty",
+                                "text": "1. The responsibility for the warranty of the products available on Galeria Pintar o 7 is exclusive to the artists who are part of the marketplace. 2. In the case of a return of a product by the buyer, the buyer will be responsible for the shipping costs unless there is an ongoing campaign. In the event of non-compliance with the product, shipping costs will be reimbursed by the artist. In the case of misuse of the product, shipping costs will be solely borne by the buyer."
+                            },
+                            {
+                                "title": "Article 13 - Liability",
+                                "text": "1. Galeria Pintar o 7 assumes no responsibility for the buyer's misuse or errors in the purchase process, nor for situations originated by third parties. 2. No responsibility is taken for losses resulting from platform failures, system maintenance, or unforeseeable events that may prevent the fulfillment of contractual obligations. This lack of liability includes circumstances beyond the control of the platform. Likewise, we are not responsible for the content provided by the artists. 3. Transactions made in the marketplace are not the responsibility of Galeria Pintar o 7; 4. It is the Buyer's responsibility to ensure the proper use of Galeria Pintar o 7, and the correctness of the information provided during the purchase."
+                            },
+                            {
+                                "title": "Article 14 - Personal Data",
+                                "text": "1. The data of buyers and artists are processed by Galeria Pintar o 7 for account management, compliance with legal obligations, and improvement of the services offered. 2. The Artist and the Buyer undertake to ensure the truthfulness and updating of personal data. Incorrect information may lead to the suspension of services. 3. Galeria Pintar o 7 complies with Regulation (EU) 2016/679 and Law No. 58/2019 on the protection of personal data, guaranteeing the exercise of the rights provided. Consult our Privacy Policy for more details."
+                            },
+                            {
+                                "title": "Article 15 - Intellectual Property",
+                                "text": "1. All content present on Galeria Pintar o 7 (texts, logos, illustrations, and images) is protected by copyright and intellectual property rights. 2. Use is allowed only for private purposes, respecting restrictive provisions of the Copyright and Related Rights Code. 3. Any total or partial reproduction of Galeria Pintar o 7 is strictly prohibited."
+                            },
+                            {
+                                "title": "Article 16 - Private Messages",
+                                "text": "1. Buyers and Artists have the possibility to send private messages to exchange information about a Product. 2. It is not allowed to send private messages for various reasons, especially to: Announce products or services; Distribute malware; Send unsolicited or bulk messages to 5 or more Buyers or Artists; Transmit messages that may be considered illegal, obscene, harmful, unethical, threatening to public safety, improper, or in any way incompatible with the best interests of the platform and Buyers or Artists; 3. APARCULT Access: APARCULT reserves the right to access all messages exchanged between Buyers and Artists for the sole purpose of facilitating the resolution of issues related to transactions. This access is made to ensure effective mediation in situations that require intervention to resolve pending issues."
+                            },
+                            {
+                                "title": "Article 17 - Partial Nullity",
+                                "text": "In the event of one or more provisions of these terms being considered invalid, the remaining ones will remain valid and effective."
+                            },
+                            {
+                                "title": "Article 18 - Dispute Resolution",
+                                "text": "1. Galeria Pintar o 7 is not a party to the purchase and sale contract concluded between the artist and the buyer. 2. Disputes must be resolved directly between the parties. 3. Galeria Pintar o 7 disclaims any responsibility to the buyer and artist."
+                            },
+                            {
+                                "title": "Article 19 - Applicable Law and Competent Court",
+                                "text": "1. These terms are governed by Portuguese and European law. 2. Any dispute will be settled by the Courts of the District of Porto, with express waiver of any other."
+                            },
+                            {
+                                "title": "Article 20 - Electronic Complaint",
+                                "text": "If you wish to file an electronic complaint, use the Electronic Complaints Book. You can also contact Galeria Pintar o 7 to resolve the issue amicably, although this is not mandatory. By using the Galeria Pintar o 7 platform, artists fully agree with the presented terms and conditions. These terms are subject to changes, and artists will be notified of any revisions or significant changes. We recommend that artists regularly review the terms to ensure their ongoing compliance."
+                            }
+                        ]
+                    }
+                ]
+            },
+            "privacy": {
+                "title": "Privacy Policies",
+                "text": [
+                    {
+                        "title": "Section 1 - What We Do with Your Information?",
+                        "text": "When making purchases on our Gallery, we collect the provided personal information, such as name, address, and email, to facilitate the buying and selling process. While browsing, we automatically receive your computer's IP address to obtain information about your browser and operating system. With your permission, we send emails about the Gallery, new products, and updates."
+                    },
+                    {
+                        "title": "Section 2 - Consent",
+                        "text": "By providing personal information for transactions, credit card checks, orders, deliveries, and returns, you agree to the collection and use of personal information only for specific purposes. If we request information for secondary purposes, we seek your consent. How can I withdraw my consent? You can withdraw your consent at any time by contacting us through <a href='mailto:geral@associacaoportuguesaartesecultura.pt'>link</a>"
+                    },
+                    {
+                        "title": "Section 3 - Disclosure",
+                        "text": "We may disclose personal information if required by law or a violation of our Terms of Service."
+                    },
+                    {
+                        "title": "Section 4 - Third-Party Services",
+                        "text": "Third-party providers use your information only to provide necessary services. We recommend reading the privacy policies of these providers. Remember that they may be subject to different laws."
+                    },
+                    {
+                        "title": "Section 5 - Security",
+                        "text": "We implement measures to protect your information. If you provide credit card data, it is encrypted and securely stored."
+                    },
+                    {
+                        "title": "Cookies",
+                        "text": "We use cookies to improve the user experience. You can choose not to accept cookies by changing your browser settings."
+                    },
+                    {
+                        "title": "Section 6 - Age of Consent",
+                        "text": "By using the site, you confirm that you are of legal age and authorize dependent minors to use the site."
+                    },
+                    {
+                        "title": "Section 7 - Changes to the Privacy Policy",
+                        "text": "We reserve the right to modify the policy at any time. Changes take effect immediately upon being published. We will notify you of changes."
+                    },
+                    {
+                        "title": "Questions and Contact Information",
+                        "text": "To access, correct, change, or delete personal information, or for more information, contact the Privacy Director through <a href='mailto:geral@associacaoportuguesaartesecultura.pt'>link</a>"
+                    },
+                    {
+                        "title": "GDPR Compliance",
+                        "text": "<b>General Data Protection Regulation - <a href='https://www.eugdpr.org'>https://www.eugdpr.org</a></b><br><b>Other third parties may intervene on the platform as follows:</b><ul><li>Social media share buttons - on most pages, which, when connected to these platforms and browsing Galeria Pintar o 7, collect information according to their rules.</li><li>Similar to most online communities, our moderators have limited access to member data. This access includes the email address associated with the account, the date and time of the last site connections with the respective IP address, the history of moderated or deleted content, and the record of moderation actions. It is important to note that moderators have access to users' private messages to facilitate the resolution of any disputes in transactions.</li></ul>"
+                    }
+                ]
+            },
+            "faq_text": "FAQ Text"
+        },
+        "initial": {
+            "gallery": "gallery",
+            "artists": "artists",
+            "contact": "contacts",
+            "profile": "profile",
+            "login": "login"
+        },
+        "months": {
+            "0": "Jan",
+            "1": "Feb",
+            "2": "Mar",
+            "3": "Apr",
+            "4": "May",
+            "5": "Jun",
+            "6": "Jul",
+            "7": "Aug",
+            "8": "Sep",
+            "9": "Oct",
+            "10": "Nov",
+            "11": "Dec"
+        },
+        "dashboard": {
+            "registerMonth": "Registrations per month",
+            "artistsCity": "Artists per city",
+            "clientsCity": "Clients per city",
+            "lastVisited_client": "Last client visits (days)",
+            "lastVisited_seller": "Last artist visits (days)",
+            "age": "Age of clients",
+            "7": "< 7",
+            "15": "< 15",
+            "30": "< 30",
+            "60": "< 60",
+            "rest": ">= 60",
+            "shipmentState": "Order status",
+            "pending": "Pending",
+            "reserved": "Reserved",
+            "paid": "Paid"
         }
     }
 }
