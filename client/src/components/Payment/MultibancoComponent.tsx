@@ -114,6 +114,12 @@ const MultibancoComponent = () => {
                     </CardActions>
                 </CardContent>
             </Card>
+            <Typography
+                component="p"
+                variant="caption"
+                style={{ color: 'gray' }}>
+                *Maximum amount: 3999€
+            </Typography>
         </div>
     );
 };
