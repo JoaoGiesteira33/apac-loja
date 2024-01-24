@@ -85,6 +85,7 @@ export default function useProductSearch(query: object, pageNumber: number) {
             .then((res) => {
                 if (empty) {
                     setProducts(res.data.results);
+                    empty = false;
                 } else setProducts(products.concat(res.data.results));
                 setHasMore(res.data.hasMore);
                 setLoading(false);

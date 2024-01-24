@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { Divider, Typography, Avatar } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/system/Box';
@@ -10,12 +10,13 @@ import AddCircleOutlineSharpIcon from '@mui/icons-material/AddCircleOutlineSharp
 import ProductThumbnail from '../../components/pintar_o_7/ProductThumbnail';
 import useProductSearch from '../../hooks/useProductSearch';
 import { useTranslation } from 'react-i18next';
-import { checkLink } from '../../fetchers';
+import { checkLink, updateUser } from '../../fetchers';
 
 export default function ArtistPage() {
     const { t } = useTranslation();
     const location = useLocation();
     const artist = location.state;
+    const navigate = useNavigate();
 
     const [productQuery, setProductQuery] = useState({
         'piece_info.state': 'available',
@@ -27,6 +28,13 @@ export default function ArtistPage() {
         productQuery,
         productPage
     );
+
+    const handleArchive = async () => {
+        const newArtist = { ...artist };
+        newArtist.seller_fields.status = 'inactice';
+        await updateUser(newArtist);
+        navigate('/artists');
+    }
 
     return (
         <Box component="div">

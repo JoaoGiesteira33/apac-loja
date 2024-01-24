@@ -29,6 +29,9 @@ import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import NewSeller from './pages/Seller/NewSeller';
 import { CurrentAccountProvider } from './contexts/currentAccountContext';
 import ChatPage from './components/experinecia_chat/ChatPage';
+import PrivateRoutes from './routes/PrivateRoutes';
+import SellerPrivateRoutes from './routes/SellerPrivateRoutes';
+import AdminPrivateRoutes from './routes/AdminPrivateRoutes';
 
 import { useTranslation } from 'react-i18next';
 
@@ -371,56 +374,7 @@ function App() {
                                                 element={route.element}
                                             />
                                         ))}
-                                        {protectedRoutes.map((route, index) => (
-                                            <Route
-                                                key={index}
-                                                path={route.path}
-                                                element={route.element}
-                                            />
-                                        ))}
-                                        {sellerRoutes.map((route, index) => (
-                                            <Route
-                                                key={index}
-                                                path={route.path}
-                                                element={route.element}
-                                            />
-                                        ))}
-                                        {adminRoutes.map((route, index) => (
-                                            <Route
-                                                key={index}
-                                                path={route.path}
-                                                element={route.element}
-                                            />
-                                        ))}
-                                    </Routes>
-                                </Suspense>
-                                {loggedIn && location.pathname !== '/cart' && (
-                                    <CartBadge />
-                                )}
-                                {checkChatRoute(location.pathname) ? (
-                                    <Chat />
-                                ) : (
-                                    <></>
-                                )}
-                                {location.pathname !== '/' ? (
-                                    <Footer setHeight={setFooterSize} />
-                                ) : (
-                                    <></>
-                                )}
-                            </Box>
-                        </ThemeProvider>
-                    </ColorModeContext.Provider>
-                </PayPalScriptProvider>
-            </LocalizationProvider>
-        </CurrentAccountProvider>
-    );
-}
-
-export default App;
-
-/*
-
-                                    <Route
+                                        <Route
                                         element={
                                             <PrivateRoutes level={tokenLevel} />
                                         }>
@@ -460,5 +414,34 @@ export default App;
                                             />
                                         ))}
                                     </Route>
+                                    </Routes>
+                                </Suspense>
+                                {loggedIn && location.pathname !== '/cart' && (
+                                    <CartBadge />
+                                )}
+                                {/*checkChatRoute(location.pathname) ? (
+                                    <Chat />
+                                ) : (
+                                    <></>
+                                )*/}
+                                {location.pathname !== '/' ? (
+                                    <Footer setHeight={setFooterSize} />
+                                ) : (
+                                    <></>
+                                )}
+                            </Box>
+                        </ThemeProvider>
+                    </ColorModeContext.Provider>
+                </PayPalScriptProvider>
+            </LocalizationProvider>
+        </CurrentAccountProvider>
+    );
+}
+
+export default App;
+
+/*
+
+                                    
 
 */

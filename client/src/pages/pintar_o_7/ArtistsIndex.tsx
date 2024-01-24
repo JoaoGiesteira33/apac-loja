@@ -15,9 +15,17 @@ import { TextField } from '@mui/material';
 
 export default function ArtistsIndexPage() {
     const [t] = useTranslation();
+    const { tokenLevel } = useContext(CurrentAccountContext);
     const [artistPage, setArtistPage] = useState(1);
     const [artistFilter, setArtistFilter] = useState('');
-    const [artistQuery, setArtistQuery] = useState({});
+    const [artistQuery, setArtistQuery] = useState(() => {
+        if (tokenLevel === "admin")
+            return {};
+        else
+            return {
+                'seller_fields.status': 'active',
+            };
+    });
 
     const { hasMore, loading, error, artists } = useArtistSearch(
         artistQuery,

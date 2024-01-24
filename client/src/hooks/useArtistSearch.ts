@@ -7,9 +7,10 @@ export default function useArtistSearch(query: object, pageNumber: number) {
     const [error, setError] = useState(false);
     const [artists, setArtists] = useState([]);
     const [hasMore, setHasMore] = useState(false);
-
+    let empty = false;
     useEffect(() => {
         setArtists([]);
+        empty = true;
     }, [query]);
 
     useEffect(() => {
@@ -28,7 +29,10 @@ export default function useArtistSearch(query: object, pageNumber: number) {
             cancelToken: new axios.CancelToken((c) => (cancel = c)),
         })
             .then((res) => {
-                setArtists((prevValue) => prevValue.concat(res.data.results));
+                if (empty) {
+                    setArtists(res.data.results);
+                    empty = false;
+                }else               setArtists(artists.concat(res.data.results));
                 setHasMore(res.data.hasMore);
                 setLoading(false);
             })
