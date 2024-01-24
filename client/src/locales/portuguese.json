@@ -125,6 +125,7 @@
             "description": "Descrição",
             "title": "Título",
             "price": "Preço",
+            "author": "Autor",
             "contact": "Fala connosco",
             "type-of-piece": "Tipo de Obra",
             "types": "Tipos",

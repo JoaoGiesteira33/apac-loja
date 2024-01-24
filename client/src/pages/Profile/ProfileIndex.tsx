@@ -103,6 +103,7 @@ export default function ProfileIndex() {
                     onClick={() => {
                         localStorage.removeItem('loggedIn');
                         localStorage.removeItem('user');
+                        localStorage.removeItem('token');
                         setLoggedIn(false);
                     }}>
                     <ProfileThumbnail

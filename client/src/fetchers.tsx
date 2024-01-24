@@ -240,7 +240,7 @@ export const addProduct = async (
     if (product.price == null) product.price = 0;
 
     try {
-        const response = await axios.post(`${BASE_URL}/products`, product, {
+        const response = await axios.post(`${API_URL_PROD}`, product, {
             params: {
                 token: token,
             },

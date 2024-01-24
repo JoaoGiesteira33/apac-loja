@@ -26,7 +26,6 @@ import { ProductType } from '../../types/product';
 import { NestedPartial } from '../../types/nestedPartial';
 import { addProduct, uploadProductPhotos } from '../../fetchers';
 import { Result } from '../../types/result';
-import { checkLink } from '../../fetchers';
 import { useNavigate } from 'react-router-dom';
 
 const availableTypes: string[] = [
@@ -112,6 +111,7 @@ export default function NewProduct() {
     const inputRef = useRef<HTMLInputElement>(null);
 
     const [title, setTitle] = useState('');
+    const [author, setAuthor] = useState<string>('');
     const [description, setDescription] = useState('');
     const [technique, setTechnique] = useState<string>('');
     const [materials, setMaterials] = useState<string[]>([]);
@@ -130,6 +130,7 @@ export default function NewProduct() {
 
     const onAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         const fileList = e.target.files;
+        console.log(fileList)
         if (fileList) {
             let files = [...images, ...fileList];
             if (files.length > MAX_IMAGES) {
@@ -177,6 +178,7 @@ export default function NewProduct() {
                     weight: parseFloat(maskedValues.weight),
                 },
             },
+            author: author,
         };
 
         const token = localStorage.getItem('token');
@@ -247,6 +249,18 @@ export default function NewProduct() {
                         id="title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
+                    />
+                    <TextField
+                        variant="standard"
+                        margin="normal"
+                        label={t('global.author')}
+                        type="text"
+                        fullWidth
+                        error={false}
+                        helperText={''}
+                        id="author"
+                        value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
                     />
                     <TextField
                         variant="standard"
@@ -325,7 +339,8 @@ export default function NewProduct() {
                             _: React.SyntheticEvent<Element, Event>,
                             newValue: string[] | null
                         ) => {
-                            newValue != null
+                            console.log(newValue);
+                            return newValue != null
                                 ? setMaterials(newValue)
                                 : setMaterials([]);
                         }}
@@ -466,7 +481,7 @@ export default function NewProduct() {
                                     }}>
                                     <img
                                         className="w-full h-full object-cover"
-                                        src={checkLink(url)}
+                                        src={url}
                                         alt={''}
                                     />
                                     <IconButton
