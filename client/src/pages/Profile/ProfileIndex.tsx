@@ -16,7 +16,7 @@ import { CurrentAccountContext } from '../../contexts/currentAccountContext';
 
 export default function ProfileIndex() {
     const [t] = useTranslation();
-    const { setLoggedIn, tokenLevel } = useContext(CurrentAccountContext);
+    const { setLoggedIn, tokenLevel, setTokenLevel } = useContext(CurrentAccountContext);
 
     return (
         <Box
@@ -33,13 +33,13 @@ export default function ProfileIndex() {
                 justifyContent: 'center',
             }}>
             <div className="grid max-w-max max-h-max gap-2 md:gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 justify-center content-center items-center">
-                <Link className="inline-block" to="/profile/info">
+                {(tokenLevel == 'seller' || tokenLevel == 'client') && <Link className="inline-block" to="/profile/info">
                     <ProfileThumbnail
                         title={t('profile.account.title')}
                         description={t('profile.account.description')}
                         icon={<AccountCircleIcon />}
                     />
-                </Link>
+                </Link>}
                 {(tokenLevel == 'seller' || tokenLevel == 'admin') && (
                     <Link className="inline-block" to="/profile/notifications">
                         <ProfileThumbnail
@@ -105,6 +105,7 @@ export default function ProfileIndex() {
                         localStorage.removeItem('user');
                         localStorage.removeItem('token');
                         setLoggedIn(false);
+                        setTokenLevel("");
                     }}>
                     <ProfileThumbnail
                         title={t('profile.logout')}

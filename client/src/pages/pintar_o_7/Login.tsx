@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
     Box,
     TextField,
@@ -10,13 +10,16 @@ import {
 } from '@mui/material';
 import { loginUser, fetchUser } from '../../fetchers';
 import { Link, useNavigate } from 'react-router-dom';
-import { useJwt, decodeToken } from 'react-jwt';
+import { decodeToken } from 'react-jwt';
 import { useTranslation } from 'react-i18next';
+import { CurrentAccountContext } from '../../contexts/currentAccountContext';
 
-const Login = (props) => {
+const Login = () => {
     const [t] = useTranslation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const { setLoggedIn, setTokenLevel } = useContext(CurrentAccountContext);
 
     const [showEmailAlert, setShowEmailAlert] = useState(false);
     const [showPassAlert, setShowPassAlert] = useState(false);
@@ -69,7 +72,8 @@ const Login = (props) => {
                     // TODO - store user in local storage
                     localStorage.setItem('user', JSON.stringify(user));
                     localStorage.setItem('loggedIn', 'ok');
-                    props.setLoggedIn(true);
+                    setLoggedIn(true);
+                    setTokenLevel(decodedToken.level);
                     navigate('/gallery');
                 } else {
                     setErrorMessage('#1');

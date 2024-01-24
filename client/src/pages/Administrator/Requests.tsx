@@ -27,7 +27,7 @@ export default function Requests() {
         expand: '_seller',
     });
     const [productPage, setProductPage] = React.useState(1);
-    const { hasMore, loading, error, products } = useProductSearch(
+    const { hasMore, loading, error, products, setProducts } = useProductSearch(
         productQuery,
         productPage
     );
@@ -75,21 +75,27 @@ export default function Requests() {
 
     const onChangeProductState = (productId: string) => {
         console.log(productId);
-        //products.filter((product) => product._id !== productId);
+        setProducts(products.filter((product) => product._id !== productId));
     };
 
+    let first = 0;
+
     useEffect(() => {
-        if (selectedTypes.length === 0) {
-            let newQuery = { ...productQuery };
-            delete newQuery['piece_info.technique[in]'];
-            setProductQuery({
-                ...newQuery,
-            });
-        } else {
-            setProductQuery({
-                ...productQuery,
-                'piece_info.technique[in]': selectedTypes.join(','),
-            });
+        if (first === 0) {
+            first++;
+        }else{
+            if (selectedTypes.length === 0) {
+                let newQuery = { ...productQuery };
+                delete newQuery['piece_info.technique[in]'];
+                setProductQuery({
+                    ...newQuery,
+                });
+            } else {
+                setProductQuery({
+                    ...productQuery,
+                    'piece_info.technique[in]': selectedTypes.join(','),
+                });
+            }
         }
     }, [selectedTypes]);
 
@@ -171,7 +177,8 @@ export default function Requests() {
                                     onChangeProductState={onChangeProductState}
                                 />
                             )
-                    )}
+                    )
+                    }
                 {error && <div>{t('errors.title')}</div>}
                 {loading && (
                     <Box
@@ -185,6 +192,11 @@ export default function Requests() {
                         <CircularProgress />
                     </Box>
                 )}
+                {!loading && (products || products.length === 0) && (
+                    <div>{t('errors.no-results')}</div>
+                )
+
+                }
                 {hasMore && (
                     <Button
                         startIcon={<AddCircleOutlineSharpIcon />}
