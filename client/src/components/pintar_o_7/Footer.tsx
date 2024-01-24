@@ -1,15 +1,10 @@
 import { Grid, Box, Divider, List, ListItem, Typography } from '@mui/material';
 import { useNavigate, Link } from 'react-router-dom';
-import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import YouTubeIcon from '@mui/icons-material/YouTube';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import logo from '../../assets/LOGO.png';
-import { useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const Footer = (props) => {
-    const navigate = useNavigate();
     const ICON_MARGIN = 0.5;
     const year = new Date().getFullYear();
 

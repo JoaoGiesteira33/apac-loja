@@ -1,9 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 
 import ProductDetails from '../components/Product/ProductDetails';
-import products from '../data/product.json';
-import { ProductType } from '../types/product';
-import MyBreadCrumb from '../components/MyBreadCrumb';
 
 import { useParams } from 'react-router-dom';
 import { Box, Divider, Typography, Grid } from '@mui/material';
@@ -15,7 +12,6 @@ import ProductThumbnail from '../components/pintar_o_7/ProductThumbnail';
 import { useTranslation } from 'react-i18next';
 //import { CurrentChatContext } from '../contexts/chatContext';
 
-import useCart from '../hooks/useCart';
 
 const Product = (props) => {
     const { t } = useTranslation();
@@ -100,8 +96,7 @@ const Product = (props) => {
                 },
                 my: 5,
             }}>
-            {/* <MyBreadCrumb />*/}
-            {/* <ProductDetails product={product1}/> */}
+
             {product && (
                 <ProductDetails product={product} loggedIn={loggedIn} />
             )}

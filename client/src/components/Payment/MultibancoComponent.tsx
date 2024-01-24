@@ -1,17 +1,13 @@
-import * as React from 'react';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import {
-    Box,
     Button,
     Card,
     CardActions,
     CardContent,
-    Checkbox,
     Divider,
     FormControl,
     FormLabel,
-    Input,
     InputAdornment,
     TextField,
     Typography,
@@ -118,7 +114,7 @@ const MultibancoComponent = () => {
                 component="p"
                 variant="caption"
                 style={{ color: 'gray' }}>
-                *Maximum amount: 3999€
+                O valor máximo para pagamento com MBWay é de 3999€.
             </Typography>
         </div>
     );

@@ -1,5 +1,4 @@
 import { Box, Divider, Paper, Stack, Typography } from '@mui/material';
-import React from 'react';
 import useCart from '../hooks/useCart';
 import { useTranslation } from 'react-i18next';
 
