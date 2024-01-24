@@ -192,7 +192,7 @@ export default function Requests() {
                         <CircularProgress />
                     </Box>
                 )}
-                {!loading && (products || products.length === 0) && (
+                {!loading && (!products || products.length === 0) && (
                     <div>{t('errors.no-results')}</div>
                 )
 
