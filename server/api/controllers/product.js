@@ -31,10 +31,7 @@ module.exports.replaceProductInfo = function (id, data) {
 
 //      - updateProductInfo
 module.exports.updateProductInfo = function (id, data) {
-    console.log(data);
-    let dotData = utils.dotify(data);
-    console.log(dotData);
-    return Product.updateOne({ _id: id }, { $set: dotData }).then((info) => {
+    return Product.updateOne({ _id: id }, { $set: data }).then((info) => {
         return info;
     });
 };
