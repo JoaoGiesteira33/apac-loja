@@ -75,6 +75,7 @@ export default function useProductSearch(query: object, pageNumber: number) {
 
         setLoading(true);
         setError(false);
+
         axios({
             method: 'GET',
             url: API_URL_PROD,
