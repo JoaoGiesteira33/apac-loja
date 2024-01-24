@@ -280,7 +280,7 @@ module.exports.createPaypalOrder = async function(data) {
                     method: "POST",
                     body: JSON.stringify(payload),
                 });
-
+            console.log(response);
             return handleCreateOrderResponse(response, data);
         } catch (err) {
             throw new Error("Error on request to Paypal: ", err);
@@ -298,7 +298,7 @@ module.exports.capturePaypalOrder = async function(paypalOrderId) {
     try {
         const accessToken = await generatePaypalAccessToken();
         const url = `${paypalBaseUrl}/v2/checkout/orders/${paypalOrderId}/capture`;
-        
+
         const response = await fetch(url, 
             {
                 method: "POST",
@@ -310,7 +310,7 @@ module.exports.capturePaypalOrder = async function(paypalOrderId) {
                     // "PayPal-Mock-Response": '{"mock_application_codes": "INSTRUMENT_DECLINED"}'
                     // "PayPal-Mock-Response": '{"mock_application_codes": "TRANSACTION_REFUSED"}'
                     // "PayPal-Mock-Response": '{"mock_application_codes": "INTERNAL_SERVER_ERROR"}'
-                },
+                }
             });
     
         return handleCaptureOrderResponse(response);
@@ -361,7 +361,7 @@ async function handleCreateOrderResponse(response, data) {
             httpStatusCode: status,
         };
     } catch (err) {
-        throw new Error(errorMessage);
+        throw err;
     }
 }
 
@@ -372,9 +372,7 @@ async function handleCaptureOrderResponse(response) {
         const shipmentsArray = await Shipments.getShipments(
             {"payments.transactionId": jsonResponse.id}, 
             {}, 0, 0, '');
-        console.log("Shipments=", shipmentsArray);
         for (const shipment of shipmentsArray.results) {
-            console.log("ShipmentId=", shipment._id);
             const len = shipment.states.length - 1;
             const oldState = shipment.states[len];
             if (oldState.value != 'unpaid' && oldState.value != 'reserved') {
@@ -386,14 +384,14 @@ async function handleCaptureOrderResponse(response) {
                 };
             }
             const updatedState = oldState.value == 'unpaid' ? 'pending' : 'paid';
-    
             await Shipments.updateShipmentState({ '_id': shipment._id }, updatedState);
         }
         return {
             httpStatusCode: 200,
             jsonResponse: {
                 message: "Processed capture order successfully!",
-                transactionId: orderId,
+                transactionId: jsonResponse.id,
+                ...jsonResponse,
             },
         };
     } catch {
