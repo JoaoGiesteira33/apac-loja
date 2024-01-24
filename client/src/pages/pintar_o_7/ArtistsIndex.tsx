@@ -19,47 +19,6 @@ export default function ArtistsIndexPage() {
     const [artistFilter, setArtistFilter] = useState('');
     const [artistQuery, setArtistQuery] = useState({});
 
-    // const { hasMore, loading, error, artists } = {
-    //     hasMore: false,
-    //     loading: false,
-    //     error: false,
-    //     artists: [
-    //         {
-    //             _id: 1,
-    //             email: 'joao@gmail.com',
-    //             role: 'artist',
-    //             tags: [],
-    //             active_chat_id: [],
-    //             seller_fields: {
-    //                 about: 'Pintor de quadros abstratos',
-    //                 seller_type: 'artista',
-    //                 profile_picture: 'https://picsum.photos/400/400',
-    //                 demographics: {
-    //                     name: 'Joao Giesteira',
-    //                     birth_date: new Date(),
-    //                     phone: '927426347',
-    //                     address: {
-    //                         street: 'Largo do Beco',
-    //                         postal_code: '4500-450',
-    //                         city: 'Braga',
-    //                         country: 'Portugal',
-    //                     },
-    //                 },
-    //             },
-    //         },
-    //         {
-    //             _id: 2,
-    //             email: 'maria@gmail.com',
-    //             role: 'artist',
-    //             tags: [],
-    //             active_chat_id: [],
-    //             seller_fields: {
-    //                 profile_picture: 'https://picsum.photos/400/400',
-    //                 demographics: { name: 'Maria Oliveira' },
-    //             },
-    //         },
-    //     ],
-    // };
     const { hasMore, loading, error, artists } = useArtistSearch(
         artistQuery,
         artistPage
