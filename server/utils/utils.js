@@ -3,39 +3,22 @@ var jwt = require('jsonwebtoken');
 var secrets = require('docker-secret').secrets;
 
 async function send_email(email, subject, text, self = false) {
-    try {
-        console.log('Email:', secrets.EMAIL);
-        console.log('Service:', secrets.SERVICE);
-        console.log('Port:', secrets.EMAIL_PORT);
-        console.log('Secure:', secrets.SECURE);
-        console.log('User:', secrets.USER_EMAIL);
-        console.log('Pass:', secrets.USER_PASS);
-
-        console.log('Email:', email);
-        console.log('Subject:', subject);
-        console.log('Text:', text);
-
-        const transporter = nodemailer.createTransport({
-            host: secrets.EMAIL,
-            service: secrets.SERVICE,
-            port: secrets.EMAIL_PORT,
-            secure: secrets.SECURE,
-            auth: {
-                user: secrets.USER_EMAIL,
-                pass: secrets.USER_PASS,
-            },
-        });
-        await transporter.sendMail({
-            from: secrets.USER_EMAIL,
-            to: self ? secrets.USER_EMAIL : email,
-            subject: subject,
-            text: text,
-        });
-
-        console.log('Email sent successfuly');
-    } catch (error) {
-        console.log('Email not sent', error);
-    }
+    const transporter = nodemailer.createTransport({
+        host: secrets.EMAIL,
+        service: secrets.SERVICE,
+        port: secrets.EMAIL_PORT,
+        secure: secrets.SECURE,
+        auth: {
+            user: secrets.USER_EMAIL,
+            pass: secrets.USER_PASS,
+        },
+    });
+    await transporter.sendMail({
+        from: secrets.USER_EMAIL,
+        to: self ? secrets.USER_EMAIL : email,
+        subject: subject,
+        text: text,
+    });
 }
 
 function getDateTime() {

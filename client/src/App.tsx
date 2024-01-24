@@ -8,9 +8,7 @@ import {
     Routes,
     useLocation,
     useNavigate,
-    Navigate,
 } from 'react-router-dom';
-import { CanvasModel } from './components/canvasModel';
 import ProfileInfo from './pages/Profile/ProfileInfo';
 import ProfileIndex from './pages/Profile/ProfileIndex';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -19,8 +17,6 @@ import { IconButton, PaletteMode, CircularProgress, Box } from '@mui/material';
 import { CssBaseline } from '@mui/material/';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-import { input } from '@material-tailwind/react';
-import { rootCertificates } from 'tls';
 import ProfileOrderHistory from './pages/Profile/ProfileOrderHistory';
 import { isExpired, decodeToken } from 'react-jwt';
 import Requests from './pages/Administrator/Requests';
@@ -28,14 +24,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Products from './pages/Seller/Products';
 import NewProduct from './pages/Seller/NewProduct';
-import PrivateRoutes from './routes/PrivateRoutes';
-import SellerPrivateRoutes from './routes/SellerPrivateRoutes';
-import AdminPrivateRoutes from './routes/AdminPrivateRoutes';
 
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { element } from 'three/examples/jsm/nodes/Nodes.js';
 import NewSeller from './pages/Seller/NewSeller';
-import { light } from '@mui/material/styles/createPalette';
 import { CurrentAccountProvider } from './contexts/currentAccountContext';
 import ChatPage from './components/experinecia_chat/ChatPage';
 
@@ -135,7 +126,6 @@ function App() {
     const [navbarSize, setNavbarSize] = React.useState<number>(0);
     const [footerSize, setFooterSize] = React.useState<number>(0);
     const location = useLocation();
-    const navigate = useNavigate();
 
     const checkChatRoute = (route: string) => {
         var re = /\/product\/[^\/?]+/;
@@ -292,7 +282,6 @@ function App() {
         clientId: 'AXH3T6mt5FSd1rfMt0i2m6AadWj86MjC2qESbozuHcBXvS3Orwtt0FhxuG-MpxAkOPcYt1LD_ni4dpz4', // testing
         currency: 'EUR',
         intent: 'capture',
-        debug: true, // only for testing
     };
 
     return (

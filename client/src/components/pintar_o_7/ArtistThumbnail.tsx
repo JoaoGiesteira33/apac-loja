@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
 import Box from '@mui/system/Box';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Divider, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { checkLink } from '../../fetchers';
 
 // TO DO - TROCAR DE PRODUCT PARA ARTIST

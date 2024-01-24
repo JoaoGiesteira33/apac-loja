@@ -14,7 +14,6 @@ router.post('/paypal/orders', hasAccess, function (req, res) {
             error: 'Not allowed to create order.',
         });
     } else {
-        console.log("Creating Paypal order=", req.body);
         controllerPayment.createPaypalOrder(req.body)
             .then(rep => res.status(rep.httpStatusCode).json(rep.jsonResponse))
             .catch(error => {
@@ -46,7 +45,6 @@ router.post('/eupago/mbway/orders', hasAccess, function (req, res) {
             error: 'Not allowed to create order.',
         });
     } else {
-        console.log("Creating EuPago order=", req.body);
         controllerPayment.createEuPagoMBWayOrder(req.body)
         .then(response => res.status(response.httpStatusCode).json(response.jsonResponse))
         .catch(error => {
@@ -63,7 +61,6 @@ router.post('/eupago/creditCard/orders', hasAccess, function (req, res) {
             error: 'Not allowed to create order.',
         });
     } else {
-        console.log("Creating EuPago Credit Card order=", req.body);
         controllerPayment.createEuPagoCreditCardOrder(req.body)
             .then(response => res.status(response.httpStatusCode).json(response.jsonResponse))
             .catch(error => {
@@ -75,7 +72,6 @@ router.post('/eupago/creditCard/orders', hasAccess, function (req, res) {
 
 // EuPago webhook payment confirmation
 router.get('/eupago/webhook', function (req, res) {
-    console.log("Received EuPago Webhook: ", req.query);
     controllerPayment.receiveEuPagoWebhook(req.query)
         .then(response => res.status(response.httpStatusCode).json(response.jsonResponse))
         .catch(error => {
