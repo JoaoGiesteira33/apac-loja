@@ -33,6 +33,7 @@ import {
 } from '../../fetchers';
 import { CurrentAccountContext } from '../../contexts/currentAccountContext';
 import { Result } from '../../types/result';
+import { ShipmentType } from '../../types/order';
 
 const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
     const { t } = useTranslation();
@@ -40,11 +41,10 @@ const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
     const { product, loggedIn } = data;
     const { tokenLevel } = useContext(CurrentAccountContext);
     const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
     const { cart, REDUCER_ACTIONS, dispatch } = useCart();
+    const [shipment, setShipment] = useState<ShipmentType>();
     const [lastState, setLastState] = useState<string>('');
-    console.log('lastState: ', lastState);
 
     const [selectedImage, setSelectedImage] = useState(product.photos[0]);
     const [lightboxStatus, setLightboxStatus] = useState(false);
@@ -82,8 +82,7 @@ const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
         getShipmentByProduct(token, product._id)
             .then((shipment) => {
                 if (shipment) {
-                    //setShipment(shipment)
-                    console.log('shippment: ', shipment);
+                    setShipment(shipment)
                     setLastState(shipment.states.slice(-1)[0].value);
                 }
             })
@@ -98,14 +97,16 @@ const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
         if (token == null) return;
 
         // Change shipment state to reserved on backend
-        const shipment = {
+        const shipmentNew = {
             value: 'reserved',
         };
 
+        if (!shipment) return;
+
         const updateShipmentRes: Result<object, Error> = await updateShipment(
-            shipment,
+            shipmentNew,
             token,
-            product._id
+            shipment?._id
         );
         if (updateShipmentRes.isOk()) {
             setLastState('reserved');
@@ -118,14 +119,16 @@ const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
         if (token == null) return;
 
         // Change shipment state to canceled on backend
-        const shipment = {
+        const shipmentNew = {
             value: 'canceled',
         };
 
+        if (!shipment) return;
+
         const updateShipmentRes: Result<object, Error> = await updateShipment(
-            shipment,
+            shipmentNew,
             token,
-            product._id
+            shipment?._id
         );
         if (updateShipmentRes.isOk()) {
             setLastState('canceled');
@@ -239,7 +242,7 @@ const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
                                         {t('errors.cart.login')}
                                     </Alert>
                                 )}
-                                {lastState === 'unpaid' &&
+                                {product.piece_info?.state === 'available' &&
                                     tokenLevel === 'client' && (
                                         <button
                                             type="button"

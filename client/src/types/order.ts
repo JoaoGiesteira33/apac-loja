@@ -6,6 +6,7 @@ export type OrderType = {
 };
 
 export type ShipmentType = {
+    _id: string;
     seller_id: string;
     product_id: string;
     states: StateType[];
