@@ -1,5 +1,5 @@
 import { ProductType } from '../../types/product';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import ProductAccordion from './ProductAccordion';
 import { ImageLightBox } from './ImageLightBox';
 import { useNavigate } from 'react-router-dom';
@@ -11,20 +11,40 @@ import {
     DialogFooter,
     Typography,
 } from '@material-tailwind/react';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
 
-import { Alert } from '@mui/material';
+import {
+    Alert,
+    ButtonGroup,
+    IconButton,
+    useMediaQuery,
+    useTheme,
+    Button as ButtonMUI,
+} from '@mui/material';
 
 import { Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import useCart from '../../hooks/useCart';
-import { checkLink } from '../../fetchers';
+import {
+    checkLink,
+    getShipmentByProduct,
+    updateShipment,
+} from '../../fetchers';
+import { CurrentAccountContext } from '../../contexts/currentAccountContext';
+import { Result } from '../../types/result';
 
 const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const { product, loggedIn } = data;
+    const { tokenLevel } = useContext(CurrentAccountContext);
+    const theme = useTheme();
+    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
     const { cart, REDUCER_ACTIONS, dispatch } = useCart();
+    const [lastState, setLastState] = useState<string>('');
+    console.log('lastState: ', lastState);
 
     const [selectedImage, setSelectedImage] = useState(product.photos[0]);
     const [lightboxStatus, setLightboxStatus] = useState(false);
@@ -34,10 +54,9 @@ const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
     const checkIfInCart = () => {
         // check if product is in cart array
         var i = 0;
-        console.log('product_id', product._id);
 
         while (i < cart.length) {
-            console.log('cart', cart[i].id);
+            console.log('cart', cart[i]._id);
             if (cart[i]._id === product._id) {
                 return true;
             }
@@ -48,7 +67,6 @@ const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
 
     const handleLightbox = () => setLightboxStatus(!lightboxStatus);
     const handleOpenCheckout = () => {
-        console.log('loggedIn', loggedIn);
         if (!data.loggedIn) {
             setLoggedInError(true);
         } else {
@@ -59,8 +77,82 @@ const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
     const handleCheckoutConfirm = () => navigate('/cart');
 
     useEffect(() => {
+        const token = localStorage.getItem('token');
         setSelectedImage(product.photos[0]);
+        getShipmentByProduct(token, product._id)
+            .then((shipment) => {
+                if (shipment) {
+                    //setShipment(shipment)
+                    console.log('shippment: ', shipment);
+                    setLastState(shipment.states.slice(-1)[0].value);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }, [product]);
+
+    const handleAccept = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const token = localStorage.getItem('token');
+        if (token == null) return;
+
+        // Change shipment state to reserved on backend
+        const shipment = {
+            value: 'reserved',
+        };
+
+        const updateShipmentRes: Result<object, Error> = await updateShipment(
+            shipment,
+            token,
+            product._id
+        );
+        if (updateShipmentRes.isOk()) {
+            setLastState('reserved');
+        }
+    };
+
+    const handleDecline = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const token = localStorage.getItem('token');
+        if (token == null) return;
+
+        // Change shipment state to canceled on backend
+        const shipment = {
+            value: 'canceled',
+        };
+
+        const updateShipmentRes: Result<object, Error> = await updateShipment(
+            shipment,
+            token,
+            product._id
+        );
+        if (updateShipmentRes.isOk()) {
+            setLastState('canceled');
+        }
+    };
+
+    const PendingStateComponent = () => {
+        return (
+            <Box component="div" sx={{ marginLeft: 2 }}>
+                <ButtonGroup
+                    orientation="horizontal"
+                    variant="contained"
+                    disableElevation
+                    color="secondary"
+                    aria-label="horizontal contained button group">
+                    <ButtonMUI onClick={handleAccept} startIcon={<CheckIcon />}>
+                        Accept
+                    </ButtonMUI>
+                    <ButtonMUI
+                        onClick={handleDecline}
+                        startIcon={<ClearIcon />}>
+                        Reject
+                    </ButtonMUI>
+                </ButtonGroup>
+            </Box>
+        );
+    };
 
     return (
         <Box component="div" sx={{ my: 10 }}>
@@ -147,15 +239,42 @@ const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
                                         {t('errors.cart.login')}
                                     </Alert>
                                 )}
-                                <button
-                                    type="button"
-                                    className="text-white bg-gradient-to-r from-gray-700 to-gray-900 hover:bg-gradient-to-br font-poppins rounded-lg text-md px-5 py-2.5 text-center mb-4 mx-4"
-                                    onClick={handleOpenCheckout}
-                                    disabled={checkIfInCart()}>
-                                    {checkIfInCart()
-                                        ? t('product.already-in-cart')
-                                        : t('product.add-to-cart')}
-                                </button>
+                                {lastState === 'unpaid' &&
+                                    tokenLevel === 'client' && (
+                                        <button
+                                            type="button"
+                                            className="text-white bg-gradient-to-r from-gray-700 to-gray-900 hover:bg-gradient-to-br font-poppins rounded-lg text-md px-5 py-2.5 text-center mb-4 mx-4"
+                                            onClick={handleOpenCheckout}
+                                            disabled={checkIfInCart()}>
+                                            {checkIfInCart()
+                                                ? t('product.already-in-cart')
+                                                : t('product.add-to-cart')}
+                                        </button>
+                                    )}
+                                {lastState === 'pending' &&
+                                    tokenLevel === 'seller' && (
+                                        <PendingStateComponent />
+                                    )}
+                                {lastState === 'pending' &&
+                                    tokenLevel === 'client' && (
+                                        <button
+                                            type="button"
+                                            className="text-white bg-gradient-to-r from-gray-700 to-gray-900 hover:bg-gradient-to-br font-poppins rounded-lg text-md px-5 py-2.5 text-center mb-4 mx-4"
+                                            onClick={handleOpenCheckout}
+                                            disabled={true}>
+                                            {t('product.pending')}
+                                        </button>
+                                    )}
+                                {lastState === 'reserved' && (
+                                    <button
+                                        type="button"
+                                        className="text-white bg-gradient-to-r from-gray-700 to-gray-900 hover:bg-gradient-to-br font-poppins rounded-lg text-md px-5 py-2.5 text-center mb-4 mx-4"
+                                        onClick={handleOpenCheckout}
+                                        disabled={true}>
+                                        {t('product.reserved')}
+                                    </button>
+                                )}
+
                                 <Dialog
                                     open={openCheckoutModel}
                                     handler={handleOpenCheckout}

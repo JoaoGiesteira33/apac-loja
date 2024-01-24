@@ -186,7 +186,10 @@
             "product-details": "Detalhes do produto",
             "more": "Outras obras de arte do artista",
             "no_more": "Não existem mais obras de arte do artista",
-            "already-in-cart": "Este produto está no seu carrinho."
+            "already-in-cart": "Este produto está no seu carrinho.",
+            "pending": "Este produto está pendente para reserva.",
+            "paid": "Este produto já foi vendido.",
+            "reserved": "Este produto já foi reservado."
         },
         "profile": {
             "requests": {
