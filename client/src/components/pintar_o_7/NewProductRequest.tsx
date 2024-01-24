@@ -1,6 +1,6 @@
 import { ProductType } from '../../types/product';
 import { User } from '../../types/user';
-
+import { Link } from 'react-router-dom';
 import {
     Avatar,
     Box,
@@ -107,9 +107,13 @@ export default function NewProductRequest(props: {
                             component={'div'}
                             flexDirection={'column'}
                             className="flex justify-between">
-                            <Typography variant="h5">
-                                {props.product.title}
-                            </Typography>
+                            <Link
+                                to={`/product/${props.product._id}`}
+                                state={props.product}>
+                                <Typography variant="h5">
+                                    {props.product.title}
+                                </Typography>
+                            </Link>
                             <Typography>{props.product.description}</Typography>
                         </Box>
                         <Typography>
