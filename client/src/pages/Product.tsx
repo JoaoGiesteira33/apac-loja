@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import ProductDetails from '../components/Product/ProductDetails';
 import products from '../data/product.json';
@@ -13,6 +13,7 @@ import { getProduct } from '../fetchers';
 import useProductSearch from '../hooks/useProductSearch';
 import ProductThumbnail from '../components/pintar_o_7/ProductThumbnail';
 import { useTranslation } from 'react-i18next';
+//import { CurrentChatContext } from '../contexts/chatContext';
 
 import useCart from '../hooks/useCart';
 
@@ -21,6 +22,8 @@ const Product = (props) => {
     const location = useLocation();
     const [product, setProduct] = useState(location.state);
     const { product_id } = useParams();
+
+    //const { setSelectedUser, users } = useContext(CurrentChatContext);
 
     const { loggedIn } = props;
 
@@ -70,10 +73,18 @@ const Product = (props) => {
                         limit: 2,
                         '_id[ne]': product._id,
                     });
+                    // get selected user from users
+                    //let selectedUser = users.find((user) => user.username === product._seller);
+                    //setSelectedUser(selectedUser)      
                 })
                 .catch((error) => {
                     console.log(error);
                 });
+        //else{
+        //    // get selected user from users
+        //    //let selectedUser = users.find((user) => user.username === product._seller);
+        //    //setSelectedUser(selectedUser)  
+        //}    
     });
     return (
         <Box

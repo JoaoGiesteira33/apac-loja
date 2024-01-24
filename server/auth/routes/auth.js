@@ -178,7 +178,7 @@ router.post('/registo', function (req, res) {
 						}
 					})
 					.catch(error2 => {
-						var errorString2 = (error2 && error2.response && error2.response.data && error2.response.data.message) ? error2.response.data.message : "Erro desconhecido"
+						var errorString2 = (error2 && error2.response && error2.response.data) ? error2.response.data : "Erro desconhecido"
 						//apagar do login !!!
 						controllerLogin.deleteLogin(u.username)
 							.then(d => {
@@ -356,7 +356,7 @@ router.delete('/admin', isAdmin, function (req, res) {
 																		}
 																	})
 																	.catch(error1 => {
-																		var errorString1 = (error1 && error1.response && error1.response.data && error1.response.data.message) ? error1.response.data.message : "Erro desconhecido"
+																		var errorString1 = (error1 && error1.response && error1.response.data) ? error1.response.data : "Erro desconhecido"
 																		console.log("Erro na criação do utilizador, BD corrompida, contacte admins! _id: " + u._id + " , error: " + errorString1)
 																		res.status(477).jsonp({ error: "2. Erro ao processar o pedido" })
 																	})
@@ -379,7 +379,7 @@ router.delete('/admin', isAdmin, function (req, res) {
 										}
 									})
 									.catch(error3 => {
-										var errorString2 = (error3 && error3.response && error3.response.data && error3.response.data.message) ? error3.response.data.message : "Erro desconhecido"
+										var errorString2 = (error3 && error3.response && error3.response.data) ? error3.response.data : "Erro desconhecido"
 										res.status(401).jsonp({ error: "2. Erro na remoção do utilizador: " + errorString2 })
 									})
 							}
@@ -388,7 +388,7 @@ router.delete('/admin', isAdmin, function (req, res) {
 							}
 						})
 						.catch(error4 => {
-							var errorString3 = (error4 && error4.response && error4.response.data && error4.response.data.message) ? error4.response.data.message : "Erro desconhecido"
+							var errorString3 = (error4 && error4.response && error4.response.data) ? error4.response.data : "Erro desconhecido"
 							res.status(401).jsonp({ error: "Erro na obtenção do user: " + errorString3 })
 						})
 				}

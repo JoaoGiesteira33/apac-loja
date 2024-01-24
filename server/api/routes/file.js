@@ -6,7 +6,6 @@ router.get('/:filename', function (req, res, next) {
     controllerFile
         .getFile(req.params.filename)
         .then((info) => {
-            console.log(info);
             res.header('Content-Type', info.mimetype);
             res.header('Content-Length', info.size);
             res.status(200).send(info.data);

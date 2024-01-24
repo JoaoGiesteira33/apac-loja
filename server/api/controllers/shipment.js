@@ -75,7 +75,6 @@ module.exports.createManyShipments = async function (data, session) {
         if (!sessionIsPassed) await session.commitTransaction();
         return shipments;
     } catch (err) {
-        console.log(err);
         if (!sessionIsPassed) await session.abortTransaction();
         throw err;
     } finally {
@@ -204,7 +203,6 @@ module.exports.updateShipmentsState = async function (filter, value) {
                 shipment._client
             );
             if (notifications) {
-                console.log(notifications);
                 return Promise.all(
                     notifications.map((notification) => {
                         return notification.save({ session: session });

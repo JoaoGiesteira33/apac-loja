@@ -73,13 +73,13 @@ export default function Order(props: { order: OrderType }) {
                             sx={{
                                 backgroundColor: theme.palette.background.paper,
                             }}
-                            expanded={expanded === shipment.product_id}
-                            onChange={handleChange(shipment.product_id)}>
+                            expanded={expanded === shipment._product}
+                            onChange={handleChange(shipment._product)}>
                             <AccordionSummary
                                 aria-controls={`${props.order._id}-${index}-content`}
                                 id={`${props.order._id}-${index}-header`}>
                                 <Typography>
-                                    {t('checkout.shippmentNr')}{shipment.product_id}
+                                    {t('checkout.shippmentNr')}{shipment._product}
                                 </Typography>
                             </AccordionSummary>
                             <AccordionDetails>

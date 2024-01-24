@@ -1,9 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import Order from '../../components/pintar_o_7/Order';
 import { OrderType, ShipmentType, StateType } from '../../types/order';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
+import { getOrders } from '../../fetchers';
+import { decodeToken } from 'react-jwt';
+import { CurrentAccountContext } from '../../contexts/currentAccountContext';
 
 const createRandomOrder = (): OrderType => {
     const _id = Math.floor(Math.random() * 1000).toString();
@@ -55,12 +58,26 @@ const createRandomOrders = (): OrderType[] => {
     return orders;
 };
 
+
+
 export default function ProfileOrderHistory() {
     const [orders, setOrders] = useState<OrderType[]>([]);
+
+    const { _id } = useContext(CurrentAccountContext);
     useEffect(() => {
-        const MOCK_ORDERS = createRandomOrders();
-        setOrders(MOCK_ORDERS);
+        //const MOCK_ORDERS = createRandomOrders();
+        //setOrders(MOCK_ORDERS);
+
+        console.log("ID:",_id);
+        let token = localStorage.getItem('token');
+        let decodedToken = decodeToken(token);
+        getOrders(token,decodedToken._id).then((orders) => {
+            setOrders(orders);
+        }).catch((e) => {
+            console.log('error', e);
+        });
     }, []);
+
 
     const { t } = useTranslation();
 
