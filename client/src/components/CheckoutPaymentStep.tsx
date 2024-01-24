@@ -2,16 +2,14 @@ import { Box, Button, Divider, Paper, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import PayPalComponent from './Payment/PayPalComponent';
-import useCart from '../hooks/useCart';
-import { User } from '../types/user';
 import MBWayComponent from './Payment/MBWayComponent';
+import MultibancoComponent from './Payment/MultibancoComponent';
 
 const CheckoutStep4 = () => {
     const { t } = useTranslation();
-    const { cart } = useCart();
-    const user = localStorage.getItem('user') as Object as User;
 
     const [mbway, setMbway] = useState(false);
+    const [multibanco, setMultibanco] = useState(false);
 
     return (
         <Box
@@ -33,7 +31,7 @@ const CheckoutStep4 = () => {
                     {t('checkout.payment.title')}
                 </Typography>
                 <Box component="div" sx={{ width: '100%' }}>
-                    <PayPalComponent cart={cart} user={user} />
+                    <PayPalComponent />
 
                     <Divider sx={{ margin: '20px 0' }} />
 
@@ -57,7 +55,8 @@ const CheckoutStep4 = () => {
                     <Divider sx={{ margin: '20px 0' }} />
 
                     <Box component="div">
-                        <Button variant="contained" className="w-full h-12">
+                        <Button variant="contained" className="w-full h-12"
+                        onClick={() => {setMultibanco(!multibanco)}}>
                             <img src="/public/eupago.png" alt="MBWay" />
                             <img
                                 src="/public/multibanco-logo.png"
@@ -65,7 +64,9 @@ const CheckoutStep4 = () => {
                                 className="h-10 ml-2"
                             />
                         </Button>
-                        *Maximum amount: 3999€
+                        {multibanco && (
+                            <MultibancoComponent />
+                        )}
                     </Box>
                 </Box>
             </Paper>

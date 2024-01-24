@@ -4,9 +4,9 @@ import Step from '@mui/material/Step';
 import Button from '@mui/material/Button';
 import { useRef, useState } from 'react';
 import { StepLabel } from '@mui/material';
-import CheckoutStep2 from '../components/CheckoutStep2';
-import { CheckoutStep3 } from '../components/CheckoutStep3';
-import CheckoutStep4 from '../components/CheckoutStep4';
+import CheckoutStep2 from '../components/CheckoutShippingAddressStep';
+import { CheckoutStep3 } from '../components/CheckoutReviewStep';
+import CheckoutStep4 from '../components/CheckoutPaymentStep';
 import { useTranslation } from 'react-i18next';
 
 const Checkout = () => {

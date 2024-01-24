@@ -15,6 +15,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import CountrySelect from './pintar_o_7/CountrySelect';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import { useTranslation } from 'react-i18next';
+import { CountryType } from '../types/country';
 
 interface CheckoutStep2Props {
     validate: boolean;
@@ -23,8 +24,14 @@ interface CheckoutStep2Props {
 
 const CheckoutStep2 = ({ validate, setValidFunc }: CheckoutStep2Props) => {
     const { t } = useTranslation();
+    
+    const [countryInput, setCountryInput] = useState('');
+    const [country, setCountry] = useState<CountryType>({
+        code: 'PT',
+        label: 'Portugal',
+        phone: '+351',
+    });
 
-    const [country, setCountry] = useState('');
     const [city, setCity] = useState('');
     const [address, setAddress] = useState('');
     const [postalCode, setPostalCode] = useState('');
@@ -50,11 +57,6 @@ const CheckoutStep2 = ({ validate, setValidFunc }: CheckoutStep2Props) => {
         e.preventDefault();
 
         disableAlerts();
-
-        if (country === '') {
-            setShowCountryAlert(true);
-            return;
-        }
 
         if (city === '') {
             setShowCityError(true);
@@ -114,8 +116,10 @@ const CheckoutStep2 = ({ validate, setValidFunc }: CheckoutStep2Props) => {
                         <CountrySelect
                             selection={country}
                             setSelection={setCountry}
-                            sx={{ marginTop: '1rem', flex: 1 }}
+                            selectionInput={countryInput}
+                            setSelectionInput={setCountryInput}
                             showCountryAlert={showCountryAlert}
+                            sx={{ marginTop: '1rem', flex: 1 }}
                         />
                         <TextField
                             variant="standard"
