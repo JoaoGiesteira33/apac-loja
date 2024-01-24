@@ -28,9 +28,8 @@ export default function useArtistSearch(query: object, pageNumber: number) {
             cancelToken: new axios.CancelToken((c) => (cancel = c)),
         })
             .then((res) => {
-                setArtists(artists.concat(res.data.results));
+                setArtists((prevValue) => prevValue.concat(res.data.results));
                 setHasMore(res.data.hasMore);
-                console.log('Artists:', artists.concat(res.data.results));
                 setLoading(false);
             })
             .catch((e) => {

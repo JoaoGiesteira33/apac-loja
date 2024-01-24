@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { Link } from 'react-router-dom';
 import {
@@ -14,55 +14,28 @@ import dayjs from 'dayjs';
 import ProductPaper from '../../components/Seller/ProductPaper';
 import { useTranslation } from 'react-i18next';
 import AddIcon from '@mui/icons-material/Add';
+import { CurrentAccountContext } from '../../contexts/currentAccountContext';
 
 export default function Products() {
     const { t } = useTranslation();
-    const [productQuery, setProductQuery] = React.useState({
-        expand: '_seller',
-        _seller: '123',
-        'published_date[lte]': dayjs(new Date()).format('YYYY-MM-DD'),
-    });
+    const { loggedIn, setLoggedIn, tokenLevel } = useContext(
+        CurrentAccountContext
+    );
+    const [productQuery, setProductQuery] = React.useState({});
     const [productPage, setProductPage] = React.useState(1);
-    const { MockData, hasMore, loading, error, products } = useProductSearch(
+    const { hasMore, loading, error, products } = useProductSearch(
         productQuery,
         productPage
     );
 
-    // Filters
-    const [selectedTypes, setSelectedTypes] = React.useState<string[]>([]);
-    const [dateFilter, setDateFilter] = React.useState<Date | null>(null);
-
-    const dateFilterUpdate = (value: Date | null) => {
-        setDateFilter(value);
-        setProductPage(1);
-
-        if (value === null) {
-            setProductQuery({
-                ...productQuery,
-                'published_date[lte]': dayjs(new Date()).format('YYYY-MM-DD'),
-            });
-        } else {
-            setProductQuery({
-                ...productQuery,
-                'published_date[lte]': dayjs(value).format('YYYY-MM-DD'),
-            });
-        }
-    };
-
     useEffect(() => {
-        setProductPage(1);
-        if (selectedTypes.length === 0) {
+        if (tokenLevel === 'seller') {
+            const sellerId = decodeToken(token)._id;
             setProductQuery({
-                ...productQuery,
-                //'piece_info.type': '',
-            });
-        } else {
-            setProductQuery({
-                ...productQuery,
-                //'piece_info.type': selectedTypes.join(','),
+                _seller: tokenLevel,
             });
         }
-    }, [productQuery, selectedTypes]);
+    }, []);
 
     return (
         <Box
@@ -91,8 +64,8 @@ export default function Products() {
                     variant="contained">
                     {t('artist.new-piece')}
                 </Button>
-                {MockData &&
-                    MockData.map(
+                {products &&
+                    products.map(
                         (product, index) =>
                             product._seller instanceof Object && (
                                 <ProductPaper key={index} product={product} />
