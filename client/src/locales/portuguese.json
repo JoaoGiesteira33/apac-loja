@@ -1,6 +1,7 @@
 {
     "translation": {
         "errors": {
+            "no-results": "Não foram encontrados resultados",
             "title": "Erro",
             "login": {
                 "email": "Email Inválido",

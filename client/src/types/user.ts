@@ -31,6 +31,7 @@ export type ClientFields = {
 };
 
 export interface User {
+    _id: string;
     email: string;
     role: string;
     client_fields: ClientFields | null;

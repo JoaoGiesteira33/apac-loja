@@ -67,6 +67,28 @@ export default function Home() {
             });
     }, []);
 
+    let first = 0;
+
+    useEffect(() => {
+        if (first === 0) {
+            first++;
+        }else{
+        if (selectedTypes.length === 0) {
+            let newQuery = {...productQuery};
+            delete newQuery['piece_info.technique[in]'];
+            setProductQuery({
+                ...newQuery
+            });
+        } else {
+            setProductQuery({
+                ...productQuery,
+                'piece_info.technique[in]': selectedTypes.join(','),
+            });
+        }
+    }
+    }, [selectedTypes]);
+
+
     return (
         <Box
             component="div"
@@ -105,13 +127,6 @@ export default function Home() {
                     <SelectTypes
                         values={selectedTypes}
                         setValues={setSelectedTypes}
-                        onClose={() => {
-                            setProductQuery({
-                                ...productQuery,
-                                'piece_info.technique[in]':
-                                    selectedTypes.join(','),
-                            });
-                        }}
                         isMultiple={true}
                     />
                 </Box>

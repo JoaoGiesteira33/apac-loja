@@ -5,7 +5,6 @@ import {
     useMemo,
     useReducer,
 } from 'react';
-import { Key, decryptData, encryptData } from '../utils/Encryption';
 import { ProductType } from '../types/product';
 
 type CartStateType = { cart: ProductType[] };
