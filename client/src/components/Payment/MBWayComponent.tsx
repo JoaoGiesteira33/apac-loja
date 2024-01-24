@@ -4,8 +4,10 @@ import { Box, Button, Typography } from '@mui/material';
 import useCart from '../../hooks/useCart';
 import { Address, User } from '../../types/user';
 import { API_URL_PAY } from '../../fetchers';
+import { useTranslation } from 'react-i18next';
 
 const MBWayComponent = () => {
+    const { t } = useTranslation();
     const {cart} = useCart();
     const user = JSON.parse(localStorage.getItem('user') as string) as User;
     const address = user.client_fields?.demographics.address as Address;
@@ -53,7 +55,6 @@ const MBWayComponent = () => {
             .then((response) => response.json())
             .then((order) => {
                 // Your code here after create the order
-                alert('MBWay payment');
                 setPending(true);
                 console.log('order: ', order);
                 return order.id;
@@ -96,7 +97,7 @@ const MBWayComponent = () => {
                     component="p"
                     variant="body2"
                     style={{ color: 'black' }}>
-                    Tem 5 minutos para confirmar o pagamento na app MBWay.
+                    {t('checkout.payment.mbway-pending')}
                 </Typography>
             )}
             {!pending && (
@@ -108,20 +109,20 @@ const MBWayComponent = () => {
                             required
                             {...!matchIsValidTel(valuePhone) && {
                                 error: true,
-                                helperText: 'Invalid phone number',
+                                helperText: t('errors.register.phone-number'),
                             }}
                             variant="standard"
                             inputProps={{ maxLength: 16 }}
                         />
                         <Button variant="outlined" onClick={handlePay} disabled={!matchIsValidTel(valuePhone)}>
-                            Pagar
+                            {t('checkout.payment.pay')}
                         </Button>
                     </Box>
                     <Typography
                         component="p"
                         variant="caption"
                         style={{ color: 'gray' }}>
-                        *Maximum amount: 750€
+                        {t('checkout.payment.mbway-max-amaount')}
                     </Typography>
                 </>
             )}
