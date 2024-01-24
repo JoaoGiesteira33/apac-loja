@@ -29,12 +29,12 @@ export default function ArtistPage() {
         productPage
     );
 
-    const handleArchive = async () => {
-        const newArtist = { ...artist };
-        newArtist.seller_fields.status = 'inactice';
-        await updateUser(newArtist);
-        navigate('/artists');
-    }
+    //const handleArchive = async () => {
+    //    const newArtist = { ...artist };
+    //    newArtist.seller_fields.status = 'inactice';
+    //   // await updateUser(newArtist);
+    //    navigate('/artists');
+    //}
 
     return (
         <Box component="div">

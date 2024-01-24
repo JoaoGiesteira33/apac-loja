@@ -342,7 +342,7 @@ function App() {
                                     }}
                                     onClick={() => changeLanguageHandler()}
                                     color="inherit">
-                                    {i18n.language == "pt" ? "EN" : "PT"}
+                                    {i18n.language == "pt" ? "PT" : "EN"}
                                 </Button>
 
                                 {location.pathname !== '/' ? (

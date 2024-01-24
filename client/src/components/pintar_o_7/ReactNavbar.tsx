@@ -11,12 +11,10 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import logoApac from '../../assets/LOGO_negrito.png';
 
+import { useTranslation } from 'react-i18next';
+
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-const pages = ['a galeria', 'artistas', 'contacto'];
-const pagesLinks = ['/gallery', '/artists', '/contact'];
-const lastpage = ['login', 'perfil'];
-const lastpageLinks = ['/login', '/profile'];
 
 const padX = {
     xs: '2rem',
@@ -31,6 +29,13 @@ function ReactNavbar(props) {
     const location = useLocation();
     const [open, setOpen] = React.useState(false);
     const [idx, setIdx] = React.useState(0);
+
+    const { t } = useTranslation();
+
+    const pages = [t('initial.gallery'), t('initial.artists'), t('initial.contact')]
+    const pagesLinks = ['/gallery', '/artists', '/contact'];
+    const lastpage = ['login', t('initial.profile')];
+    const lastpageLinks = ['/login', '/profile'];
 
     const checkRoute = (route: string, page: string) => {
         const re = RegExp(route);
