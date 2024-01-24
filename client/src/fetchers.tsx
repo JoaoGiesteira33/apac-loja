@@ -15,7 +15,10 @@ export const API_URL_MAIL = BASE_URL + ':11000/email';
 export const API_URL_SHIP = BASE_URL + ':11000/shipment';
 export const API_URL_NOTIF = BASE_URL + ':11000/notification';
 export const API_URL_PAY = BASE_URL + ':11000/payment';
+export const API_URL_ORD = BASE_URL + ':11000/order';
 export const AUTH_URL = BASE_URL + ':11001';
+export const CHAT_URL = BASE_URL + ':11002';
+
 //export const BASE_URL = 'http:/192.168.1.68:8000/api';
 
 export const loginUser = async (email: string, password: string) => {
@@ -423,3 +426,20 @@ export const getNotifications = async (token: string) => {
         throw error;
     }
 };
+
+export const getOrders = async (token: string, id: string) => {
+    try {
+        const response = await axios.get(`${API_URL_ORD}`, {
+            params: {
+                token: token,
+                _client: id,
+                expand: 'shipments',
+            },
+        });
+        console.log('Orders:', response.data.results);
+        return response.data.results;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}

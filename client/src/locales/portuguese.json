@@ -111,6 +111,8 @@
                 "title": "Método de pagamento",
                 "paypal": "Paypal",
                 "mbway": "MBWay",
+                "mbway-pending": "Tem 5 minutos para confirmar o pagamento na app MBWay.",
+                "mbway-max-amaount": "O valor máximo para pagamento com MBWay é de 750€.",
                 "credit-card": "Cartão de Crédito",
                 "multibanco": "Multibanco",
                 "card-number": "Número do cartão",

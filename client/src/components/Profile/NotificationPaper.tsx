@@ -1,12 +1,9 @@
-import React from 'react';
 import { NotificationType } from '../../types/notification';
 import {
     Box,
-    IconButton,
     Paper,
     Stack,
     Typography,
-    duration,
     useMediaQuery,
     useTheme,
 } from '@mui/material';
@@ -66,14 +63,14 @@ const NotificationPaper = (props: { notification: NotificationType }) => {
                                 </Typography>
                                 <Typography variant="caption" color="grey">
                                     {diffInDays === 0
-                                        ? 'Today'
+                                        ? 'Hoje'
                                         : diffInDays === 1
-                                        ? 'Yesterday'
+                                        ? 'Ontem'
                                         : diffInDays < 30
                                         ? `${diffInDays} days ago`
                                         : diffInDays < 365
-                                        ? `${Math.floor(diffInDays/30)} mouth ago`
-                                        : `${Math.floor(diffInDays/365)} year ago`}
+                                        ? `${Math.floor(diffInDays/30)} mêses atrás`
+                                        : `${Math.floor(diffInDays/365)} anos atrás`}
                                 </Typography>
                             </Box>
                         </Stack>
