@@ -31,10 +31,7 @@ module.exports.replaceProductInfo = function (id, data) {
 
 //      - updateProductInfo
 module.exports.updateProductInfo = function (id, data) {
-    console.log(data);
-    let dotData = utils.dotify(data);
-    console.log(dotData);
-    return Product.updateOne({ _id: id }, { $set: dotData }).then((info) => {
+    return Product.updateOne({ _id: id }, { $set: data }).then((info) => {
         return info;
     });
 };
@@ -56,7 +53,7 @@ module.exports.getProducts = function (filters, fields, page, limit, expand) {
             .populate(expand),
         Product.countDocuments(filters),
     ]).then(([products, count]) => {
-        let hasMore = count > (page + 1) * limit && limit != 0;
+        let hasMore = count > (Number(page) + 1) * Number(limit) && limit != 0;
         return { results: products, hasMore: hasMore };
     });
 };

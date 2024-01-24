@@ -24,9 +24,9 @@ import { useTranslation } from 'react-i18next';
 import React from 'react';
 import { ProductType } from '../../types/product';
 import { NestedPartial } from '../../types/nestedPartial';
-import { addProduct } from '../../fetchers';
+import { addProduct, uploadProductPhotos } from '../../fetchers';
 import { Result } from '../../types/result';
-import { checkLink } from '../../fetchers';
+import { useNavigate } from 'react-router-dom';
 
 const availableTypes: string[] = [
     'Pintura',
@@ -106,10 +106,12 @@ const MAX_IMAGES = 12;
 
 export default function NewProduct() {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const theme = useTheme();
-    const inputRef = useRef(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const [title, setTitle] = useState('');
+    const [author, setAuthor] = useState<string>('');
     const [description, setDescription] = useState('');
     const [technique, setTechnique] = useState<string>('');
     const [materials, setMaterials] = useState<string[]>([]);
@@ -128,6 +130,7 @@ export default function NewProduct() {
 
     const onAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         const fileList = e.target.files;
+        console.log(fileList)
         if (fileList) {
             let files = [...images, ...fileList];
             if (files.length > MAX_IMAGES) {
@@ -175,17 +178,34 @@ export default function NewProduct() {
                     weight: parseFloat(maskedValues.weight),
                 },
             },
+            author: author,
         };
 
-        const addProductResponse: Result<string, Error> = await addProduct(
-            product
-        );
+        const token = localStorage.getItem('token');
+        if (token == null) return;
 
+        const addProductResponse: Result<object, Error> = await addProduct(
+            product,
+            token
+        );
         if (addProductResponse.isOk()) {
-            console.log(addProductResponse.value);
+            const productId = addProductResponse.value._id;
+            uploadPhotos(productId, token);
         } else {
             console.log(addProductResponse.error);
         }
+    };
+
+    const uploadPhotos = async (productId: string, token: string) => {
+        if (!inputRef.current?.files) return;
+        if (images.length === 0) return;
+
+        const uploadPhotosRes = await uploadProductPhotos(
+            token,
+            productId,
+            inputRef.current.files
+        );
+        navigate(`/product/${productId}`);
     };
 
     return (
@@ -229,6 +249,18 @@ export default function NewProduct() {
                         id="title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
+                    />
+                    <TextField
+                        variant="standard"
+                        margin="normal"
+                        label={t('global.author')}
+                        type="text"
+                        fullWidth
+                        error={false}
+                        helperText={''}
+                        id="author"
+                        value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
                     />
                     <TextField
                         variant="standard"
@@ -307,7 +339,8 @@ export default function NewProduct() {
                             _: React.SyntheticEvent<Element, Event>,
                             newValue: string[] | null
                         ) => {
-                            newValue != null
+                            console.log(newValue);
+                            return newValue != null
                                 ? setMaterials(newValue)
                                 : setMaterials([]);
                         }}
@@ -448,7 +481,7 @@ export default function NewProduct() {
                                     }}>
                                     <img
                                         className="w-full h-full object-cover"
-                                        src={checkLink(url)}
+                                        src={url}
                                         alt={''}
                                     />
                                     <IconButton

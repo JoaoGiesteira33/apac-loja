@@ -17,11 +17,60 @@ import {
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import dayjs from 'dayjs';
-import { checkLink } from '../../fetchers';
+import { checkLink, updateProduct } from '../../fetchers';
+import { NestedPartial } from '../../types/nestedPartial';
+import { Result } from '../../types/result';
 
-export default function NewProductRequest(props: { product: ProductType }) {
+export default function NewProductRequest(props: {
+    product: ProductType;
+    onChangeProductState: (id: string) => void;
+}) {
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+
+    const handleAccept = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const token = localStorage.getItem('token');
+        if (token == null) return;
+        if (props.product._id == null) return;
+
+        const product: NestedPartial<ProductType> = {
+            piece_info: {
+                state: 'available',
+            },
+        };
+
+        const updateProductRes: Result<object, Error> = await updateProduct(
+            product,
+            token,
+            props.product._id
+        );
+        if (updateProductRes.isOk()) {
+            props.onChangeProductState(props.product._id);
+        }
+    };
+
+    const handleDecline = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const token = localStorage.getItem('token');
+        if (token == null) return;
+        if (props.product._id == null) return;
+
+        const product: NestedPartial<ProductType> = {
+            piece_info: {
+                state: 'rejected',
+            },
+        };
+
+        const updateProductRes: Result<object, Error> = await updateProduct(
+            product,
+            token,
+            props.product._id
+        );
+        if (updateProductRes.isOk()) {
+            props.onChangeProductState(props.product._id);
+        }
+    };
 
     return (
         <Paper className="w-full">
@@ -84,10 +133,10 @@ export default function NewProductRequest(props: { product: ProductType }) {
                                 }
                             </Typography>
                             <Avatar
-                                src={
-                                    checkLink((props.product._seller as User)
-                                        .seller_fields?.profile_picture)
-                                }
+                                src={checkLink(
+                                    (props.product._seller as User)
+                                        .seller_fields?.profile_picture
+                                )}
                                 alt={
                                     (props.product._seller as User)
                                         .seller_fields?.demographics.name
@@ -101,10 +150,10 @@ export default function NewProductRequest(props: { product: ProductType }) {
                                 color="secondary"
                                 disableElevation
                                 aria-label="horizontal contained button group">
-                                <IconButton>
+                                <IconButton onClick={handleAccept}>
                                     <CheckIcon />
                                 </IconButton>
-                                <IconButton>
+                                <IconButton onClick={handleDecline}>
                                     <ClearIcon />
                                 </IconButton>
                             </ButtonGroup>
@@ -115,10 +164,14 @@ export default function NewProductRequest(props: { product: ProductType }) {
                                 disableElevation
                                 color="secondary"
                                 aria-label="horizontal contained button group">
-                                <Button startIcon={<CheckIcon />}>
+                                <Button
+                                    onClick={handleAccept}
+                                    startIcon={<CheckIcon />}>
                                     Accept
                                 </Button>
-                                <Button startIcon={<ClearIcon />}>
+                                <Button
+                                    onClick={handleDecline}
+                                    startIcon={<ClearIcon />}>
                                     Reject
                                 </Button>
                             </ButtonGroup>

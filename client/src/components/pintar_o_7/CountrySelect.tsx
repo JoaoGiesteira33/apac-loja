@@ -50,7 +50,7 @@ export default function CountrySelect(props: {
                     variant="standard"
                     error={props.showCountryAlert}
                     helperText={
-                        props.showCountryAlert ? 'Please select a country' : ' '
+                        props.showCountryAlert ? t('global.select-country') : ' '
                     }
                     inputProps={{
                         ...params.inputProps,

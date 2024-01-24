@@ -59,7 +59,7 @@ module.exports.getNotifications = function (
             .populate(expand),
         Notification.countDocuments(filters),
     ]).then(([notifications, count]) => {
-        let hasMore = count > (page + 1) * limit && limit != 0;
+        let hasMore = count > (Number(page) + 1) * Number(limit) && limit != 0;
         return { results: notifications, hasMore: hasMore };
     });
 };
