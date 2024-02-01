@@ -20,6 +20,7 @@ const Dashboard: React.FC = () => {
         let districts: { [key: string]: number }[] = [{}, {}];
         users.forEach((user) => {
             try {
+                console.log(user);
                 if (user.role == 'client') {
                     if (
                         user.client_fields.demographics.address.city in
@@ -57,8 +58,8 @@ const Dashboard: React.FC = () => {
     const getMonthRegisterStats = (users) => {
         let months: { [key: string]: string } = {};
         users.forEach((user) => {
-            if(user.role == 'seller') return;
-        
+            if (user.role == 'seller') return;
+
             let date = new Date(user.dataRegisto);
             let month = date.getMonth();
             if (month in months) months[month]++;
@@ -66,52 +67,58 @@ const Dashboard: React.FC = () => {
         });
         let formattedMonths = [];
 
-        for(const key in months){
-            formattedMonths[key] = { id:key , value: months[key], label: t('months.'+key) };
+        for (const key in months) {
+            formattedMonths[key] = {
+                id: key,
+                value: months[key],
+                label: t('months.' + key),
+            };
         }
         return formattedMonths;
-    }
+    };
 
     // estatistica de ultima visita (ultimos 15 dias, 30 dias, 60 dias, resto)
     const getLastVisitedStats = (users) => {
         let lastVisited = [
-            [{ id: '7', value: 0, label: t('dashboard.7') },
-            { id: '15', value: 0, label: t('dashboard.15') },
-            { id: '30', value: 0, label: t('dashboard.30') },
-            { id: '60', value: 0, label: t('dashboard.60') },
-            { id: 'rest', value: 0, label: t('dashboard.rest') } ]           
-            ,[
-            { id: '7', value: 0, label: t('dashboard.7') },
-            { id: '15', value: 0, label: t('dashboard.15') },
-            { id: '30', value: 0, label: t('dashboard.30') },
-            { id: '60', value: 0, label: t('dashboard.60') },
-            { id: 'rest', value: 0, label: t('dashboard.rest') }
-        ]];
+            [
+                { id: '7', value: 0, label: t('dashboard.7') },
+                { id: '15', value: 0, label: t('dashboard.15') },
+                { id: '30', value: 0, label: t('dashboard.30') },
+                { id: '60', value: 0, label: t('dashboard.60') },
+                { id: 'rest', value: 0, label: t('dashboard.rest') },
+            ],
+            [
+                { id: '7', value: 0, label: t('dashboard.7') },
+                { id: '15', value: 0, label: t('dashboard.15') },
+                { id: '30', value: 0, label: t('dashboard.30') },
+                { id: '60', value: 0, label: t('dashboard.60') },
+                { id: 'rest', value: 0, label: t('dashboard.rest') },
+            ],
+        ];
 
         users.forEach((user) => {
             let type = 0;
-            if(user.nivel == 'seller') 
-                type = 1;
-        
+            if (user.nivel == 'seller') type = 1;
+
             let date = new Date(user.dataUltimoAcesso);
             let today = new Date();
             let diff = today.getTime() - date.getTime();
             let days = Math.ceil(diff / (1000 * 3600 * 24));
-            if(days < 7) lastVisited[type][0]["value"]++;
-            else if(days < 15) lastVisited[type][1]["value"]++;
-            else if(days < 30) lastVisited[type][2]['value']++;
-            else if(days < 60) lastVisited[type][3]["value"]++;
-            else lastVisited[type][4]["value"]++;
-        })
-        
+            if (days < 7) lastVisited[type][0]['value']++;
+            else if (days < 15) lastVisited[type][1]['value']++;
+            else if (days < 30) lastVisited[type][2]['value']++;
+            else if (days < 60) lastVisited[type][3]['value']++;
+            else lastVisited[type][4]['value']++;
+        });
+
         return lastVisited;
-    }
+    };
 
     // get age users
     const getAgeStats = (users) => {
         let ages: { [key: string]: string } = {};
         users.forEach((user) => {
-            if(user.role == 'seller') return;
+            if (user.role == 'seller') return;
             let today = new Date();
             let date = new Date(user.client_fields.demographics.birth_date);
             // get age from birthdate
@@ -124,12 +131,9 @@ const Dashboard: React.FC = () => {
             else ages[age] = 1;
         });
         var i;
-        for(i = 18; i < 100; i++){
-            ages[i] = ages[i] ? ages[i]+1 : 1;
-        }
 
         return ages;
-    }
+    };
 
     const getShipmentStateStats = (shipments) => {
         let states = [
@@ -137,17 +141,16 @@ const Dashboard: React.FC = () => {
             { id: 'reserved', value: 0, label: t('dashboard.reserved') },
             { id: 'paid', value: 0, label: t('dashboard.paid') },
         ];
-        console.log("Shipments:", shipments)
+        console.log('Shipments:', shipments);
         shipments.forEach((shipment) => {
             let state = shipment.states[shipment.states.length - 1].value;
-            if(state == 'pending') states[0]["value"]++;
-            else if(state == 'reserved') states[1]["value"]++;
-            else if(state == 'paid') states[2]["value"]++;
-        })
-        console.log("States:", states)
+            if (state == 'pending') states[0]['value']++;
+            else if (state == 'reserved') states[1]['value']++;
+            else if (state == 'paid') states[2]['value']++;
+        });
+        console.log('States:', states);
         return states;
-    }   
-    
+    };
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -161,7 +164,7 @@ const Dashboard: React.FC = () => {
             });
         getAuthUsers(token)
             .then((users) => {
-                console.log("Auth Users:",users);
+                console.log('Auth Users:', users);
                 setMonthsStats(getMonthRegisterStats(users));
                 setLastVisited(getLastVisitedStats(users));
             })
@@ -175,7 +178,6 @@ const Dashboard: React.FC = () => {
             .catch((err) => {
                 console.log(err);
             });
-        
     }, []);
 
     const data = {
@@ -214,7 +216,11 @@ const Dashboard: React.FC = () => {
                 {
                     data: registerMonth ? registerMonth : [],
                     highlightScope: { faded: 'global', highlighted: 'item' },
-                    faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+                    faded: {
+                        innerRadius: 30,
+                        additionalRadius: -30,
+                        color: 'gray',
+                    },
                 },
             ],
         },
@@ -223,7 +229,11 @@ const Dashboard: React.FC = () => {
                 {
                     data: lastVisited ? lastVisited[0] : [],
                     highlightScope: { faded: 'global', highlighted: 'item' },
-                    faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+                    faded: {
+                        innerRadius: 30,
+                        additionalRadius: -30,
+                        color: 'gray',
+                    },
                 },
             ],
         },
@@ -232,7 +242,11 @@ const Dashboard: React.FC = () => {
                 {
                     data: lastVisited ? lastVisited[1] : [],
                     highlightScope: { faded: 'global', highlighted: 'item' },
-                    faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+                    faded: {
+                        innerRadius: 30,
+                        additionalRadius: -30,
+                        color: 'gray',
+                    },
                 },
             ],
         },
@@ -245,18 +259,20 @@ const Dashboard: React.FC = () => {
             ],
             series: [
                 {
-                    data: ages
-                        ? Object.values(ages)
-                        : [],
+                    data: ages ? Object.values(ages) : [],
                 },
-            ]
+            ],
         },
         chart7: {
             series: [
                 {
                     data: shipmentState ? shipmentState : [],
                     highlightScope: { faded: 'global', highlighted: 'item' },
-                    faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+                    faded: {
+                        innerRadius: 30,
+                        additionalRadius: -30,
+                        color: 'gray',
+                    },
                 },
             ],
         },
@@ -276,21 +292,19 @@ const Dashboard: React.FC = () => {
     };
 
     const ChartWithSkeleton = (condition, chart, type) => {
-
         return condition ? (
             type == 'pie' ? (
                 <PieChart series={chart.series} />
-            ) : ( type == 'bar' ? (
+            ) : type == 'bar' ? (
                 <BarChart xAxis={chart.xAxis} series={chart.series} />
-            ) :
-            (
+            ) : (
                 <LineChart series={chart.series} xAxis={chart.xAxis} />
-            ))
+            )
         ) : (
             <Box
                 component="div"
                 sx={{
-                    height: "100%",
+                    height: '100%',
                 }}>
                 <Skeleton
                     variant="rounded"
@@ -319,60 +333,88 @@ const Dashboard: React.FC = () => {
             </Typography>
             <Grid container sx={rootEffect} spacing={3}>
                 <Grid xs={12}>
-                    <Typography variant="h6" gutterBottom fontWeight="bold" textAlign="center">
+                    <Typography
+                        variant="h6"
+                        gutterBottom
+                        fontWeight="bold"
+                        textAlign="center">
                         {t('dashboard.clientsCity')}
                     </Typography>
                     <Paper sx={paperEffect}>
-                        {ChartWithSkeleton(districtsStats, data.chart1,"bar")}
+                        {ChartWithSkeleton(districtsStats, data.chart1, 'bar')}
                     </Paper>
                 </Grid>
                 <Grid xs={12}>
-                    <Typography variant="h6" gutterBottom fontWeight="bold" textAlign="center">
+                    <Typography
+                        variant="h6"
+                        gutterBottom
+                        fontWeight="bold"
+                        textAlign="center">
                         {t('dashboard.artistsCity')}
                     </Typography>
                     <Paper sx={paperEffect}>
-                        {ChartWithSkeleton(districtsStats, data.chart2,"bar")}
+                        {ChartWithSkeleton(districtsStats, data.chart2, 'bar')}
                     </Paper>
                 </Grid>
                 <Grid xs={12} sm={6} md={6}>
-                    <Typography variant="h6" gutterBottom fontWeight="bold" textAlign="center">
+                    <Typography
+                        variant="h6"
+                        gutterBottom
+                        fontWeight="bold"
+                        textAlign="center">
                         {t('dashboard.registerMonth')}
                     </Typography>
-                    <Paper sx={paperEffect}> 
-                        {ChartWithSkeleton(registerMonth, data.chart3,"pie")}
+                    <Paper sx={paperEffect}>
+                        {ChartWithSkeleton(registerMonth, data.chart3, 'pie')}
                     </Paper>
                 </Grid>
                 <Grid xs={12} sm={6} md={6}>
-                    <Typography variant="h6" gutterBottom fontWeight="bold" textAlign="center">
+                    <Typography
+                        variant="h6"
+                        gutterBottom
+                        fontWeight="bold"
+                        textAlign="center">
                         {t('dashboard.shipmentState')}
                     </Typography>
-                    <Paper sx={paperEffect}> 
-                        {ChartWithSkeleton(shipmentState, data.chart7,"pie")}
+                    <Paper sx={paperEffect}>
+                        {ChartWithSkeleton(shipmentState, data.chart7, 'pie')}
                     </Paper>
                 </Grid>
                 <Grid xs={12} sm={6} md={6}>
-                    <Typography variant="h6" gutterBottom fontWeight="bold" textAlign="center">
+                    <Typography
+                        variant="h6"
+                        gutterBottom
+                        fontWeight="bold"
+                        textAlign="center">
                         {t('dashboard.lastVisited_client')}
                     </Typography>
                     <Paper sx={paperEffect}>
-                        {ChartWithSkeleton(lastVisited, data.chart4,"pie")}
+                        {ChartWithSkeleton(lastVisited, data.chart4, 'pie')}
                     </Paper>
                 </Grid>
                 <Grid xs={12} sm={6} md={6}>
-                    <Typography variant="h6" gutterBottom fontWeight="bold" textAlign="center">
+                    <Typography
+                        variant="h6"
+                        gutterBottom
+                        fontWeight="bold"
+                        textAlign="center">
                         {t('dashboard.lastVisited_seller')}
                     </Typography>
                     <Paper sx={paperEffect}>
-                        {ChartWithSkeleton(lastVisited, data.chart5,"pie")}
+                        {ChartWithSkeleton(lastVisited, data.chart5, 'pie')}
                     </Paper>
                 </Grid>
 
                 <Grid xs={12}>
-                    <Typography variant="h6" gutterBottom fontWeight="bold" textAlign="center">
+                    <Typography
+                        variant="h6"
+                        gutterBottom
+                        fontWeight="bold"
+                        textAlign="center">
                         {t('dashboard.age')}
                     </Typography>
-                    <Paper sx={paperEffect}> 
-                        {ChartWithSkeleton(ages, data.chart6,"bar")}
+                    <Paper sx={paperEffect}>
+                        {ChartWithSkeleton(ages, data.chart6, 'bar')}
                     </Paper>
                 </Grid>
             </Grid>
