@@ -11,16 +11,15 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 //import { CurrentChatContext } from '../../contexts/chatContext';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../config/firebase';
-
 
 const Login = () => {
     const [t] = useTranslation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const { setLoggedIn, setTokenLevel } = useContext(CurrentAccountContext);
-    //const { setUsername, setSessionID, connect } = useContext(CurrentChatContext);
+    //const { setUsernameu, setSessionID, connect } = useContext(CurrentChatContext);
 
     const [showEmailAlert, setShowEmailAlert] = useState(false);
     const [showPassAlert, setShowPassAlert] = useState(false);
@@ -51,22 +50,18 @@ const Login = () => {
             return;
         }
 
-        try {
-            // Sign in with email and password
-            await auth.signInWithEmailAndPassword(email, password);
-
-            // User successfully signed in
-            // Redirect or perform any necessary actions here
-            navigate('/gallery');
-        } catch (error) {
-            // Handle authentication errors
-            if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                setShowCredAlert(true);
-            } else {
-                setErrorMessage(error.message);
-                setShowErrorAlert(true);
-            }
-        }
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                navigate('/gallery');
+            })
+            .catch((error) => {
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    setShowCredAlert(true);
+                } else {
+                    setErrorMessage(error.message);
+                    setShowErrorAlert(true);
+                }
+            });
     };
 
 

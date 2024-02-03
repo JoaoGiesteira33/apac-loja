@@ -383,7 +383,7 @@ function App() {
                                         <Route
                                         element={
                                             <PrivateRoutes 
-                                            // level={tokenLevel} 
+                                            level={loggedIn !== undefined} 
                                             />
                                         }>
                                         {protectedRoutes.map((route, index) => (
@@ -397,7 +397,7 @@ function App() {
                                     <Route
                                         element={
                                             <SellerPrivateRoutes
-                                                // level={tokenLevel}
+                                                level={loggedIn}
                                             />
                                         }>
                                         {sellerRoutes.map((route, index) => (

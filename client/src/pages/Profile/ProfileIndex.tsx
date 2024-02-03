@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -12,13 +11,12 @@ import PhotoAlbumIcon from '@mui/icons-material/PhotoAlbum';
 import { Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ProfileThumbnail from '../../components/Profile/ProfileThumbnail';
-import { CurrentAccountContext } from '../../contexts/currentAccountContext';
 //import { CurrentChatContext } from '../../contexts/chatContext';
 
 export default function ProfileIndex() {
     const [t] = useTranslation();
-    const { setLoggedIn, tokenLevel, setTokenLevel } = useContext(CurrentAccountContext);
     //const { disconnect } = useContext(CurrentChatContext);
+    const tokenLevel = "admin" as string;
 
     return (
         <Box
@@ -107,8 +105,8 @@ export default function ProfileIndex() {
                         localStorage.removeItem('user');
                         localStorage.removeItem('token');
                         //disconnect();
-                        setLoggedIn(false);
-                        setTokenLevel("");
+                        // setLoggedIn(false);
+                        // setTokenLevel("");
                     }}>
                     <ProfileThumbnail
                         title={t('profile.logout')}

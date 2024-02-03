@@ -13,6 +13,7 @@ export type Demographics = {
 };
 
 export type Statistics = {};
+
 export type SellerFields = {
     demographics: Demographics;
     statistics: Statistics;
@@ -31,11 +32,11 @@ export type ClientFields = {
 };
 
 export interface User {
-    _id: string;
+    uid: string;
     email: string;
     role: string;
-    client_fields: ClientFields | null;
-    seller_fields: SellerFields | null;
+    client_fields?: ClientFields;
+    seller_fields?: SellerFields;
     active_chat_id: string[];
     tags: string[];
 }

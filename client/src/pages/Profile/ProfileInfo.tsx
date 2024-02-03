@@ -1,31 +1,26 @@
-import { useState, useMemo, useContext } from 'react';
+import { useMemo, useState } from 'react';
 
-import Box from '@mui/system/Box';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
+import Box from '@mui/system/Box';
 
 import { Alert, Button, Slide, Stack, Typography } from '@mui/material';
 
-import CountrySelect from '../../components/pintar_o_7/CountrySelect';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import SaveSharpIcon from '@mui/icons-material/SaveSharp';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { useTranslation } from 'react-i18next';
-import { CountryType, getCountry } from '../../types/country';
-import { User } from '../../types/user';
-import { NestedPartial } from '../../types/nestedPartial';
+import CountrySelect from '../../components/pintar_o_7/CountrySelect';
 import { updateUser } from '../../fetchers';
-import { CurrentAccountContext } from '../../contexts/currentAccountContext';
+import { CountryType, getCountry } from '../../types/country';
+import { NestedPartial } from '../../types/nestedPartial';
+import { User } from '../../types/user';
 
 const TODAY_MINUS_18_YEARS: Dayjs = dayjs().subtract(18, 'year');
 
 export default function ProfileInfo() {
     const [t] = useTranslation();
     const userInfo = JSON.parse(localStorage.getItem('user') as string);
-
-    const { loggedIn, setLoggedIn, tokenLevel } = useContext(
-        CurrentAccountContext
-    );
 
     let userInfoType = null;
     if (userInfo && userInfo.seller_fields) {
@@ -258,7 +253,7 @@ export default function ProfileInfo() {
             },
         };
 
-        let newUserInfo = tokenLevel == 'client' ? newUserInfoC : newUserInfoS;
+        const newUserInfo = tokenLevel == 'client' ? newUserInfoC : newUserInfoS;
         const token = localStorage.getItem('token');
         if (token == null) return;
 

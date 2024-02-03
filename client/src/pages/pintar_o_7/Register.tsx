@@ -9,12 +9,12 @@ import {
     Typography
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import CountrySelect from '../../components/pintar_o_7/CountrySelect';
-import { auth, registerWithEmailAndPassword } from '../../config/firebase';
+import { auth, pb } from '../../config/firebase';
 
 
 const Register = () => {
@@ -110,40 +110,35 @@ const Register = () => {
             setShowPostalCodeError(true);
             return;
         } else {
-             disableAlerts();
-      try {
-        // Use Firebase registration function
-        const credentials = await registerWithEmailAndPassword(email, password);
-        console.log(credentials);
-        console.log("current: ", auth.currentUser)
+            disableAlerts();
+            // Use Firebase registration function
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
 
-        // Additional data to be stored in Firestore can be added here
-        const userData = {
-          name,
-          birth_date,
-          phone,
-          country,
-          address,
-          postalCode,
-          city,
-        };
+                    pb.collections("users").add(
+                        {
+                            uid: user.uid,
+                            name: name,
+                            birth_date: birth_date,
+                            phone: phone,
+                            country: country,
+                            address: address,
+                            postalCode: postalCode,
+                            city: city,
+                        });
+                    navigate('/');
+                })
+                .catch((error) => {
+                    // const errorCode = error.code;
+                    // const errorMessage = error.message;
+                    // ..
+                    setShowError(true);
+                    console.log(error);
+                });
 
-        await updateProfile(auth.currentUser, { displayName: name })
-
-
-        // db.collections('users').add(userData);
-        
-
-        // You can save additional user data to Firestore or your database here
-        // For example, firestore.collection('users').add(userData);
-
-        navigate('/');
-      } catch (error) {
-        console.log(error);
-        setShowError(true);
-      }
-    }
-  };
+        }
+    };
 
     return (
         <Box component="div" maxWidth="xs">
