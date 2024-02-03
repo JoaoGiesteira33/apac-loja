@@ -1,20 +1,21 @@
-import React, { useState } from 'react';
 import {
-    Box,
-    TextField,
-    Button,
-    Typography,
-    Paper,
-    CssBaseline,
-    Grid,
     Alert,
+    Box,
+    Button,
+    CssBaseline,
+    Paper,
     Stack,
+    TextField,
+    Typography
 } from '@mui/material';
-import { registerUser } from '../../fetchers';
-import { useNavigate } from 'react-router-dom';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import CountrySelect from '../../components/pintar_o_7/CountrySelect';
+import { updateProfile } from "firebase/auth";
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import CountrySelect from '../../components/pintar_o_7/CountrySelect';
+import { auth, registerWithEmailAndPassword } from '../../config/firebase';
+
 
 const Register = () => {
     const [t] = useTranslation();
@@ -88,7 +89,7 @@ const Register = () => {
         setShowPostalCodeError(false);
     };
 
-    const handleRegisto = async (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
         disableAlerts();
 
@@ -109,21 +110,40 @@ const Register = () => {
             setShowPostalCodeError(true);
             return;
         } else {
-            disableAlerts();
-            let data = new FormData(e.target);
-            console.log('Body:', data);
-            data.set('client_fields.demographics.address.country', country);
+             disableAlerts();
+      try {
+        // Use Firebase registration function
+        const credentials = await registerWithEmailAndPassword(email, password);
+        console.log(credentials);
+        console.log("current: ", auth.currentUser)
 
-            try {
-                const response = await registerUser(data);
-                navigate('/login');
-            } catch (error) {
-                console.log(error);
-            }
+        // Additional data to be stored in Firestore can be added here
+        const userData = {
+          name,
+          birth_date,
+          phone,
+          country,
+          address,
+          postalCode,
+          city,
+        };
 
-            // TO DO - verificar formatacao dos campos + fazer ligacao com backend
-        }
-    };
+        await updateProfile(auth.currentUser, { displayName: name })
+
+
+        // db.collections('users').add(userData);
+        
+
+        // You can save additional user data to Firestore or your database here
+        // For example, firestore.collection('users').add(userData);
+
+        navigate('/');
+      } catch (error) {
+        console.log(error);
+        setShowError(true);
+      }
+    }
+  };
 
     return (
         <Box component="div" maxWidth="xs">
@@ -147,7 +167,7 @@ const Register = () => {
                     style={{ margin: '20px 0', color: 'black' }}>
                     {t('global.register')}
                 </Typography>
-                <form onSubmit={handleRegisto} style={{ width: '100%' }}>
+                <form onSubmit={handleRegister} style={{ width: '100%' }}>
                     {/* ----------- EMAIL ---------------- */}
                     {showEmailAlert && (
                         <Alert

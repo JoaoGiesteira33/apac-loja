@@ -2,16 +2,16 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LogoutIcon from '@mui/icons-material/Logout';
-import HistoryIcon from '@mui/icons-material/History';
-import PhotoAlbumIcon from '@mui/icons-material/PhotoAlbum';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ProfileThumbnail from '../../components/Profile/ProfileThumbnail';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import HistoryIcon from '@mui/icons-material/History';
+import LogoutIcon from '@mui/icons-material/Logout';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
-import { useTranslation } from 'react-i18next';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PhotoAlbumIcon from '@mui/icons-material/PhotoAlbum';
 import { Box } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import ProfileThumbnail from '../../components/Profile/ProfileThumbnail';
 import { CurrentAccountContext } from '../../contexts/currentAccountContext';
 //import { CurrentChatContext } from '../../contexts/chatContext';
 

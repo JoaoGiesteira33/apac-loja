@@ -1,39 +1,41 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense } from 'react';
 
-import Footer from './components/pintar_o_7/Footer';
-import ReactNavbar from './components/pintar_o_7/ReactNavbar';
-import Chat from './components/experinecia_chat/Chat';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { Box, Button, CircularProgress, IconButton, PaletteMode } from '@mui/material';
+import { CssBaseline } from '@mui/material/';
+import { grey, orange } from '@mui/material/colors';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
     Route,
     Routes,
-    useLocation,
-    useNavigate,
+    useLocation
 } from 'react-router-dom';
-import ProfileInfo from './pages/Profile/ProfileInfo';
-import ProfileIndex from './pages/Profile/ProfileIndex';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { grey, orange } from '@mui/material/colors';
-import { IconButton, PaletteMode, CircularProgress, Box, Button } from '@mui/material';
-import { CssBaseline } from '@mui/material/';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import ProfileOrderHistory from './pages/Profile/ProfileOrderHistory';
-import { isExpired, decodeToken } from 'react-jwt';
+import Footer from './components/pintar_o_7/Footer';
+import ReactNavbar from './components/pintar_o_7/ReactNavbar';
 import Requests from './pages/Administrator/Requests';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import Products from './pages/Seller/Products';
+import ProfileIndex from './pages/Profile/ProfileIndex';
+import ProfileInfo from './pages/Profile/ProfileInfo';
+import ProfileOrderHistory from './pages/Profile/ProfileOrderHistory';
 import NewProduct from './pages/Seller/NewProduct';
+import Products from './pages/Seller/Products';
 
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
-import NewSeller from './pages/Seller/NewSeller';
-import { CurrentAccountProvider } from './contexts/currentAccountContext';
 import ChatPage from './components/experinecia_chat/ChatPage';
+import NewSeller from './pages/Seller/NewSeller';
+import AdminPrivateRoutes from './routes/AdminPrivateRoutes';
 import PrivateRoutes from './routes/PrivateRoutes';
 import SellerPrivateRoutes from './routes/SellerPrivateRoutes';
-import AdminPrivateRoutes from './routes/AdminPrivateRoutes';
 
 import { useTranslation } from 'react-i18next';
+
+
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "./config/firebase";
+
+
 
 // dynamically load components as they are needed
 const InitialPage = React.lazy(() => import('./pages/pintar_o_7/Initial'));
@@ -132,13 +134,17 @@ function App() {
     const [footerSize, setFooterSize] = React.useState<number>(0);
     const location = useLocation();
 
-    const checkChatRoute = (route: string) => {
-        var re = /\/product\/[^\/?]+/;
-        return re.test(route);
-    };
+    // const checkChatRoute = (route: string) => {
+    //     var re = /\/product\/[^\/?]+/;
+    //     return re.test(route);
+    // };
 
-    const [loggedIn, setLoggedIn] = React.useState<boolean>(false);
-    const [tokenLevel, setTokenLevel] = React.useState(undefined);
+    const [loggedIn, loading, error] = useAuthState(auth);
+
+//    onAuthStateChanged(auth, (user) => {
+//     setLoggedIn(user !== undefined)
+//    }) ;
+    // const [tokenLevel, setTokenLevel] = React.useState(undefined);
 
     const colorMode = React.useMemo(
         () => ({
@@ -185,7 +191,7 @@ function App() {
         },
         {
             path: '/login',
-            element: <LoginPage setLoggedIn={setLoggedIn} />,
+            element: <LoginPage />,
         },
         {
             path: '/register',
@@ -213,7 +219,7 @@ function App() {
         {
             path: '/profile',
             element: (
-                <ProfileIndex setLoggedIn={setLoggedIn} level={tokenLevel} />
+                <ProfileIndex />
             ),
         },
         {
@@ -268,20 +274,20 @@ function App() {
         [mode]
     );
 
-    useEffect(() => {
-        let token = localStorage.getItem('token');
+    // useEffect(() => {
+    //     const token = localStorage.getItem('token');
 
-        if (token) {
-            if (isExpired(token)) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                localStorage.removeItem('loggedIn');
-            } else if (localStorage.getItem('loggedIn')) {
-                setTokenLevel(decodeToken(token).level);
-                setLoggedIn(true);
-            }
-        }
-    }, []);
+    //     if (token) {
+    //         if (isExpired(token)) {
+    //             localStorage.removeItem('token');
+    //             localStorage.removeItem('user');
+    //             localStorage.removeItem('loggedIn');
+    //         } else if (localStorage.getItem('loggedIn')) {
+    //             setTokenLevel(decodeToken(token).level);
+    //             setLoggedIn(true);
+    //         }
+    //     }
+    // }, []);
 
     const payPalOptions = {
         clientId: 'AXH3T6mt5FSd1rfMt0i2m6AadWj86MjC2qESbozuHcBXvS3Orwtt0FhxuG-MpxAkOPcYt1LD_ni4dpz4', // testing
@@ -301,12 +307,12 @@ function App() {
      }
 
     return (
-        <CurrentAccountProvider
-            loggedIn={loggedIn}
-            setLoggedIn={setLoggedIn}
-            tokenLevel={tokenLevel ?? ''}
-            setTokenLevel={setTokenLevel}
-            >
+        // <CurrentAccountProvider
+        //     loggedIn={loggedIn}
+        //     setLoggedIn={setLoggedIn}
+        //     tokenLevel={tokenLevel ?? ''}
+        //     setTokenLevel={setTokenLevel}
+        //     >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <PayPalScriptProvider options={payPalOptions}>
                     <ColorModeContext.Provider value={colorMode}>
@@ -376,7 +382,9 @@ function App() {
                                         ))}
                                         <Route
                                         element={
-                                            <PrivateRoutes level={tokenLevel} />
+                                            <PrivateRoutes 
+                                            // level={tokenLevel} 
+                                            />
                                         }>
                                         {protectedRoutes.map((route, index) => (
                                             <Route
@@ -389,7 +397,7 @@ function App() {
                                     <Route
                                         element={
                                             <SellerPrivateRoutes
-                                                level={tokenLevel}
+                                                // level={tokenLevel}
                                             />
                                         }>
                                         {sellerRoutes.map((route, index) => (
@@ -403,7 +411,7 @@ function App() {
                                     <Route
                                         element={
                                             <AdminPrivateRoutes
-                                                level={tokenLevel}
+                                                // level={tokenLevel}
                                             />
                                         }>
                                         {adminRoutes.map((route, index) => (
@@ -434,7 +442,7 @@ function App() {
                     </ColorModeContext.Provider>
                 </PayPalScriptProvider>
             </LocalizationProvider>
-        </CurrentAccountProvider>
+        // </CurrentAccountProvider>
     );
 }
 

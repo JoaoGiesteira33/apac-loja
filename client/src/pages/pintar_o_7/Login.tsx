@@ -1,19 +1,18 @@
-import React, { useEffect, useState, useContext } from 'react';
 import {
-    Box,
-    TextField,
-    Button,
-    Typography,
-    Paper,
-    CssBaseline,
     Alert,
+    Box,
+    Button,
+    CssBaseline,
+    Paper,
+    TextField,
+    Typography,
 } from '@mui/material';
-import { loginUser, fetchUser } from '../../fetchers';
-import { Link, useNavigate } from 'react-router-dom';
-import { decodeToken } from 'react-jwt';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CurrentAccountContext } from '../../contexts/currentAccountContext';
+import { Link, useNavigate } from 'react-router-dom';
 //import { CurrentChatContext } from '../../contexts/chatContext';
+import { auth } from '../../config/firebase';
+
 
 const Login = () => {
     const [t] = useTranslation();
@@ -43,7 +42,6 @@ const Login = () => {
         setShowCredAlert(false);
         setShowErrorAlert(false);
 
-        console.log('Login clicked');
         if (!checkEmail(email)) {
             setShowEmailAlert(true);
             return;
@@ -52,46 +50,25 @@ const Login = () => {
             setShowPassAlert(true);
             return;
         }
-        console.log('Email: ', email);
-        console.log('Password: ', password);
-        const response = await loginUser(email, password);
-        if (response.status === 401) {
-            setShowCredAlert(true);
-        } else {
-            console.log('Susexo: ', response.token);
-            const decodedToken = decodeToken(response.token);
-            localStorage.setItem('token', response.token);
 
-            try {
-                const user = await fetchUser(
-                    decodedToken._id,
-                    decodedToken.level,
-                    response.token
-                );
-                console.log('user: ', user);
-                if (user !== undefined) {
-                    console.log('User: ', user);
-                    // TODO - store user in local storage
-                    localStorage.setItem('user', JSON.stringify(user));
-                    localStorage.setItem('loggedIn', 'ok');
-                    setLoggedIn(true);
-                    setTokenLevel(decodedToken.level);
-                    //setUsername(user.username);
-                    //setSessionID(user._id);
-                    //connect()
-                    navigate('/gallery');
-                } else {
-                    setErrorMessage('#1');
-                    setShowErrorAlert(true);
-                    console.log('User não encontrado');
-                }
-            } catch (e) {
-                setErrorMessage('#2');
+        try {
+            // Sign in with email and password
+            await auth.signInWithEmailAndPassword(email, password);
+
+            // User successfully signed in
+            // Redirect or perform any necessary actions here
+            navigate('/gallery');
+        } catch (error) {
+            // Handle authentication errors
+            if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                setShowCredAlert(true);
+            } else {
+                setErrorMessage(error.message);
                 setShowErrorAlert(true);
-                console.log('Erro ao buscar user: ', e);
             }
         }
     };
+
 
     return (
         <Box component="div" maxWidth="xs" style={{}}>
