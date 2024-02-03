@@ -1,8 +1,6 @@
-import { User } from './user';
 
-export interface ProductType {
-    _id: string;
-    _seller: string | User;
+export interface Product {
+    seller: string;
     title: string;
     author: string;
     photos: string[];
@@ -10,7 +8,7 @@ export interface ProductType {
     price: number;
     product_type: string;
     piece_info: PieceInfo | null;
-    book_info: BookInfo | null;
+    // book_info: BookInfo | null;
     published_date: Date;
     //rating: number,     // [0-5]
     //reviews: Review[],
@@ -23,7 +21,7 @@ export interface ProductType {
     comment: string,
 }*/
 
-type PieceInfo = {
+export type PieceInfo = {
     technique: string;
     materials: string[];
     dimensions: Dimensions;
@@ -31,12 +29,12 @@ type PieceInfo = {
     state: string;
 };
 
-type BookInfo = {
-    publisher: string;
-    genre: string;
-    stock: number;
-    isbn: string; // International Standard Book Number
-};
+// type BookInfo = {
+//     publisher: string;
+//     genre: string;
+//     stock: number;
+//     isbn: string; // International Standard Book Number
+// };
 
 type Dimensions = {
     height: number;

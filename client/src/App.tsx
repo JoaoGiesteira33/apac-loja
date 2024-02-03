@@ -55,7 +55,7 @@ const CartBadge = React.lazy(() => import('./components/CartBadge'));
 const Dashboard = React.lazy(() => import('./pages/Administrator/Dashboard'));
 const Notifications = React.lazy(() => import('./pages/Profile/Notifications'));
 
-const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
+const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
 const getDesignTokens = (mode: PaletteMode) => ({
     typography: {
         fontFamily: 'Poppins',
@@ -64,37 +64,37 @@ const getDesignTokens = (mode: PaletteMode) => ({
         mode,
         ...(mode === 'light'
             ? {
-                  // Light Mode
-                  primary: grey,
-                  secondary: {
-                      main: '#000000',
-                      light: '#333333',
-                      dark: '#000000',
-                      contrastText: '#ffffff',
-                  },
-                  background: {
-                      default: '#fff',
-                      paper: '#fff',
-                  },
-                  divider: grey[900],
-                  text: {
-                      primary: grey[900],
-                      secondary: grey[800],
-                  },
-              }
+                // Light Mode
+                primary: grey,
+                secondary: {
+                    main: '#000000',
+                    light: '#333333',
+                    dark: '#000000',
+                    contrastText: '#ffffff',
+                },
+                background: {
+                    default: '#fff',
+                    paper: '#fff',
+                },
+                divider: grey[900],
+                text: {
+                    primary: grey[900],
+                    secondary: grey[800],
+                },
+            }
             : {
-                  // Dark Mode
-                  primary: grey,
-                  secondary: orange,
-                  background: {
-                      default: '#121212',
-                      paper: '#1f1f1f',
-                  },
-                  text: {
-                      primary: '#ffffff',
-                      secondary: grey[400],
-                  },
-              }),
+                // Dark Mode
+                primary: grey,
+                secondary: orange,
+                background: {
+                    default: '#121212',
+                    paper: '#1f1f1f',
+                },
+                text: {
+                    primary: '#ffffff',
+                    secondary: grey[400],
+                },
+            }),
     },
     components: {
         MuiSelect: {

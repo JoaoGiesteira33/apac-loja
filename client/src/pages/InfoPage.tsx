@@ -1,16 +1,15 @@
-import React from 'react';
-import Hero from '../components/pintar_o_7/Hero';
-import { Box, Typography } from '@mui/material';
-import infoBanner from '../assets/infoBanner.png';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { Box, Typography } from '@mui/material';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
+import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import MuiAccordionSummary, {
     AccordionSummaryProps,
 } from '@mui/material/AccordionSummary';
-import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import { styled } from '@mui/material/styles';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import infoBanner from '../assets/infoBanner.png';
+import Hero from '../components/pintar_o_7/Hero';
 
 const Accordion = styled((props: AccordionProps) => (
     <MuiAccordion elevation={0} square {...props} />

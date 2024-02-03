@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import logoApac from '../../assets/LOGO_negrito.png';
 import {
+    Box,
+    CircularProgress,
     Divider,
     Grid,
     Link,
-    CircularProgress,
     useTheme,
-    Box,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
+import logoApac from '../../assets/LOGO_negrito.png';
 import { checkLink } from '../../fetchers';
 
 import useProductSearch from '../../hooks/useProductSearch';
@@ -50,11 +50,11 @@ export default function Initial(props) {
         );
     }
 
-    const [productQuery, setProductQuery] = useState({
+    const [productQuery] = useState({
         featured: true,
         limit: 100,
     });
-    const [productPage, setProductPage] = useState(1);
+    const [productPage] = useState(1);
 
     const { products, loading, error } = useProductSearch(
         productQuery,

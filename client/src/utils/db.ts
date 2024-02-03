@@ -11,6 +11,7 @@ import {
 } from 'firebase/firestore';
 import { app, auth } from './firebase';
 
+import { Product } from '../types/product';
 import { Customer, Seller, User } from '../types/user';
 
 const converter = <T>(): FirestoreDataConverter<T> => ({
@@ -31,6 +32,9 @@ const docGeneric = <T>(docPath: string) =>
 export const db = {
     users: collectionGeneric<User>('users'),
     user: (id: string) => docGeneric<User>(`users/${id}`),
+
+    products: collectionGeneric<Product>('products'),
+    product: (id: string) => docGeneric<Product>(`products/${id}`),
 };
 
 export const getUserInfo = async (): Promise<Customer | Seller> => {
@@ -49,4 +53,8 @@ export const getUserInfo = async (): Promise<Customer | Seller> => {
 
 export const saveUserInfo = async (user: User): Promise<void> => {
     await setDoc(db.user(user.uid), user);
+};
+
+export const saveProduct = async (product: Product): Promise<void> => {
+    await setDoc(db.product(product.title + product.author), product);
 };
