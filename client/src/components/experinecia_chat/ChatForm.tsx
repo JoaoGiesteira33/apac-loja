@@ -24,109 +24,103 @@ interface MessagePanelProps {
 }
 
 export function ChatForm({ user, onMessage }: MessagePanelProps) {
-  const theme = useTheme();
-  const [input, setInput] = useState('');
-  const [emojisOpen, setEmojisOpen] = useState(false);
+    const theme = useTheme();
+    const [input, setInput] = useState('');
+    const [emojisOpen, setEmojisOpen] = useState(false);
 
-  const handleEmojisOpen = () => setEmojisOpen(!emojisOpen);
+    const handleEmojisOpen = () => setEmojisOpen(!emojisOpen);
 
-  const handleEmojiSelect = (emoji) => {
-      setInput(input + emoji.native);
-  };
+    const handleEmojiSelect = (emoji) => {
+        setInput(input + emoji.native);
+    };
 
-  const onSubmit = () => {
-      onMessage(input);
-      setInput('');
-      
-      // Close emoji picker on message
-      if (emojisOpen)
-        handleEmojisOpen();
-  };
+    const onSubmit = () => {
+        onMessage(input);
+        setInput('');
 
-  const isValid = input.length > 0;
+        // Close emoji picker on message
+        if (emojisOpen) handleEmojisOpen();
+    };
 
-  return (
-    <Box
-        component="div"
-        sx={{
-            backgroundColor: theme.palette.primary.main,
-            display: 'inline-flex',
-            flexGrow: 1,
-            width: {xs: '90%', sm: '60%', md: '40%'},
-            height: {xs: '10%', sm: '10%', md: '10%'},
-            position: 'fixed',
-            bottom: '5%',
-            right: '5%',
-        }}>
+    const isValid = input.length > 0;
 
-        {emojisOpen && (
-            // Fixed position flexible box
+    return (
+        <Box
+            component="div"
+            sx={{
+                backgroundColor: theme.palette.primary.main,
+                display: 'inline-flex',
+                flexGrow: 1,
+                width: { xs: '90%', sm: '60%', md: '40%' },
+                height: { xs: '10%', sm: '10%', md: '10%' },
+                position: 'fixed',
+                bottom: '5%',
+                right: '5%',
+            }}>
+            {emojisOpen && (
+                // Fixed position flexible box
+                <Box
+                    component="div"
+                    sx={{
+                        display: 'inline-flex',
+                        flexGrow: 1,
+                        position: 'fixed',
+                        bottom: { xs: '15%', sm: '14%', md: '13%' },
+                        right: { xs: '5%', sm: '15%', md: '15%' },
+                    }}>
+                    <Picker
+                        data={data}
+                        onEmojiSelect={handleEmojiSelect}
+                        theme={theme.palette.mode}
+                    />
+                </Box>
+                // TODO: Handle On click outside (close emoji picker)
+            )}
+
             <Box
                 component="div"
                 sx={{
-                    display: 'inline-flex',
-                    flexGrow: 1,
-                    position: 'fixed',
-                    bottom: {xs: '15%', sm: '14%', md: '13%'},
-                    right: {xs: '5%', sm: '15%', md: '15%'},
+                    display: 'inline',
+                    backgroundColor: theme.palette.primary.main,
+                    justifyContent: { xs: 'center', sm: 'space-between' },
+                    width: 1 / 4,
                 }}>
-                    
-                <Picker data={data} onEmojiSelect={handleEmojiSelect} theme={theme.palette.mode}/>
+                <IconButton>
+                    <AttachFileIcon />
+                </IconButton>
+
+                <IconButton onClick={handleEmojisOpen}>
+                    <EmojiEmotionsIcon />
+                </IconButton>
             </Box>
-            // TODO: Handle On click outside (close emoji picker)
-        )}
 
-        <Box
-            component="div"
-            sx={{
-                display: 'inline',
-                backgroundColor: theme.palette.primary.main,
-                justifyContent: { xs: 'center', sm: 'space-between' },
-                width: 1 / 4,
-            }}>
+            <TextField
+                id="message"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Aa"
+                multiline
+                fullWidth
+                maxRows={2}
+                sx={{
+                    flexGrow: 1,
+                    backgroundColor: theme.palette.primary.main,
+                    overflow: 'auto',
+                }}
+            />
 
-            <IconButton>
-                <AttachFileIcon />
-            </IconButton>
-
-            <IconButton onClick={handleEmojisOpen}>
-                <EmojiEmotionsIcon />
-            </IconButton>
-
-
+            <Box
+                component="div"
+                sx={{
+                    display: 'inline',
+                    flexGrow: 1,
+                    backgroundColor: theme.palette.primary.main,
+                    width: 1 / 8,
+                }}>
+                <IconButton onClick={onSubmit} disabled={!isValid}>
+                    <SendIcon />
+                </IconButton>
+            </Box>
         </Box>
-
-
-        <TextField
-            id="message"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Aa"
-            multiline
-            fullWidth
-            maxRows={2}
-            sx={{
-                flexGrow: 1,
-                backgroundColor: theme.palette.primary.main,
-                overflow: 'auto',
-            }}
-        />
-
-
-        <Box
-            component="div"
-            sx={{
-                display: 'inline',
-                flexGrow: 1,
-                backgroundColor: theme.palette.primary.main,
-                width: 1 / 8,
-            }}>
-
-            <IconButton onClick={onSubmit} disabled={!isValid}>
-                <SendIcon />
-            </IconButton>
-
-        </Box>
-    </Box>
-  );
+    );
 }

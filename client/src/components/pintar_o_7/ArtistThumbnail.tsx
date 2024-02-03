@@ -25,7 +25,9 @@ export default function ArtistThumbnail(props) {
                 <Box component="div" className="w-full aspect-square">
                     <img
                         className="w-full h-full aspect-square object-cover"
-                        src={checkLink(props.artist.seller_fields.profile_picture)}
+                        src={checkLink(
+                            props.artist.seller_fields.profile_picture
+                        )}
                     />
                 </Box>
             </Link>
@@ -37,9 +39,7 @@ export default function ArtistThumbnail(props) {
                         justifyContent: 'space-between',
                         marginTop: 0,
                     }}>
-                    <Grid xs={12}>
-                        {props.artist.seller_fields.about}
-                    </Grid>
+                    <Grid xs={12}>{props.artist.seller_fields.about}</Grid>
                 </Grid>
             </Box>
         </Box>

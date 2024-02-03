@@ -6,7 +6,7 @@ import {
     Paper,
     Stack,
     TextField,
-    Typography
+    Typography,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -16,7 +16,6 @@ import CountrySelect from '../../components/pintar_o_7/CountrySelect';
 import { newCustomer } from '../../types/user';
 import { saveUserInfo } from '../../utils/db';
 import { auth } from '../../utils/firebase';
-
 
 const Register = () => {
     const [t] = useTranslation();
@@ -116,12 +115,23 @@ const Register = () => {
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
-                    const customer = newCustomer(user.uid, email, name, new Date(birth_date), phone, { street: address, postalCode: postalCode, city: city, country: country })
+                    const customer = newCustomer(
+                        user.uid,
+                        email,
+                        name,
+                        new Date(birth_date),
+                        phone,
+                        {
+                            street: address,
+                            postalCode: postalCode,
+                            city: city,
+                            country: country,
+                        }
+                    );
 
                     saveUserInfo(customer);
-                    navigate("/gallery");
+                    navigate('/gallery');
                     return;
-
                 })
                 .catch((error) => {
                     // const errorCode = error.code;
@@ -130,7 +140,6 @@ const Register = () => {
                     setShowError(true);
                     console.log(error);
                 });
-
         }
     };
 

@@ -56,7 +56,9 @@ export default function ArtistPage() {
                     sx={{ display: { xs: 'none', sm: 'flex' }, my: 10 }}>
                     <Grid xs={2}>
                         <Avatar
-                            src={checkLink(artist.seller_fields.profile_picture)}
+                            src={checkLink(
+                                artist.seller_fields.profile_picture
+                            )}
                             sx={{ width: '15vw', height: '15vw' }}
                         />
                     </Grid>
@@ -102,7 +104,9 @@ export default function ArtistPage() {
                                 height: '8rem',
                                 margin: '1rem auto',
                             }}
-                            src={checkLink(artist.seller_fields.profile_picture)}
+                            src={checkLink(
+                                artist.seller_fields.profile_picture
+                            )}
                         />
                     </Grid>
                     <Grid xs={12}>

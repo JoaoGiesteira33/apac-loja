@@ -78,12 +78,12 @@ export default function NewSeller() {
         if (hasErrors) return;
         const userInfo: NestedPartial<User> = {
             seller_fields: {
-                demographics: {                     
-                    name: name,                     
+                demographics: {
+                    name: name,
                     birth_date: birth_date!.format('YYYY-MM-DD'),
                 },
-                seller_type: 'artist'             
-            },             
+                seller_type: 'artist',
+            },
             email: email,
             nivel: 'seller',
         };

@@ -82,7 +82,7 @@ const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
         getShipmentByProduct(token, product._id)
             .then((shipment) => {
                 if (shipment) {
-                    setShipment(shipment)
+                    setShipment(shipment);
                     setLastState(shipment.states.slice(-1)[0].value);
                 }
             })

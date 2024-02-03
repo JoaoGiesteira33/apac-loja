@@ -14,8 +14,6 @@ interface MessagePanelProps {
 }
 
 function MessagePanel({ user, onMessage }: MessagePanelProps) {
-
-
     const displaySender = (message: { fromSelf: boolean }, index: number) => {
         return (
             index === 0 ||
@@ -23,15 +21,12 @@ function MessagePanel({ user, onMessage }: MessagePanelProps) {
         );
     };
 
-
     return (
         <ul className="messages">
             {user.messages.map((message, index) => (
                 <li key={index} className="message">
                     <ChatMessage
-                        username={
-                            message.fromSelf ? 'Eu' : user.username
-                        }
+                        username={message.fromSelf ? 'Eu' : user.username}
                         text={message.content}
                         date={message.date}
                     />

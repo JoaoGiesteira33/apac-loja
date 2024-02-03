@@ -6,7 +6,7 @@ import { CHAT_URL } from './fetchers';
 export const socket = io(CHAT_URL, {
     autoConnect: false,
     auth: {
-        serverOffset: 0
+        serverOffset: 0,
     },
     // enable retries
     //ackTimeout: 10000,

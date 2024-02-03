@@ -27,16 +27,15 @@ export default function CustomizedBadges() {
             ariaLabel="Icon fixo para chat"
             sx={{ position: 'fixed', bottom: 16, left: 16 }}
             icon={
-                    <Badge
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                        variant={badge ? 'dot' : ''}
-                        color="secondary">
-                        <ShoppingCartIcon sx={{ color: 'black' }} />
-                    </Badge>
-
+                <Badge
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    variant={badge ? 'dot' : ''}
+                    color="secondary">
+                    <ShoppingCartIcon sx={{ color: 'black' }} />
+                </Badge>
             }
             onClick={() => navigate('/cart')}
         />

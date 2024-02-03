@@ -69,7 +69,9 @@ export const ReservationDetails = () => {
                             aria-label="product table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>{t('cart.reservation.piece')}</TableCell>
+                                    <TableCell>
+                                        {t('cart.reservation.piece')}
+                                    </TableCell>
                                     <TableCell align="right">
                                         {t('cart.price')}
                                     </TableCell>
@@ -96,7 +98,9 @@ export const ReservationDetails = () => {
                                             <Grid container spacing={2}>
                                                 <Grid xs={3}>
                                                     <img
-                                                        src={checkLink(product.photos[0])}
+                                                        src={checkLink(
+                                                            product.photos[0]
+                                                        )}
                                                         alt={product.title}
                                                         className="object-cover w-16 h-16 rounded-sm"
                                                     />
@@ -200,13 +204,13 @@ export const ReservationDetails = () => {
                             {new Intl.NumberFormat('pt-PT', {
                                 style: 'currency',
                                 currency: 'EUR',
-                            }).format(total*0.25)}
+                            }).format(total * 0.25)}
                         </Typography>
-                        
+
                         <ReserveModal />
                     </Box>
                 </Grid>
             </Grid>
         </Box>
     );
-}
+};

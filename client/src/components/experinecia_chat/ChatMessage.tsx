@@ -15,7 +15,12 @@ export function ChatMessage(data: {
         )
     );
     return (
-        <div className={isMe? "flex flex-row-reverse text-right" : "flex flex-row text-left"}>
+        <div
+            className={
+                isMe
+                    ? 'flex flex-row-reverse text-right'
+                    : 'flex flex-row text-left'
+            }>
             <div id="toast-message-cta" className={boxStyle} role="alert">
                 <div className="mx-3 text-sm font-normal">
                     <span className="mb-1 text-sm font-semibold text-gray-900 dark:text-white">

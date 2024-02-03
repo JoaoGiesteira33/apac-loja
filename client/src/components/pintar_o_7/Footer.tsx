@@ -32,11 +32,10 @@ const Footer = (props) => {
                 },
             }}>
             <Grid container sx={{ paddingBottom: 5 }}>
-                <Grid  xs={12}>
+                <Grid xs={12}>
                     <Divider />
                 </Grid>
                 <Grid
-                    
                     xs={6}
                     sm={3}
                     md={3}
@@ -94,7 +93,6 @@ const Footer = (props) => {
                     </List>
                 </Grid>
                 <Grid
-                    
                     xs={6}
                     sm={5}
                     md={5}
@@ -110,30 +108,37 @@ const Footer = (props) => {
                             </Typography>
                         </ListItem>
                         <ListItem disablePadding>
-                            <MY_LNK link="gallery" text={t('initial.gallery')} />
+                            <MY_LNK
+                                link="gallery"
+                                text={t('initial.gallery')}
+                            />
                         </ListItem>
                         <ListItem disablePadding>
-                            <MY_LNK link="artists" text={t('initial.artists')} />
+                            <MY_LNK
+                                link="artists"
+                                text={t('initial.artists')}
+                            />
                         </ListItem>
                         <ListItem disablePadding>
-                            <MY_LNK link="contact" text={t('initial.contact')} />
+                            <MY_LNK
+                                link="contact"
+                                text={t('initial.contact')}
+                            />
                         </ListItem>
                     </List>
                 </Grid>
             </Grid>
             <Grid container>
                 <Grid
-                    
                     xs={12}
                     md={3}
                     lg={2}
                     display="flex"
                     alignItems="center"
                     justifyContent="center">
-                    <MY_LNK link="info" text={t('info.terms.title')}/>
+                    <MY_LNK link="info" text={t('info.terms.title')} />
                 </Grid>
                 <Grid
-                    
                     xs={12}
                     md={3}
                     lg={2}
@@ -146,7 +151,6 @@ const Footer = (props) => {
                     />
                 </Grid>
                 <Grid
-                    
                     xs={12}
                     md={3}
                     lg={2}
@@ -156,7 +160,6 @@ const Footer = (props) => {
                     <MY_LNK link="info" text={t('info.privacy.title')} />
                 </Grid>
                 <Grid
-                    
                     xs={12}
                     md={3}
                     lg={6}
@@ -169,8 +172,8 @@ const Footer = (props) => {
                         <Typography
                             color="primary"
                             sx={{ textDecoration: 'underline' }}>
-                            {t('home.iniciative')} associação portuguesa das artes e da
-                            cultura &copy; {year}
+                            {t('home.iniciative')} associação portuguesa das
+                            artes e da cultura &copy; {year}
                         </Typography>
                     </a>
                 </Grid>

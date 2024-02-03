@@ -15,7 +15,6 @@ import { useTranslation } from 'react-i18next';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-
 const padX = {
     xs: '2rem',
     sm: '4rem',
@@ -32,7 +31,11 @@ function ReactNavbar(props) {
 
     const { t } = useTranslation();
 
-    const pages = [t('initial.gallery'), t('initial.artists'), t('initial.contact')]
+    const pages = [
+        t('initial.gallery'),
+        t('initial.artists'),
+        t('initial.contact'),
+    ];
     const pagesLinks = ['/gallery', '/artists', '/contact'];
     const lastpage = ['login', t('initial.profile')];
     const lastpageLinks = ['/login', '/profile'];
@@ -71,7 +74,6 @@ function ReactNavbar(props) {
                     <Grid container>
                         {pages.map((page, index) => (
                             <Grid
-
                                 xs={3}
                                 sx={
                                     checkRoute(
@@ -79,9 +81,11 @@ function ReactNavbar(props) {
                                         location.pathname
                                     )
                                         ? { fontWeight: 'bold' }
-                                        : { color: theme.palette.text.secondary }
+                                        : {
+                                              color: theme.palette.text
+                                                  .secondary,
+                                          }
                                 }
-
                                 key={page}>
                                 <Link
                                     to={pagesLinks[index]}
@@ -91,11 +95,10 @@ function ReactNavbar(props) {
                             </Grid>
                         ))}
                         <Grid
-
                             xs={3}
                             sx={
                                 location.pathname ==
-                                    lastpageLinks[props.loggedIn ? 1 : 0]
+                                lastpageLinks[props.loggedIn ? 1 : 0]
                                     ? { fontWeight: 'bold' }
                                     : { color: theme.palette.text.secondary }
                             }>
@@ -137,7 +140,6 @@ function ReactNavbar(props) {
                 spacing={2}>
                 {pages.map((page, index) => (
                     <Grid
-
                         xs={12}
                         key={page}
                         sx={{
@@ -166,7 +168,7 @@ function ReactNavbar(props) {
                             component={'div'}
                             sx={
                                 location.pathname ==
-                                    lastpageLinks[props.loggedIn ? 1 : 0]
+                                lastpageLinks[props.loggedIn ? 1 : 0]
                                     ? { fontWeight: 'bold' }
                                     : {}
                             }>

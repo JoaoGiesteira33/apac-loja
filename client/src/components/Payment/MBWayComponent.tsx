@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 const MBWayComponent = () => {
     const { t } = useTranslation();
-    const {cart} = useCart();
+    const { cart } = useCart();
     const user = JSON.parse(localStorage.getItem('user') as string) as User;
     const address = user.client_fields?.demographics.address as Address;
     const token = localStorage.getItem('token');
@@ -64,12 +64,14 @@ const MBWayComponent = () => {
     // set a timer for 5 min to turn off pending
     React.useEffect(() => {
         if (pending) {
-            setTimeout(() => {
-                setPending(false);
-            }, 5 * 60 * 1000);
+            setTimeout(
+                () => {
+                    setPending(false);
+                },
+                5 * 60 * 1000
+            );
         }
     }, [pending]);
-
 
     const handlePay = () => {
         // validate phone number
@@ -79,7 +81,6 @@ const MBWayComponent = () => {
 
         // create order
         createOrder(countryCode, phoneNumber);
-        
     };
 
     return (
@@ -107,14 +108,17 @@ const MBWayComponent = () => {
                             value={valuePhone}
                             onChange={handleChangePhone}
                             required
-                            {...!matchIsValidTel(valuePhone) && {
+                            {...(!matchIsValidTel(valuePhone) && {
                                 error: true,
                                 helperText: t('errors.register.phone-number'),
-                            }}
+                            })}
                             variant="standard"
                             inputProps={{ maxLength: 16 }}
                         />
-                        <Button variant="outlined" onClick={handlePay} disabled={!matchIsValidTel(valuePhone)}>
+                        <Button
+                            variant="outlined"
+                            onClick={handlePay}
+                            disabled={!matchIsValidTel(valuePhone)}>
                             {t('checkout.payment.pay')}
                         </Button>
                     </Box>

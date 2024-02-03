@@ -32,7 +32,7 @@ export default function useArtistSearch(query: object, pageNumber: number) {
                 if (empty) {
                     setArtists(res.data.results);
                     empty = false;
-                }else               setArtists(artists.concat(res.data.results));
+                } else setArtists(artists.concat(res.data.results));
                 setHasMore(res.data.hasMore);
                 setLoading(false);
             })

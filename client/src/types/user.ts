@@ -1,4 +1,3 @@
-
 // Replace the following import with the actual library you are using for Firebase
 // export type Address = {
 //     street: string;
@@ -118,7 +117,7 @@ interface CommonUserFields {
 }
 
 interface CustomerFields {
-    role: "customer";
+    role: 'customer';
     address: Address;
     searchHistory: string[];
     favorites: string[];
@@ -127,7 +126,7 @@ interface CustomerFields {
 }
 
 interface SellerFields {
-    role: "seller";
+    role: 'seller';
     about: string;
     sellerType: string;
 }
@@ -146,7 +145,7 @@ export function newCustomer(
     name: string,
     birthDate: Date,
     phone: string,
-    address: Address,
+    address: Address
 ): Customer {
     return {
         uid: uid,
@@ -154,7 +153,7 @@ export function newCustomer(
         name: name,
         birthDate: birthDate,
         phone: phone,
-        profilePicture: "",
+        profilePicture: '',
         activeChatId: [],
         tags: [],
         role: 'customer',

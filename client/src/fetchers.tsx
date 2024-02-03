@@ -62,11 +62,21 @@ export const fetchUser = async (id: string, level: string, token: string) => {
     }
 };
 
-export const createClient = (uid: string, email: string, name: string, birth_date: Date, phone: string, country: string, street: string, postal_code: string, city: string): User => {
+export const createClient = (
+    uid: string,
+    email: string,
+    name: string,
+    birth_date: Date,
+    phone: string,
+    country: string,
+    street: string,
+    postal_code: string,
+    city: string
+): User => {
     return {
         uid: uid,
         email: email,
-        role: "client",
+        role: 'client',
         personal_info: {
             name: name,
             birth_date: birth_date,
@@ -75,12 +85,10 @@ export const createClient = (uid: string, email: string, name: string, birth_dat
                 postal_code: postal_code,
                 city: city,
                 country: country,
-
             },
             phone: phone,
-
         },
-        profile_picture: "",
+        profile_picture: '',
         client_fields: {
             search_history: [],
             favorites: [],
@@ -90,8 +98,8 @@ export const createClient = (uid: string, email: string, name: string, birth_dat
         seller_fields: undefined,
         active_chat_id: [],
         tags: [],
-    }
-}
+    };
+};
 export const registerUser = async (body: FormData) => {
     console.log('Registering user');
     console.log('body: ', body);
@@ -471,4 +479,4 @@ export const getOrders = async (token: string, id: string) => {
         console.error(error);
         throw error;
     }
-}
+};

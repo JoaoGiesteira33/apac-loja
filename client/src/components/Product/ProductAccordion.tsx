@@ -32,10 +32,9 @@ const ProductAccordion = (data: { product: ProductType }) => {
                         )}
                     </p>
                     <p className="mb-2 text-gray-500 dark:text-gray-400">
-                        {t('product.weight')}: {product.piece_info?.dimensions?.weight}
-                        {product.piece_info?.dimensions && (
-                            <>{'kg'}</>
-                        )}
+                        {t('product.weight')}:{' '}
+                        {product.piece_info?.dimensions?.weight}
+                        {product.piece_info?.dimensions && <>{'kg'}</>}
                     </p>
                     <p className="mb-2 text-gray-500 dark:text-gray-400">
                         {t('product.materials')} {product.piece_info?.materials}

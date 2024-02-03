@@ -8,19 +8,25 @@ interface User {
     messages: Message[];
     hasNewMessages: boolean;
 }
-  
+
 interface Message {
-  content: string;
-  fromSelf: boolean;
+    content: string;
+    fromSelf: boolean;
     from?: string;
     to?: string;
-  date: string;
+    date: string;
 }
 
 export const CurrentChatContext = createContext({
     connect: () => {},
     disconnect: () => {},
-    selectedUser: { username: '', connected: false, self: false, messages: [], hasNewMessages: false },
+    selectedUser: {
+        username: '',
+        connected: false,
+        self: false,
+        messages: [],
+        hasNewMessages: false,
+    },
     setSelectedUser: (selectedUser) => {},
     users: [] as User[],
     setUsers: (users: User[]) => {},
@@ -41,9 +47,14 @@ export const CurrentChatProvider = ({
     sessionID: string;
     children: ReactNode;
 }) => {
-
-    const [selectedUser, setSelectedUser] = useState({ username: '', connected: false, self: false, messages: [], hasNewMessages: false });
-      const [users, setUsers] = useState<User[]>([]);
+    const [selectedUser, setSelectedUser] = useState({
+        username: '',
+        connected: false,
+        self: false,
+        messages: [],
+        hasNewMessages: false,
+    });
+    const [users, setUsers] = useState<User[]>([]);
 
     function connect() {
         setUsername(username);
@@ -54,18 +65,32 @@ export const CurrentChatProvider = ({
     }
 
     async function disconnect() {
-        setUsername("");
-        setSessionID("");
+        setUsername('');
+        setSessionID('');
         setUsers([]);
-        setSelectedUser({ username: '', connected: false, self: false, messages: [], hasNewMessages: false });
+        setSelectedUser({
+            username: '',
+            connected: false,
+            self: false,
+            messages: [],
+            hasNewMessages: false,
+        });
         console.log('Disconnecting from socket...', socket);
         socket.disconnect();
     }
 
-
     return (
         <CurrentChatContext.Provider
-            value={{ connect, disconnect, selectedUser, setSelectedUser, users, setUsers, setUsername, setSessionID }}>
+            value={{
+                connect,
+                disconnect,
+                selectedUser,
+                setSelectedUser,
+                users,
+                setUsers,
+                setUsername,
+                setSessionID,
+            }}>
             {children}
         </CurrentChatContext.Provider>
     );

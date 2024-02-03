@@ -2,17 +2,19 @@ import React, { Suspense } from 'react';
 
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-import { Box, Button, CircularProgress, IconButton, PaletteMode } from '@mui/material';
+import {
+    Box,
+    Button,
+    CircularProgress,
+    IconButton,
+    PaletteMode,
+} from '@mui/material';
 import { CssBaseline } from '@mui/material/';
 import { grey, orange } from '@mui/material/colors';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import {
-    Route,
-    Routes,
-    useLocation
-} from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import Footer from './components/pintar_o_7/Footer';
 import ReactNavbar from './components/pintar_o_7/ReactNavbar';
 import Requests from './pages/Administrator/Requests';
@@ -31,11 +33,8 @@ import SellerPrivateRoutes from './routes/SellerPrivateRoutes';
 
 import { useTranslation } from 'react-i18next';
 
-
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "./utils/firebase";
-
-
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from './utils/firebase';
 
 // dynamically load components as they are needed
 const InitialPage = React.lazy(() => import('./pages/pintar_o_7/Initial'));
@@ -56,7 +55,7 @@ const CartBadge = React.lazy(() => import('./components/CartBadge'));
 const Dashboard = React.lazy(() => import('./pages/Administrator/Dashboard'));
 const Notifications = React.lazy(() => import('./pages/Profile/Notifications'));
 
-const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
+const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 const getDesignTokens = (mode: PaletteMode) => ({
     typography: {
         fontFamily: 'Poppins',
@@ -65,37 +64,37 @@ const getDesignTokens = (mode: PaletteMode) => ({
         mode,
         ...(mode === 'light'
             ? {
-                // Light Mode
-                primary: grey,
-                secondary: {
-                    main: '#000000',
-                    light: '#333333',
-                    dark: '#000000',
-                    contrastText: '#ffffff',
-                },
-                background: {
-                    default: '#fff',
-                    paper: '#fff',
-                },
-                divider: grey[900],
-                text: {
-                    primary: grey[900],
-                    secondary: grey[800],
-                },
-            }
+                  // Light Mode
+                  primary: grey,
+                  secondary: {
+                      main: '#000000',
+                      light: '#333333',
+                      dark: '#000000',
+                      contrastText: '#ffffff',
+                  },
+                  background: {
+                      default: '#fff',
+                      paper: '#fff',
+                  },
+                  divider: grey[900],
+                  text: {
+                      primary: grey[900],
+                      secondary: grey[800],
+                  },
+              }
             : {
-                // Dark Mode
-                primary: grey,
-                secondary: orange,
-                background: {
-                    default: '#121212',
-                    paper: '#1f1f1f',
-                },
-                text: {
-                    primary: '#ffffff',
-                    secondary: grey[400],
-                },
-            }),
+                  // Dark Mode
+                  primary: grey,
+                  secondary: orange,
+                  background: {
+                      default: '#121212',
+                      paper: '#1f1f1f',
+                  },
+                  text: {
+                      primary: '#ffffff',
+                      secondary: grey[400],
+                  },
+              }),
     },
     components: {
         MuiSelect: {
@@ -218,9 +217,7 @@ function App() {
     const protectedRoutes = [
         {
             path: '/profile',
-            element: (
-                <ProfileIndex />
-            ),
+            element: <ProfileIndex />,
         },
         {
             path: '/profile/info',
@@ -290,20 +287,19 @@ function App() {
     // }, []);
 
     const payPalOptions = {
-        clientId: 'AXH3T6mt5FSd1rfMt0i2m6AadWj86MjC2qESbozuHcBXvS3Orwtt0FhxuG-MpxAkOPcYt1LD_ni4dpz4', // testing
+        clientId:
+            'AXH3T6mt5FSd1rfMt0i2m6AadWj86MjC2qESbozuHcBXvS3Orwtt0FhxuG-MpxAkOPcYt1LD_ni4dpz4', // testing
         currency: 'EUR',
         intent: 'capture',
     };
 
-    const { t, i18n } = useTranslation()
+    const { t, i18n } = useTranslation();
 
     const changeLanguageHandler = () => {
-        console.log("lang: ", i18n.language);
-        if (i18n.language == "pt")
-            i18n.changeLanguage("en");
-        else
-            i18n.changeLanguage("pt");
-    }
+        console.log('lang: ', i18n.language);
+        if (i18n.language == 'pt') i18n.changeLanguage('en');
+        else i18n.changeLanguage('pt');
+    };
 
     return (
         // <CurrentAccountProvider
@@ -347,7 +343,7 @@ function App() {
                                 }}
                                 onClick={() => changeLanguageHandler()}
                                 color="inherit">
-                                {i18n.language == "pt" ? "PT" : "EN"}
+                                {i18n.language == 'pt' ? 'PT' : 'EN'}
                             </Button>
 
                             {location.pathname !== '/' ? (

@@ -83,7 +83,7 @@ export default function Requests() {
     useEffect(() => {
         if (first === 0) {
             first++;
-        }else{
+        } else {
             if (selectedTypes.length === 0) {
                 const newQuery = { ...productQuery };
                 delete newQuery['piece_info.technique[in]'];
@@ -177,8 +177,7 @@ export default function Requests() {
                                     onChangeProductState={onChangeProductState}
                                 />
                             )
-                    )
-                    }
+                    )}
                 {error && <div>{t('errors.title')}</div>}
                 {loading && (
                     <Box
@@ -194,9 +193,7 @@ export default function Requests() {
                 )}
                 {!loading && (!products || products.length === 0) && (
                     <div>{t('errors.no-results')}</div>
-                )
-
-                }
+                )}
                 {hasMore && (
                     <Button
                         startIcon={<AddCircleOutlineSharpIcon />}

@@ -16,7 +16,7 @@ import ProfileThumbnail from '../../components/Profile/ProfileThumbnail';
 export default function ProfileIndex() {
     const [t] = useTranslation();
     //const { disconnect } = useContext(CurrentChatContext);
-    const tokenLevel = "client" as string;
+    const tokenLevel = 'client' as string;
 
     return (
         <Box
@@ -33,14 +33,18 @@ export default function ProfileIndex() {
                 justifyContent: 'center',
             }}>
             <div className="grid max-w-max max-h-max gap-2 md:gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 justify-center content-center items-center">
-                {(tokenLevel == 'seller' || tokenLevel == 'client') && <Link className="inline-block" to="/profile/info">
-                    <ProfileThumbnail
-                        title={t('profile.account.title')}
-                        description={t('profile.account.description')}
-                        icon={<AccountCircleIcon />}
-                    />
-                </Link>}
-                {(tokenLevel == 'seller' || tokenLevel == 'admin' || tokenLevel == 'client') && (
+                {(tokenLevel == 'seller' || tokenLevel == 'client') && (
+                    <Link className="inline-block" to="/profile/info">
+                        <ProfileThumbnail
+                            title={t('profile.account.title')}
+                            description={t('profile.account.description')}
+                            icon={<AccountCircleIcon />}
+                        />
+                    </Link>
+                )}
+                {(tokenLevel == 'seller' ||
+                    tokenLevel == 'admin' ||
+                    tokenLevel == 'client') && (
                     <Link className="inline-block" to="/profile/notifications">
                         <ProfileThumbnail
                             title={t('profile.notifications.title')}

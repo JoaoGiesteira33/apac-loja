@@ -55,7 +55,10 @@ const Login = () => {
                 navigate('/gallery');
             })
             .catch((error) => {
-                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                if (
+                    error.code === 'auth/user-not-found' ||
+                    error.code === 'auth/wrong-password'
+                ) {
                     setShowCredAlert(true);
                 } else {
                     setErrorMessage(error.message);
@@ -63,7 +66,6 @@ const Login = () => {
                 }
             });
     };
-
 
     return (
         <Box component="div" maxWidth="xs" style={{}}>

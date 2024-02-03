@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
 import logoApac from '../../assets/LOGO_negrito.png';
-import { Divider, Grid, Link, CircularProgress, useTheme, Box } from '@mui/material';
+import {
+    Divider,
+    Grid,
+    Link,
+    CircularProgress,
+    useTheme,
+    Box,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { checkLink } from '../../fetchers';
@@ -37,8 +44,7 @@ export default function Initial(props) {
                 className="font-poppins"
                 href={link}
                 underline="none"
-                color={theme.palette.text.primary}
-                >
+                color={theme.palette.text.primary}>
                 {text}
             </Box>
         );

@@ -19,7 +19,7 @@ interface CheckoutStep2Props {
 
 const CheckoutStep2 = ({ validate, setValidFunc }: CheckoutStep2Props) => {
     const { t } = useTranslation();
-    
+
     const [countryInput, setCountryInput] = useState('');
     const [country, setCountry] = useState<CountryType>({
         code: 'PT',

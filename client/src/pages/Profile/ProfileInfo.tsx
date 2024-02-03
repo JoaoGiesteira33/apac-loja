@@ -21,7 +21,7 @@ const TODAY_MINUS_18_YEARS: Dayjs = dayjs().subtract(18, 'year');
 
 export default async function ProfileInfo() {
     const [t] = useTranslation();
-    console.log("here")
+    console.log('here');
     const userInfo = await getUserInfo();
 
     console.log(userInfo);
@@ -257,7 +257,7 @@ export default async function ProfileInfo() {
             },
         };
 
-        const role = userInfo.role
+        const role = userInfo.role;
         const newUserInfo = role === 'customer' ? newUserInfoC : newUserInfoS;
 
         const res = await updateUser(newUserInfo, role);

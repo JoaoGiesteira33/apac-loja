@@ -16,7 +16,10 @@ const NotificationPaper = (props: { notification: NotificationType }) => {
     const navigate = useNavigate();
 
     // calculate difference in days
-    const diffInDays: number = dayjs().diff(dayjs(props.notification.date), 'day');
+    const diffInDays: number = dayjs().diff(
+        dayjs(props.notification.date),
+        'day'
+    );
 
     return (
         <span
@@ -65,12 +68,12 @@ const NotificationPaper = (props: { notification: NotificationType }) => {
                                     {diffInDays === 0
                                         ? 'Hoje'
                                         : diffInDays === 1
-                                        ? 'Ontem'
-                                        : diffInDays < 30
-                                        ? `${diffInDays} days ago`
-                                        : diffInDays < 365
-                                        ? `${Math.floor(diffInDays/30)} mêses atrás`
-                                        : `${Math.floor(diffInDays/365)} anos atrás`}
+                                          ? 'Ontem'
+                                          : diffInDays < 30
+                                            ? `${diffInDays} days ago`
+                                            : diffInDays < 365
+                                              ? `${Math.floor(diffInDays / 30)} mêses atrás`
+                                              : `${Math.floor(diffInDays / 365)} anos atrás`}
                                 </Typography>
                             </Box>
                         </Stack>

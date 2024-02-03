@@ -39,7 +39,9 @@ const CheckoutStep4 = () => {
                         <Button
                             variant="contained"
                             className="w-full h-12"
-                            onClick={() => {setMbway(!mbway)}}>
+                            onClick={() => {
+                                setMbway(!mbway);
+                            }}>
                             <img src="/public/eupago.png" alt="MBWay" />
                             <img
                                 src="/public/logo-mbway.png"
@@ -47,16 +49,18 @@ const CheckoutStep4 = () => {
                                 className="h-12"
                             />
                         </Button>
-                        {mbway && (
-                            <MBWayComponent />
-                        )}
+                        {mbway && <MBWayComponent />}
                     </Box>
 
                     <Divider sx={{ margin: '20px 0' }} />
 
                     <Box component="div">
-                        <Button variant="contained" className="w-full h-12"
-                        onClick={() => {setMultibanco(!multibanco)}}>
+                        <Button
+                            variant="contained"
+                            className="w-full h-12"
+                            onClick={() => {
+                                setMultibanco(!multibanco);
+                            }}>
                             <img src="/public/eupago.png" alt="MBWay" />
                             <img
                                 src="/public/multibanco-logo.png"
@@ -64,9 +68,7 @@ const CheckoutStep4 = () => {
                                 className="h-10 ml-2"
                             />
                         </Button>
-                        {multibanco && (
-                            <MultibancoComponent />
-                        )}
+                        {multibanco && <MultibancoComponent />}
                     </Box>
                 </Box>
             </Paper>

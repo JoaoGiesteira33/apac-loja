@@ -12,7 +12,6 @@ import ProductThumbnail from '../components/pintar_o_7/ProductThumbnail';
 import { useTranslation } from 'react-i18next';
 //import { CurrentChatContext } from '../contexts/chatContext';
 
-
 const Product = (props) => {
     const { t } = useTranslation();
     const location = useLocation();
@@ -70,7 +69,7 @@ const Product = (props) => {
                     });
                     // get selected user from users
                     //let selectedUser = users.find((user) => user.username === product._seller);
-                    //setSelectedUser(selectedUser)      
+                    //setSelectedUser(selectedUser)
                 })
                 .catch((error) => {
                     console.log(error);
@@ -78,8 +77,8 @@ const Product = (props) => {
         //else{
         //    // get selected user from users
         //    //let selectedUser = users.find((user) => user.username === product._seller);
-        //    //setSelectedUser(selectedUser)  
-        //}    
+        //    //setSelectedUser(selectedUser)
+        //}
     });
     return (
         <Box
@@ -95,7 +94,6 @@ const Product = (props) => {
                 },
                 my: 5,
             }}>
-
             {product && (
                 <ProductDetails product={product} loggedIn={loggedIn} />
             )}
@@ -122,7 +120,6 @@ const Product = (props) => {
                         {t('product.no_more')}
                     </Typography>
                 )}
-                
             </Grid>
         </Box>
     );

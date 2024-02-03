@@ -50,7 +50,7 @@ export default function Order(props: { order: OrderType }) {
         };
 
     const { t } = useTranslation();
-    
+
     return (
         <Paper
             sx={{
@@ -58,7 +58,8 @@ export default function Order(props: { order: OrderType }) {
             }}>
             <Box component={'div'} sx={{ padding: '1rem' }}>
                 <Typography sx={{ wordWrap: 'break-word' }} variant="h5">
-                    {t('checkout.orderNr')}{props.order._id}
+                    {t('checkout.orderNr')}
+                    {props.order._id}
                 </Typography>
                 <Typography variant="h6">
                     ({props.order.date ? props.order.date.toLocaleString() : ''}
@@ -79,7 +80,8 @@ export default function Order(props: { order: OrderType }) {
                                 aria-controls={`${props.order._id}-${index}-content`}
                                 id={`${props.order._id}-${index}-header`}>
                                 <Typography>
-                                    {t('checkout.shippmentNr')}{shipment._product}
+                                    {t('checkout.shippmentNr')}
+                                    {shipment._product}
                                 </Typography>
                             </AccordionSummary>
                             <AccordionDetails>

@@ -28,7 +28,7 @@ const CartDetails = () => {
     const products = cart;
     const navigate = useNavigate();
 
-    const [shippingCost, setShippingCost] = useState(0); 
+    const [shippingCost, setShippingCost] = useState(0);
     const [subtotal, setSubtotal] = useState(parseFloat(subTotalPrice));
     const [tax, setTax] = useState(0.23);
 

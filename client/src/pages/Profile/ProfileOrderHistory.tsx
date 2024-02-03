@@ -58,8 +58,6 @@ const createRandomOrders = (): OrderType[] => {
     return orders;
 };
 
-
-
 export default function ProfileOrderHistory() {
     const [orders, setOrders] = useState<OrderType[]>([]);
 
@@ -68,16 +66,17 @@ export default function ProfileOrderHistory() {
         //const MOCK_ORDERS = createRandomOrders();
         //setOrders(MOCK_ORDERS);
 
-        console.log("ID:",_id);
+        console.log('ID:', _id);
         const token = localStorage.getItem('token');
         const decodedToken = decodeToken(token);
-        getOrders(token,decodedToken._id).then((orders) => {
-            setOrders(orders);
-        }).catch((e) => {
-            console.log('error', e);
-        });
+        getOrders(token, decodedToken._id)
+            .then((orders) => {
+                setOrders(orders);
+            })
+            .catch((e) => {
+                console.log('error', e);
+            });
     }, []);
-
 
     const { t } = useTranslation();
 
@@ -98,7 +97,9 @@ export default function ProfileOrderHistory() {
                 spacing={4}
                 alignItems={'center'}
                 justifyContent={'flex-start'}>
-                <Typography variant="h3">{t('profile.order_history')}</Typography>
+                <Typography variant="h3">
+                    {t('profile.order_history')}
+                </Typography>
                 {orders.map((order) => {
                     return <Order key={order._id} order={order}></Order>;
                 })}

@@ -61,7 +61,9 @@ export const ReserveModal = () => {
                         <CheckoutStep4 />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose}>{t('cart.reservation.cancel-button')}</Button>
+                        <Button onClick={handleClose}>
+                            {t('cart.reservation.cancel-button')}
+                        </Button>
                         {/* <Button type="submit">Subscribe</Button> */}
                     </DialogActions>
                     <Typography
@@ -70,8 +72,7 @@ export const ReserveModal = () => {
                         fontSize="0.75rem"
                         className="font-poppins p-2">
                         * {t('cart.reservation.info')}
-                        <br />
-                        * {t('cart.reservation.info2')}
+                        <br />* {t('cart.reservation.info2')}
                     </Typography>
                 </Dialog>
             </React.Fragment>

@@ -21,9 +21,7 @@ const Cart = () => {
                 },
                 paddingY: '3rem',
             }}>
-
             <ReservationDetails />
-            
 
             <Link
                 component="button"

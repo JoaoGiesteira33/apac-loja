@@ -19,8 +19,7 @@ export default function ArtistsIndexPage() {
     const [artistPage, setArtistPage] = useState(1);
     const [artistFilter, setArtistFilter] = useState('');
     const [artistQuery, setArtistQuery] = useState(() => {
-        if (tokenLevel === "admin")
-            return {};
+        if (tokenLevel === 'admin') return {};
         else
             return {
                 'seller_fields.status': 'active',
