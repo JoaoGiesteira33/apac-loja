@@ -27,7 +27,7 @@ export default async function ProfileInfo() {
     console.log(userInfo);
 
     let userInfoType = null;
-    if (userInfo && userInfo.sellerFields) {
+    if (userInfo.role === 'seller') {
         userInfoType = userInfo.sellerFields;
     } else {
         userInfoType = userInfo.customerFields;

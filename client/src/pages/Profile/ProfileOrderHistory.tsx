@@ -69,8 +69,8 @@ export default function ProfileOrderHistory() {
         //setOrders(MOCK_ORDERS);
 
         console.log("ID:",_id);
-        let token = localStorage.getItem('token');
-        let decodedToken = decodeToken(token);
+        const token = localStorage.getItem('token');
+        const decodedToken = decodeToken(token);
         getOrders(token,decodedToken._id).then((orders) => {
             setOrders(orders);
         }).catch((e) => {

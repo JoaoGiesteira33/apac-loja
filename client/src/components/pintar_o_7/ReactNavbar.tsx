@@ -1,12 +1,12 @@
-import * as React from 'react';
 import {
     AppBar,
     Box,
-    Toolbar,
-    IconButton,
     Grid,
+    IconButton,
+    Toolbar,
     useTheme,
 } from '@mui/material';
+import * as React from 'react';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import logoApac from '../../assets/LOGO_negrito.png';
@@ -71,7 +71,7 @@ function ReactNavbar(props) {
                     <Grid container>
                         {pages.map((page, index) => (
                             <Grid
-                                
+
                                 xs={3}
                                 sx={
                                     checkRoute(
@@ -91,11 +91,11 @@ function ReactNavbar(props) {
                             </Grid>
                         ))}
                         <Grid
-                            
+
                             xs={3}
                             sx={
                                 location.pathname ==
-                                lastpageLinks[props.loggedIn ? 1 : 0]
+                                    lastpageLinks[props.loggedIn ? 1 : 0]
                                     ? { fontWeight: 'bold' }
                                     : { color: theme.palette.text.secondary }
                             }>
@@ -137,7 +137,7 @@ function ReactNavbar(props) {
                 spacing={2}>
                 {pages.map((page, index) => (
                     <Grid
-                        
+
                         xs={12}
                         key={page}
                         sx={{
@@ -166,7 +166,7 @@ function ReactNavbar(props) {
                             component={'div'}
                             sx={
                                 location.pathname ==
-                                lastpageLinks[props.loggedIn ? 1 : 0]
+                                    lastpageLinks[props.loggedIn ? 1 : 0]
                                     ? { fontWeight: 'bold' }
                                     : {}
                             }>

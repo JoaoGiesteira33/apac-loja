@@ -7,11 +7,11 @@ import { checkLink } from '../../fetchers';
 // TO DO - TROCAR DE PRODUCT PARA ARTIST
 
 export default function ArtistThumbnail(props) {
-    var name = props.artist.seller_fields.demographics.name;
-    var length = name.split(' ').length;
+    const name = props.artist.seller_fields.demographics.name;
+    const length = name.split(' ').length;
 
-    var lastName = name.split(' ')[length - 1];
-    var otherNames = name
+    const lastName = name.split(' ')[length - 1];
+    const otherNames = name
         .split(' ')
         .slice(0, length - 1)
         .join(' ');

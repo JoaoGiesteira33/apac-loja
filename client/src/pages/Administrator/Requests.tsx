@@ -85,7 +85,7 @@ export default function Requests() {
             first++;
         }else{
             if (selectedTypes.length === 0) {
-                let newQuery = { ...productQuery };
+                const newQuery = { ...productQuery };
                 delete newQuery['piece_info.technique[in]'];
                 setProductQuery({
                     ...newQuery,

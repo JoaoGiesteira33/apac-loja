@@ -77,7 +77,7 @@ export default function Home() {
             setProductPage(1);
 
             if (selectedTypes.length === 0) {
-                let newQuery = { ...productQuery };
+                const newQuery = { ...productQuery };
                 delete newQuery['piece_info.technique[in]'];
                 setProductQuery({
                     ...newQuery,

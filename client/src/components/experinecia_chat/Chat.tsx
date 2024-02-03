@@ -58,7 +58,7 @@ function Chat() {
         to: selectedUser.username,
       });
 
-      let messages = selectedUser.messages;
+      const messages = selectedUser.messages;
       messages.push({
         content,
         fromSelf: true,

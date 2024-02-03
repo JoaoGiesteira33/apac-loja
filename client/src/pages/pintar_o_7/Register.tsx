@@ -12,9 +12,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import CountrySelect from '../../components/pintar_o_7/CountrySelect';
-import { createClient } from '../../fetchers';
+import { newCustomer } from '../../types/user';
+import { saveUserInfo } from '../../utils/db';
 import { auth } from '../../utils/firebase';
 
 
@@ -116,8 +116,10 @@ const Register = () => {
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
-                    const client = createClient(user.uid, email, name, new Date(birth_date), phone, country, address, postalCode, city);
+                    const customer = newCustomer(user.uid, email, name, new Date(birth_date), phone, { street: address, postalCode: postalCode, city: city, country: country })
 
+                    saveUserInfo(customer);
+                    navigate("/gallery");
                     return;
 
                 })

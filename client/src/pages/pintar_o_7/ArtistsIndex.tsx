@@ -36,7 +36,7 @@ export default function ArtistsIndexPage() {
         setArtistFilter(value);
         setArtistPage(1);
         if (value === '') {
-            let newArtistQuery = { ...artistQuery };
+            const newArtistQuery = { ...artistQuery };
             delete newArtistQuery['seller_fields.demographics.name[regex]'];
             delete newArtistQuery['seller_fields.demographics.name[options]'];
 

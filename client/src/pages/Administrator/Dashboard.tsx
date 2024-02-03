@@ -17,7 +17,7 @@ const Dashboard: React.FC = () => {
     const [ages, setAges] = useState(null);
 
     const getDistrictsStats = (users) => {
-        let districts: { [key: string]: number }[] = [{}, {}];
+        const districts: { [key: string]: number }[] = [{}, {}];
         users.forEach((user) => {
             try {
                 console.log(user);
@@ -56,16 +56,16 @@ const Dashboard: React.FC = () => {
 
     // estatistica de mes de registo
     const getMonthRegisterStats = (users) => {
-        let months: { [key: string]: string } = {};
+        const months: { [key: string]: string } = {};
         users.forEach((user) => {
             if (user.role == 'seller') return;
 
-            let date = new Date(user.dataRegisto);
-            let month = date.getMonth();
+            const date = new Date(user.dataRegisto);
+            const month = date.getMonth();
             if (month in months) months[month]++;
             else months[month] = 1;
         });
-        let formattedMonths = [];
+        const formattedMonths = [];
 
         for (const key in months) {
             formattedMonths[key] = {
@@ -79,7 +79,7 @@ const Dashboard: React.FC = () => {
 
     // estatistica de ultima visita (ultimos 15 dias, 30 dias, 60 dias, resto)
     const getLastVisitedStats = (users) => {
-        let lastVisited = [
+        const lastVisited = [
             [
                 { id: '7', value: 0, label: t('dashboard.7') },
                 { id: '15', value: 0, label: t('dashboard.15') },
@@ -100,10 +100,10 @@ const Dashboard: React.FC = () => {
             let type = 0;
             if (user.nivel == 'seller') type = 1;
 
-            let date = new Date(user.dataUltimoAcesso);
-            let today = new Date();
-            let diff = today.getTime() - date.getTime();
-            let days = Math.ceil(diff / (1000 * 3600 * 24));
+            const date = new Date(user.dataUltimoAcesso);
+            const today = new Date();
+            const diff = today.getTime() - date.getTime();
+            const days = Math.ceil(diff / (1000 * 3600 * 24));
             if (days < 7) lastVisited[type][0]['value']++;
             else if (days < 15) lastVisited[type][1]['value']++;
             else if (days < 30) lastVisited[type][2]['value']++;
@@ -116,34 +116,34 @@ const Dashboard: React.FC = () => {
 
     // get age users
     const getAgeStats = (users) => {
-        let ages: { [key: string]: string } = {};
+        const ages: { [key: string]: string } = {};
         users.forEach((user) => {
             if (user.role == 'seller') return;
-            let today = new Date();
-            let date = new Date(user.client_fields.demographics.birth_date);
+            const today = new Date();
+            const date = new Date(user.client_fields.demographics.birth_date);
             // get age from birthdate
-            var age = today.getFullYear() - date.getFullYear();
-            var m = today.getMonth() - date.getMonth();
+            let age = today.getFullYear() - date.getFullYear();
+            const m = today.getMonth() - date.getMonth();
             if (m < 0 || (m === 0 && today.getDate() < date.getDate())) {
                 age--;
             }
             if (age in ages) ages[age]++;
             else ages[age] = 1;
         });
-        var i;
+        let i;
 
         return ages;
     };
 
     const getShipmentStateStats = (shipments) => {
-        let states = [
+        const states = [
             { id: 'pending', value: 0, label: t('dashboard.pending') },
             { id: 'reserved', value: 0, label: t('dashboard.reserved') },
             { id: 'paid', value: 0, label: t('dashboard.paid') },
         ];
         console.log('Shipments:', shipments);
         shipments.forEach((shipment) => {
-            let state = shipment.states[shipment.states.length - 1].value;
+            const state = shipment.states[shipment.states.length - 1].value;
             if (state == 'pending') states[0]['value']++;
             else if (state == 'reserved') states[1]['value']++;
             else if (state == 'paid') states[2]['value']++;

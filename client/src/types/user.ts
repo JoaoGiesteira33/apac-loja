@@ -37,33 +37,131 @@
 //     active_chat_id?: string[];
 //     tags?: string[];
 // }
-class Address {
-    constructor(public street: string, public postalCode: string, public city: string, public country: string) { }
+// class Address {
+//     constructor(public street: string, public postalCode: string, public city: string, public country: string) { }
+// }
+
+// class SellerFields {
+//     constructor(public about: string, public sellerType: string) { }
+// }
+
+// class ClientFields {
+//     constructor(public searchHistory: string[], public favorites: string[], public cart: string[], public interests: string[]) { }
+// }
+
+// export class User {
+//     constructor(
+//         public uid: string,
+//         public email: string,
+//         public role: "customer" | "seller" | "admin",
+//         public name: string,
+//         public birthDate: Date,
+//         public address: Address,
+//         public phone: string,
+//         public profilePicture: string | null,
+//         public activeChatId: string[],
+//         public tags: string[]
+//     ) { }
+
+// }
+
+// export class Customer extends User {
+//     clientFields: ClientFields;
+//     constructor(
+//         uid: string,
+//         email: string,
+//         name: string,
+//         birthDate: Date,
+//         address: Address,
+//         phone: string,
+//         profilePicture: string | null,
+//     ) {
+//         super(uid, email, "customer", name, birthDate, address, phone, profilePicture, null, [], []);
+//         this.clientFields = new ClientFields([], [], [], []);
+//     }
+// }
+
+// export class Seller extends User {
+//     sellerFields: SellerFields;
+//     constructor(
+//         uid: string,
+//         email: string,
+//         name: string,
+//         birthDate: Date,
+//         address: Address,
+//         phone: string,
+//         profilePicture: string | null,
+//         about: string,
+//         sellerType: string
+//     ) {
+//         super(uid, email, "customer", name, birthDate, address, phone, profilePicture, null, [], []);
+//         this.sellerFields = new SellerFields(about, sellerType);
+//     }
+// }
+
+interface Address {
+    street: string;
+    postalCode: string;
+    city: string;
+    country: string;
 }
 
-class PersonalInfo {
-    constructor(public name: string, public birthDate: Date, public address: Address, public phone: string) { }
+interface CommonUserFields {
+    uid: string;
+    email: string;
+    name: string;
+    birthDate: Date;
+    phone: string;
+    profilePicture: string | null;
+    activeChatId: string[];
+    tags: string[];
 }
 
-class SellerFields {
-    constructor(public about: string, public sellerType: string) { }
+interface CustomerFields {
+    role: "customer";
+    address: Address;
+    searchHistory: string[];
+    favorites: string[];
+    cart: string[];
+    interests: string[];
 }
 
-class ClientFields {
-    constructor(public searchHistory: string[], public favorites: string[], public cart: string[], public interests: string[]) { }
+interface SellerFields {
+    role: "seller";
+    about: string;
+    sellerType: string;
 }
 
-export class User {
-    constructor(
-        public uid: string,
-        public email: string,
-        public role: "customer" | "seller" | "admin",
-        public personalInfo: PersonalInfo,
-        public profilePicture: string | null,
-        public customerFields: ClientFields | null,
-        public sellerFields: SellerFields | null,
-        public activeChatId: string[],
-        public tags: string[]
-    ) { }
+type UserRole = CustomerFields | SellerFields;
 
+export type User = CommonUserFields & UserRole;
+
+export type Customer = CommonUserFields & CustomerFields;
+
+export type Seller = CommonUserFields & SellerFields;
+
+export function newCustomer(
+    uid: string,
+    email: string,
+    name: string,
+    birthDate: Date,
+    phone: string,
+    address: Address,
+): Customer {
+    return {
+        uid: uid,
+        email: email,
+        name: name,
+        birthDate: birthDate,
+        phone: phone,
+        profilePicture: "",
+        activeChatId: [],
+        tags: [],
+        role: 'customer',
+        address,
+        searchHistory: [],
+        favorites: [],
+        cart: [],
+        interests: [],
+    };
 }

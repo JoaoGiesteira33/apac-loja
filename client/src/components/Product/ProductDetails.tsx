@@ -53,7 +53,7 @@ const ProductDetails = (data: { product: ProductType; loggedIn: boolean }) => {
 
     const checkIfInCart = () => {
         // check if product is in cart array
-        var i = 0;
+        let i = 0;
 
         while (i < cart.length) {
             console.log('cart', cart[i]._id);

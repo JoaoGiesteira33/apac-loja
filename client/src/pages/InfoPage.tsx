@@ -48,7 +48,7 @@ const recursiveObjectToJSX = (obj: string | Array<Object>, level: number) => {
         );
     } else {
         return obj.map((item) => {
-            let { title, text } = item as any;
+            const { title, text } = item as any;
             return (
                 <Box component="div" mb={2} alignItems={'center'}>
                     <Typography variant="h6" fontWeight="bold" align="center">
