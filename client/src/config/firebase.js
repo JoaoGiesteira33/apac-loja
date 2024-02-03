@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 
 import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 
-import { getFirestore } from "firebase/firestore";
+import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -30,6 +30,9 @@ export const registerWithEmailAndPassword = async (email, password) => {
 
 export const db = getFirestore(app);
 
-export const getUserInfo = () => {
-  return db.collections('users').where("uid", "==", auth.currentUser.uid).get()
+export const getUserInfo = async () => {
+  console.log(auth.currentUser.uid);
+  const q = query(collection(db, "users"), where("uid", "==", auth.currentUser.uid));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs[0].data();
 }

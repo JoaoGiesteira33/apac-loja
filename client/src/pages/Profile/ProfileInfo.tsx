@@ -21,11 +21,10 @@ const TODAY_MINUS_18_YEARS: Dayjs = dayjs().subtract(18, 'year');
 
 export default function ProfileInfo() {
     const [t] = useTranslation();
-    const userInfo = getUserInfo().then(
-        (querySnapshot) => {
-            return querySnapshot.docs[0].data();
-        }
-    );
+    console.log("here")
+    const userInfo = getUserInfo();
+
+    console.log(userInfo);
 
     let userInfoType = null;
     if (userInfo && userInfo.seller_fields) {

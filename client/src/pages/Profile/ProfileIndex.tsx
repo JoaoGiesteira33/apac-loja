@@ -16,7 +16,7 @@ import ProfileThumbnail from '../../components/Profile/ProfileThumbnail';
 export default function ProfileIndex() {
     const [t] = useTranslation();
     //const { disconnect } = useContext(CurrentChatContext);
-    const tokenLevel = "admin" as string;
+    const tokenLevel = "client" as string;
 
     return (
         <Box
