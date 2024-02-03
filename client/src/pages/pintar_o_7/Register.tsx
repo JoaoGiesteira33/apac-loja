@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import CountrySelect from '../../components/pintar_o_7/CountrySelect';
-import { auth, pb } from '../../config/firebase';
+import { auth } from '../../config/firebase';
 
 
 const Register = () => {
@@ -115,19 +115,10 @@ const Register = () => {
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
+                    const data = new FormData(e.target);
+                    console.log(data);
+                    return;
 
-                    pb.collections("users").add(
-                        {
-                            uid: user.uid,
-                            name: name,
-                            birth_date: birth_date,
-                            phone: phone,
-                            country: country,
-                            address: address,
-                            postalCode: postalCode,
-                            city: city,
-                        });
-                    navigate('/');
                 })
                 .catch((error) => {
                     // const errorCode = error.code;
