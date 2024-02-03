@@ -11,6 +11,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import CountrySelect from '../../components/pintar_o_7/CountrySelect';
+import { getUserInfo } from '../../config/firebase';
 import { updateUser } from '../../fetchers';
 import { CountryType, getCountry } from '../../types/country';
 import { NestedPartial } from '../../types/nestedPartial';
@@ -20,7 +21,11 @@ const TODAY_MINUS_18_YEARS: Dayjs = dayjs().subtract(18, 'year');
 
 export default function ProfileInfo() {
     const [t] = useTranslation();
-    const userInfo = JSON.parse(localStorage.getItem('user') as string);
+    const userInfo = getUserInfo().then(
+        (querySnapshot) => {
+            return querySnapshot.docs[0].data();
+        }
+    );
 
     let userInfoType = null;
     if (userInfo && userInfo.seller_fields) {
