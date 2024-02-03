@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 //import { CurrentChatContext } from '../../contexts/chatContext';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../config/firebase';
+import { auth } from '../../utils/firebase';
 
 const Login = () => {
     const [t] = useTranslation();

@@ -1,10 +1,9 @@
-import axios, { Axios, AxiosError, AxiosResponse } from 'axios';
-import { ProductType } from './types/product';
+import axios from 'axios';
+import { decodeToken } from 'react-jwt';
 import { NestedPartial } from './types/nestedPartial';
+import { ProductType } from './types/product';
 import { Result, err, ok } from './types/result';
 import { User } from './types/user';
-import { decodeToken } from 'react-jwt';
-import { StringKeyframeTrack } from 'three';
 //import mime from 'mime';
 
 const BASE_URL = 'http://localhost';
@@ -63,14 +62,44 @@ export const fetchUser = async (id: string, level: string, token: string) => {
     }
 };
 
+export const createClient = (uid: string, email: string, name: string, birth_date: Date, phone: string, country: string, street: string, postal_code: string, city: string): User => {
+    return {
+        uid: uid,
+        email: email,
+        role: "client",
+        personal_info: {
+            name: name,
+            birth_date: birth_date,
+            address: {
+                street: street,
+                postal_code: postal_code,
+                city: city,
+                country: country,
+
+            },
+            phone: phone,
+
+        },
+        profile_picture: "",
+        client_fields: {
+            search_history: [],
+            favorites: [],
+            cart: [],
+            interests: [],
+        },
+        seller_fields: undefined,
+        active_chat_id: [],
+        tags: [],
+    }
+}
 export const registerUser = async (body: FormData) => {
     console.log('Registering user');
     console.log('body: ', body);
-    var object = {};
+    const object = {};
     body.forEach(function (value, key) {
         object[key] = value;
     });
-    var json = JSON.stringify(object);
+    const json = JSON.stringify(object);
     console.log('json: ', object);
 
     try {

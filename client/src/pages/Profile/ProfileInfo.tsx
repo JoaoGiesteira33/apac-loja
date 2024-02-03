@@ -11,26 +11,26 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import CountrySelect from '../../components/pintar_o_7/CountrySelect';
-import { getUserInfo } from '../../config/firebase';
 import { updateUser } from '../../fetchers';
 import { CountryType, getCountry } from '../../types/country';
 import { NestedPartial } from '../../types/nestedPartial';
 import { User } from '../../types/user';
+import { getUserInfo } from '../../utils/db';
 
 const TODAY_MINUS_18_YEARS: Dayjs = dayjs().subtract(18, 'year');
 
-export default function ProfileInfo() {
+export default async function ProfileInfo() {
     const [t] = useTranslation();
     console.log("here")
-    const userInfo = getUserInfo();
+    const userInfo = await getUserInfo();
 
     console.log(userInfo);
 
     let userInfoType = null;
-    if (userInfo && userInfo.seller_fields) {
-        userInfoType = userInfo.seller_fields;
+    if (userInfo && userInfo.sellerFields) {
+        userInfoType = userInfo.sellerFields;
     } else {
-        userInfoType = userInfo.client_fields;
+        userInfoType = userInfo.customerFields;
     }
 
     const [name, setName] = useState(() => {
@@ -223,45 +223,44 @@ export default function ProfileInfo() {
 
         const newUserInfoC: NestedPartial<User> = {
             email: email,
-            client_fields: {
-                demographics: {
-                    address: {
-                        street: address,
-                        city: city,
-                        postal_code: postalCode,
-                        country: countryInput,
-                    },
-                    name: name,
-                    phone: phone,
-                    birth_date: birth_date.format('YYYY-MM-DD'),
+            personalInfo: {
+                address: {
+                    street: address,
+                    city: city,
+                    postalCode: postalCode,
+                    country: countryInput,
                 },
-                ...userInfo.client_fields,
+                name: name,
+                phone: phone,
+                birthDate: birth_date.format('YYYY-MM-DD'),
+            },
+            customerFields: {
+                ...userInfo.customerFields,
             },
         };
 
         const newUserInfoS: NestedPartial<User> = {
             email: email,
-            seller_fields: {
-                demographics: {
-                    address: {
-                        street: address,
-                        city: city,
-                        postal_code: postalCode,
-                        country: countryInput,
-                    },
-                    name: name,
-                    phone: phone,
-                    birth_date: birth_date.format('YYYY-MM-DD'),
+            personalInfo: {
+                address: {
+                    street: address,
+                    city: city,
+                    postalCode: postalCode,
+                    country: countryInput,
                 },
-                ...userInfo.seller_fields,
+                name: name,
+                phone: phone,
+                birthDate: birth_date.format('YYYY-MM-DD'),
+            },
+            sellerFields: {
+                ...userInfo.sellerFields,
             },
         };
 
-        const newUserInfo = tokenLevel == 'client' ? newUserInfoC : newUserInfoS;
-        const token = localStorage.getItem('token');
-        if (token == null) return;
+        const role = userInfo.role
+        const newUserInfo = role === 'customer' ? newUserInfoC : newUserInfoS;
 
-        const res = await updateUser(newUserInfo, token);
+        const res = await updateUser(newUserInfo, role);
         if (res.isOk()) {
             const newUserInfoLocalStorage = { ...userInfo, ...newUserInfo };
             localStorage.setItem(

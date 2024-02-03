@@ -14,7 +14,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import CountrySelect from '../../components/pintar_o_7/CountrySelect';
-import { auth } from '../../config/firebase';
+import { createClient } from '../../fetchers';
+import { auth } from '../../utils/firebase';
 
 
 const Register = () => {
@@ -115,8 +116,8 @@ const Register = () => {
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
-                    const data = new FormData(e.target);
-                    console.log(data);
+                    const client = createClient(user.uid, email, name, new Date(birth_date), phone, country, address, postalCode, city);
+
                     return;
 
                 })

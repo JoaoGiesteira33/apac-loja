@@ -33,7 +33,7 @@ import { useTranslation } from 'react-i18next';
 
 
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "./config/firebase";
+import { auth } from "./utils/firebase";
 
 
 
@@ -56,7 +56,7 @@ const CartBadge = React.lazy(() => import('./components/CartBadge'));
 const Dashboard = React.lazy(() => import('./pages/Administrator/Dashboard'));
 const Notifications = React.lazy(() => import('./pages/Profile/Notifications'));
 
-const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
+const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
 const getDesignTokens = (mode: PaletteMode) => ({
     typography: {
         fontFamily: 'Poppins',
@@ -65,37 +65,37 @@ const getDesignTokens = (mode: PaletteMode) => ({
         mode,
         ...(mode === 'light'
             ? {
-                  // Light Mode
-                  primary: grey,
-                  secondary: {
-                      main: '#000000',
-                      light: '#333333',
-                      dark: '#000000',
-                      contrastText: '#ffffff',
-                  },
-                  background: {
-                      default: '#fff',
-                      paper: '#fff',
-                  },
-                  divider: grey[900],
-                  text: {
-                      primary: grey[900],
-                      secondary: grey[800],
-                  },
-              }
+                // Light Mode
+                primary: grey,
+                secondary: {
+                    main: '#000000',
+                    light: '#333333',
+                    dark: '#000000',
+                    contrastText: '#ffffff',
+                },
+                background: {
+                    default: '#fff',
+                    paper: '#fff',
+                },
+                divider: grey[900],
+                text: {
+                    primary: grey[900],
+                    secondary: grey[800],
+                },
+            }
             : {
-                  // Dark Mode
-                  primary: grey,
-                  secondary: orange,
-                  background: {
-                      default: '#121212',
-                      paper: '#1f1f1f',
-                  },
-                  text: {
-                      primary: '#ffffff',
-                      secondary: grey[400],
-                  },
-              }),
+                // Dark Mode
+                primary: grey,
+                secondary: orange,
+                background: {
+                    default: '#121212',
+                    paper: '#1f1f1f',
+                },
+                text: {
+                    primary: '#ffffff',
+                    secondary: grey[400],
+                },
+            }),
     },
     components: {
         MuiSelect: {
@@ -141,9 +141,9 @@ function App() {
 
     const [loggedIn, loading, error] = useAuthState(auth);
 
-//    onAuthStateChanged(auth, (user) => {
-//     setLoggedIn(user !== undefined)
-//    }) ;
+    //    onAuthStateChanged(auth, (user) => {
+    //     setLoggedIn(user !== undefined)
+    //    }) ;
     // const [tokenLevel, setTokenLevel] = React.useState(undefined);
 
     const colorMode = React.useMemo(
@@ -297,14 +297,13 @@ function App() {
 
     const { t, i18n } = useTranslation()
 
-     const changeLanguageHandler = () =>
-     {
-            console.log("lang: ", i18n.language);
-            if(i18n.language == "pt")
-                i18n.changeLanguage("en");
-            else
-                i18n.changeLanguage("pt");
-     }
+    const changeLanguageHandler = () => {
+        console.log("lang: ", i18n.language);
+        if (i18n.language == "pt")
+            i18n.changeLanguage("en");
+        else
+            i18n.changeLanguage("pt");
+    }
 
     return (
         // <CurrentAccountProvider
@@ -313,77 +312,77 @@ function App() {
         //     tokenLevel={tokenLevel ?? ''}
         //     setTokenLevel={setTokenLevel}
         //     >
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <PayPalScriptProvider options={payPalOptions}>
-                    <ColorModeContext.Provider value={colorMode}>
-                        <ThemeProvider theme={theme}>
-                            <CssBaseline />
-                            <Box
-                                component="div"
-                                className={
-                                    theme.palette.mode === 'dark' ? 'dark' : ''
-                                }>
-                                <IconButton
-                                    sx={{
-                                        ml: 1,
-                                        position: 'absolute',
-                                        right: 0,
-                                        top: 0,
-                                        zIndex: 1,
-                                    }}
-                                    onClick={colorMode.toggleColorMode}
-                                    color="inherit">
-                                    {theme.palette.mode === 'dark' ? (
-                                        <Brightness7Icon />
-                                    ) : (
-                                        <Brightness4Icon />
-                                    )}
-                                </IconButton>
-                                <Button
-                                    sx={{
-                                        position: 'absolute',
-                                        right: 0,
-                                        top: 30,
-                                        zIndex: 1,
-                                    }}
-                                    onClick={() => changeLanguageHandler()}
-                                    color="inherit">
-                                    {i18n.language == "pt" ? "PT" : "EN"}
-                                </Button>
-
-                                {location.pathname !== '/' ? (
-                                    <ReactNavbar
-                                        loggedIn={loggedIn}
-                                        setHeight={setNavbarSize}
-                                    />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <PayPalScriptProvider options={payPalOptions}>
+                <ColorModeContext.Provider value={colorMode}>
+                    <ThemeProvider theme={theme}>
+                        <CssBaseline />
+                        <Box
+                            component="div"
+                            className={
+                                theme.palette.mode === 'dark' ? 'dark' : ''
+                            }>
+                            <IconButton
+                                sx={{
+                                    ml: 1,
+                                    position: 'absolute',
+                                    right: 0,
+                                    top: 0,
+                                    zIndex: 1,
+                                }}
+                                onClick={colorMode.toggleColorMode}
+                                color="inherit">
+                                {theme.palette.mode === 'dark' ? (
+                                    <Brightness7Icon />
                                 ) : (
-                                    <></>
+                                    <Brightness4Icon />
                                 )}
-                                <Suspense
-                                    fallback={
-                                        <Box
-                                            sx={{
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                my: 10,
-                                            }}
-                                            component="div">
-                                            <CircularProgress />
-                                        </Box>
-                                    }>
-                                    <Routes>
-                                        {routes.map((route, index) => (
-                                            <Route
-                                                key={index}
-                                                path={route.path}
-                                                element={route.element}
-                                            />
-                                        ))}
+                            </IconButton>
+                            <Button
+                                sx={{
+                                    position: 'absolute',
+                                    right: 0,
+                                    top: 30,
+                                    zIndex: 1,
+                                }}
+                                onClick={() => changeLanguageHandler()}
+                                color="inherit">
+                                {i18n.language == "pt" ? "PT" : "EN"}
+                            </Button>
+
+                            {location.pathname !== '/' ? (
+                                <ReactNavbar
+                                    loggedIn={loggedIn}
+                                    setHeight={setNavbarSize}
+                                />
+                            ) : (
+                                <></>
+                            )}
+                            <Suspense
+                                fallback={
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            my: 10,
+                                        }}
+                                        component="div">
+                                        <CircularProgress />
+                                    </Box>
+                                }>
+                                <Routes>
+                                    {routes.map((route, index) => (
                                         <Route
+                                            key={index}
+                                            path={route.path}
+                                            element={route.element}
+                                        />
+                                    ))}
+                                    <Route
                                         element={
-                                            <PrivateRoutes 
-                                            level={loggedIn !== undefined} 
+                                            <PrivateRoutes
+                                                level={loggedIn !== undefined}
                                             />
                                         }>
                                         {protectedRoutes.map((route, index) => (
@@ -411,7 +410,7 @@ function App() {
                                     <Route
                                         element={
                                             <AdminPrivateRoutes
-                                                // level={tokenLevel}
+                                            // level={tokenLevel}
                                             />
                                         }>
                                         {adminRoutes.map((route, index) => (
@@ -422,26 +421,26 @@ function App() {
                                             />
                                         ))}
                                     </Route>
-                                    </Routes>
-                                </Suspense>
-                                {loggedIn && location.pathname !== '/cart' && (
-                                    <CartBadge />
-                                )}
-                                {/*checkChatRoute(location.pathname) ? (
+                                </Routes>
+                            </Suspense>
+                            {loggedIn && location.pathname !== '/cart' && (
+                                <CartBadge />
+                            )}
+                            {/*checkChatRoute(location.pathname) ? (
                                     <Chat />
                                 ) : (
                                     <></>
                                 )*/}
-                                {location.pathname !== '/' ? (
-                                    <Footer setHeight={setFooterSize} />
-                                ) : (
-                                    <></>
-                                )}
-                            </Box>
-                        </ThemeProvider>
-                    </ColorModeContext.Provider>
-                </PayPalScriptProvider>
-            </LocalizationProvider>
+                            {location.pathname !== '/' ? (
+                                <Footer setHeight={setFooterSize} />
+                            ) : (
+                                <></>
+                            )}
+                        </Box>
+                    </ThemeProvider>
+                </ColorModeContext.Provider>
+            </PayPalScriptProvider>
+        </LocalizationProvider>
         // </CurrentAccountProvider>
     );
 }
