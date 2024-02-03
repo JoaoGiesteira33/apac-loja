@@ -15,7 +15,8 @@ import AddCircleOutlineSharpIcon from '@mui/icons-material/AddCircleOutlineSharp
 import useProductSearch from '../../hooks/useProductSearch';
 import ProductThumbnail from '../../components/pintar_o_7/ProductThumbnail';
 import { useTranslation } from 'react-i18next';
-import { getMaxPrice } from '../../fetchers';
+import { checkLink, getMaxPrice } from '../../fetchers';
+
 
 export default function Home() {
     const [t] = useTranslation();
@@ -104,7 +105,7 @@ export default function Home() {
                     t('home.iniciative') +
                     ' Associação Portuguesa das Artes e da Cultura'
                 }
-                img={randomFeaturedProduct && randomFeaturedProduct.photos[0]}
+                img={checkLink(randomFeaturedProduct && randomFeaturedProduct.photos[0])}
                 color={'#FF3D00'}
             />
             <Stack
