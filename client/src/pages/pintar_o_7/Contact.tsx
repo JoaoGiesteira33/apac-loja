@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
     Box,
     TextField,
@@ -9,9 +9,8 @@ import {
     Alert,
     CircularProgress,
 } from '@mui/material';
-import { sendEmail } from '../fetchers';
-import { Link, useNavigate } from 'react-router-dom';
-import { useJwt, decodeToken } from 'react-jwt';
+import { sendEmail } from '../../fetchers';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 const Contact = (props) => {

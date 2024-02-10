@@ -6,7 +6,7 @@ interface Address {
 }
 
 interface CommonUserFields {
-    uid: string;
+    id: string;
     email: string;
     name: string;
     birthDate: Date;
@@ -40,7 +40,7 @@ export type Customer = CommonUserFields & CustomerFields;
 export type Seller = CommonUserFields & SellerFields;
 
 export function newCustomer(
-    uid: string,
+    id: string,
     email: string,
     name: string,
     birthDate: Date,
@@ -48,7 +48,7 @@ export function newCustomer(
     address: Address
 ): Customer {
     return {
-        uid: uid,
+        id: id,
         email: email,
         name: name,
         birthDate: birthDate,

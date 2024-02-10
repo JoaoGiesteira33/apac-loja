@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios, { Canceler } from 'axios';
 import { API_URL_PROD } from '../fetchers';
 import { ProductType } from '../types/product';
+import { searchAvailableProducts } from '../search/search_products';
 
 const MockData: ProductType[] = [];
 
@@ -71,33 +72,24 @@ export default function useProductSearch(query: object, pageNumber: number) {
     }, [query]);
 
     useEffect(() => {
-        let cancel: Canceler;
-
         setLoading(true);
         setError(false);
 
-        axios({
-            method: 'GET',
-            url: API_URL_PROD,
-            params: { page: pageNumber - 1, ...query }, //Limit é opcional, default=28
-            cancelToken: new axios.CancelToken((c) => (cancel = c)),
-        })
+        searchAvailableProducts(1)
             .then((res) => {
                 if (empty) {
-                    setProducts(res.data.results);
+                    setProducts(res);
                     empty = false;
-                } else setProducts(products.concat(res.data.results));
-                setHasMore(res.data.hasMore);
+                } else setProducts(products.concat(res));
+                setHasMore(false);
                 setLoading(false);
-                console.log('Products:', products.concat(res.data.results));
+                console.log('Products:', products.concat(res));
             })
             .catch((e) => {
                 // Ignore the error if it's a request cancellation.
-                if (axios.isCancel(e)) return;
+                // if (axios.isCancel(e)) return;
                 //else setError(true);
             });
-
-        return () => cancel();
     }, [query, pageNumber]);
 
     return { loading, error, MockData, hasMore, products, setProducts };

@@ -1,11 +1,12 @@
-import { FirebaseFirestore } from 'firebase-admin';
 import {
-    FirestoreDataConverter,
     collection,
     doc,
+    DocumentData,
+    FirestoreDataConverter,
     getDocs,
     getFirestore,
     query,
+    QueryDocumentSnapshot,
     setDoc,
     where,
 } from 'firebase/firestore';
@@ -15,11 +16,12 @@ import { Product } from '../types/product';
 import { Customer, Seller, User } from '../types/user';
 
 const converter = <T>(): FirestoreDataConverter<T> => ({
-    toFirestore: (
-        data: FirebaseFirestore.WithFieldValue<T>
-    ): FirebaseFirestore.DocumentData => data as FirebaseFirestore.DocumentData,
-    fromFirestore: (snap: FirebaseFirestore.QueryDocumentSnapshot) =>
-        snap.data() as T,
+    toFirestore: (data: T): DocumentData => data as DocumentData,
+    fromFirestore: (snap: QueryDocumentSnapshot) => {
+        const obj = snap.data();
+        obj.id = snap.id;
+        return obj as T;
+    },
 });
 
 // helpers

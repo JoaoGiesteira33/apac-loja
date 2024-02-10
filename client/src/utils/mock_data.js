@@ -1,14 +1,8 @@
 import { faker } from '@faker-js/faker';
 
-
-import {
-    doc,
-    getFirestore,
-    setDoc
-} from 'firebase/firestore';
+import { doc, getFirestore, setDoc } from 'firebase/firestore';
 
 import { initializeApp } from 'firebase/app';
-
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -27,9 +21,8 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-
 function generateMockProduct() {
-    const pieceInfo= faker.datatype.boolean() ? generatePieceInfo() : null;
+    const pieceInfo = faker.datatype.boolean() ? generatePieceInfo() : null;
 
     return {
         seller: faker.string.alphanumeric(10),
@@ -59,14 +52,64 @@ function generatePieceInfo() {
     };
 }
 
-// Example usage
-
-for(let i = 0; i<20; i++){
-    const mockProduct = generateMockProduct();
-    console.log(mockProduct);
-
-    const id = mockProduct.title + mockProduct.author
-    
-    await setDoc(doc(db, "products", id), mockProduct);
-
+function generateMockCustomer() {
+    return {
+        uid: faker.string.alphanumeric(10),
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        birthDate: faker.date.birthdate(),
+        phone: faker.phone.number(),
+        profilePicture: faker.image.url(),
+        activeChatId: [],
+        tags: [],
+        role: 'customer',
+        address: {
+            street: faker.location.street(),
+            postalCode: faker.location.zipCode(),
+            city: faker.location.city(),
+            country: faker.location.county(),
+        },
+        searchHistory: [],
+        favorites: [],
+        cart: [],
+        interests: [],
+    };
 }
+
+function generateMockSeller() {
+    return {
+        uid: faker.string.alphanumeric(10),
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        birthDate: faker.date.birthdate(),
+        phone: faker.phone.number(),
+        profilePicture: faker.image.url(),
+        activeChatId: [],
+        tags: [],
+        role: 'seller',
+        about: faker.person.bio(),
+        sellerType: faker.person.jobArea(),
+    };
+}
+
+const writeMocks = async (mockFunc, idFunc, collection, amount) => {
+    for (let i = 0; i < amount; i++) {
+        const mock = mockFunc();
+        console.log(mock);
+
+        //const id = mockProduct.title + mockProduct.author
+        const id = mock.uid;
+        console.log(id);
+
+        await setDoc(doc(db, collection, id), mock);
+    }
+};
+
+await writeMocks(
+    generateMockSeller,
+    (user) => {
+        user.uid;
+    },
+    'users',
+    20
+);
