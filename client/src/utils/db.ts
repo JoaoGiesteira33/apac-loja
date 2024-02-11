@@ -41,7 +41,7 @@ export const db = {
 
 export const getUserInfo = async (): Promise<Customer | Seller> => {
     console.log(auth.currentUser.uid);
-    const q = query(db.users, where('uid', '==', auth.currentUser.uid));
+    const q = query(db.users, where('id', '==', auth.currentUser.uid));
     const querySnapshot = await getDocs(q);
     const user = querySnapshot.docs[0].data();
 
@@ -54,7 +54,7 @@ export const getUserInfo = async (): Promise<Customer | Seller> => {
 };
 
 export const saveUserInfo = async (user: User): Promise<void> => {
-    await setDoc(db.user(user.uid), user);
+    await setDoc(db.user(user.id), user);
 };
 
 export const saveProduct = async (product: Product): Promise<void> => {

@@ -1,96 +1,58 @@
 import { useEffect, useState } from 'react';
-import axios, { Canceler } from 'axios';
-import { API_URL_PROD } from '../fetchers';
-import { ProductType } from '../types/product';
-import { searchAvailableProducts } from '../search/search_products';
+import { searchProducts } from '../search/search_products';
+import { Product } from '../types/product';
+import { ProductQuery } from '../types/query';
+import { DocumentSnapshot } from 'firebase/firestore';
 
-const MockData: ProductType[] = [];
-
-for (let i = 1; i < 30; i++) {
-    const width = Math.floor(Math.random() * 1000) + 200;
-    const height = Math.floor(Math.random() * 1000) + 200;
-
-    MockData.push({
-        _id: i.toString(),
-        _seller: {
-            email: 'joao@gmail.com',
-            role: 'Boss',
-            client_fields: null,
-            seller_fields: {
-                demographics: {
-                    name: 'João',
-                    birth_date: new Date(),
-                    address: {
-                        street: 'Rua do João',
-                        postal_code: '1234-123',
-                        city: 'Porto',
-                        country: 'Portugal',
-                    },
-                    phone: '912345678',
-                },
-                statistics: {},
-                profile_picture: 'https://picsum.photos/200/300',
-                about: 'Fixe',
-                seller_type: 'Pintador',
-            },
-            active_chat_id: [],
-            tags: [],
-        },
-        title: 'O Sol',
-        author: 'Zé',
-        photos: ['https://picsum.photos/' + width + '/' + height],
-        description: 'Retrato do pintor Zé',
-        price: 33,
-        product_type: 'Quadro',
-        piece_info: {
-            technique: 'Aguarela',
-            material: 'Papel',
-            dimensions: {
-                height: height,
-                width: width,
-                depth: 0,
-                measure: 'mm',
-            },
-            year: 2020,
-            state: 'Novo',
-        },
-        book_info: null,
-        published_date: new Date(),
-    });
-}
-
-export default function useProductSearch(query: object, pageNumber: number) {
+export default function useProductSearch(initialQuery: ProductQuery) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [hasMore, setHasMore] = useState(false);
-    let empty = false;
+    const [last, setLast] = useState<DocumentSnapshot>();
+    const [query, setQuery] = useState(initialQuery);
 
     useEffect(() => {
-        setProducts([]);
-        empty = true;
-    }, [query]);
-
-    useEffect(() => {
+        setLast(undefined);
         setLoading(true);
         setError(false);
 
-        searchAvailableProducts(1)
-            .then((res) => {
-                if (empty) {
-                    setProducts(res);
-                    empty = false;
-                } else setProducts(products.concat(res));
-                setHasMore(false);
-                setLoading(false);
-                console.log('Products:', products.concat(res));
-            })
-            .catch((e) => {
-                // Ignore the error if it's a request cancellation.
-                // if (axios.isCancel(e)) return;
-                //else setError(true);
-            });
-    }, [query, pageNumber]);
+        const fetchData = async () => {
+            try {
+                const [productsRes, lastRes] = await searchProducts(query);
+                setProducts((prevProducts) => [
+                    ...prevProducts,
+                    ...productsRes,
+                ]);
+                console.log('Loaded new products ', productsRes);
 
-    return { loading, error, MockData, hasMore, products, setProducts };
+                setLast(lastRes);
+                setHasMore(!!lastRes); // Check if there are more products to load
+                setLoading(false);
+            } catch (error) {
+                setError(true);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+
+        // Clean-up function
+        return () => {
+            // You can perform any clean-up here if necessary
+        };
+    }, [query]); // Trigger fetch whenever the query changes
+
+    const loadMore = () => {
+        if (!loading && hasMore && last) {
+            setQuery({ ...query, startAt: last });
+        }
+    };
+
+    const reloadWithQuery = (newQuery: ProductQuery) => {
+        setProducts([]);
+        setQuery(newQuery);
+    };
+
+    return { products, loadMore, loading, error, hasMore, reloadWithQuery };
 }

@@ -64,17 +64,6 @@ export default function SelectPrice({
     };
     const [t] = useTranslation();
 
-    const marks = [
-        {
-            value: 0,
-            label: '0€',
-        },
-        {
-            value: maxPrice,
-            label: `${maxPrice}€`,
-        },
-    ];
-
     return (
         <Box
             component="div"

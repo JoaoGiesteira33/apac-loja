@@ -1,17 +1,21 @@
+import { DocumentSnapshot } from 'firebase/firestore';
+
 export type Product = {
-  id: string;
-  seller: string;
-  title: string;
-  author: string;
-  photos: string[];
-  description: string;
-  price: number;
-  product_type: string;
-  piece_info: PieceInfo | null;
-  // book_info: BookInfo | null;
-  published_date: Date;
-  //rating: number,     // [0-5]
-  //reviews: Review[],
+    id: string;
+    seller: string;
+    title: string;
+    author: string;
+    photos: string[];
+    description: string;
+    price: number;
+    product_type: string;
+    piece_info: PieceInfo | null;
+    // book_info: BookInfo | null;
+    published_date: Date;
+    //rating: number,     // [0-5]
+    //reviews: Review[],
+    available: boolean;
+    featured: boolean;
 };
 
 /*type Review = {
@@ -22,11 +26,11 @@ export type Product = {
 }*/
 
 export type PieceInfo = {
-  technique: string;
-  materials: string[];
-  dimensions: Dimensions;
-  year: number;
-  state: string;
+    technique: string;
+    materials: string[];
+    dimensions: Dimensions;
+    year: number;
+    state: string;
 };
 
 // type BookInfo = {
@@ -37,14 +41,8 @@ export type PieceInfo = {
 // };
 
 type Dimensions = {
-  height: number;
-  width: number;
-  depth: number;
-  weight: number;
+    height: number;
+    width: number;
+    depth: number;
+    weight: number;
 };
-
-export type ProductQuery = {
-  availabe?: boolean;
-  limit?: number;
-  featured?: boolean;
-}

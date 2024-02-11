@@ -1,6 +1,5 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 
-import Divider from '@mui/material/Divider';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/system/Box';
 import Button from '@mui/material/Button';
@@ -12,24 +11,26 @@ import ArtistThumbnail from '../../components/pintar_o_7/ArtistThumbnail';
 import { useTranslation } from 'react-i18next';
 import { CurrentAccountContext } from '../../contexts/currentAccountContext';
 import { TextField } from '@mui/material';
+import { SellerQuery } from '../../types/query';
 
 export default function ArtistsIndexPage() {
     const [t] = useTranslation();
     const { tokenLevel } = useContext(CurrentAccountContext);
     const [artistPage, setArtistPage] = useState(1);
     const [artistFilter, setArtistFilter] = useState('');
-    const [artistQuery, setArtistQuery] = useState(() => {
-        if (tokenLevel === 'admin') return {};
-        else
-            return {
-                'seller_fields.status': 'active',
-            };
-    });
+    const [artistQuery, setArtistQuery] = useState<SellerQuery>(() => ({
+        limit: 12,
+        role: 'seller',
+    }));
+    //   if (tokenLevel === 'admin') return {};
+    //   else
+    //     return {
+    //       'seller_fields.status': 'active',
+    //     };
+    // });
 
-    const { hasMore, loading, error, artists } = useArtistSearch(
-        artistQuery,
-        artistPage
-    );
+    const { hasMore, loading, error, sellers, loadMore } =
+        useArtistSearch(artistQuery);
 
     const artistFilterUpdate = (value: string) => {
         setArtistFilter(value);
@@ -84,10 +85,10 @@ export default function ArtistsIndexPage() {
                         justifyContent: { xs: 'center', sm: 'space-between' },
                     }}
                     spacing={{ xs: 2, md: 4, lg: 8 }}>
-                    {artists &&
-                        artists.map((artist, index) => (
-                            <Grid key={index} xs={12} sm={6} md={4} lg={3}>
-                                <ArtistThumbnail artist={artist} />
+                    {sellers &&
+                        sellers.map((seller) => (
+                            <Grid key={seller.id} xs={12} sm={6} md={4} lg={3}>
+                                <ArtistThumbnail artist={seller} />
                             </Grid>
                         ))}
                 </Grid>
@@ -112,7 +113,7 @@ export default function ArtistsIndexPage() {
                     variant="outlined"
                     sx={{ marginBottom: '2rem' }}
                     onClick={() => {
-                        setArtistPage((prevPageNumber) => prevPageNumber + 1);
+                        loadMore();
                     }}>
                     {t('global.load-more')}
                 </Button>
