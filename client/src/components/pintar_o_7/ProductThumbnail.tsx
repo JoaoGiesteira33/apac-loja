@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import Box from '@mui/system/Box';
@@ -13,7 +12,8 @@ export default function ProductThumbnail(props) {
                 <Box component="div" className="w-full aspect-square">
                     <img
                         className="w-full h-full aspect-square object-cover"
-                        src={checkLink(props.product.photos[0])}></img>
+                        src={checkLink(props.product.photos[0])}
+                    />
                 </Box>
             </Link>
             <Grid
@@ -26,7 +26,8 @@ export default function ProductThumbnail(props) {
                 }}>
                 <Grid xs={8}>{props.product.title}</Grid>
                 <Grid xs={4} sx={{ textAlign: 'right' }}>
-                    {props.product.price}€
+                    {' '}
+                    {props.product.price}€{' '}
                 </Grid>
                 <Grid xs={12}>{props.product.description}</Grid>
             </Grid>
