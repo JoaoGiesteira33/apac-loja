@@ -3,12 +3,12 @@ import { lazy, Suspense, useState, useMemo } from 'react';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import {
-    Box,
-    Button,
-    CircularProgress,
-    IconButton,
-    PaletteMode,
-    Popover,
+  Box,
+  Button,
+  CircularProgress,
+  IconButton,
+  PaletteMode,
+  Popover,
 } from '@mui/material';
 import { CssBaseline } from '@mui/material/';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -55,188 +55,194 @@ const CartBadge = lazy(() => import('./components/CartBadge'));
 const Dashboard = lazy(() => import('./pages/Administrator/Dashboard'));
 const Notifications = lazy(() => import('./pages/Profile/Notifications'));
 
-const mapRoutes = (routes) =>
-    routes.map((route, index) => (
-        <Route key={index} path={route.path} element={route.element} />
-    ));
+type RouteType = {
+  path: string,
+  element: JSX.Element,
+  requireAuth?: boolean
+}
+
+const mapRoutes = (routes: RouteType[]) =>
+  routes.map((route: RouteType, index: number) => (
+    <Route key={index} path={route.path} element={route.element} />
+  ));
 function App() {
-    const [mode, setMode] = useState<PaletteMode>('light');
-    const [, setNavbarSize] = useState<number>(0);
-    const [, setFooterSize] = useState<number>(0);
-    const location = useLocation();
+  const [mode, setMode] = useState<PaletteMode>('light');
+  const [, setNavbarSize] = useState<number>(0);
+  const [, setFooterSize] = useState<number>(0);
+  const location = useLocation();
 
-    // const checkChatRoute = (route: string) => {
-    //     var re = /\/product\/[^\/?]+/;
-    //     return re.test(route);
-    // };
+  // const checkChatRoute = (route: string) => {
+  //     var re = /\/product\/[^\/?]+/;
+  //     return re.test(route);
+  // };
 
-    const [loggedIn, loading, error] = useAuthState(auth);
-    console.log(' Logged in as ', loggedIn);
+  const [loggedIn, loading, error] = useAuthState(auth);
+  console.log(' Logged in as ', loggedIn);
 
-    const colorMode = useMemo(
-        () => ({
-            toggleColorMode: () =>
-                setMode((prevMode) =>
-                    prevMode === 'light' ? 'dark' : 'light'
-                ),
-        }),
-        []
-    );
+  const colorMode = useMemo(
+    () => ({
+      toggleColorMode: () =>
+        setMode((prevMode) =>
+          prevMode === 'light' ? 'dark' : 'light'
+        ),
+    }),
+    []
+  );
 
-    const theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
+  const theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
 
-    const payPalOptions = {
-        clientId:
-            'AXH3T6mt5FSd1rfMt0i2m6AadWj86MjC2qESbozuHcBXvS3Orwtt0FhxuG-MpxAkOPcYt1LD_ni4dpz4', // testing
-        currency: 'EUR',
-        intent: 'capture',
-    };
+  const payPalOptions = {
+    clientId:
+      'AXH3T6mt5FSd1rfMt0i2m6AadWj86MjC2qESbozuHcBXvS3Orwtt0FhxuG-MpxAkOPcYt1LD_ni4dpz4', // testing
+    currency: 'EUR',
+    intent: 'capture',
+  };
 
-    const { t, i18n } = useTranslation();
-    const changeLanguageHandler = () =>
-        i18n.changeLanguage(i18n.language === 'pt' ? 'en' : 'pt');
+  const { t, i18n } = useTranslation();
+  const changeLanguageHandler = () =>
+    i18n.changeLanguage(i18n.language === 'pt' ? 'en' : 'pt');
 
-    // All routes for the app
-    const routes = [
-        {
-            path: '/',
-            element: <InitialPage loggedIn={loggedIn !== undefined} />,
-        },
-        { path: '/gallery', element: <Gallery /> },
-        { path: '/artists', element: <ArtistsIndexPage /> },
-        { path: '/artists/:id', element: <ArtistPage /> },
-        { path: '/artists/add', element: <NewSeller />, requireAuth: false },
-        {
-            path: '/product/:product_id',
-            element: <ProductPage loggedIn={loggedIn} />,
-        },
-        { path: '/product', element: <ProductPage /> },
-        { path: '/login', element: <LoginPage /> },
-        { path: '/register', element: <RegisterPage /> },
-        { path: '/info', element: <InfoPage /> },
-        { path: '/contact', element: <ContactPage /> },
-        // { path: '/chat', element: <ChatPage /> },
-        { path: '*', element: <PageNotFound /> },
-    ];
+  // All routes for the app
+  const routes = [
+    {
+      path: '/',
+      element: <InitialPage loggedIn={loggedIn !== undefined} />,
+    },
+    { path: '/gallery', element: <Gallery /> },
+    { path: '/artists', element: <ArtistsIndexPage /> },
+    { path: '/artists/:id', element: <ArtistPage /> },
+    { path: '/artists/add', element: <NewSeller />, requireAuth: false },
+    {
+      path: '/product/:product_id',
+      element: <ProductPage loggedIn={loggedIn} />,
+    },
+    { path: '/product', element: <ProductPage /> },
+    { path: '/login', element: <LoginPage /> },
+    { path: '/register', element: <RegisterPage /> },
+    { path: '/info', element: <InfoPage /> },
+    { path: '/contact', element: <ContactPage /> },
+    // { path: '/chat', element: <ChatPage /> },
+    { path: '*', element: <PageNotFound /> },
+  ];
 
-    const protectedRoutes = [
-        { path: '/profile', element: <ProfileIndex /> },
-        { path: '/profile/info', element: <ProfileInfo /> },
-        { path: '/cart', element: <CartPage /> },
-        { path: '/checkout', element: <CheackoutPage /> },
-        { path: '/profile/order-history', element: <ProfileOrderHistory /> },
-        { path: '/profile/notifications', element: <Notifications /> },
-    ];
+  const protectedRoutes = [
+    { path: '/profile', element: <ProfileIndex /> },
+    { path: '/profile/info', element: <ProfileInfo /> },
+    { path: '/cart', element: <CartPage /> },
+    { path: '/checkout', element: <CheackoutPage /> },
+    { path: '/profile/order-history', element: <ProfileOrderHistory /> },
+    { path: '/profile/notifications', element: <Notifications /> },
+  ];
 
-    const adminRoutes = [{ path: '/dashboard', element: <Dashboard /> }];
+  const adminRoutes = [{ path: '/dashboard', element: <Dashboard /> }];
 
-    const sellerRoutes = [
-        {
-            path: '/profile/products',
-            element: <Products />,
-            authLevel: 'seller',
-        },
-        {
-            path: '/profile/new-product',
-            element: <NewProduct />,
-            authLevel: 'seller',
-        },
-        { path: '/requests', element: <Requests />, authLevel: 'seller' },
-    ];
+  const sellerRoutes = [
+    {
+      path: '/profile/products',
+      element: <Products />,
+      authLevel: 'seller',
+    },
+    {
+      path: '/profile/new-product',
+      element: <NewProduct />,
+      authLevel: 'seller',
+    },
+    { path: '/requests', element: <Requests />, authLevel: 'seller' },
+  ];
 
-    return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <PayPalScriptProvider options={payPalOptions}>
-                <ColorModeContext.Provider value={colorMode}>
-                    <ThemeProvider theme={theme}>
-                        <CssBaseline />
-                        <Box
-                            component="div"
-                            className={
-                                theme.palette.mode === 'dark' ? 'dark' : ''
-                            }>
-                            <IconButton
-                                sx={{
-                                    ml: 1,
-                                    position: 'absolute',
-                                    right: 0,
-                                    top: 0,
-                                    zIndex: 1,
-                                }}
-                                onClick={colorMode.toggleColorMode}
-                                color="inherit">
-                                {theme.palette.mode === 'dark' ? (
-                                    <Brightness7Icon />
-                                ) : (
-                                    <Brightness4Icon />
-                                )}
-                            </IconButton>
-                            <Button
-                                sx={{
-                                    position: 'absolute',
-                                    right: 0,
-                                    top: 30,
-                                    zIndex: 1,
-                                }}
-                                onClick={() => changeLanguageHandler()}
-                                color="inherit">
-                                {i18n.language == 'pt' ? 'PT' : 'EN'}
-                            </Button>
-                            {location.pathname !== '/' && (
-                                <ReactNavbar
-                                    loggedIn={loggedIn}
-                                    setHeight={setNavbarSize}
-                                />
-                            )}
-                            <Suspense
-                                fallback={
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            my: 10,
-                                        }}
-                                        component="div">
-                                        <CircularProgress />
-                                    </Box>
-                                }>
-                                <Routes>
-                                    {mapRoutes(routes)}
-                                    <Route
-                                        element={
-                                            <PrivateRoutes
-                                                level={loggedIn !== undefined}
-                                            />
-                                        }>
-                                        {mapRoutes(protectedRoutes)}
-                                    </Route>
-                                    <Route
-                                        element={
-                                            <SellerPrivateRoutes
-                                                level={loggedIn}
-                                            />
-                                        }>
-                                        {mapRoutes(sellerRoutes)}
-                                    </Route>
-                                    <Route element={<AdminPrivateRoutes />}>
-                                        {mapRoutes(adminRoutes)}
-                                    </Route>
-                                </Routes>
-                            </Suspense>
-                            {loggedIn && location.pathname !== '/cart' && (
-                                <CartBadge />
-                            )}
-                            {/*checkChatRoute(location.pathname) ? ( <Chat />) : ( <></>)*/}
-                            {location.pathname !== '/' && (
-                                <Footer setHeight={setFooterSize} />
-                            )}
-                        </Box>
-                    </ThemeProvider>
-                </ColorModeContext.Provider>
-            </PayPalScriptProvider>
-        </LocalizationProvider>
-    );
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <PayPalScriptProvider options={payPalOptions}>
+        <ColorModeContext.Provider value={colorMode}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Box
+              component="div"
+              className={
+                theme.palette.mode === 'dark' ? 'dark' : ''
+              }>
+              <IconButton
+                sx={{
+                  ml: 1,
+                  position: 'absolute',
+                  right: 0,
+                  top: 0,
+                  zIndex: 1,
+                }}
+                onClick={colorMode.toggleColorMode}
+                color="inherit">
+                {theme.palette.mode === 'dark' ? (
+                  <Brightness7Icon />
+                ) : (
+                  <Brightness4Icon />
+                )}
+              </IconButton>
+              <Button
+                sx={{
+                  position: 'absolute',
+                  right: 0,
+                  top: 30,
+                  zIndex: 1,
+                }}
+                onClick={() => changeLanguageHandler()}
+                color="inherit">
+                {i18n.language == 'pt' ? 'PT' : 'EN'}
+              </Button>
+              {location.pathname !== '/' && (
+                <ReactNavbar
+                  loggedIn={loggedIn}
+                  setHeight={setNavbarSize}
+                />
+              )}
+              <Suspense
+                fallback={
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      my: 10,
+                    }}
+                    component="div">
+                    <CircularProgress />
+                  </Box>
+                }>
+                <Routes>
+                  {mapRoutes(routes)}
+                  <Route
+                    element={
+                      <PrivateRoutes
+                        level={loggedIn !== undefined}
+                      />
+                    }>
+                    {mapRoutes(protectedRoutes)}
+                  </Route>
+                  <Route
+                    element={
+                      <SellerPrivateRoutes
+                        level={loggedIn}
+                      />
+                    }>
+                    {mapRoutes(sellerRoutes)}
+                  </Route>
+                  <Route element={<AdminPrivateRoutes />}>
+                    {mapRoutes(adminRoutes)}
+                  </Route>
+                </Routes>
+              </Suspense>
+              {loggedIn && location.pathname !== '/cart' && (
+                <CartBadge />
+              )}
+              {/*checkChatRoute(location.pathname) ? ( <Chat />) : ( <></>)*/}
+              {location.pathname !== '/' && (
+                <Footer setHeight={setFooterSize} />
+              )}
+            </Box>
+          </ThemeProvider>
+        </ColorModeContext.Provider>
+      </PayPalScriptProvider>
+    </LocalizationProvider>
+  );
 }
 
 export default App;
